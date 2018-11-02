@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EntityModel
 {
-   public class UserSysData
+    public class UserSysData
     {
         public string UserId { get; set; }
         public string DisplayName { get; set; }
@@ -50,5 +50,18 @@ namespace EntityModel
         public decimal RedBagBalance { get; set; }
         public int DouDou { get; set; }
         public decimal CPSBalance { get; set; }
+    }
+    public class UserSysDataCollection
+    {
+        public int TotalCount { get; set; }
+        public decimal TotalFillMoneyBalance { get; set; }
+        public decimal TotalBonusBalance { get; set; }
+        public decimal TotalCommissionBalance { get; set; }
+        public decimal TotalExpertsBalance { get; set; }
+        public decimal TotalFreezeBalance { get; set; }
+        public decimal TotalRedBagBalance { get; set; }
+        public decimal TotalDouDou { get; set; }
+        public decimal TotalCPSBalance { get; set; }
+        public IList<UserSysData> List { get; set; }
     }
 }

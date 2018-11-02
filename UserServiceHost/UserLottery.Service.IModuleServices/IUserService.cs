@@ -176,7 +176,7 @@ namespace UserLottery.Service.IModuleServices
         Task<int> QueryUserRegisterCount();
 
         [Service(Date = "2018-10-17", Director = "renjun", Name = "查询用户当前订单列表")]
-        Task<UserCurrentOrderInfoCollection> QueryUserCurrentOrderList(string UserId, string gameCode, string userToken, int pageIndex, int pageSize);
+        Task<UserCurrentOrderInfoCollection> QueryUserCurrentOrderList(string UserId, string gameCode, int pageIndex, int pageSize);
         [Service(Date = "2018-10-17", Director = "renjun", Name = "查询红人的合买订单")]
         Task<TogetherHotUserInfoCollection> QueryHotUserTogetherOrderList(string UserId);
 

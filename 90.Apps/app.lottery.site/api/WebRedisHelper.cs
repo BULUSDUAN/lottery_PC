@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using log4net;
 using Kason.Sg.Core.ProxyGenerator;
 using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
+using EntityModel.RequestModel;
+
 
 namespace app.lottery.site.iqucai
 {
@@ -190,19 +192,21 @@ namespace app.lottery.site.iqucai
         /// <summary>
         /// 加载合买大厅数据到Redis
         /// </summary>
-        public static void LoadTogetherDataToRedis()
+        public static async void LoadTogetherDataToRedis()
         {
-            var superList = app.lottery.site.Controllers.WCFClients.GameClient.QueryHotUserTogetherOrderList("");
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["UserId"] = "";
+            var superList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.TogetherHotUserInfoCollection>(param, "api/user/QueryHotUserTogetherOrderList");
             var db = RedisHelper.GetInstance(CacheRedisHost,CacheRedisPost,CacheRedisPassword).GetDatabase(8);//.DB_CoreCacheData;
             //加载合买红人
             var redisKey_SupperUser = RedisKeys.Key_Core_Togegher_SupperUser;
-            db.KeyDeleteAsync(redisKey_SupperUser);
+            await db.KeyDeleteAsync(redisKey_SupperUser);
             foreach (var item in superList)
             {
                 try
                 {
                     var json = JsonSerializer.Serialize(item);
-                    db.ListRightPushAsync(redisKey_SupperUser, json);
+                    await db.ListRightPushAsync(redisKey_SupperUser, json);
                 }
                 catch (Exception ex)
                 {
@@ -213,13 +217,13 @@ namespace app.lottery.site.iqucai
             var orderBy = "ManYuan desc,ISTOP DESC,TotalMoney desc, Progress DESC";
             var orderList = app.lottery.site.Controllers.WCFClients.GameClient.QuerySportsTogetherList("", "", "", "", null, null, null, -1, -1, -1, -1, orderBy, 0, 30000, "");
             var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
-            db.KeyDeleteAsync(redisKey_TogetherList);
+            await db.KeyDeleteAsync(redisKey_TogetherList);
             foreach (var item in orderList.List)
             {
                 try
                 {
                     var json = JsonSerializer.Serialize(item);
-                    db.ListRightPushAsync(redisKey_TogetherList, json);
+                    await db.ListRightPushAsync(redisKey_TogetherList, json);
                 }
                 catch (Exception ex)
                 {
@@ -401,18 +405,20 @@ namespace app.lottery.site.iqucai
 
         #region 查询用户个人信息
 
-        public static ProfileUserInfo QueryProfileUserInfo(string userId)
+        public static async Task<EntityModel.ProfileUserInfo> QueryProfileUserInfo(string userId)
         {
             var info = LoadProfileUserInfoFromRedis(userId);
             if (info == null)
             {
-                info = WCFClients.GameClient.QueryProfileUserInfo(userId);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["UserId"] = userId;
+                info = await serviceProxyProvider.Invoke<EntityModel.ProfileUserInfo>(param, "api/user/QueryProfileUserInfo");
                 SaveProfileUserInfoToRedis(userId, info);
             }
             return info;
         }
 
-        private static ProfileUserInfo LoadProfileUserInfoFromRedis(string userId)
+        private static EntityModel.ProfileUserInfo LoadProfileUserInfoFromRedis(string userId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("ProfileUserInfo_{0}", userId);
@@ -421,7 +427,7 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<ProfileUserInfo>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.ProfileUserInfo>(v.ToString());
             }
             catch (Exception)
             {
@@ -429,7 +435,7 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        private static void SaveProfileUserInfoToRedis(string userId, ProfileUserInfo info)
+        private static void SaveProfileUserInfoToRedis(string userId, EntityModel.ProfileUserInfo info)
         {
             try
             {
@@ -449,18 +455,20 @@ namespace app.lottery.site.iqucai
 
         #region 查询中奖等级
 
-        public static ProfileBonusLevelInfo QueryProfileBonusLevelInfo(string userId)
+        public static async Task<EntityModel.ProfileBonusLevelInfo> QueryProfileBonusLevelInfo(string userId)
         {
             var info = LoadProfileBonusLevelInfoFromRedis(userId);
             if (info == null)
             {
-                info = WCFClients.GameClient.QueryProfileBonusLevelInfo(userId);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["UserId"] = userId;
+                info = await serviceProxyProvider.Invoke<EntityModel.ProfileBonusLevelInfo>(param, "api/user/QueryProfileBonusLevelInfo");
                 SaveProfileBonusLevelInfoToRedis(userId, info);
             }
             return info;
         }
 
-        private static ProfileBonusLevelInfo LoadProfileBonusLevelInfoFromRedis(string userId)
+        private static EntityModel.ProfileBonusLevelInfo LoadProfileBonusLevelInfoFromRedis(string userId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("ProfileBonusLevelInfo_{0}", userId);
@@ -469,7 +477,7 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<ProfileBonusLevelInfo>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.ProfileBonusLevelInfo>(v.ToString());
             }
             catch (Exception)
             {
@@ -477,7 +485,7 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        private static void SaveProfileBonusLevelInfoToRedis(string userId, ProfileBonusLevelInfo info)
+        private static void SaveProfileBonusLevelInfoToRedis(string userId, EntityModel.ProfileBonusLevelInfo info)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("ProfileBonusLevelInfo_{0}", userId);
@@ -497,18 +505,21 @@ namespace app.lottery.site.iqucai
 
         #region 查询最新中奖
 
-        public static ProfileLastBonusCollection QueryProfileLastBonusCollection(string userId)
+        public static async Task<EntityModel.ProfileLastBonusCollection> QueryProfileLastBonusCollection(string userId)
         {
             var info = LoadProfileLastBonusCollectionFromRedis(userId);
             if (info == null)
             {
-                info = WCFClients.GameClient.QueryProfileLastBonusCollection(userId);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["UserId"] = userId;
+                info = await serviceProxyProvider.Invoke<EntityModel.ProfileLastBonusCollection>(param, "api/user/QueryProfileLastBonusCollection");
+           
                 SaveProfileLastBonusCollectionToRedis(userId, info);
             }
             return info;
         }
 
-        private static ProfileLastBonusCollection LoadProfileLastBonusCollectionFromRedis(string userId)
+        private static EntityModel.ProfileLastBonusCollection LoadProfileLastBonusCollectionFromRedis(string userId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("ProfileLastBonusCollection_{0}", userId);
@@ -517,7 +528,7 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<ProfileLastBonusCollection>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.ProfileLastBonusCollection>(v.ToString());
             }
             catch (Exception)
             {
@@ -525,7 +536,7 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        private static void SaveProfileLastBonusCollectionToRedis(string userId, ProfileLastBonusCollection info)
+        private static void SaveProfileLastBonusCollectionToRedis(string userId, EntityModel.ProfileLastBonusCollection info)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("ProfileLastBonusCollection_{0}", userId);
@@ -545,18 +556,21 @@ namespace app.lottery.site.iqucai
 
         #region 查询个人数据
 
-        public static ProfileDataReport QueryProfileDataReport(string userId)
+        public static async Task<EntityModel.ProfileDataReport> QueryProfileDataReport(string userId)
         {
             var info = LoadProfileDataReportFromRedis(userId);
             if (info == null)
             {
-                info = WCFClients.GameClient.QueryProfileDataReport(userId);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["UserId"] = userId;
+                info = await serviceProxyProvider.Invoke<EntityModel.ProfileDataReport>(param, "api/user/QueryProfileDataReport");
+            
                 SaveProfileDataReportToRedis(userId, info);
             }
             return info;
         }
 
-        private static ProfileDataReport LoadProfileDataReportFromRedis(string userId)
+        private static EntityModel.ProfileDataReport LoadProfileDataReportFromRedis(string userId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("ProfileDataReport_{0}", userId);
@@ -565,7 +579,7 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<ProfileDataReport>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.ProfileDataReport>(v.ToString());
             }
             catch (Exception)
             {
@@ -573,7 +587,7 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        private static void SaveProfileDataReportToRedis(string userId, ProfileDataReport info)
+        private static void SaveProfileDataReportToRedis(string userId, EntityModel.ProfileDataReport info)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("ProfileDataReport_{0}", userId);
@@ -593,12 +607,15 @@ namespace app.lottery.site.iqucai
 
         #region 查询用户跟单人数
 
-        public static int QueryTogetherFollowerCount(string userId)
+        public static async Task<int> QueryTogetherFollowerCount(string userId)
         {
             var info = LoadTogetherFollowerCountFromRedis(userId);
             if (info == -1)
             {
-                info = WCFClients.GameQueryClient.QueryTogetherFollowerCount(userId);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["createUserId"] = userId;
+                info = await serviceProxyProvider.Invoke<int>(param, "api/user/QueryTogetherFollowerCount");
+              
                 SaveTogetherFollowerCountToRedis(userId, info);
             }
             return info;
@@ -640,18 +657,28 @@ namespace app.lottery.site.iqucai
 
         #region 查询用户战绩
 
-        public static UserBeedingListInfoCollection QueryUserBeedingListInfoCollection(string userId)
+        public static async Task<EntityModel.CoreModel.UserBeedingListInfoCollection> QueryUserBeedingListInfoCollection(string userId)
         {
             var info = LoadUserBeedingListInfoCollectionFromRedis(userId);
             if (info == null)
             {
-                info = WCFClients.GameClient.QueryUserBeedingList("", "", userId, string.Empty, 0, 100, QueryUserBeedingListOrderByProperty.TotalBonusMoney, OrderByCategory.DESC, string.Empty);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["gameCode"] = "";
+                param["gameType"] = "";
+                param["userId"] = userId;
+                param["userDisplayName"] = string.Empty;
+                param["pageIndex"] =0;
+                param["pageSize"] = 100;
+                param["property"] = QueryUserBeedingListOrderByProperty.TotalBonusMoney;
+                param["category"] = OrderByCategory.DESC;
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserBeedingListInfoCollection>(param, "api/user/QueryUserBeedingList");
+                //info = WCFClients.GameClient.QueryUserBeedingList("", "", userId, string.Empty, 0, 100, QueryUserBeedingListOrderByProperty.TotalBonusMoney, OrderByCategory.DESC, string.Empty);
                 SaveUserBeedingListInfoCollectionToRedis(userId, info);
             }
             return info;
         }
 
-        private static UserBeedingListInfoCollection LoadUserBeedingListInfoCollectionFromRedis(string userId)
+        private static EntityModel.CoreModel.UserBeedingListInfoCollection LoadUserBeedingListInfoCollectionFromRedis(string userId)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("UserBeedingList_{0}", userId);
@@ -660,7 +687,7 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<UserBeedingListInfoCollection>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.UserBeedingListInfoCollection>(v.ToString());
             }
             catch (Exception)
             {
@@ -668,7 +695,7 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        private static void SaveUserBeedingListInfoCollectionToRedis(string userId, UserBeedingListInfoCollection info)
+        private static void SaveUserBeedingListInfoCollectionToRedis(string userId, EntityModel.CoreModel.UserBeedingListInfoCollection info)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("UserBeedingList_{0}", userId);
@@ -688,18 +715,27 @@ namespace app.lottery.site.iqucai
 
         #region 查询用户当前的订单
 
-        public static UserCurrentOrderInfoCollection QueryUserCurrentOrderInfoCollection(string userId, string gameCode)
+        public static async Task<EntityModel.CoreModel.UserCurrentOrderInfoCollection> QueryUserCurrentOrderInfoCollection(string userId, string gameCode)
         {
             var info = LoadUserCurrentOrderInfoCollectionFromRedis(userId, gameCode);
             if (info == null)
             {
-                info = WCFClients.GameClient.QueryUserCurrentOrderList(userId, gameCode, string.Empty, 0, 30);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["UserId"] = userId;
+                param["gameCode"] = gameCode;
+            
+                param["pageIndex"] = 0;
+                param["pageSize"] = 30;
+            
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserCurrentOrderInfoCollection>(param, "api/user/QueryUserCurrentOrderList");
+
+                //info = WCFClients.GameClient.QueryUserCurrentOrderList(userId, gameCode, string.Empty, 0, 30);
                 SaveUserCurrentOrderInfoCollectionToRedis(userId, gameCode, info);
             }
             return info;
         }
 
-        private static UserCurrentOrderInfoCollection LoadUserCurrentOrderInfoCollectionFromRedis(string userId, string gameCode)
+        private static EntityModel.CoreModel.UserCurrentOrderInfoCollection LoadUserCurrentOrderInfoCollectionFromRedis(string userId, string gameCode)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("UserCurrentOrderInfoCollection_{0}_{1}", userId, gameCode);
@@ -708,7 +744,7 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<UserCurrentOrderInfoCollection>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.UserCurrentOrderInfoCollection>(v.ToString());
             }
             catch (Exception)
             {
@@ -716,7 +752,7 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        private static void SaveUserCurrentOrderInfoCollectionToRedis(string userId, string gameCode, UserCurrentOrderInfoCollection info)
+        private static void SaveUserCurrentOrderInfoCollectionToRedis(string userId, string gameCode, EntityModel.CoreModel.UserCurrentOrderInfoCollection info)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("UserCurrentOrderInfoCollection_{0}_{1}", userId, gameCode);
@@ -736,20 +772,25 @@ namespace app.lottery.site.iqucai
 
         #region 查询用户中奖订单
 
-        public static BonusOrderInfoCollection QueryBonusOrderInfoCollection(string userId, string gameCode, string gameType)
+        public static async Task<EntityModel.CoreModel.BonusOrderInfoCollection> QueryBonusOrderInfoCollection(string userId, string gameCode, string gameType)
         {
             gameCode = (gameCode == "SZC" ? gameType : gameCode);
             gameType = (gameCode == "SZC" ? "" : gameType);
             var info = LoadBonusOrderInfoCollectionFromRedis(userId, gameCode, gameType);
             if (info == null)
             {
-                info = WCFClients.GameQueryClient.QueryBonusInfoList(userId, gameCode, gameType, string.Empty, string.Empty, string.Empty, 0, 30, string.Empty);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param["Model"] = new QueryBonusInfoListParam() { userId = userId, gameCode = gameCode, gameType = gameType, pageIndex = 0, pageSize = 30};
+
+
+                info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BonusOrderInfoCollection> (param, "api/Order/QueryBonusInfoList");
+                //info = WCFClients.GameQueryClient.QueryBonusInfoList(userId, gameCode, gameType, string.Empty, string.Empty, string.Empty, 0, 30, string.Empty);
                 SaveBonusOrderInfoCollectionToRedis(userId, gameCode, gameType, info);
             }
             return info;
         }
 
-        private static BonusOrderInfoCollection LoadBonusOrderInfoCollectionFromRedis(string userId, string gameCode, string gameType)
+        private static EntityModel.CoreModel.BonusOrderInfoCollection LoadBonusOrderInfoCollectionFromRedis(string userId, string gameCode, string gameType)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("BonusOrderInfoCollection_{0}_{1}_{2}", userId, gameCode, gameType);
@@ -758,7 +799,7 @@ namespace app.lottery.site.iqucai
                 return null;
             try
             {
-                return JsonSerializer.Deserialize<BonusOrderInfoCollection>(v.ToString());
+                return JsonSerializer.Deserialize<EntityModel.CoreModel.BonusOrderInfoCollection>(v.ToString());
             }
             catch (Exception)
             {
@@ -766,7 +807,7 @@ namespace app.lottery.site.iqucai
             }
         }
 
-        private static void SaveBonusOrderInfoCollectionToRedis(string userId, string gameCode, string gameType, BonusOrderInfoCollection info)
+        private static void SaveBonusOrderInfoCollectionToRedis(string userId, string gameCode, string gameType, EntityModel.CoreModel.BonusOrderInfoCollection info)
         {
             var db = RedisHelper.GetInstance(CacheRedisHost, CacheRedisPost, CacheRedisPassword).GetDatabase(10);//.DB_UserBlogData;
             var key = string.Format("BonusOrderInfoCollection_{0}_{1}_{2}", userId, gameCode, gameType);

@@ -563,7 +563,7 @@ namespace KaSon.FrameWork.ORM.Helper
         #endregion
 
         #region 会员管理模块
-        public UserQueryInfoCollection QueryUserList(DateTime regFrom, DateTime regTo, string keyType, string keyValue, bool? isEnable, bool? isFillMoney, bool? IsUserType, bool? isAgent
+        public UserSysDataCollection QueryUserList(DateTime regFrom, DateTime regTo, string keyType, string keyValue, bool? isEnable, bool? isFillMoney, bool? IsUserType, bool? isAgent
             , string commonBlance, string bonusBlance, string freezeBlance, string vipRange, string comeFrom, string agentId, int pageIndex, int pageSize, string userToken, string strOrderBy, int UserCreditType = -1)
         {
             var siteBiz = new LocalLoginBusiness();
@@ -572,8 +572,6 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public CommonActionResult DisableUser(string userId, string userToken)
         {
-            //// 验证用户身份及权限
-            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new LocalLoginBusiness().DisableUser(userId);
@@ -590,8 +588,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public CommonActionResult EnableUser(string userId, string userToken)
         {
-            //// 验证用户身份及权限
-            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new LocalLoginBusiness().EnableUser(userId);
@@ -684,7 +680,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult GetUserTokenByKey(string userId, string userToken)
         {
             // 验证用户身份及权限
-            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             return GetUserToken(userId);
         }
         public CommonActionResult GetUserToken(string userId)
@@ -699,7 +695,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public UserBalanceFreezeCollection QueryUserBalanceFreezeListByUser(string userId, int pageIndex, int pageSize, string userToken)
         {
             // 验证用户身份及权限
-            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 return new FundBusiness().QueryUserBalanceFreezeListByUser(userId, pageIndex, pageSize);
@@ -726,7 +722,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public UserRealNameInfo GetUserRealNameInfo(string userId, string userToken)
         {
             // 验证用户身份及权限
-            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
             var biz = new RealNameAuthenticationBusiness();
             var realName = biz.GetAuthenticatedRealName(userId);
@@ -974,8 +970,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public CommonActionResult UpdateMobileAuthen(string userId, string mobile, string userToken)
         {
-            // 验证用户身份及权限
-            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new MobileAuthenticationBusiness().UpdateMobileAuthen(userId, mobile, myId);
@@ -992,8 +986,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public CommonActionResult LogOffMobileAuthen(string userId, string userToken)
         {
-            // 验证用户身份及权限
-            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new MobileAuthenticationBusiness().LogOffMobileAuthen(userId);
@@ -1009,8 +1001,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public CommonActionResult UpdateBankCard(C_BankCard bankCard, string userToken)
         {
-            // 验证用户身份及权限
-            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new BankCardBusiness().UpdateBankCard(bankCard, bankCard.UserId);
@@ -1056,8 +1046,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public GameInfoCollection QueryGameList(string userToken)
         {
-            // 验证用户身份及权限
-            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 return new GameBusiness().QueryGameInfoCollection();
@@ -1070,8 +1058,6 @@ namespace KaSon.FrameWork.ORM.Helper
         public BettingOrderInfoCollection QueryBettingOrderList(string userIdOrName, SchemeType? schemeType, ProgressStatus? progressStatus, BonusStatus? bonusStatus, SchemeBettingCategory? betCategory, bool? isVirtual, string gameCode
             , DateTime startTime, DateTime endTime, int sortType, int pageIndex, int pageSize, string userToken, string fieldName, TicketStatus? ticketStatus = null, SchemeSource? schemeSource = null)
         {
-            // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 var agentId = "";
@@ -1087,8 +1073,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public FillMoneyQueryInfoCollection QueryFillMoneyList(string userKey, string agentTypeList, string statusList, string sourceList, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string orderId)
         {
-            //// 验证用户身份及权限
-            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 return new SqlQueryBusiness().QueryFillMoneyList(userKey, agentTypeList, statusList, sourceList, startTime, endTime, pageIndex, pageSize, orderId);
@@ -1186,13 +1170,20 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public CommonActionResult AuthenticateUserRealName_BackSite(string userId, string realName, string idCard, string userToken)
         {
-            // 验证用户身份及权限
-            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
-            var biz = new RealNameAuthenticationBusiness();
-            biz.AddAuthenticationRealName("LOCAL", userId, realName, "0", idCard, myId, false);
-            //! 执行扩展功能代码 - 提交事务后
-            BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realName + "|0|" + idCard, SchemeSource.Web });
-            return new CommonActionResult(true, "实名认证成功。");
+            try
+            {
+                // 验证用户身份及权限
+                var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+                var biz = new RealNameAuthenticationBusiness();
+                biz.AddAuthenticationRealName("LOCAL", userId, realName, "0", idCard, myId, false);
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IResponseAuthentication_AfterTranCommit>(new object[] { userId, "RealName", realName + "|0|" + idCard, SchemeSource.Web });
+                return new CommonActionResult(true, "实名认证成功。");
+            }
+            catch (Exception ex)
+            {
+                return new CommonActionResult(true, "实名认证失败。"+ ex.Message);
+            }
         }
         /// <summary>
         /// 用户手机认证
@@ -1618,6 +1609,237 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new Exception(ex.Message);
             }
         }
+        /// <summary>
+        /// 新增宝单或大单推荐专家
+        /// </summary>
+        public CommonActionResult AddUserSchemeShareExpert(string userId, int shortIndex, CopyOrderSource source)
+        {
+            try
+            {
+                new BDFXOrderBusiness().AddUserSchemeShareExpert(userId, shortIndex, source);
+                return new CommonActionResult(true, "保存数据成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 删除宝单或大单推荐专家
+        /// </summary>
+        public CommonActionResult DeleteUserSchemeShareExpert(string id)
+        {
+            try
+            {
+                new BDFXOrderBusiness().DeleteUserSchemeShareExpert(id);
+                return new CommonActionResult(true, "删除数据成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询宝单、大单推荐专家
+        /// </summary>
+        public UserSchemeShareExpert_Collection QueryUserSchemeShareExpertList(string userKey, int source, int pageIndex, int pageSize)
+        {
+            try
+            {
+                return new BDFXOrderBusiness().QueryUserSchemeShareExpertList(userKey, source, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询代理销售充值注册量明细汇总
+        /// </summary>
+        public OCAagentDetailInfoCollection QueryAgentDetail(string agentId, string gameCode, DateTime starTime, DateTime endTime, int pageIndex, int pageSize, bool isRecharge)
+        {
+            try
+            {
+                return new OCAgentBusiness().QueryAgentDetail(agentId, gameCode, starTime, endTime, pageIndex, pageSize, isRecharge);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         #endregion
+
+
+
+        /// <summary>
+        /// 根据方案号更新单个订单的过关统
+        /// </summary>
+        public CommonActionResult Update_CTZQ_HitCountBySchemeId(string schemeId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new IssuseBusiness().Update_CTZQ_HitCountBySchemeId(schemeId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 删除订单缓存
+        /// </summary>
+        public CommonActionResult ManualDeleteOrderCache(string schemeId)
+        {
+            //// 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                //删除缓存文件
+                new CacheDataBusiness().DeleteSchemeInfoXml(schemeId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 手工返点
+        /// </summary>
+        /// <param name="schemeId"></param>
+        public CommonActionResult ManualAgentPayIn(string schemeId)
+        {
+            try
+            {
+                new OCAgentBusiness().AgentPayIn_CompateOrder(schemeId);
+                //new SiteMessageBusiness().ManualAgentPayIn(schemeId);
+                return new CommonActionResult(true, "手工返点成功！");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        //按keyline查询追号列表
+        public BettingOrderInfoCollection QueryBettingOrderListByChaseKeyLine(string keyLine)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                var collection = new SqlQueryBusiness().QueryBettingOrderListByChaseKeyLine(keyLine);
+                if (collection != null && collection.OrderList != null && collection.OrderList.Count > 0)
+                {
+                    collection.TotalCount = collection.OrderList.Count;
+                    collection.TotalOrderMoney = collection.OrderList.Sum(o => o.TotalMoney);
+                    collection.TotalBuyMoney = collection.OrderList.Sum(o => o.CurrentBettingMoney);
+                    collection.TotalPreTaxBonusMoney = collection.OrderList.Sum(o => o.PreTaxBonusMoney);
+                    collection.TotalAfterTaxBonusMoney = collection.OrderList.Sum(o => o.AfterTaxBonusMoney);
+                    collection.TotalAddMoney = collection.OrderList.Sum(o => o.AddMoney);
+                    collection.TotalUserCount = 1;
+                }
+                return collection;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询追号列表失败 - " + ex.Message, ex);
+            }
+        }
+
+        //查询指定订单的投注号码列表
+        public BettingAnteCodeInfoCollection QueryAnteCodeListBySchemeId(string schemeId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new SqlQueryBusiness().QueryAnteCodeListBySchemeId(schemeId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询投注号码列表失败 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询足彩方案信息
+        /// </summary>
+        public Sports_SchemeQueryInfo QuerySportsSchemeInfo(string schemeId)
+        {
+            try
+            {
+                return new Sports_Business().QuerySportsSchemeInfo(schemeId);
+
+                //var cacheBiz = new CacheDataBusiness();
+                //var info = cacheBiz.QuerySports_SchemeQueryInfo(schemeId);
+                //if (info == null)
+                //{
+                //    info = new Sports_Business().QuerySportsSchemeInfo(schemeId);
+                //    if (info != null && (info.BonusStatus == BonusStatus.Lose || (info.BonusStatus == BonusStatus.Win && info.IsPrizeMoney)))
+                //    {
+                //        cacheBiz.SaveSchemeInfoToXml(info);
+                //    }
+                //}
+                //return info;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询足彩订单投注列表
+        /// </summary>
+        public Sports_AnteCodeQueryInfoCollection QuerySportsOrderAnteCodeList(string schemeId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new Sports_Business().QuerySportsOrderAnteCodeList(schemeId);
+
+                //var cacheBiz = new CacheDataBusiness();
+                //var collection = cacheBiz.QuerySports_AnteCodeQueryInfoCollection(schemeId);
+                //if (collection == null)
+                //{
+                //    collection = new Sports_Business().QuerySportsOrderAnteCodeList(schemeId);
+                //    var grp = collection.GroupBy(a => a.BonusStatus);
+                //    if (grp.Count(g => g.Key != BonusStatus.Lose && g.Key != BonusStatus.Win) == 0 && collection.ToList().Count() > 0)
+                //    {
+                //        cacheBiz.SaveSchemeAnteCodeCollectionToXml(schemeId, collection);
+                //    }
+                //}
+                //return collection;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 订单投注失败返钱
+        /// </summary>
+        public CommonActionResult BetFail(string schemeId)
+        {
+            //// 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new Sports_Business().BetFail(schemeId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("操作失败 " + ex.Message, ex);
+            }
+        }
     }
 }

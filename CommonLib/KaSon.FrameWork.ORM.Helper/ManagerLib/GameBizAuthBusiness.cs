@@ -730,7 +730,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new ArgumentException("指定的用户不存在。");
             }
             var roleList = userManager.GetRolesByIDs(roleIds);
-            List<C_Auth_UserRole> entitylist = null;
+            List<C_Auth_UserRole> entitylist = new List<C_Auth_UserRole>();
             foreach (var item in roleList)
             {
                 entitylist.Add(new C_Auth_UserRole() {

@@ -18,7 +18,6 @@ using EntityModel.ExceptionExtend;
 using UserLottery.Service.ModuleServices;
 using KaSon.FrameWork.Common.Redis;
 using EntityModel.Redis;
-using KaSon.FrameWork.Common.FileOperate;
 
 namespace BettingLottery.Service.ModuleServices
 {
@@ -483,6 +482,33 @@ namespace BettingLottery.Service.ModuleServices
             }
         }
 
+        private void CheckSchemeOrder(SingleSchemeInfo info)
+        {
+            if (info.Amount <= 0)
+                throw new ArgumentException("订单倍数错误");
+            if (info.TotalMoney <= 0M)
+                throw new ArgumentException("订单金额错误");
+            if (info.AllowCodes == null || info.AllowCodes.Length == 0)
+                throw new ArgumentException("允许的投注号码不能为空");
+            if (info.FileBuffer.Length == 0)
+                throw new ArgumentException("上传的文件字节不能为0");
+            //if (string.IsNullOrEmpty(info.AnteCodeFullFileName))
+            //    throw new ArgumentException("上传的文件路径不能为空");
+            if (info.GameType != null && info.GameType.ToUpper() != "HH")
+            {
+                if (info.AnteCodeList != null)
+                {
+                    foreach (var item in info.AnteCodeList)
+                    {
+                        if (item.GameType != null)
+                        {
+                            if (item.GameType.ToUpper() != info.GameType.ToUpper())
+                                throw new Exception("彩种玩法有误，应该是:" + BettingHelper.FormatGameType(info.GameCode, info.GameType) + ",但实际是:" + BettingHelper.FormatGameType(info.GameCode, item.GameType));
+                        }
+                    }
+                }
+            }
+        }
 
         private void CheckSchemeOrder(Sports_TogetherSchemeInfo info)
         {
@@ -1323,23 +1349,7 @@ namespace BettingLottery.Service.ModuleServices
             }
         }
         #endregion
-        public Task<string> ReadSqlTimeLog(string FileName)
-        {
-            return Task.FromResult(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\SQLInfo", "LogTime_"));
-        }
-        public Task<string> ReadLog(string DicName = "SQLInfo", string ApiDicTypeName = "Fatal")
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + DicName, "LogTime_"));
-
-            sb.Append("新的日志************************* \r\n");
-            sb.Append("新的日志************************* \r\n");
-            sb.Append("新的日志************************* \r\n");
-            sb.Append(KaSon.FrameWork.Common.Utilities.FileHelper.GetLogInfo("Log_Log\\" + ApiDicTypeName, "LogTime_"));
-
-            return Task.FromResult(sb.ToString());
-        }
-        //   Task<string> ReadLog(string DicName);
+      
 
         public Task<string> QueryCurrentUserInfo(string userToken)
         {
@@ -1417,7 +1427,7 @@ namespace BettingLottery.Service.ModuleServices
         /// <summary>
         /// 发起单式合买
         /// </summary>
-        public CommonActionResult CreateSingleSchemeTogether(SingleScheme_TogetherSchemeInfo info, string balancePassword, string userId)
+        public Task<CommonActionResult> CreateSingleSchemeTogether(SingleScheme_TogetherSchemeInfo info, string balancePassword, string userId)
         {
             //检查彩种是否暂停销售
             BusinessHelper.CheckGameEnable(info.BettingInfo.GameCode.ToUpper());
@@ -1441,10 +1451,10 @@ namespace BettingLottery.Service.ModuleServices
                 //参与合买后
                 BusinessHelper.ExecPlugin<IJoinTogether_AfterTranCommit>(new object[] { userId, schemeId, schemeInfo.SoldCount, schemeInfo.GameCode, schemeInfo.GameType, schemeInfo.IssuseNumber, schemeInfo.TotalMoney, schemeInfo.SchemeProgress });
 
-                return new CommonActionResult(true, "发起合买成功")
+                return Task.FromResult(new CommonActionResult(true, "发起合买成功")
                 {
                     ReturnValue = schemeId + "|" + info.TotalMoney,
-                };
+                });
             }
             catch (LogicException ex)
             {
@@ -1456,6 +1466,146 @@ namespace BettingLottery.Service.ModuleServices
             }
         }
 
+        /// <summary>
+        /// 单式投注和追号
+        /// </summary>
+        public Task<CommonActionResult> SingleSchemeBettingAndChase(SingleSchemeInfo info, string password, decimal redBagMoney, string userId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(UserId);
+            CheckSingleRepeatBetting(userId, info);
+            try
+            {
+                string schemeId;
+                var isSuceess = true;
+                var t = this.SingleScheme(info, password, redBagMoney, userId);
+                isSuceess = t.IsSuccess;
+                schemeId = t.ReturnValue;
+                //if (t.IsSuccess)
+                //{
+                //    t = SportsChase(schemeId);
+                //    isSuceess = t.IsSuccess;
+                //}
+
+                return Task.FromResult(new CommonActionResult(isSuceess, isSuceess ? "单式方案提交成功" : "单式方案提交失败")
+                {
+                    ReturnValue = schemeId + "|" + info.TotalMoney,
+                });
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("投注订单异常，请重试 ", ex);
+            }
+        }
+
+        /// <summary>
+        /// 单式缓存数据
+        /// </summary>
+        private static Dictionary<string, SingleSchemeInfo> _singleSchemeListInfo = new Dictionary<string, SingleSchemeInfo>();
+        /// <summary>
+        /// 检查单式订单频繁投注
+        /// </summary>
+        private void CheckSingleRepeatBetting(string currUserId, SingleSchemeInfo info)
+        {
+            try
+            {
+                if (_singleSchemeListInfo == null || !_singleSchemeListInfo.ContainsKey(currUserId))
+                {
+                    info.CurrentBetTime = DateTime.Now;
+                    _singleSchemeListInfo.Add(currUserId, info);
+                    return;
+                }
+                var cacheInfo = _singleSchemeListInfo.FirstOrDefault(s => s.Key == currUserId && s.Value.SchemeSource == info.SchemeSource && s.Value.GameCode == info.GameCode.ToUpper() && s.Value.BettingCategory == info.BettingCategory && s.Value.TotalMoney == info.TotalMoney);
+                if (string.IsNullOrEmpty(cacheInfo.Key) || cacheInfo.Value == null)
+                {
+                    _singleSchemeListInfo.Remove(currUserId);
+                    info.CurrentBetTime = DateTime.Now;
+                    _singleSchemeListInfo.Add(currUserId, info);
+                    return;
+                }
+                if (!info.Equals(cacheInfo.Value))
+                {
+                    //不重复
+                    _singleSchemeListInfo.Remove(currUserId);
+                    info.CurrentBetTime = DateTime.Now;
+                    _singleSchemeListInfo.Add(currUserId, info);
+                    return;
+                }
+                //投注内容相同
+                if (info.IsRepeat)
+                {
+                    _singleSchemeListInfo.Remove(currUserId);
+                    info.CurrentBetTime = DateTime.Now;
+                    _singleSchemeListInfo.Add(currUserId, info);
+                    return;
+                }
+                var timeSpan = DateTime.Now - cacheInfo.Value.CurrentBetTime;
+                if (timeSpan.TotalSeconds > 5)
+                {
+                    //大于间隔时间
+                    _singleSchemeListInfo.Remove(currUserId);
+                    info.CurrentBetTime = DateTime.Now;
+                    _singleSchemeListInfo.Add(currUserId, info);
+                    return;
+                }
+            }
+            catch (Exception)
+            {
+                _singleSchemeListInfo.Clear();
+                return;
+            }
+            throw new LogicException("Repeat");
+        }
+
+       
+
+        /// <summary>
+        /// 单式上传
+        /// </summary>
+        public CommonActionResult SingleScheme(SingleSchemeInfo info, string password, decimal redBagMoney, string userId)
+        {
+            //检查彩种是否暂停销售
+            BusinessHelper.CheckGameEnable(info.GameCode.ToUpper());
+            BusinessHelper.CheckGameCodeAndType(info.GameCode, info.GameType);
+            //// 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            CheckSingleRepeatBetting(userId, info);
+            try
+            {
+                //栓查是否实名
+                //if (!BusinessHelper.IsUserValidateRealName(userId))
+                //    throw new LogicException("未实名认证用户不能购买彩票");
+
+
+                //CheckDisableGame(info.GameCode, info.GameType);
+
+                CheckSchemeOrder(info);
+
+                var schemeId = new Sports_Business().SingleScheme(info, userId, password, redBagMoney);
+                return new CommonActionResult(true, "单式方案提交成功")
+                {
+                    ReturnValue = schemeId + "|" + info.TotalMoney,
+                };
+                //return new CommonActionResult
+                //{
+                //    IsSuccess = true,
+                //    Message = "单式上传成功",
+                //    ReturnValue = schemeId,
+                //};
+            }
+            catch (LogicException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("投注订单异常，请重试 ", ex);
+            }
+        }
         /// <summary>
         /// 单式合买
         /// </summary>
@@ -1589,5 +1739,7 @@ namespace BettingLottery.Service.ModuleServices
             sb.Append("仍在冻结的用户包括:" + liststr);
             return Task.FromResult(sb.ToString());
         }
+
+       
     }
 }

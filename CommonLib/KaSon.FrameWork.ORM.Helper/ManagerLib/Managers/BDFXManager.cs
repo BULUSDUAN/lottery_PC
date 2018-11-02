@@ -627,53 +627,49 @@ namespace KaSon.FrameWork.ORM.Helper
         //    return collection;
         //}
 
-        //public void AddUserSchemeShareExpert(UserSchemeShareExpert entity)
-        //{
-        //    this.Add<UserSchemeShareExpert>(entity);
-        //}
-        //public void UpdateUserSchemeShareExpert(UserSchemeShareExpert entity)
-        //{
-        //    this.Update<UserSchemeShareExpert>(entity);
-        //}
-        //public UserSchemeShareExpert QueryUserSchemeShareExpertByUserId(string userId, CopyOrderSource source)
-        //{
-        //    Session.Clear();
-        //    return Session.Query<UserSchemeShareExpert>().FirstOrDefault(s => s.UserId == userId && s.ExpertType == source);
-        //}
-        //public UserSchemeShareExpert_Collection QueryUserSchemeShareExpertList(string userKey, int source, int pageIndex, int pageSize)
-        //{
-        //    Session.Clear();
-        //    UserSchemeShareExpert_Collection collection = new UserSchemeShareExpert_Collection();
-        //    var query = from s in Session.Query<UserSchemeShareExpert>()
-        //                join u in Session.Query<UserRegister>() on s.UserId equals u.UserId
-        //                where (string.IsNullOrEmpty(userKey) || u.UserId == userKey || u.DisplayName == userKey)
-        //                && (source == -1 || s.ExpertType == (CopyOrderSource)source)
-        //                orderby s.CreateTime descending
-        //                select new UserSchemeShareExpertInfo
-        //                {
-        //                    CreateTime = s.CreateTime,
-        //                    ExpertType = s.ExpertType,
-        //                    Id = s.Id,
-        //                    IsEnable = s.IsEnable,
-        //                    ShowSort = s.ShowSort,
-        //                    UserId = s.UserId,
-        //                    UserName = u.DisplayName,
-        //                };
-        //    if (query != null && query.Count() > 0)
-        //    {
-        //        collection.TotalCount = query.Count();
-        //        collection.SchemeShareExpertList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-        //    }
-        //    return collection;
-        //}
-        //public void DeleteUserSchemeShareExpert(string id)
-        //{
-        //    Session.Clear();
-        //    var strSql = "delete from E_User_SchemeShareExpert where Id=:id";
-        //    Session.CreateSQLQuery(strSql)
-        //           .SetString("id", id)
-        //           .UniqueResult();
-        //}
+        public void AddUserSchemeShareExpert(E_User_SchemeShareExpert entity)
+        {
+            DB.GetDal<E_User_SchemeShareExpert>().Add(entity);
+        }
+        public void UpdateUserSchemeShareExpert(E_User_SchemeShareExpert entity)
+        {
+            DB.GetDal<E_User_SchemeShareExpert>().Update(entity);
+        }
+        public E_User_SchemeShareExpert QueryUserSchemeShareExpertByUserId(string userId, CopyOrderSource source)
+        {
+            return DB.CreateQuery<E_User_SchemeShareExpert>().Where(s => s.UserId == userId && s.ExpertType == (int)source).FirstOrDefault();
+        }
+        public UserSchemeShareExpert_Collection QueryUserSchemeShareExpertList(string userKey, int source, int pageIndex, int pageSize)
+        {
+            UserSchemeShareExpert_Collection collection = new UserSchemeShareExpert_Collection();
+            var query = from s in DB.CreateQuery<E_User_SchemeShareExpert>()
+                        join u in DB.CreateQuery<C_User_Register>() on s.UserId equals u.UserId
+                        where (u.UserId==string.Empty || u.UserId == userKey || u.DisplayName == userKey)
+                        && (source == -1 || s.ExpertType == source)
+                        orderby s.CreateTime descending
+                        select new UserSchemeShareExpertInfo
+                        {
+                            CreateTime = s.CreateTime,
+                            ExpertType = (CopyOrderSource)s.ExpertType,
+                            Id = s.Id,
+                            IsEnable = s.IsEnable,
+                            ShowSort = s.ShowSort,
+                            UserId = s.UserId,
+                            UserName = u.DisplayName,
+                        };
+            if (query != null && query.Count() > 0)
+            {
+                collection.TotalCount = query.Count();
+                collection.SchemeShareExpertList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            }
+            return collection;
+        }
+        public void DeleteUserSchemeShareExpert(string id)
+        {
+            var strSql = "delete from E_User_SchemeShareExpert where Id=@id";
+            DB.CreateSQLQuery(strSql)
+                   .SetString("@id", id).Excute();
+        }
 
         public BDFXCommisionInfo QueryBDFXCommision(string schemeId)
         {
@@ -749,5 +745,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             return collection;
         }
+        
+        
     }
 }

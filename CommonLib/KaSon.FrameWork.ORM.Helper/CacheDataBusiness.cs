@@ -7,6 +7,7 @@ using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -14,6 +15,7 @@ namespace KaSon.FrameWork.ORM.Helper
 {
     public class CacheDataBusiness : DBbase
     {
+        private static string _baseDir = "";
         public C_Core_Config QueryCoreConfigByKey(string key)
         {
             var RedisKeyH = "CoreConfig_";
@@ -337,6 +339,49 @@ namespace KaSon.FrameWork.ORM.Helper
             entity.ConfigValue = info.ConfigValue;
             entity.CreateTime = DateTime.Now;
             manager.UpdateCoreConfig(entity);
+        }
+
+        public void DeleteSchemeInfoXml(string schemeId)
+        {
+            if (string.IsNullOrEmpty(schemeId)) return;
+            var fileName = GetSchemeFileFullName(schemeId);
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
+        }
+
+        private string GetSchemeFileFullName(string schemeId)
+        {
+            schemeId = schemeId.Trim();
+            var prev = GetSchemeIdPrev(schemeId);
+            var fullName = Path.Combine(_baseDir, "Schemes", prev, schemeId.Substring(0, prev.Length + 3), schemeId + ".xml");
+            return fullName;
+        }
+
+        private string GetSchemeIdPrev(string schemeId)
+        {
+            if (string.IsNullOrEmpty(schemeId)) return string.Empty;
+
+            if (schemeId.StartsWith("TSM", StringComparison.OrdinalIgnoreCase)) { return "TSM"; }
+            else if (schemeId.StartsWith("JCZQ", StringComparison.OrdinalIgnoreCase)) { return "JCZQ"; }
+            else if (schemeId.StartsWith("JCLQ", StringComparison.OrdinalIgnoreCase)) { return "JCLQ"; }
+            else if (schemeId.StartsWith("BJDC", StringComparison.OrdinalIgnoreCase)) { return "BJDC"; }
+            else if (schemeId.StartsWith("CTZQ", StringComparison.OrdinalIgnoreCase)) { return "CTZQ"; }
+            else if (schemeId.StartsWith("DLT", StringComparison.OrdinalIgnoreCase)) { return "DLT"; }
+            else if (schemeId.StartsWith("PL3", StringComparison.OrdinalIgnoreCase)) { return "PL3"; }
+            else if (schemeId.StartsWith("SSQ", StringComparison.OrdinalIgnoreCase)) { return "SSQ"; }
+            else if (schemeId.StartsWith("FC3D", StringComparison.OrdinalIgnoreCase)) { return "FC3D"; }
+            else if (schemeId.StartsWith("CQSSC", StringComparison.OrdinalIgnoreCase)) { return "CQSSC"; }
+            else if (schemeId.StartsWith("JXSSC", StringComparison.OrdinalIgnoreCase)) { return "JXSSC"; }
+            else if (schemeId.StartsWith("SD11X5", StringComparison.OrdinalIgnoreCase)) { return "SD11X5"; }
+            else if (schemeId.StartsWith("GD11X5", StringComparison.OrdinalIgnoreCase)) { return "GD11X5"; }
+            else if (schemeId.StartsWith("JX11X5", StringComparison.OrdinalIgnoreCase)) { return "JX11X5"; }
+            else if (schemeId.StartsWith("GDKLSF", StringComparison.OrdinalIgnoreCase)) { return "GDKLSF"; }
+            else if (schemeId.StartsWith("JSKS", StringComparison.OrdinalIgnoreCase)) { return "JSKS"; }
+            else if (schemeId.StartsWith("SDKLPK3", StringComparison.OrdinalIgnoreCase)) { return "SDKLPK3"; }
+
+            else { return schemeId.Substring(0, 5); }
         }
     }
 }

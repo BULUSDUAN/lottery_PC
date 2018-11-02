@@ -22,7 +22,6 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public C_BankCard BankCardById(string userId)
         {
-
             return DB.CreateQuery<C_BankCard>().Where(p => p.UserId == userId).FirstOrDefault();
         }
 

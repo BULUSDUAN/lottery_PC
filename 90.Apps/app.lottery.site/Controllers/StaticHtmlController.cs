@@ -18,6 +18,8 @@ using System.Threading.Tasks;
 using log4net;
 using Kason.Sg.Core.ProxyGenerator;
 using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers;
+using EntityModel;
+using EntityModel.RequestModel;
 
 namespace app.lottery.site.Controllers
 {
@@ -222,7 +224,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成指定的页面
         /// </summary>
-        public ContentResult BuildSpecificPage()
+        public async Task<ContentResult> BuildSpecificPage()
         {
             try
             {
@@ -241,7 +243,7 @@ namespace app.lottery.site.Controllers
                         //{
 
                         //});
-                        BuildIndex();
+                        await BuildIndex();
                         break;
                     case "11":
                         //中间页面
@@ -384,7 +386,7 @@ namespace app.lottery.site.Controllers
                         break;
                     case "200":
                         //个人博客
-                        error = BuildBlog(key);
+                        error = await BuildBlog(key);
                         break;
                     case "300":
                         //注册页
@@ -454,24 +456,37 @@ namespace app.lottery.site.Controllers
             ViewBag.CurrentUser = CurrentUser;
             //神单排行
             var now = DateTime.Now;
-            ViewBag.RankList = WCFClients.ExternalClient.QueryGSRankList(now.ToString("MM.dd"), now.ToString("MM.dd"), "", "");
+            param.Clear();
+            param["startTime"] = now.ToString("MM.dd"); param["endTime"] = now.ToString("MM.dd"); param["currUserId"] = ""; param["isMyGZ"] = "";
+            ViewBag.RankList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BDFXGSRank_Collection>(param, "api/order/QueryGSRankList");
             //焦点新闻想     
-            ViewBag.FocusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("FocusCMS", "", 0, 10);
+            param.Clear();
+            param["category"] = "FocusCMS"; param["gameCode"] = ""; param["pageIndex"] =0; param["pageSize"] = 10;
+            ViewBag.FocusCMS = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
             //中奖新闻
-            ViewBag.BonusCMS = WCFClients.ExternalClient.QueryArticleList_YouHua("BonusCMS", "", 0, 10);
+            param.Clear();
+            param["category"] = "BonusCMS"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = 10;
+            ViewBag.BonusCMS = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
             //总注册人数
-            ViewBag.TotalUserCount = WCFClients.ExternalClient.QueryUserRegisterCount();
+            param.Clear();
+            ViewBag.TotalUserCount = await serviceProxyProvider.Invoke<int>(param, "api/user/QueryUserRegisterCount");
             //神单红人月/总排行
             var MonthBeginTime = DateTime.Now.AddDays(-30);
             var TotalBeginTime = DateTime.Now.AddDays(-90);
             var endTime = DateTime.Now.AddDays(1);
-            ViewBag.mRankList = WCFClients.GameQueryClient.QueryRankReport_BettingProfit_Sport(MonthBeginTime, endTime, "", "", 0, 10);
-            ViewBag.tRankList = WCFClients.GameQueryClient.QueryRankReport_BettingProfit_Sport(TotalBeginTime, endTime, "", "", 0, 10);
-            ViewBag.LotteryBonus = WCFClients.ExternalClient.QueryLotteryNewBonusInfoList(15);
+
+            param["Model"] = new QueryBonusBase() { fromDate = MonthBeginTime, toDate = endTime,gameCode="", gameType = "", pageIndex = 0, pageSize = 10 };
+            ViewBag.mRankList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BettingProfit_Sport");
+            param.Clear();
+            param["Model"] = new QueryBonusBase() { fromDate = TotalBeginTime, toDate = endTime, gameCode = "", gameType = "", pageIndex = 0, pageSize = 10 };
+            ViewBag.tRankList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BettingProfit_Sport");
+            param.Clear();
+            param["count"] = 15;
+            ViewBag.LotteryBonus = await serviceProxyProvider.Invoke<List<EntityModel.CoreModel.LotteryNewBonusInfo>> (param, "api/data/QueryLotteryNewBonusInfoList");
             BuildViewHtml("Default", tempFilePath);
 
             var realPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "index.html");
-            System.IO.File.Copy(tempFilePath, realPath, true);
+            System.IO.File.Copy(tempFilePath, realPath, true);  
 
         }
 
@@ -487,7 +502,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成中奖排行
         /// </summary>
-        private void BuildBonusDetail()
+        private async void BuildBonusDetail()
         {
             //中奖排行主页
             var indexPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "statichtml", "bonus");
@@ -520,28 +535,49 @@ namespace app.lottery.site.Controllers
 
                         var pageIndex = 0;
                         var pageSize = 30;
+                        Dictionary<string, object> param = new Dictionary<string, object>();
                         switch (type)
                         {
                             case "djph":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankReport_BigBonus_Sport(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BigBonus_Sport");
                                 break;
                             case "fdyl":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankReport_BettingProfit_Sport(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BettingProfit_Sport");
                                 break;
                             case "gdyl":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankReport_JoinProfit_Sport(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BettingProfit_Sport");
                                 break;
                             case "hmrq":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankInfoList_HotTogether(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_RankInfo_HotTogether>(param, "api/data/QueryRankInfoList_HotTogether");
                                 break;
                             case "cgzj":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankInfoList_SuccessOrder_Sport(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankInfoList_SuccessOrder_Sport");
                                 break;
                             case "zdgd":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankInfoList_BeFollowerCount(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_RankInfo_BeFollower>(param, "api/data/QueryRankInfoList_BeFollowerCount");
                                 break;
                             case "ljzj":
-                                ViewBag.FDList = WCFClients.GameQueryClient.QueryRankReport_TotalBonus_Sport(beginTime, endTime, _gameCode, gameType, pageIndex, pageSize);
+                                param.Clear();
+                                param["Model"] = new QueryBonusBase() { fromDate = beginTime, toDate = endTime, gameCode = _gameCode, gameType = gameType, pageIndex = pageIndex, pageSize = pageSize };
+
+                                ViewBag.FDList = await serviceProxyProvider.Invoke<EntityModel.RankReportCollection_TotalBonus_Sport>(param, "api/data/QueryRankReport_TotalBonus_Sport");
                                 break;
                         }
 
@@ -568,7 +604,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成指定彩种的开奖历史
         /// </summary>
-        private void BuildOpenResultHistory_ByGameCode(string gameCode)
+        private async void BuildOpenResultHistory_ByGameCode(string gameCode)
         {
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "statichtml", "lottery");
             if (!Directory.Exists(path))
@@ -579,6 +615,7 @@ namespace app.lottery.site.Controllers
             var historyFullName = "";
             var startTime = DateTime.Today;
             var endTime = startTime.AddDays(1);
+            Dictionary<string, object> param = new Dictionary<string, object>();
             if (gameCode.ToUpper() == "CTZQ")
             {
                 foreach (var gameType in new string[] { "t14c", "tr9", "t6bqc", "t4cjq" })
@@ -586,8 +623,12 @@ namespace app.lottery.site.Controllers
                     ViewBag.GameType = gameType;
                     historyFullName = Path.Combine(path, string.Format("history_{0}_{1}.html", gameCode, gameType));
                     startTime = startTime.AddMonths(-1);
-
-                    ViewBag.NumberHistoryList = WCFClients.ChartClient.QueryGameWinNumberByDate(startTime, endTime, string.Format("{0}_{1}", gameCode, gameType), 0, MaxIssuseCount(ViewBag.GameCode));
+                    param["startTime"] = startTime;
+                    param["endTime"] = endTime;
+                    param["gameCode"] = string.Format("{0}_{1}", gameCode, gameType);
+                    param["pageIndex"] = 0;
+                    param["pageSize"] = MaxIssuseCount(ViewBag.GameCode);
+                    ViewBag.NumberHistoryList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.GameWinNumber_InfoCollection>(param, "api/order/QueryGameWinNumberByDate");
                     BuildViewHtml("lottery/history", historyFullName);
                 }
 
@@ -599,7 +640,12 @@ namespace app.lottery.site.Controllers
                 {
                     startTime = startTime.AddMonths(-1);
                 }
-                ViewBag.NumberHistoryList = WCFClients.ChartClient.QueryGameWinNumberByDate(startTime, endTime, ViewBag.GameCode, 0, MaxIssuseCount(ViewBag.GameCode));
+                param["startTime"] = startTime;
+                param["endTime"] = endTime;
+                param["gameCode"] = ViewBag.GameCode;
+                param["pageIndex"] = 0;
+                param["pageSize"] = MaxIssuseCount(ViewBag.GameCode);
+                ViewBag.NumberHistoryList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.GameWinNumber_InfoCollection>(param, "api/order/QueryGameWinNumberByDate");
                 BuildViewHtml("lottery/history", historyFullName);
             }
         }
@@ -607,7 +653,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成开奖详细
         /// </summary>
-        private void BuildOpenResultDetail_ByGameCode(string currentGameCode)
+        private async void BuildOpenResultDetail_ByGameCode(string currentGameCode)
         {
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "statichtml", "lottery");
             if (!Directory.Exists(path))
@@ -615,10 +661,14 @@ namespace app.lottery.site.Controllers
 
             //数字彩
             var sscArray = new string[] { "ssq", "dlt", "pl3", "fc3d" };
+            Dictionary<string, object> param = new Dictionary<string, object>();
             if (sscArray.Contains(currentGameCode.ToLower()))
             {
-                var sscIssuseArray = WCFClients.GameClient.QueryPrizedIssuseList(currentGameCode, "", 10, UserToken).Split(',');
-                for (int i = 0; i < sscIssuseArray.Length; i++)
+                param["gameCode"] = currentGameCode;
+                param["gameType"] = "";
+                param["length"] = ViewBag.GameCode;
+                var sscIssuseArray = await serviceProxyProvider.Invoke<string>(param, "api/data/QueryPrizedIssuseList");
+                for (int i = 0; i < sscIssuseArray.Split(',').Length; i++)
                 {
                     //最后一期
                     var currentIssuseNumber = sscIssuseArray[i];
@@ -640,8 +690,12 @@ namespace app.lottery.site.Controllers
             var ctzqArray = new string[] { "t14c", "tr9", "t6bqc", "t4cjq" };
             if (ctzqArray.Contains(currentGameCode.ToLower()))
             {
-                var ctzqIssuseArray = WCFClients.GameClient.QueryStopIssuseList("CTZQ", currentGameCode, 5, UserToken).Split(',');
-                for (int i = 0; i < ctzqIssuseArray.Length; i++)
+                param.Clear();
+                param["gameCode"] = "CTZQ";
+                param["gameType"] = currentGameCode;
+                param["length"] = 5;
+                var ctzqIssuseArray = await serviceProxyProvider.Invoke<string>(param, "api/data/QueryStopIssuseList");
+                for (int i = 0; i < ctzqIssuseArray.Split(',').Length; i++)
                 {
                     var ctzqIssuse = ctzqIssuseArray[i];
                     //最后一期
@@ -678,7 +732,9 @@ namespace app.lottery.site.Controllers
                         ViewBag.Type = gameType == "all" ? "" : gameType;
                         ViewBag.Begin = date;
                         ViewBag.IsDefault = false;
-                        ViewBag.Match = WCFClients.GameIssuseClient.QueryJCZQMatchResultByTime(ViewBag.Begin);
+                        param.Clear();
+                        param["time"] = ViewBag.Begin;
+                        ViewBag.Match = await serviceProxyProvider.Invoke<EntityModel.CoreModel.JCZQMatchResult_Collection>(param, "api/order/QueryJCZQMatchResultByTime");
 
                         var tempPath = Path.Combine(path, "jczq", date.ToString("yyyyMM"));
                         if (!Directory.Exists(tempPath))
@@ -706,7 +762,9 @@ namespace app.lottery.site.Controllers
                         ViewBag.Type = gameType == "all" ? "" : gameType;
                         ViewBag.Begin = date;
                         ViewBag.IsDefault = false;
-                        ViewBag.Match = WCFClients.GameIssuseClient.QueryJCLQMatchResultByTime(ViewBag.Begin);
+                        param.Clear();
+                        param["time"] = ViewBag.Begin;
+                        ViewBag.Match = await serviceProxyProvider.Invoke<EntityModel.CoreModel.JCLQMatchResult_Collection>(param, "api/order/QueryJCLQMatchResultByTime");
 
                         var tempPath = Path.Combine(path, "jclq", date.ToString("yyyyMM"));
                         if (!Directory.Exists(tempPath))
@@ -726,8 +784,10 @@ namespace app.lottery.site.Controllers
             //北京单场
             if (currentGameCode.ToLower() == "bjdc")
             {
-                var issuseArray = WCFClients.GameIssuseClient.QueryBJDCLastIssuseNumber(5).Split('|');
-                for (int i = 0; i < issuseArray.Length; i++)
+                param.Clear();
+                param["count"] = 5;
+                var issuseArray = await serviceProxyProvider.Invoke<string>(param, "api/order/QueryBJDCLastIssuseNumber");
+                for (int i = 0; i < issuseArray.Split('|').Length; i++)
                 {
                     var bjdcIssuse = issuseArray[i];
                     var gameTypeArray = new string[] { "all", "spf", "zjq", "sxds", "bf", "bqc" };
@@ -736,7 +796,10 @@ namespace app.lottery.site.Controllers
                         ViewBag.Type = gameType == "all" ? "" : gameType;
                         ViewBag.IssuseList = issuseArray;
                         ViewBag.IssuseNum = bjdcIssuse;
-                        ViewBag.MathList = WCFClients.GameIssuseClient.QueryBJDC_MatchResultList(bjdcIssuse);
+
+                        param.Clear();
+                        param["issuseNumber"] = bjdcIssuse;
+                        ViewBag.MathList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BJDCMatchResultInfo_Collection>(param, "api/order/QueryBJDC_MatchResultList");
 
                         var detailFullName = Path.Combine(path, string.Format("detail_bjdc_{0}_{1}.html", gameType, bjdcIssuse));
                         BuildViewHtml("lottery/newbjdc", detailFullName);
@@ -789,7 +852,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成指定彩种的最新开奖号
         /// </summary>
-        private void BuildLotteryNewNumber_ByGameCode(string gameCode)
+        private async void BuildLotteryNewNumber_ByGameCode(string gameCode)
         {
             var gameCodeArray = new string[] { "CQSSC", "JX11X5", "SSQ", "DLT", "FC3D", "PL3", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" };
             if (!gameCodeArray.Contains(gameCode)) return;
@@ -799,9 +862,10 @@ namespace app.lottery.site.Controllers
                 Directory.CreateDirectory(path);
 
             #region 所有彩种生成到同一个文件
-
+            Dictionary<string, object> param = new Dictionary<string, object>();
             var list = new List<GameWinNumberInfo>();
-            var info = WCFClients.ChartClient.QueryNewWinNumber(gameCode);
+            param["gameCode"] = gameCode;
+            var info = await serviceProxyProvider.Invoke<EntityModel.CoreModel.GameWinNumber_Info>(param, "api/data/QueryNewWinNumber");
             if (info != null)
             {
                 var fileFullPath = Path.Combine(path, "lottery_new_number.json");
@@ -834,7 +898,12 @@ namespace app.lottery.site.Controllers
             #region 某彩种最新N条开奖号
 
             var openList = new List<GameWinNumberInfo>();
-            WCFClients.ChartClient.QueryGameWinNumber(gameCode, 0, 10).List.ForEach((o) =>
+            param.Clear();
+            param["gameCode"] = gameCode;
+            param["pageIndex"] = 0;
+            param["pageSize"] = 10;
+            var lists = await serviceProxyProvider.Invoke<EntityModel.CoreModel.GameWinNumber_InfoCollection>(param, "api/data/QueryGameWinNumber");
+            lists.List.ForEach((o) =>
             {
                 openList.Add(new GameWinNumberInfo
                 {
@@ -875,7 +944,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成 资讯首页 和 分类列表页
         /// </summary>
-        private void BuildZiXunIndexAndCategoryPage()
+        private async void BuildZiXunIndexAndCategoryPage()
         {
             #region 资讯页首页
 
@@ -883,18 +952,52 @@ namespace app.lottery.site.Controllers
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             var zixunIndexFileName = Path.Combine(path, "index.html");
-            ViewBag.jdxw = WCFClients.ExternalClient.QueryArticleList_YouHua("FocusCMS", "", 0, 6);
-            ViewBag.ssdp = WCFClients.ExternalClient.QueryArticleList_YouHua("Match_Comment", "", 0, 7);
-            ViewBag.szc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "SSQ|FC3D|DLT|PL3|CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3", 0, 7);
-            ViewBag.gpc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3", 0, 7);
-            ViewBag.jjc = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JCZQ|JCLQ", 0, 7);
-            ViewBag.s_d = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "SSQ|DLT", 0, 7);
-            ViewBag.z_s_l = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "T14C|TR9|T6BQC|T4CJQ", 0, 7);
-            ViewBag.z_j = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JCLQ|BJDC", 0, 7);
-            ViewBag.f_p = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "FC3D|PL3|PL5", 0, 7);
-            ViewBag.zjxw = WCFClients.ExternalClient.QueryArticleList_YouHua("BonusCMS", "", 0, 5);
-            ViewBag.r_cpbk = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_Know", "", 0, 10);
-            ViewBag.Ads = WCFClients.ExternalClient.QuerySitemessageBanngerList_Web(BannerType.Index_ZiXun);
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["category"] = "FocusCMS"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = 6;
+            ViewBag.jdxw = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Match_Comment"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = 7;
+            ViewBag.ssdp = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_GameCode"; param["gameCode"] = "SSQ|FC3D|DLT|PL3|CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3"; param["pageIndex"] = 0; param["pageSize"] = 7;
+            ViewBag.szc = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_GameCode"; param["gameCode"] = "CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3"; param["pageIndex"] = 0; param["pageSize"] = 7;
+           
+            ViewBag.gpc = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_GameCode"; param["gameCode"] = "JCZQ|JCLQ"; param["pageIndex"] = 0; param["pageSize"] = 7;
+
+            ViewBag.jjc = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_GameCode"; param["gameCode"] = "SSQ|DLT"; param["pageIndex"] = 0; param["pageSize"] = 7;
+
+            ViewBag.s_d = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_GameCode"; param["gameCode"] = "T14C|TR9|T6BQC|T4CJQ"; param["pageIndex"] = 0; param["pageSize"] = 7;
+
+            ViewBag.z_s_l = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_GameCode"; param["gameCode"] = "JCLQ|BJDC"; param["pageIndex"] = 0; param["pageSize"] = 7;
+
+            ViewBag.z_j = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_GameCode"; param["gameCode"] = "FC3D|PL3|PL5"; param["pageIndex"] = 0; param["pageSize"] = 7;
+
+            ViewBag.f_p = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "BonusCMS"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = 5;
+
+            ViewBag.zjxw = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["category"] = "Lottery_Know"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = 10;
+
+            ViewBag.r_cpbk = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+            param.Clear();
+            param["bannerType"] = BannerType.Index_ZiXun;
+            param["returnRecord"] = 10;
+            
+            ViewBag.Ads = await serviceProxyProvider.Invoke<EntityModel.CoreModel.SiteMessageBannerInfo_Collection>(param, "api/data/QuerySitemessageBanngerList_Web");
             BuildViewHtml("zixun/HotCaiXun", zixunIndexFileName);
 
             #endregion
@@ -906,57 +1009,91 @@ namespace app.lottery.site.Controllers
                 var categoryPath = Path.Combine(path, c);
                 if (!Directory.Exists(categoryPath))
                     Directory.CreateDirectory(categoryPath);
-
+             
                 var pageIndex = 0;
                 var pageSize = 30;
                 var totalCount = 0;
+              
+               
                 while (true)
                 {
-                    ArticleInfo_QueryCollection data = null;
+                    EntityModel.CoreModel.ArticleInfo_QueryCollection data = null;
                     switch (c)
                     {
                         case "jdxw":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("FocusCMS", "", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "FocusCMS"; param["gameCode"] = ""; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                             totalCount = data.TotalCount;
                             break;
                         case "ssdp":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("Match_Comment", "", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "Match_Comment"; param["gameCode"] = ""; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                             totalCount = data.TotalCount;
                             break;
                         case "szczx":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "SSQ|FC3D|DLT|PL3|CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "Lottery_GameCode"; param["gameCode"] = "SSQ|FC3D|DLT|PL3|CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3"; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                             totalCount = data.TotalCount;
                             break;
                         case "gpczx":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "Lottery_GameCode"; param["gameCode"] = "CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3"; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                             totalCount = data.TotalCount;
                             break;
                         case "jjczx":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JCZQ|JCLQ", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "Lottery_GameCode"; param["gameCode"] = "JCZQ|JCLQ"; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                             totalCount = data.TotalCount;
                             break;
                         case "ssq_dlt":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "SSQ|DLT", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "Lottery_GameCode"; param["gameCode"] = "SSQ|DLT"; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                             totalCount = data.TotalCount;
                             break;
                         case "zc_siliu":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "T14C|TR9|T6BQC|T4CJQ", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "Lottery_GameCode"; param["gameCode"] = "T14C|TR9|T6BQC|T4CJQ"; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                             totalCount = data.TotalCount;
                             break;
                         case "zd_jl":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JCLQ|BJDC", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "Lottery_GameCode"; param["gameCode"] = "JCLQ|BJDC"; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
+
                             totalCount = data.TotalCount;
                             break;
                         case "fc3d_pl3_pl5":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "FC3D|PL3|PL5", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "Lottery_GameCode"; param["gameCode"] = "FC3D|PL3|PL5"; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                             totalCount = data.TotalCount;
                             break;
                         case "zjxw":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("BonusCMS", "", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "BonusCMS"; param["gameCode"] = ""; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                             totalCount = data.TotalCount;
                             break;
                         case "cpbk":
-                            data = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_Know", "", pageIndex, pageSize);
+                            param.Clear();
+                            param["category"] = "Lottery_Know"; param["gameCode"] = ""; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+                            data = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                             totalCount = data.TotalCount;
                             break;
                         default:
@@ -987,7 +1124,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成资讯明细
         /// </summary>
-        private void BuildZiXunDetail()
+        private async void BuildZiXunDetail()
         {
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "statichtml", "zixun");
             if (!Directory.Exists(path))
@@ -996,83 +1133,108 @@ namespace app.lottery.site.Controllers
             #region 查询11个类型的前N条最新资讯
 
             var topNumber = 7;
-            var totalCategoryArticleList = new ArticleInfo_QueryCollection();
+            var totalCategoryArticleList = new EntityModel.CoreModel.ArticleInfo_QueryCollection();
+            Dictionary<string, object> param = new Dictionary<string, object>();
             foreach (var c in new string[] { "jdxw", "ssdp", "szczx", "gpczx", "jjczx", "ssq_dlt", "zc_siliu", "zd_jl", "fc3d_pl3_pl5", "zjxw", "cpbk" })
             {
                 switch (c)
                 {
                     case "jdxw":
-                        var topN_jdxw = WCFClients.ExternalClient.QueryArticleList_YouHua("FocusCMS", "", 0, topNumber);
+                        param["category"] = "FocusCMS"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+                        var topN_jdxw = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_jdxw.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
                         }
                         break;
                     case "ssdp":
-                        var topN_ssdp = WCFClients.ExternalClient.QueryArticleList_YouHua("Match_Comment", "", 0, topNumber);
+                        param.Clear();
+                        param["category"] = "Match_Comment"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+                        var topN_ssdp = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_ssdp.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
                         }
                         break;
                     case "szczx":
-                        var topN_szczx = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "SSQ|FC3D|DLT|PL3|CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3", 0, topNumber);
+                        param.Clear();
+                        param["category"] = "Lottery_GameCode"; param["gameCode"] = "SSQ|FC3D|DLT|PL3|CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3"; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+                        var topN_szczx = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_szczx.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
                         }
                         break;
                     case "gpczx":
-                        var topN_gpczx = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3", 0, topNumber);
+                        param.Clear();
+                        param["category"] = "Lottery_GameCode"; param["gameCode"] = "CQSSC|JX11X5|SD11X5|GD11X5|GDKLSF|JSKS|SDKLPK3"; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+
+                        var topN_gpczx = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_gpczx.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
                         }
                         break;
                     case "jjczx":
-                        var topN_jjczx = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JCZQ|JCLQ", 0, topNumber);
+                        param.Clear();
+                        param["category"] = "Lottery_GameCode"; param["gameCode"] = "JCZQ|JCLQ"; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+
+                        var topN_jjczx = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_jjczx.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
                         }
                         break;
                     case "ssq_dlt":
-                        var topN_ssq_dlt = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "SSQ|DLT", 0, topNumber);
+                        param.Clear();
+                        param["category"] = "Lottery_GameCode"; param["gameCode"] = "SSQ|DLT"; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+
+                        var topN_ssq_dlt = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_ssq_dlt.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
                         }
                         break;
                     case "zc_siliu":
-                        var topN_zc_siliu = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "T14C|TR9|T6BQC|T4CJQ", 0, topNumber);
+                        param.Clear();
+                        param["category"] = "Lottery_GameCode"; param["gameCode"] = "T14C|TR9|T6BQC|T4CJQ"; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+                        var topN_zc_siliu = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_zc_siliu.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
                         }
                         break;
                     case "zd_jl":
-                        var topN_zd_jl = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "JCLQ|BJDC", 0, topNumber);
+                        param.Clear();
+                        param["category"] = "Lottery_GameCode"; param["gameCode"] = "JCLQ|BJDC"; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+                        var topN_zd_jl = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_zd_jl.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
                         }
                         break;
                     case "fc3d_pl3_pl5":
-                        var topN_fc3d_pl3_pl5 = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_GameCode", "FC3D|PL3|PL5", 0, topNumber);
+                        param.Clear();
+                        param["category"] = "Lottery_GameCode"; param["gameCode"] = "FC3D|PL3|PL5"; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+                        var topN_fc3d_pl3_pl5 = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_fc3d_pl3_pl5.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
                         }
                         break;
                     case "zjxw":
-                        var topN_zjxw = WCFClients.ExternalClient.QueryArticleList_YouHua("BonusCMS", "", 0, topNumber);
+                        param.Clear();
+                        param["category"] = "BonusCMS"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+                        var topN_zjxw = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_zjxw.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
                         }
                         break;
                     case "cpbk":
-                        var topN_cpbk = WCFClients.ExternalClient.QueryArticleList_YouHua("Lottery_Know", "", 0, topNumber);
+                        param.Clear();
+                        param["category"] = "Lottery_Know"; param["gameCode"] = ""; param["pageIndex"] = 0; param["pageSize"] = topNumber;
+                        var topN_cpbk = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/data/QueryArticleList_YouHua");
                         foreach (var item in topN_cpbk.ArticleList)
                         {
                             totalCategoryArticleList.ArticleList.Add(item);
@@ -1096,7 +1258,10 @@ namespace app.lottery.site.Controllers
             var pageSize = 25;
             while (true)
             {
-                var list = WCFClients.ExternalClient.QueryNoStaticPathArticleList(pageIndex, pageSize);
+                param.Clear();
+                param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+                var list = await serviceProxyProvider.Invoke<EntityModel.CoreModel.ArticleInfo_QueryCollection>(param, "api/order/QueryNoStaticPathArticleList");
                 foreach (var item in list.ArticleList)
                 {
                     BuildArticleDetail(item, path);
@@ -1113,7 +1278,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成一条资讯详细
         /// </summary>
-        private void BuildArticleDetail(ArticleInfo_Query info, string path)
+        private void BuildArticleDetail(EntityModel.CoreModel.ArticleInfo_Query info, string path)
         {
             var detailPath = Path.Combine(path, "details", info.CreateTime.ToString("yyyyMMdd"));
             if (!Directory.Exists(detailPath))
@@ -1133,7 +1298,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 查找文章小分类
         /// </summary>
-        private string FindArticleCategory(ArticleInfo_Query info)
+        private string FindArticleCategory(EntityModel.CoreModel.ArticleInfo_Query info)
         {
             switch (info.Category)
             {
@@ -1162,7 +1327,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成公告
         /// </summary>
-        private void BuildBulletin()
+        private async void BuildBulletin()
         {
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "statichtml", "bulletin");
             if (!Directory.Exists(path))
@@ -1173,11 +1338,16 @@ namespace app.lottery.site.Controllers
 
             var pageIndex = 0;
             var pageSize = 30;
+            Dictionary<string, object> param = new Dictionary<string, object>();
             while (true)
             {
                 //公告列表
                 var fileFullPath = Path.Combine(path, string.Format("notice_list_{0}.html", pageIndex));
-                var list = WCFClients.ExternalClient.QueryDisplayBulletinCollection(BulletinAgent.Local, pageIndex, pageSize, UserToken);
+                param.Clear();
+                param["agent"] = EntityModel.Enum.BulletinAgent.Local;
+                param["pageIndex"] = pageIndex;
+                param["pageSize"] = pageSize;
+                var list = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BulletinInfo_Collection>(param, "api/data/QueryDisplayBulletinCollection");
                 ViewBag.NoticeList = list;
                 ViewBag.PageIndex = pageIndex;
                 ViewBag.PageSize = pageSize;
@@ -1188,8 +1358,15 @@ namespace app.lottery.site.Controllers
                 foreach (var notice in list.BulletinList)
                 {
                     //公告详细
-                    ViewBag.NoticeList = WCFClients.ExternalClient.QueryDisplayBulletinCollection(BulletinAgent.Local, 0, 10, UserToken);
-                    ViewBag.Notice = WCFClients.ExternalClient.QueryDisplayBulletinDetailById(notice.Id);
+                    param.Clear();
+                    param["agent"] = EntityModel.Enum.BulletinAgent.Local;
+                    param["pageIndex"] = 0;
+                    param["pageSize"] = 10;
+                    ViewBag.NoticeList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BulletinInfo_Collection>(param, "api/data/QueryDisplayBulletinCollection");
+                    param.Clear();
+                    param["bulletinId"] = notice.Id;
+                    ViewBag.Notice = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BulletinInfo_Query>(param, "api/data/QueryDisplayBulletinDetailById");
+
                     var detailFileFullPath = Path.Combine(detailPath, string.Format("{0}.html", notice.Id));
                     BuildViewHtml("zixun/notice", detailFileFullPath);
                 }
@@ -3109,7 +3286,7 @@ namespace app.lottery.site.Controllers
         /// <summary>
         /// 生成个人博客主页
         /// </summary>
-        private string BuildBlog(string userId)
+        private async Task<string> BuildBlog(string userId)
         {
             var log = new List<string>();
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "statichtml", "blog", userId);
@@ -3118,15 +3295,30 @@ namespace app.lottery.site.Controllers
 
             var pageIndex = 0;
             var pageSize = 1000;
+            Dictionary<string, object> param = new Dictionary<string, object>();
+            param["UserId"] = userId;
+            var userInfo = await serviceProxyProvider.Invoke<EntityModel.ProfileUserInfo>(param, "api/user/QueryProfileUserInfo");
 
-            var userInfo = WCFClients.GameClient.QueryProfileUserInfo(userId);
-            var bonuslevel = WCFClients.GameClient.QueryProfileBonusLevelInfo(userId);
-            var datareport = WCFClients.GameClient.QueryProfileDataReport(userId);
-            var bonusListZj = WCFClients.GameClient.QueryProfileLastBonusCollection(userId);
-            var count = WCFClients.GameQueryClient.QueryTogetherFollowerCount(userId);
-            var billlist = WCFClients.GameClient.QueryUserBeedingList("", "", userId, string.Empty, 0, 100, QueryUserBeedingListOrderByProperty.TotalBonusMoney, OrderByCategory.DESC, UserToken);
-            var totalBonusList = WCFClients.GameQueryClient.QueryBonusInfoList(userId, "", "", "", "", "", pageIndex, pageSize, UserToken);
-            var totalCurrentOrder = WCFClients.GameClient.QueryUserCurrentOrderList(userId, "", UserToken, pageIndex, pageSize);
+            var bonuslevel = await serviceProxyProvider.Invoke<EntityModel.ProfileBonusLevelInfo>(param, "api/user/QueryProfileBonusLevelInfo");
+
+            var datareport = await serviceProxyProvider.Invoke<EntityModel.ProfileDataReport>(param, "api/user/QueryProfileDataReport");
+
+            var bonusListZj = await serviceProxyProvider.Invoke<EntityModel.ProfileLastBonusCollection>(param, "api/user/QueryProfileLastBonusCollection");
+            param.Clear();
+            param["createUserId"] = userId;
+            var count = await serviceProxyProvider.Invoke<int>(param, "api/user/QueryTogetherFollowerCount");
+            param.Clear();
+            param["gameCode"] = ""; param["gameType"] = ""; param["userId"] = userId; param["userDisplayName"] = string.Empty; param["pageIndex"] = 0;
+            param["pageSize"] = 100; param["property"] = EntityModel.Enum.QueryUserBeedingListOrderByProperty.TotalBonusMoney; param["category"] = EntityModel.Enum.OrderByCategory.DESC;
+            var billlist = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserBeedingListInfoCollection>(param, "api/user/QueryUserBeedingList");
+            param.Clear();
+            var model = new QueryBonusInfoListParam { userId= userId,gameCode="",gameType="",issuseNumber="",completeData=0,key="", pageIndex=pageIndex,pageSize=pageSize };
+            param["Model"] = model;
+            var totalBonusList = await serviceProxyProvider.Invoke<EntityModel.CoreModel.BonusOrderInfoCollection>(param, "api/order/QueryBonusInfoList");
+            param.Clear();
+            param["UserId"] = userId; param["gameCode"] = ""; param["pageIndex"] = pageIndex; param["pageSize"] = pageSize;
+
+            var totalCurrentOrder = await serviceProxyProvider.Invoke<EntityModel.CoreModel.UserCurrentOrderInfoCollection>(param, "api/user/QueryUserCurrentOrderList");
 
 
             var gameCodeArray = new string[] { "SZC", "CTZQ", "BJDC", "JCZQ", "JCLQ" };
@@ -3157,8 +3349,8 @@ namespace app.lottery.site.Controllers
 
                 foreach (var gameType in gameTypeArray)
                 {
-                    var bonusList = new List<BonusOrderInfo>();
-                    var currentOrder = new List<UserCurrentOrderInfo>();//合买
+                    var bonusList = new List<EntityModel.CoreModel.BonusOrderInfo>();
+                    var currentOrder = new List<EntityModel.CoreModel.UserCurrentOrderInfo>();//合买
                     try
                     {
                         var currentPageSize = 30;

@@ -12,10 +12,8 @@ namespace KaSon.FrameWork.ORM.Helper
 {
     public class LoginLocalManager : DBbase
     {
-        public List<UserSysData> QueryUserList(DateTime regFrom, DateTime regTo, string keyType, string keyValue, bool? isEnable, bool? isFillMoney, bool? isUserType, bool? isAgent
-            , string commonBlance, string bonusBlance, string freezeBlance, string vipRange, string comeFrom, string agentId, int pageIndex, int pageSize,
-            out int totalCount, out decimal totalFillMoneyBalance, out decimal totalBonusBalance, out decimal totalCommissionBalance,
-            out decimal totalExpertsBalance, out decimal totalFreezeBalance, out decimal totalRedBagBalance, out int totalDouDou, out decimal totalCPSBalance, string strOrderBy = "", int UserCreditType = -1)
+        public UserSysDataCollection QueryUserList(DateTime regFrom, DateTime regTo, string keyType, string keyValue, bool? isEnable, bool? isFillMoney, bool? isUserType, bool? isAgent
+            , string commonBlance, string bonusBlance, string freezeBlance, string vipRange, string comeFrom, string agentId, int pageIndex, int pageSize,string strOrderBy = "", int UserCreditType = -1)
         {
             #region 构造查询语句
 
@@ -200,29 +198,22 @@ namespace KaSon.FrameWork.ORM.Helper
             sqlBuilder_query.AppendLine(string.Format(") AS T WHERE [RowNumber] > {0} AND [RowNumber] <= {1}", pageIndex * pageSize, (pageIndex + 1) * pageSize));
             sqlBuilder_query.AppendLine(") tab order by " + orderBy + "");
 
-            var totalModel = DB.CreateSQLQuery(sqlBuilder_count.ToString()) as UserSysCount;
-            totalCount = 0;
-            totalFillMoneyBalance = 0M;
-            totalBonusBalance = 0M;
-            totalCommissionBalance = 0M;
-            totalExpertsBalance = 0M;
-            totalFreezeBalance = 0M;
-            totalRedBagBalance = 0M;
-            totalDouDou = 0;
-            totalCPSBalance = 0M;
-            if (totalModel != null)
+            var result = new UserSysDataCollection();
+            var totalModel = DB.CreateSQLQuery(sqlBuilder_count.ToString()).First<UserSysCount>();
+            if (totalModel!=null)
             {
-                totalCount = totalModel.TotalCount;
-                totalFillMoneyBalance = totalModel.FillMoneyBalance;
-                totalBonusBalance = totalModel.BonusBalance;
-                totalCommissionBalance = totalModel.CommissionBalance;
-                totalExpertsBalance = totalModel.ExpertsBalance;
-                totalFreezeBalance = totalModel.FreezeBalance;
-                totalRedBagBalance = totalModel.RedBagBalance;
-                totalDouDou = totalModel.DouDou;
-                totalCPSBalance = totalModel.CPSBalance;
+                result.TotalCount = totalModel.TotalCount;
+                result.TotalFillMoneyBalance = totalModel.FillMoneyBalance;
+                result.TotalBonusBalance = totalModel.BonusBalance;
+                result.TotalCommissionBalance = totalModel.CommissionBalance;
+                result.TotalExpertsBalance = totalModel.ExpertsBalance;
+                result.TotalFreezeBalance = totalModel.FreezeBalance;
+                result.TotalRedBagBalance = totalModel.RedBagBalance;
+                result.TotalDouDou = totalModel.DouDou;
+                result.TotalCPSBalance = totalModel.CPSBalance;
             }
-            return DB.CreateSQLQuery(sqlBuilder_query.ToString()).List<UserSysData>().ToList();
+            result.List=DB.CreateSQLQuery(sqlBuilder_query.ToString()).List<UserSysData>().ToList();
+            return result;
         }
         public NotOnlineUserCollection QueryNotOnlineRecentlyList(int days, int pageIndex, int pageSize)
         {
@@ -230,7 +221,7 @@ namespace KaSon.FrameWork.ORM.Helper
             string countSql = @"select Count(*) from (select UserId from C_User_Register where IsFillMoney=1 and IsEnable=1
   except
 SELECT distinct UserId from E_Blog_UserLoginHistory where DATEDIFF(DAY,LoginTime,CURRENT_TIMESTAMP)<=@days) as a";
-            result.TotalCount = DB.CreateSQLQuery(countSql).SetInt("@days", days).First<int>();
+            result.TotalCount = SDB.CreateSQLQuery(countSql).SetInt("@days", days).First<int>();
 
             string querySql = @"with filluser AS(
  select UserId from C_User_Register where IsFillMoney=1 and IsEnable=1
@@ -257,7 +248,7 @@ left join E_Blog_DataReport eb on f.userId=eb.UserId
 left join C_User_Balance cu on f.userId=cu.UserId
 left join wmoney wm on f.userId=wm.UserId)
 AS T WHERE RowNumber > @skipsize AND RowNumber <= @maxsize";
-            var array = DB.CreateSQLQuery(querySql)
+            var array = SDB.CreateSQLQuery(querySql)
                  .SetInt("@days", days)
                  .SetInt("@skipsize", pageIndex * pageSize)
                  .SetInt("@maxsize", (pageIndex + 1) * pageSize).List<NotOnlineUser>();
@@ -286,7 +277,7 @@ AS T WHERE RowNumber > @skipsize AND RowNumber <= @maxsize";
 left join  C_User_Balance cu on c.userId = cu.UserId
 left join(
   select UserId, SUM(RequestMoney)as chongzhi from C_FillMoney
-where Status = 1 and UserId = :useId
+where Status = 1 and UserId = @useId
 group by UserId
   ) as fi on c.UserId = fi.UserId
 left join E_Blog_DataReport eb on c.userId = eb.UserId
@@ -321,6 +312,7 @@ left join E_Blog_DataReport eb on c.userId = eb.UserId
                string.Format("赠送回归红包{0:N2}元", theItem.GiveRedPackets), RedBagCategory.Activity, operatorId);
                 str += string.Format("红包{0:N2}元", theItem.GiveRedPackets);
             }
+            //DB.Dispose
             return str;
         }
         public NotOnlineUserCollection QueryNotOnlineRecentlyList(int days, int pageIndex, int pageSize, string theEarnings)

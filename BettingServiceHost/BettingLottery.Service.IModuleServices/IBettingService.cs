@@ -87,5 +87,12 @@ namespace BettingLottery.Service.IModuleServices
 
         [Service(Date = "2018-10-24", Director = "lidi", Name = "查询必要数据")]
         Task<string> GetAllConfigValue();
+
+        [Service(Date = "2018-10-29", Director = "renjun", Name = "购买用户保存订单")]
+        Task<CommonActionResult> BettingUserSavedOrder(string schemeId, string balancePassword, decimal redBagMoney, string userId);
+        [Service(Date = "2018-10-29", Director = "renjun", Name = "发起单式合买")]
+        Task<CommonActionResult> CreateSingleSchemeTogether(SingleScheme_TogetherSchemeInfo info, string balancePassword, string userId);
+        [Service(Date = "2018-10-30", Director = "renjun", Name = "单式投注和追号")]
+        Task<CommonActionResult> SingleSchemeBettingAndChase(SingleSchemeInfo info, string password, decimal redBagMoney, string userId);
     }
 }

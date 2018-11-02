@@ -124,7 +124,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public void AddOCAgent(OCAgentCategory category, string parentUserId, string userId, CPSMode cpsmode)
         {
-                DB.Begin();
+                //DB.Begin();
                 if (parentUserId == userId)
                     throw new Exception("不能将自己添加为自己的上级代理");
                 var balanceManager = new UserBalanceManager();
@@ -224,7 +224,281 @@ namespace KaSon.FrameWork.ORM.Helper
                         });
                     }
                 }
-                DB.Commit();
+               // DB.Commit();
+        }
+        /// <summary>
+        /// 查询代理销售充值注册量明细汇总
+        /// </summary>
+        public OCAagentDetailInfoCollection QueryAgentDetail(string agentId, string gameCode, DateTime starTime, DateTime endTime, int pageIndex, int pageSize, bool isRecharge)
+        {
+            var collection = new OCAagentDetailInfoCollection();
+            collection = new OCAgentManager().QueryAgentDetail(agentId, gameCode, starTime, endTime, pageIndex, pageSize, isRecharge);
+            return collection;
+        }
+
+        /// <summary>
+        /// 对已派奖订单返点
+        /// </summary>
+        public void AgentPayIn_CompateOrder(string schemeId)
+        {
+            string currentUserId = string.Empty;
+            decimal currentBetMoney = 0M;
+            string currentGameCode = string.Empty;
+            bool currentIsAgent = false;
+
+            //查询订单信息
+            var sportsManager = new Sports_Manager();
+            var manager = new SchemeManager();
+            var order = sportsManager.QuerySports_Order_Complate(schemeId);
+            if (order == null)
+                throw new LogicException(string.Format("找不到已派奖订单 ：{0} ", schemeId));
+            if (order.IsPayRebate)
+                throw new LogicException(string.Format("订单{0}已执行返点", schemeId));
+            if (order.TicketStatus != (int)TicketStatus.Ticketed)
+                throw new LogicException("订单未出票完成，不能返点");
+
+            var orderDetail = sportsManager.QueryOrderDetailBySchemeId(schemeId);
+            if (orderDetail == null)
+                throw new LogicException(string.Format("找不到订单 ：{0} ", schemeId));
+
+
+            DB.Begin();
+                if (order.IsVirtualOrder)
+                {
+                    //虚订单，只修改状态
+                    order.IsPayRebate = true;
+                    sportsManager.UpdateSports_Order_Complate(order);
+                }
+                else
+                {
+                    //真实订单，处理返点数据
+                    var gameCode = order.GameCode.ToUpper();
+                    var gameType = order.GameType.ToUpper();
+                    var userId = order.UserId;
+
+                    var msg = string.Empty;
+                    //合买判断
+                    if (order.SchemeType == (int)SchemeType.TogetherBetting)
+                    {
+                        var main = sportsManager.QuerySports_Together(schemeId);
+                        if (main == null)
+                        {
+                            msg = string.Format("找不到合买订单:{0}", schemeId);
+                            //throw new Exception(string.Format("找不到合买订单:{0}", schemeId));
+                        }
+                        //if (main.ProgressStatus != TogetherSchemeProgress.Finish)
+                        //    throw new Exception(string.Format("合买订单:{0} 状态不正确", schemeId));
+                        var sysJoinEntity = sportsManager.QuerySports_TogetherJoin(schemeId, TogetherJoinType.SystemGuarantees);
+                        if (sysJoinEntity != null && sysJoinEntity.RealBuyCount > 0)
+                        {
+                            msg = "网站参与保底，不返点";
+                            //throw new Exception("网站参与保底，不返点");
+                        }
+
+                        if (main.SoldCount + main.Guarantees < main.TotalCount)
+                            throw new Exception("订单未满员，不执行返点");
+                        //realMoney -= main.SystemGuarantees * main.Price;
+                    }
+
+                    var realMoney = 0M; ;
+                    var totalPayRebateMoney = 0M;
+                    var agentManager = new OCAgentManager();
+                    if (string.IsNullOrEmpty(msg))
+                    {
+                        //没有异常，执行返点
+                        var noGameTypeArray = new string[] { "CQSSC", "JX11X5", "SSQ", "DLT", "FC3D", "PL3", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" };
+                        if (noGameTypeArray.Contains(gameCode))
+                            gameType = string.Empty;
+
+                        //真实投注金额，订单成功金额
+                        realMoney = order.TotalMoney;
+                        //查询用户自身返点
+                        var balanceManager = new UserBalanceManager();
+                        var user = balanceManager.QueryUserRegister(userId);
+                        currentIsAgent = user.IsAgent;
+
+                        //去掉红包参与金额
+                        var redBagJoinMoney = order.RedBagMoney;// new FundManager().QuerySchemeRedBagTotalJoinMoney(schemeId);
+                        //var redBagJoinMoney = new FundManager().QuerySchemeRedBagTotalJoinMoney(schemeId);
+                        realMoney -= redBagJoinMoney;
+                        //递归调用
+                        int rebateType = 0;
+                        var arrGameCode = new string[] { "JCZQ", "JCLQ", "BJDC" };
+                        if (!string.IsNullOrEmpty(order.PlayType) && arrGameCode.Contains(order.GameCode))
+                        {
+                            if (order.PlayType == "1_1")
+                                rebateType = 1;
+                        }
+                        totalPayRebateMoney = PayOrderRebate(agentManager, user, schemeId, userId, (SchemeType)order.SchemeType, gameCode, gameType, order.TotalMoney, realMoney, 0, rebateType);
+                    }
+
+                    order.IsPayRebate = true;
+                    //order.RealPayRebateMoney = realMoney;
+                    var agentRebate = agentManager.QueryOCAgentDefaultRebate(userId, gameCode, gameType, CPSMode.PayRebate);
+                    if (agentRebate != null)
+                    {
+                        //自身有返点
+                        var payMoney = realMoney * agentRebate.Rebate / 100;
+                        if (payMoney > 0)
+                        {
+                            order.RealPayRebateMoney = payMoney;
+                            orderDetail.RealPayRebateMoney = payMoney;
+                        }
+                    }
+                    order.TotalPayRebateMoney = totalPayRebateMoney;
+                    order.TicketLog += msg;
+                    sportsManager.UpdateSports_Order_Complate(order);
+
+                    orderDetail.TotalPayRebateMoney = totalPayRebateMoney;
+                    manager.UpdateOrderDetail(orderDetail);
+                }
+
+            DB.Commit();
+                currentUserId = order.UserId;
+                currentBetMoney = order.SuccessMoney;
+                currentGameCode = order.GameCode;
+            
+            //计算代理销量
+            CalculationAgentSales(currentUserId, currentGameCode, currentBetMoney, currentIsAgent, 0);
+        }
+
+        //计算用户自身返点
+        public decimal PayOrderRebate(OCAgentManager manager, C_User_Register currentUser, string schemeId, string orderUserId, SchemeType schemeType,
+            string gameCode, string gameType, decimal totalOrderMoney, decimal realMoney, decimal payedRebate, int rebateType)
+        {
+            var totalPayRebateMoney = 0M;
+            if (realMoney <= 0M)
+                return totalPayRebateMoney;
+            if (currentUser == null)
+                return totalPayRebateMoney;
+            if (currentUser.UserId == currentUser.AgentId)
+                return totalPayRebateMoney;
+
+            //var agentRebate = manager.QueryOCAgentDefaultRebate(currentUser.UserId, gameCode, gameType);
+            var agentRebate = manager.QueryOCAgentDefaultRebateByRebateType(currentUser.UserId, gameCode, gameType, rebateType);
+            if (agentRebate != null)
+            {
+                if (agentRebate.CPSMode != (int)CPSMode.PayRebate)
+                    return totalPayRebateMoney;
+                //自身有返点
+                var currentPayRebate = (agentRebate.Rebate - payedRebate);
+                var payMoney = realMoney * currentPayRebate / 100;
+                var remark = string.Format("订单{0}出票成功,返利{1:N2}%，共{2:N2}元。", schemeId, currentPayRebate, payMoney);
+                payedRebate = agentRebate.Rebate;
+                totalPayRebateMoney += payMoney;
+                if (payMoney <= 0)
+                {
+                    if (string.IsNullOrEmpty(currentUser.AgentId))
+                        return totalPayRebateMoney;
+                    var balance = new UserBalanceManager();
+                    var p = balance.QueryUserRegister(currentUser.AgentId);
+                    return totalPayRebateMoney + PayOrderRebate(manager, p, schemeId, orderUserId, schemeType, gameCode, gameType, totalOrderMoney, realMoney, payedRebate, rebateType);
+                }
+                //添加佣金
+                //BusinessHelper.Payin_To_Balance(AccountType.CPS, BusinessHelper.FundCategory_SchemeDeduct, currentUser.UserId,
+                //    schemeId, payMoney, remark);
+                BusinessHelper.Payin_To_Balance(AccountType.Commission, BusinessHelper.FundCategory_SchemeDeduct, currentUser.UserId,
+                    schemeId, payMoney, remark);
+
+                manager.AddOCAgentPayDetail(new P_OCAgent_PayDetail
+                {
+                    CreateTime = DateTime.Now,
+                    GameCode = gameCode,
+                    GameType = gameType,
+                    PayMoney = payMoney,
+                    OrderTotalMoney = totalOrderMoney,
+                    Rebate = currentPayRebate,
+                    SchemeId = schemeId,
+                    SchemeType = (int)schemeType,
+                    CPSMode = (int)CPSMode.PayRebate,
+                    PayInUserId = currentUser.UserId,
+                    OrderUser = orderUserId,
+                    Remark = remark,
+                });
+
+                //刷新余额
+                BusinessHelper.RefreshRedisUserBalance(currentUser.UserId);
+            }
+            //查询上级
+            if (string.IsNullOrEmpty(currentUser.AgentId))
+                return totalPayRebateMoney;
+
+            var balanceManager = new UserBalanceManager();
+            var parent = balanceManager.QueryUserRegister(currentUser.AgentId);
+
+            //递归
+            return totalPayRebateMoney + PayOrderRebate(manager, parent, schemeId, orderUserId, schemeType, gameCode, gameType, totalOrderMoney, realMoney, payedRebate, rebateType);
+        }
+
+        /// <summary>
+        /// 计算代理销量
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="currentBetMoney"></param>
+        /// <param name="isAgent"></param>
+        public void CalculationAgentSales(string userId, string gameCode, decimal currentBetMoney, bool isAgent, int index = 0)
+        {
+            if (string.IsNullOrEmpty(userId) || currentBetMoney <= 0 || string.IsNullOrEmpty(gameCode))
+                return;
+            try
+            {
+                var balanceManager = new UserBalanceManager();
+                var user = balanceManager.QueryUserRegister(userId);
+                //if (user != null)
+                //{
+                //    var ocAgentSales = balanceManager.QueryOCAgentReportSales(userId, gameCode);
+                //    if (ocAgentSales == null)
+                //    {
+                //        ocAgentSales = new OCAgentReportSales();
+                //        ocAgentSales.UserId = userId;
+                //        ocAgentSales.ParentUserId = user.AgentId;
+                //        ocAgentSales.ParentUserIdPath = user.ParentPath;
+                //        ocAgentSales.TotalSales = currentBetMoney;
+                //        if (index != 0)
+                //        {
+                //            ocAgentSales.TotalAgentSales = isAgent ? currentBetMoney : 0M;
+                //            ocAgentSales.TotalUserSales = !isAgent ? currentBetMoney : 0M;
+                //        }
+                //        else
+                //        {
+                //            ocAgentSales.TotalAgentSales = 0M;
+                //            ocAgentSales.TotalUserSales = 0M;
+                //            ocAgentSales.TotalCurrentUserSales = currentBetMoney;
+                //        }
+                //        ocAgentSales.GameCode = gameCode;
+                //        ocAgentSales.CreateTime = DateTime.Now;
+                //        balanceManager.AddOCAgentReportSales(ocAgentSales);
+                //    }
+                //    else
+                //    {
+                //        var parentUser = balanceManager.QueryUserRegister(userId);
+                //        ocAgentSales.UserId = userId;
+                //        ocAgentSales.ParentUserId = user.AgentId;
+                //        ocAgentSales.ParentUserIdPath = user.ParentPath;
+                //        ocAgentSales.TotalSales += currentBetMoney;
+                //        if (index != 0)
+                //        {
+                //            ocAgentSales.TotalAgentSales += isAgent ? currentBetMoney : 0M;
+                //            ocAgentSales.TotalUserSales += !isAgent ? currentBetMoney : 0M;
+                //        }
+                //        else
+                //            ocAgentSales.TotalCurrentUserSales += currentBetMoney;
+                //        //else
+                //        //{
+                //        //    ocAgentSales.TotalAgentSales = 0M;
+                //        //    ocAgentSales.TotalUserSales = 0M;
+                //        //}
+                //        ocAgentSales.GameCode = gameCode;
+                //        //ocAgentSales.CreateTime = DateTime.Now;
+                //        balanceManager.UpdateOCAgentReportSales(ocAgentSales);
+                //    }
+                //}
+                index++;
+                CalculationAgentSales(user.AgentId, gameCode, currentBetMoney, user.IsAgent, index);
+            }
+            catch
+            {
+            }
         }
     }
 }

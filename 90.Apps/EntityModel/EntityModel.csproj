@@ -296,8 +296,10 @@
     <Compile Include="CoreModel\AuthEntities\RoleFunction.cs" />
     <Compile Include="CoreModel\AuthEntities\SystemRole.cs" />
     <Compile Include="CoreModel\AuthEntities\SystemUser.cs" />
+    <Compile Include="CoreModel\AuthEntities\TogetherHotUserIofo.cs" />
     <Compile Include="CoreModel\AuthEntities\TotalSingleTreasureInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\UserBalance.cs" />
+    <Compile Include="CoreModel\AuthEntities\UserBeedingInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\UserEmailInfo.cs" />
     <Compile Include="CoreModel\AuthEntities\UserFunction.cs" />
     <Compile Include="CoreModel\AuthEntities\UserMobile.cs" />
@@ -677,6 +679,8 @@
     <Compile Include="ORM\QuerySearchModel.cs" />
     <Compile Include="ORM\QuerySearchModelExtend.cs" />
     <Compile Include="PayModel\PayDetail.cs" />
+    <Compile Include="PCModel\QueryBonusBase.cs" />
+    <Compile Include="PCModel\RankInfo.cs" />
     <Compile Include="Redis\RedisKeys.cs" />
     <Compile Include="Redis\RedisTicketInfo.cs" />
     <Compile Include="Redis\RedisWaitTicketOrder.cs" />

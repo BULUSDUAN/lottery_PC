@@ -120,7 +120,7 @@ namespace Lottery.AdminApi.Controllers
                 string verifyCode = PreconditionAssert.IsNotEmptyString(verifyCodestr, "验证码不能为空！");
                 var vCode = HttpContext.Session.GetObj<string>("ValidateCode");
                 if (vCode != verifyCode)
-                { 
+                {
                     throw new Exception("验证码输入错误！");
                 }
                 AdminService service = new AdminService();

@@ -1,4 +1,4 @@
-﻿@using GameBiz.Core;
+﻿@using EntityModel.CoreModel;
 @using app.lottery.site.Models;
 @{
     ViewBag.Title = "保存订单列表 - 用户中心 - 体育彩票 | 福利彩票 | 中国体育彩票 - " + SiteString.getHZSiteName(Request);
@@ -68,58 +68,59 @@
 
                             foreach (var item in orders)
                             {
-                        <tr>
-                            <td>
-                                @item.CreateTime.ToString("MM-dd HH:mm")
-                            </td>
-                            <td>
-                                @SiteConvert.GameName(item.GameCode, item.GameType)
-                            </td>
-                            <td>
-                                @item.IssuseNumber
-                            </td>
-                            <td>
-                                @item.BetCount 注
-                            </td>
-                            <td>
-                                @item.Amount 倍
-                            </td>
-                            <td class="ye blod fszie">
-                                @item.TotalMoney.ToString("f")
-                            </td>
-                            <td>
-                                @item.StopTime.ToString("MM-dd HH:mm")
-                            </td>
-                            <td class="@(item.StopTime <= DateTime.Now ? "gray" : "green")">
-                                @if (item.StopTime <= DateTime.Now)
-                                {
-                                    @("已过期")
-                                }
-                                else
-                                {
-                                    @OrderManager.OrderStatusName(SchemeType.SaveScheme, item.ProgressStatus)
-                                }
-                            </td>
-                            <td class="last_td" title="@OrderManager.SchemeCategoryName(item.SchemeBettingCategory)">
-                                <a href="/user/scheme/@item.SchemeId" target="_blank" class="orderId">查看</a>
-                                @if (item.StopTime > DateTime.Now && item.SchemeType != SchemeType.SingleTreasure)
-                                {
-                                    <a href="javascript:delbuy('@item.GameCode','@item.BetCount','@item.Amount','@item.TotalMoney.ToString("f")','@item.SchemeId')"  class="yellow" id="buy">
-                                        购买</a>
+                                <tr>
+                                    <td>
+                                        @item.CreateTime.ToString("MM-dd HH:mm")
+                                    </td>
+                                    <td>
+                                        @SiteConvert.GameName(item.GameCode, item.GameType)
+                                    </td>
+                                    <td>
+                                        @item.IssuseNumber
+                                    </td>
+                                    <td>
+                                        @item.BetCount 注
+                                    </td>
+                                    <td>
+                                        @item.Amount 倍
+                                    </td>
+                                    <td class="ye blod fszie">
+                                        @item.TotalMoney.ToString("f")
+                                    </td>
+                                    <td>
+                                        @item.StopTime.ToString("MM-dd HH:mm")
+                                    </td>
+                                    <td class="@(item.StopTime <= DateTime.Now ? "gray" : "green")">
+                                        @if (item.StopTime <= DateTime.Now)
+                                        {
+                                            @("已过期")
+                                        }
+                                        else
+                                        {
+                                            @OrderManager.OrderStatusName(EntityModel.Enum.SchemeType.SaveScheme, item.ProgressStatus)
+                                        }
+                                    </td>
+                                    <td class="last_td" title="@OrderManager.SchemeCategoryName(item.SchemeBettingCategory)">
+                                        <a href="/user/scheme/@item.SchemeId" target="_blank" class="orderId">查看</a>
+                                        @if (item.StopTime > DateTime.Now && item.SchemeType != EntityModel.Enum.SchemeType.SingleTreasure)
+                                        {
+                                            <a href="javascript:delbuy('@item.GameCode','@item.BetCount','@item.Amount','@item.TotalMoney.ToString("f")','@item.SchemeId')" class="yellow" id="buy">
+                                                购买
+                                            </a>
 
-                                }
-                                <i class="green small">@OrderManager.SchemeCategoryName(item.SchemeBettingCategory, true)</i>
-                            </td>
-                        </tr>
+                                        }
+                                        <i class="green small">@OrderManager.SchemeCategoryName(item.SchemeBettingCategory, true)</i>
+                                    </td>
+                                </tr>
                             }
                         }
                         else
                         {
-                        <tr>
-                            <td colspan="9">
-                                暂时没有找到你要的数据哦
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="9">
+                                    暂时没有找到你要的数据哦
+                                </td>
+                            </tr>
                         }
                     }
                 </table>

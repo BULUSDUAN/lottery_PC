@@ -333,7 +333,7 @@ namespace EntityModel
     /// <summary>
     /// 用户查询列表
     /// </summary>
-    public class UserQueryInfoCollection
+    public class UserQueryInfoCollection:Page
     {
         /// <summary>
         /// 构造函数
@@ -342,10 +342,6 @@ namespace EntityModel
         {
             UserList = new List<UserQueryInfo>();
         }
-        /// <summary>
-        /// 总数
-        /// </summary>
-        public int TotalCount { get; set; }
         /// <summary>
         /// 总总值账户金额
         /// </summary>
