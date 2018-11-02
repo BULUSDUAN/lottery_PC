@@ -970,6 +970,8 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public CommonActionResult UpdateMobileAuthen(string userId, string mobile, string userToken)
         {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new MobileAuthenticationBusiness().UpdateMobileAuthen(userId, mobile, myId);
