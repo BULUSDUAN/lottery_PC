@@ -322,5 +322,137 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
         #endregion
+
+        /// <summary>
+        /// 资金报表
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="keyLine"></param>
+        /// <param name="fromDate"></param>
+        /// <param name="toDate"></param>
+        /// <param name="accountTypeList"></param>
+        /// <param name="categoryList"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="totalPayinCount"></param>
+        /// <param name="totalPayinMoney"></param>
+        /// <param name="totalPayoutCount"></param>
+        /// <param name="totalPayoutMoney"></param>
+        /// <returns></returns>
+        public IList<C_Fund_Detail> QueryUserFundDetailListReport(string userId, string keyLine, DateTime fromDate, DateTime toDate, string accountTypeList, string categoryList
+             , int pageIndex, int pageSize, out int totalPayinCount, out decimal totalPayinMoney, out int totalPayoutCount, out decimal totalPayoutMoney)
+        {
+            //userId = string.IsNullOrEmpty(userId) ? string.Empty : userId;
+            //keyLine = string.IsNullOrEmpty(keyLine) ? string.Empty : keyLine;
+            //accountTypeList = string.IsNullOrEmpty(accountTypeList) ? string.Empty : accountTypeList;
+            //categoryList = string.IsNullOrEmpty(categoryList) ? string.Empty : categoryList;
+            toDate = toDate.AddDays(1).Date;
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            if (pageSize < 10000)
+                pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+
+            //把in条件直接写出string，用到时拼接
+            var accountSql = "";
+            if (!string.IsNullOrEmpty(accountTypeList))
+            {
+                var accountTypeArray = accountTypeList.Split('|', StringSplitOptions.RemoveEmptyEntries).ToList();
+                if (accountTypeArray.Count > 0)
+                {
+                    var str_accountTypeList = string.Join("','", string.Format("'{0}'", accountTypeArray.Select(exp => exp))).ToString();
+                    accountSql = $" and (@AccountList = '' or f.AccountType in ({str_accountTypeList}))";
+                }
+            }
+            IList<C_Fund_Detail> result;
+            //当没有传入userId时的查询语句
+            if (string.IsNullOrEmpty(userId))
+            {
+                string listSql = SqlModule.AdminModule.First(x => x.Key == "Admin_QueryUserFundDetailListReportByDate").SQL;
+                result = DB.CreateSQLQuery(listSql)
+                    .SetString("StartTime", fromDate.ToString("yyyy-MM-dd"))
+                    .SetString("EndTime", toDate.ToString("yyyy-MM-dd"))
+                    .SetInt("PageIndex", pageIndex)
+                    .SetInt("PageSize", pageSize)
+                    .List<C_Fund_Detail>();
+            }
+            else
+            {
+                string listSql = SqlModule.AdminModule.First(x => x.Key == "Admin_QueryUserFundDetailListReportByUserId").SQL;
+                listSql = string.Format(listSql, accountSql);
+                result = DB.CreateSQLQuery(listSql)
+                    .SetString("UserId", userId)
+                    .SetString("StartTime", fromDate.ToString("yyyy-MM-dd"))
+                    .SetString("EndTime", toDate.ToString("yyyy-MM-dd"))
+                    .SetInt("PageIndex", pageIndex)
+                    .SetInt("PageSize", pageSize)
+                    .List<C_Fund_Detail>();
+            }
+
+            string payInSql = SqlModule.AdminModule.First(x => x.Key == "Admin_QueryUserFundDetailListReport_PayIn").SQL;
+            payInSql = string.Format(payInSql, accountSql);
+            string payOutSql = SqlModule.AdminModule.First(x => x.Key == "Admin_QueryUserFundDetailListReport_PayOut").SQL;
+            payOutSql = string.Format(payOutSql, accountSql);
+            totalPayinCount = 0;
+            totalPayinMoney = 0M;
+            totalPayoutCount = 0;
+            totalPayoutMoney = 0M;
+            var payIn = DB.CreateSQLQuery(payInSql)
+                    .SetString("UserId", userId)
+                    .SetString("StartTime", fromDate.ToString("yyyy-MM-dd"))
+                    .SetString("EndTime", toDate.ToString("yyyy-MM-dd"))
+                    .First<Sql_FundDetail_PayIn>();
+            if (payIn != null)
+            {
+                totalPayinCount = payIn.PayInCount;
+                totalPayinMoney = payIn.TotalPayInMoney;
+            }
+            var payOut = DB.CreateSQLQuery(payOutSql)
+                   .SetString("UserId", userId)
+                   .SetString("StartTime", fromDate.ToString("yyyy-MM-dd"))
+                   .SetString("EndTime", toDate.ToString("yyyy-MM-dd"))
+                   .First<Sql_FundDetail_PayOut>();
+            if (payOut != null)
+            {
+                totalPayoutCount = payOut.PayOutCount;
+                totalPayoutMoney = payOut.TotalPayOutMoney;
+            }
+            return result;
+        }
+
+        public List<C_Fund_Detail> QueryUserFundDetail_Commission(string userId, DateTime fromDate, DateTime toDate, int pageIndex, int pageSize
+            , out int totalPayinCount, out decimal totalPayinMoney)
+        {
+            toDate = toDate.AddDays(1);
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            var query = from r in DB.CreateQuery<C_Fund_Detail>()
+                        where (string.IsNullOrEmpty(userId) || r.UserId == userId)
+                        && r.CreateTime >= fromDate && r.CreateTime < toDate
+                        && r.PayType == (int)PayType.Payin
+                        && r.AccountType == (int)AccountType.Commission
+                        select r;
+            totalPayinCount = query.Count();
+            if (totalPayinCount > 0)
+            {
+                totalPayinMoney = query.Sum(p => p.PayMoney);
+                return query.OrderByDescending(p => p.CreateTime).Skip(pageIndex * pageSize).Take(pageSize).ToList();
+                //.Select(r=>new FundDetailInfo
+                //{
+                //    Id = r.Id,
+                //    UserId = r.UserId,
+                //    AccountType = r.AccountType,
+                //    AfterBalance = r.AfterBalance,
+                //    BeforeBalance = r.BeforeBalance,
+                //    Category = r.Category,
+                //    KeyLine = r.KeyLine,
+                //    OperatorId = r.OperatorId,
+                //    OrderId = r.OrderId,
+                //    PayMoney = r.PayMoney,
+                //    PayType = r.PayType,
+                //    Summary = r.Summary,
+                //    CreateTime = r.CreateTime,
+                //}).ToList();
+            }
+            totalPayinMoney = 0M;
+            return new List<C_Fund_Detail>();
+        }
     }
 }

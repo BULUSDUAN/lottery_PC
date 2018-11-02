@@ -220,7 +220,7 @@ namespace EntityModel.CoreModel
     {
         public UserBalanceHistoryInfoCollection()
         {
-            InfoList = new List<UserBalanceHistoryInfo>();
+            InfoList = new List<C_User_Balance_History>();
         }
         public int TotalCount { get; set; }
         /// <summary>
@@ -255,7 +255,7 @@ namespace EntityModel.CoreModel
         /// 总的豆豆
         /// </summary>
         public int TotalDouDou { get; set; }
-        public List<UserBalanceHistoryInfo> InfoList { get; set; }
+        public List<C_User_Balance_History> InfoList { get; set; }
     }
 
     /// <summary>

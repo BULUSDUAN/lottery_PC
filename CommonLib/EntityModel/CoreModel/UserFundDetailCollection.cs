@@ -22,9 +22,9 @@ namespace EntityModel.CoreModel
         public string OrderId { get; set; }
         public string UserId { get; set; }
         /// 收支类型
-        public PayType PayType { get; set; }
+        public int PayType { get; set; }
         /// 账户类型
-        public AccountType AccountType { get; set; }
+        public int AccountType { get; set; }
         public string Category { get; set; }
         public string Summary { get; set; }
         /// 收入金额

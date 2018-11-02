@@ -331,5 +331,35 @@ namespace KaSon.FrameWork.ORM.Helper
             , pageIndex, pageSize, orderId);
             return collection;
         }
+
+        public UserFundDetailCollection QueryUserFundDetailListReport(string userId, string keyLine, DateTime fromDate, DateTime toDate, string accountTypeList, string categoryList, int pageIndex, int pageSize)
+        {
+            int totalPayinCount;
+            decimal totalPayinMoney;
+            int totalPayoutCount;
+            decimal totalPayoutMoney;
+            var collection = new UserFundDetailCollection();
+
+            collection.FundDetailList = new SqlQueryManager().QueryUserFundDetailListReport(userId, keyLine, fromDate, toDate, accountTypeList, categoryList, pageIndex, pageSize
+                , out totalPayinCount, out totalPayinMoney, out totalPayoutCount, out totalPayoutMoney);
+            collection.TotalPayinCount = totalPayinCount;
+            collection.TotalPayinMoney = totalPayinMoney;
+            collection.TotalPayoutCount = totalPayoutCount;
+            collection.TotalPayoutMoney = totalPayoutMoney;
+            //collection.TotalBalanceMoney = new SqlQueryManager().GetAllUserBalanceMoney(userId);
+            return collection;
+        }
+
+        public UserFundDetailCollection QueryUserFundDetail_Commission(string userId, DateTime fromDate, DateTime toDate, int pageIndex, int pageSize)
+        {
+            int totalPayinCount;
+            decimal totalPayinMoney;
+            var collection = new UserFundDetailCollection();
+            collection.FundDetailList = new SqlQueryManager().QueryUserFundDetail_Commission(userId, fromDate, toDate, pageIndex, pageSize
+                , out totalPayinCount, out totalPayinMoney);
+            collection.TotalPayinCount = totalPayinCount;
+            collection.TotalPayinMoney = totalPayinMoney;
+            return collection;
+        }
     }
 }

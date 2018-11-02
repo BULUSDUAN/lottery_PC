@@ -766,5 +766,138 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         #endregion
 
+        #region 财务管理
+        public decimal QueryUserTotalFillMoney(string userId)
+        {
+            return new FundBusiness().QueryUserTotalFillMoney(userId);
+        }
+
+        public decimal QueryUserTotalWithdrawMoney(string userId)
+        {
+            return new FundBusiness().QueryUserTotalWithdrawMoney(userId);
+        }
+
+        /// <summary>
+        /// 查询用户资金明细报表定制
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="keyLine"></param>
+        /// <param name="fromDate"></param>
+        /// <param name="toDate"></param>
+        /// <param name="accountTypeList"></param>
+        /// <param name="categoryList"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public UserFundDetailCollection QueryUserFundDetailListReport(string userId, string keyLine, DateTime fromDate, DateTime toDate, string accountTypeList, string categoryList, int pageIndex, int pageSize)
+        {
+            //// 验证用户身份及权限
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new SqlQueryBusiness().QueryUserFundDetailListReport(userId, keyLine, fromDate, toDate, accountTypeList, categoryList, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询用户资金明细报表出错 - " + ex.Message, ex);
+            }
+        }
+
+
+        public UserFundDetailCollection QueryUserFundDetail_Commission(string userId, DateTime fromDate, DateTime toDate, int pageIndex, int pageSize)
+        {
+            try
+            {
+                return new SqlQueryBusiness().QueryUserFundDetail_Commission(userId, fromDate, toDate, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询用户资金明细出错 - " + ex.Message, ex);
+            }
+        }
+        #endregion
+
+
+        public FinanceSettingsInfo_Collection GetFinanceSettingsCollection(string userId, int pageIndex, int pageSize)
+        {
+            try
+            {
+                // 验证用户身份及权限
+                //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+                return new UserBusiness().GetFinanceSettingsCollection(userId, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public string GetCaiWuOperator()
+        {
+            try
+            {
+                //// 验证用户身份及权限
+                //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+                return new UserBusiness().GetCaiWuOperator();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public FinanceSettingsInfo GetFinanceSettingsByFinanceId(string FinanceId)
+        {
+            try
+            {
+                //// 验证用户身份及权限
+                //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+                return new UserBusiness().GetFinanceSettingsByFinanceId(FinanceId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public CommonActionResult FinanceSetting(string opeType, C_FinanceSettings info, string userId)
+        {
+            try
+            {
+                //// 验证用户身份及权限
+                //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+                new UserBusiness().FinanceSetting(opeType, info, userId);
+                if (opeType.ToLower() != "delete")
+                {
+                    return new CommonActionResult(true, "保存数据成功！");
+                }
+                else
+                {
+                    return new CommonActionResult(true, "删除数据成功！");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询网站结余明细
+        /// </summary>
+        public UserBalanceHistoryInfoCollection QueryUserBalanceHistoryList(string userId, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        {
+            try
+            {
+                return new UserBusiness().QueryUserBalanceHistoryList(userId, startTime, endTime, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }
