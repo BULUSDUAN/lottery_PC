@@ -7855,5 +7855,120 @@ namespace KaSon.FrameWork.ORM.Helper
             result.AddRange(new Sports_Manager().QuerySaveOrderLottery(userId));
             return result;
         }
+
+        /// <summary>
+        /// 查询足彩方案信息
+        /// </summary>
+        public Sports_SchemeQueryInfo QuerySportsSchemeInfo(string schemeId)
+        {
+            var manager = new SchemeManager();
+            var sportsManager = new Sports_Manager();
+            var orderDetail = manager.QueryOrderDetail(schemeId);
+            if (orderDetail == null) return null;
+            var info = (orderDetail.ProgressStatus == (int)ProgressStatus.Complate
+                || orderDetail.ProgressStatus == (int)ProgressStatus.Aborted
+                || orderDetail.ProgressStatus == (int)ProgressStatus.AutoStop) ? sportsManager.QuerySports_Order_ComplateInfo(schemeId) : sportsManager.QuerySports_Order_RunningInfo(schemeId);
+            if (info == null)
+                throw new Exception(string.Format("没有查询到方案{0}的信息", schemeId));
+            return info;
+        }
+
+        /// <summary>
+        /// 订单投注失败，返钱
+        /// </summary>
+        public void BetFail(string schemeId)
+        {
+            //开启事务
+
+
+            DB.Begin();
+
+                if (schemeId.StartsWith("CHASE"))
+                    throw new Exception("追号订单暂时不能处理");
+
+                var sportsManager = new Sports_Manager();
+                var order = sportsManager.QuerySports_Order_Running(schemeId);
+                if (order == null)
+                    throw new Exception(string.Format("订单{0}不存在", schemeId));
+
+                #region 处理订单数据
+
+                var manager = new SchemeManager();
+                var orderDetail = manager.QueryOrderDetail(schemeId);
+                orderDetail.ProgressStatus = (int)ProgressStatus.Aborted;
+                orderDetail.CurrentBettingMoney = 0M;
+                orderDetail.CurrentIssuseNumber = order.IssuseNumber;
+                orderDetail.TicketStatus = (int)TicketStatus.Error;
+                manager.UpdateOrderDetail(orderDetail);
+
+                //移动订单数据
+                OrderFailToEnd(schemeId, sportsManager, order);
+
+                #endregion
+
+                #region 请求出票失败后，退还投注资金
+
+                if (!order.IsVirtualOrder)
+                {
+                    // 返还资金
+                    if (order.SchemeType == (int)SchemeType.GeneralBetting)
+                    {
+                        if (order.TotalMoney > 0)
+                            BusinessHelper.Payback_To_Balance(BusinessHelper.FundCategory_TicketFailed, order.UserId, schemeId, order.TotalMoney
+                               , string.Format("{0} 出票失败，返还资金￥{1:N2}。 ", BettingHelper.FormatGameCode(order.GameCode), order.TotalMoney));
+                    }
+                    if (order.SchemeType == (int)SchemeType.ChaseBetting)
+                    {
+                        var chaseOrder = sportsManager.QueryLotteryScheme(order.SchemeId);
+                        if (chaseOrder != null)
+                        {
+                            if (order.TotalMoney > 0)
+                                BusinessHelper.Payback_To_Balance(BusinessHelper.FundCategory_TicketFailed, order.UserId, chaseOrder.KeyLine, order.TotalMoney
+                                , string.Format("订单{0} 出票失败，返还资金￥{1:N2}。 ", order.SchemeId, order.TotalMoney));
+                        }
+                    }
+                    if (order.SchemeType == (int)SchemeType.TogetherBetting)
+                    {
+                        //失败
+                        foreach (var item in sportsManager.QuerySports_TogetherSucessJoin(schemeId))
+                        {
+                            item.JoinSucess = false;
+                            item.JoinLog += "出票失败";
+                            sportsManager.UpdateSports_TogetherJoin(item);
+                            if (item.JoinType == (int)TogetherJoinType.SystemGuarantees)
+                                continue;
+
+                            var t = string.Empty;
+                            var realBuyCount = item.RealBuyCount;
+                            switch (item.JoinType)
+                            {
+                                case (int)TogetherJoinType.Subscription:
+                                    t = "认购";
+                                    break;
+                                case (int)TogetherJoinType.FollowerJoin:
+                                    t = "订制跟单";
+                                    break;
+                                case (int)TogetherJoinType.Join:
+                                    t = "参与";
+                                    break;
+                                case (int)TogetherJoinType.Guarantees:
+                                    realBuyCount = item.BuyCount;
+                                    t = "保底";
+                                    break;
+                            }
+                            var money = item.Price * realBuyCount;
+                            //退钱
+                            if (money > 0)
+                                BusinessHelper.Payback_To_Balance(BusinessHelper.FundCategory_TogetherFail, item.JoinUserId,
+                                  string.Format("{0}_{1}", schemeId, item.Id), item.TotalMoney, string.Format("合买失败，返还{0}资金{1:N2}元", t, money));
+                        }
+                    }
+                }
+
+                #endregion
+
+                DB.Commit();
+            
+        }
     }
 }

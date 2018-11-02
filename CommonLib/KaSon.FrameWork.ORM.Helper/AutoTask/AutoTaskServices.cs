@@ -668,6 +668,11 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                             string providerSerialNo = "";
                             try
                             {
+                                var GameType = "SMG";
+                                if (item.GameType == (int)MGGameType.SMF)
+                                {
+                                    GameType = "SMF";
+                                }
                                 var gameLoginName = PreName + item.UserId;
                                 var sign = MD5Helper.UpperMD5($"{item.RequestMoney.ToString()}&{OperatorCode}&{pwd}&{item.OrderId}&{gameLoginName}&{SecretKey}");
                                 var rechargeParam = new
@@ -684,7 +689,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                                         amount = item.RequestMoney.ToString(),
                                         extraparameter = new
                                         {
-                                            type = "SMG"
+                                            type = GameType
                                         }
                                     }
                                 }.ToJson();
@@ -761,6 +766,11 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                         {
                             try
                             {
+                                var GameType = "SMG";
+                                if (item.GameType == (int)MGGameType.SMF)
+                                {
+                                    GameType = "SMF";
+                                }
                                 var gameLoginName = PreName + item.UserId;
                                 var sign = MD5Helper.UpperMD5($"{item.RequestMoney.ToString()}&{OperatorCode}&{pwd}&{item.OrderId}&{gameLoginName}&{SecretKey}");
                                 var withdrawParam = new
@@ -777,7 +787,7 @@ namespace KaSon.FrameWork.ORM.Helper.AutoTask
                                         amount = item.RequestMoney.ToString(),
                                         extraparameter = new
                                         {
-                                            type = "SMG"
+                                            type = GameType
                                         }
                                     }
                                 }.ToJson();

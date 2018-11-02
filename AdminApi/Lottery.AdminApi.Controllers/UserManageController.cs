@@ -84,6 +84,29 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
+
+        /// <summary>
+        /// 会员概况
+        /// </summary>
+        public ActionResult UserSummary(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var UserId = p.id;
+                //if (!string.IsNullOrEmpty(ViewBag.UserId))
+                //{
+                   var UserResult = _service.QueryUserByKey(UserId, CurrentUser.UserToken);
+
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = UserResult });
+                //}
+             
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
         /// <summary>
         /// 批量禁用用户
         /// </summary>

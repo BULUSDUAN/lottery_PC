@@ -652,5 +652,17 @@ namespace KaSon.FrameWork.ORM.Helper
             return userId;
 
         }
+
+        #region 财务管理
+        public decimal QueryUserTotalFillMoney(string userId)
+        {
+            return new FundManager().QueryUserTotalFillMoney(userId);
+        }
+
+        public decimal QueryUserTotalWithdrawMoney(string userId)
+        {
+            return new FundManager().QueryUserTotalWithdrawMoney(userId);
+        }
+        #endregion
     }
 }

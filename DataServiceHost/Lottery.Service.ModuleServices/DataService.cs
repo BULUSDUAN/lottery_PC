@@ -882,7 +882,7 @@ namespace Lottery.Service.ModuleServices
         /// <param name="userId"></param>
         /// <param name="money"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> FreezeGameRecharge(string userId, decimal money, string userDisplayName)
+        public Task<CommonActionResult> FreezeGameRecharge(string userId, decimal money, string userDisplayName, int gameType)
         {
             try
             {
@@ -898,7 +898,7 @@ namespace Lottery.Service.ModuleServices
                     });
                 }
                 //存入游戏交易表中
-                return Task.FromResult(new DataQuery().FreezeGameRecharge(userId, money, userDisplayName));
+                return Task.FromResult(new DataQuery().FreezeGameRecharge(userId, money, userDisplayName, gameType));
             }
             catch (LogicException ex)
             {
@@ -976,11 +976,11 @@ namespace Lottery.Service.ModuleServices
             }
         }
 
-        public Task<CommonActionResult> AddGameWithdraw_Step1(string userId, decimal money, string userDisplayName)
+        public Task<CommonActionResult> AddGameWithdraw_Step1(string userId, decimal money, string userDisplayName, int gameType)
         {
             try
             {
-                return Task.FromResult(new DataQuery().AddGameWithdraw_Step1(userId, money, userDisplayName));
+                return Task.FromResult(new DataQuery().AddGameWithdraw_Step1(userId, money, userDisplayName, gameType));
             }
             catch (LogicException ex)
             {

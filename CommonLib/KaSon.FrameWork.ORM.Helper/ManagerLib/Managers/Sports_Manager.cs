@@ -1021,5 +1021,139 @@ namespace KaSon.FrameWork.ORM.Helper
                 CreateTime = p.g.CreateTime,
             }).ToList();
         }
+
+        public Sports_SchemeQueryInfo QuerySports_Order_ComplateInfo(string schemeId)
+        {
+           
+            var query = from r in DB.CreateQuery<C_Sports_Order_Complate>()
+                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
+                        where r.SchemeId == schemeId
+                        select new {r,u };
+            var info = query.ToList().Select(p => new Sports_SchemeQueryInfo
+            {
+                UserId = p.u.UserId,
+                UserDisplayName = p.u.DisplayName,
+                HideDisplayNameCount = p.u.HideDisplayNameCount,
+                GameDisplayName = BettingHelper.FormatGameCode(p.r.GameCode),
+                GameCode = p.r.GameCode,
+                Amount = p.r.Amount,
+                BonusStatus = (BonusStatus)p.r.BonusStatus,
+                CreateTime = p.r.CreateTime,
+                GameType = p.r.GameType,
+                GameTypeDisplayName = BettingHelper.FormatGameType(p.r.GameCode, p.r.GameType),
+                IssuseNumber = p.r.IssuseNumber,
+                PlayType = p.r.PlayType,
+                ProgressStatus = (ProgressStatus)p.r.ProgressStatus,
+                SchemeId = p.r.SchemeId,
+                SchemeType = (SchemeType)p.r.SchemeType,
+                TicketId = p.r.TicketId,
+                TicketLog = p.r.TicketLog,
+                TicketStatus = (TicketStatus)p.r.TicketStatus,
+                TotalMatchCount = p.r.TotalMatchCount,
+                TotalMoney = p.r.TotalMoney,
+                BetCount = p.r.BetCount,
+                PreTaxBonusMoney = p.r.PreTaxBonusMoney,
+                AfterTaxBonusMoney = p.r.AfterTaxBonusMoney,
+                BonusCount = p.r.BonusCount,
+                IsPrizeMoney = p.r.IsPrizeMoney,
+                Security = (TogetherSchemeSecurity)p.r.Security,
+                IsVirtualOrder = p.r.IsVirtualOrder,
+                StopTime = p.r.StopTime,
+                HitMatchCount = p.r.HitMatchCount,
+                AddMoney = p.r.AddMoney,
+                AddMoneyDescription = p.r.AddMoneyDescription,
+                SchemeBettingCategory = (SchemeBettingCategory)p.r.SchemeBettingCategory,
+                TicketProgress = p.r.TicketProgress,
+                DistributionWay = (AddMoneyDistributionWay)p.r.DistributionWay,
+                Attach = p.r.Attach,
+                MaxBonusMoney = p.r.MaxBonusMoney,
+                MinBonusMoney = p.r.MinBonusMoney,
+                ExtensionOne = p.r.ExtensionOne,
+                IsAppend = p.r.IsAppend == false ? false : p.r.IsAppend,
+                ComplateDateTime = p.r.ComplateDateTime,
+                BetTime = p.r.BetTime,
+                SchemeSource = (SchemeSource)p.r.SchemeSource,
+                RedBagMoney = p.r.RedBagMoney,
+                TicketTime = p.r.TicketTime,
+                RedBagAwardsMoney = p.r.AddMoneyDescription == "70" ? p.r.AddMoney : 0,
+                BonusAwardsMoney = p.r.AddMoneyDescription == "10" ? p.r.AddMoney : 0,
+            }).FirstOrDefault();
+            if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
+            {
+                var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
+                if (info.GameCode == "SJB")
+                    key = string.Format("{0}|{1}|{2}", info.GameCode, info.GameType == "冠亚军" ? "GYJ" : "GJ", info.IssuseNumber);
+                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().Where(g => g.GameCode_IssuseNumber == key).FirstOrDefault();
+                if (gameIssuse != null)
+                    info.WinNumber = gameIssuse.WinNumber;
+            }
+            return info;
+        }
+
+        public Sports_SchemeQueryInfo QuerySports_Order_RunningInfo(string schemeId)
+        {
+         
+            var query = from r in DB.CreateQuery<C_Sports_Order_Running>()
+                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
+                        where r.SchemeId == schemeId
+                        select new { r,u};
+            var info = query.ToList().Select(p => new Sports_SchemeQueryInfo
+            {
+                UserId = p.u.UserId,
+                UserDisplayName = p.u.DisplayName,
+                HideDisplayNameCount = p.u.HideDisplayNameCount,
+                GameCode = p.r.GameCode,
+                Amount = p.r.Amount,
+                BonusStatus = (BonusStatus)p.r.BonusStatus,
+                CreateTime = p.r.CreateTime,
+                GameType = p.r.GameType,
+                IssuseNumber = p.r.IssuseNumber,
+                PlayType = p.r.PlayType,
+                ProgressStatus = (ProgressStatus)p.r.ProgressStatus,
+                SchemeId = p.r.SchemeId,
+                SchemeType = (SchemeType)p.r.SchemeType,
+                TicketId = p.r.TicketId,
+                TicketLog = p.r.TicketLog,
+                TicketStatus = (TicketStatus)p.r.TicketStatus,
+                TotalMatchCount = p.r.TotalMatchCount,
+                TotalMoney = p.r.TotalMoney,
+                BetCount = p.r.BetCount,
+                GameDisplayName = BettingHelper.FormatGameCode(p.r.GameCode),
+                GameTypeDisplayName = BettingHelper.FormatGameType(p.r.GameCode, p.r.GameType),
+                AfterTaxBonusMoney = 0M,
+                PreTaxBonusMoney = 0M,
+                BonusCount = 0,
+                WinNumber = string.Empty,
+                IsPrizeMoney = false,
+                Security = (TogetherSchemeSecurity)p.r.Security,
+                IsVirtualOrder = p.r.IsVirtualOrder,
+                StopTime = p.r.StopTime,
+                HitMatchCount = p.r.HitMatchCount,
+                AddMoney = 0M,
+                AddMoneyDescription = string.Empty,
+                SchemeBettingCategory = (SchemeBettingCategory)p.r.SchemeBettingCategory,
+                TicketProgress = p.r.TicketProgress,
+                DistributionWay = AddMoneyDistributionWay.Average,
+                Attach = p.r.Attach,
+                MaxBonusMoney = p.r.MaxBonusMoney,
+                MinBonusMoney = p.r.MinBonusMoney,
+                ExtensionOne = p.r.ExtensionOne,
+                IsAppend = p.r.IsAppend == false ? false : p.r.IsAppend,
+                BetTime = p.r.BetTime,
+                SchemeSource = (SchemeSource)p.r.SchemeSource,
+                TicketTime = p.r.TicketTime,
+                RedBagMoney = p.r.RedBagMoney,
+            }).FirstOrDefault();
+            if (info != null && info.GameCode != "JCZQ" && info.GameCode != "JCLQ" && info.GameCode != "BJDC")
+            {
+                var key = info.GameCode == "CTZQ" ? string.Format("{0}|{1}|{2}", info.GameCode, info.GameType, info.IssuseNumber) : string.Format("{0}|{1}", info.GameCode, info.IssuseNumber);
+                if (info.GameCode == "SJB")
+                    key = string.Format("{0}|{1}|{2}", info.GameCode, info.GameType == "冠亚军" ? "GYJ" : "GJ", info.IssuseNumber);
+                var gameIssuse = DB.CreateQuery<C_Game_Issuse>().Where(g => g.GameCode_IssuseNumber == key).FirstOrDefault();
+                if (gameIssuse != null)
+                    info.WinNumber = gameIssuse.WinNumber;
+            }
+            return info;
+        }
     }
 }

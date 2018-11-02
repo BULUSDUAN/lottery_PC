@@ -3229,6 +3229,12 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 string gameCode = p.GameCode;
+                int? mggameType = p.mggameType;
+                var GameType = "SMG";
+                if (mggameType == 1)
+                {
+                    GameType = "SMF";
+                }
                 if (string.IsNullOrEmpty(gameCode) || string.IsNullOrEmpty(userToken)) throw new Exception("参数出错");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 //var param = new Dictionary<string, object>();
@@ -3255,7 +3261,7 @@ namespace Lottery.Api.Controllers
                         language = "CN",
                         extraparameter = new
                         {
-                            type = "SMG"
+                            type = GameType
                         }
                     }
                 }.ToJson();
@@ -3319,6 +3325,12 @@ namespace Lottery.Api.Controllers
                 InitGameParam();
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
+                int? mggameType = p.mggameType;
+                var GameType = "SMG";
+                if (mggameType == 1)
+                {
+                    GameType = "SMF";
+                }
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 //var param = new Dictionary<string, object>();
                 //param["userId"] = userId;
@@ -3340,7 +3352,7 @@ namespace Lottery.Api.Controllers
                         password = pwd,
                         extraparameter = new
                         {
-                            type = "SMG"
+                            type = GameType
                         }
                     }
                 }.ToJson();
@@ -3386,7 +3398,7 @@ namespace Lottery.Api.Controllers
                             password = pwd,
                             extraparameter = new
                             {
-                                type = "SMG"
+                                type = GameType
                             }
                         }
                     }.ToJson();
@@ -3421,7 +3433,7 @@ namespace Lottery.Api.Controllers
         }
 
         /// <summary>
-        /// 游戏充值
+        /// 游戏充值(根据mggameType判断，如果是0则是)
         /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> GameRecharge([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
@@ -3440,6 +3452,12 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 decimal money = p.Money;
+                int? mggameType = p.mggameType;
+                var GameType = "SMG";
+                if (mggameType == 1)
+                {
+                    GameType = "SMF";
+                }
                 if (money <= 0) throw new Exception("参数错误");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var param = new Dictionary<string, object>();
@@ -3450,6 +3468,7 @@ namespace Lottery.Api.Controllers
                 param.Add("userId", userId);
                 param.Add("money", money);
                 param.Add("userDisplayName", loginInfo.DisplayName);
+                param.Add("gameType", mggameType == null ? 0 : mggameType.Value);
                 var freezeResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/FreezeGameRecharge");
                 if (freezeResult.IsSuccess)
                 {
@@ -3474,7 +3493,7 @@ namespace Lottery.Api.Controllers
                                 amount = money.ToString(),
                                 extraparameter = new
                                 {
-                                    type = "SMG"
+                                    type = GameType
                                 }
                             }
                         }.ToJson();
@@ -3669,6 +3688,12 @@ namespace Lottery.Api.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.UserToken;
                 decimal money = p.Money;
+                int? mggameType = p.mggameType;
+                var GameType = "SMG";
+                if (mggameType == 1)
+                {
+                    GameType = "SMF";
+                }
                 if (money <= 0) throw new Exception("参数错误");
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var param = new Dictionary<string, object>();
@@ -3679,6 +3704,7 @@ namespace Lottery.Api.Controllers
                 param.Add("userId", userId);
                 param.Add("money", money);
                 param.Add("userDisplayName", loginInfo.DisplayName);
+                param.Add("gameType", mggameType == null ? 0 : mggameType.Value);
                 var withdrawInfo = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/AddGameWithdraw_Step1");
                 if (withdrawInfo.IsSuccess)
                 {
@@ -3703,7 +3729,7 @@ namespace Lottery.Api.Controllers
                                 amount = money.ToString(),
                                 extraparameter = new
                                 {
-                                    type = "SMG"
+                                    type = GameType
                                 }
                             }
                         }.ToJson();
@@ -3833,7 +3859,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + "游戏充值参数：" + gameParam + ";游戏充值返回：" + gameResult + ";" + ex.ToString(),
+                    Message = ex.ToGetMessage() + "●" + "游戏提款参数：" + gameParam + ";游戏提款返回：" + gameResult + ";" + ex.ToString(),
                     MsgId = "",
                     Value = ex.ToGetMessage(),
                 });
