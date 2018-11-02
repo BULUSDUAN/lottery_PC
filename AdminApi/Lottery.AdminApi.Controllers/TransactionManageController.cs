@@ -283,6 +283,78 @@ namespace Lottery.AdminApi.Controllers
         #endregion
 
         #region 手工处理订单
+
+        public JsonResult MoveRunningOrderToComplateOrder(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var schemeId = PreconditionAssert.IsNotEmptyString((string)p.schemeId, "订单号不能为空！");
+                //移动订单数据
+                var result = _service.MoveRunningOrderToComplateOrder(schemeId);
+                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsSuccess = false, Msg = ex.Message });
+            }
+        }
+        /// <summary>
+        /// 修改订单中奖数据
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult ManualSetOrderBonusMoney(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var schemeId = PreconditionAssert.IsNotEmptyString((string)p.schemeId, "订单号不能为空！");
+                var money = PreconditionAssert.IsNotEmptyString((string)p.bonusMoney, "中奖金额不能为空！");
+                var bonusMoney = decimal.Parse(money);
+                var bonusCount = PreconditionAssert.IsInt32((string)p.bonusCount, "中奖注数不能为空！");
+                var hitMatchCount = PreconditionAssert.IsInt32((string)p.hitMatchCount, "命中场数不能为空！");
+                var bonusCountDescription = PreconditionAssert.IsNotEmptyString((string)p.bonusCountDescription, "中奖注数描述不能为空！");
+                var bonusCountDisplayName = PreconditionAssert.IsNotEmptyString((string)p.bonusCountDisplayName, "中奖注数显示名称不能为空！");
+                //修改订单中奖金额
+                var result = _service.ManualSetOrderBonusMoney(schemeId, bonusMoney, bonusCount, hitMatchCount, bonusCountDescription, bonusCountDisplayName);
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+
+        public JsonResult ManualSetOrderNotBonus(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var schemeId = PreconditionAssert.IsNotEmptyString((string)p.schemeId, "订单号不能为空！");
+                //var hitMatchCount = PreconditionAssert.IsInt32(Request["hitMatchCount"], "命中场数不能为空！");
+                //设为不中奖
+                var result = _service.ManualSetOrderNotBonus(schemeId, 0);
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        public JsonResult ManualAnalyzeTogetherScheme(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var schemeId = PreconditionAssert.IsNotEmptyString((string)p.schemeId, "订单号不能为空！");
+                var result = _service.AnalysisSchemeTogether(schemeId);
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
         //public JsonResult ManualUpdateHitCount(LotteryServiceRequest entity)
         //{
         //    try
@@ -327,11 +399,11 @@ namespace Lottery.AdminApi.Controllers
                 _service.AddSysOperationLog(schemeId, this.CurrentUser.UserId, "撤销订单", string.Format("操作员【{0}】撤销订单编号【{1}】", this.CurrentUser.UserId, schemeId));
                 var result = _service.BetFail(schemeId);
 
-                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message });
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = result.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
 
@@ -350,11 +422,11 @@ namespace Lottery.AdminApi.Controllers
                 if (string.IsNullOrEmpty(schemeId))
                     throw new Exception("订单号不能为空！");
                 var result = _service.ManualAgentPayIn(schemeId);
-                return Json(new { result.IsSuccess, Msg = result.Message });
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = result.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
 
@@ -370,11 +442,11 @@ namespace Lottery.AdminApi.Controllers
                 if ((string)p.SchemeId == null)
                     throw new Exception("订单号不能为空！");
                 var result = _service.ManualPrizeOrder((string)p.SchemeId);
-                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message });
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = result.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
         /// <summary>
@@ -389,13 +461,15 @@ namespace Lottery.AdminApi.Controllers
                 if ((string)p.SchemeId == null)
                     throw new Exception("订单号不能为空！");
                 var result = _service.ManualBet((string)p.SchemeId);
-                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message });
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = result.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
+
+
 
 
     }

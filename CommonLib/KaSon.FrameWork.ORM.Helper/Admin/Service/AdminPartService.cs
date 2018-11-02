@@ -1855,5 +1855,86 @@ namespace KaSon.FrameWork.ORM.Helper
             new Sports_Business().ManualPrizeOrder(orderId);
             return new CommonActionResult(true, "票数据派奖完成");
         }
+        #region 手工处理订单相关
+
+        /// <summary>
+        /// 移动中的订单数据到完成订单数据
+        /// </summary>
+        public CommonActionResult MoveRunningOrderToComplateOrder(string schemeId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new Sports_Business().MoveRunningOrderToComplateOrder(schemeId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 手工设置订单中奖数据
+        /// </summary>
+        public CommonActionResult ManualSetOrderBonusMoney(string schemeId, decimal bonusMoney, int bonusCount, int hitMatchCount, string bonusCountDescription, string bonusCountDisplayName)
+        {
+            // 验证用户身份及权限
+        
+            try
+            {
+                new Sports_Business().ManualSetOrderBonusMoney(schemeId, bonusMoney, bonusCount, hitMatchCount, bonusCountDescription, bonusCountDisplayName);
+                //删除缓存文件
+                new CacheDataBusiness().DeleteSchemeInfoXml(schemeId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 手工设置订单为不中奖
+        /// </summary>
+        public CommonActionResult ManualSetOrderNotBonus(string schemeId, int hitMatchCount)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new Sports_Business().ManualSetOrderNotBonus(schemeId, hitMatchCount);
+                //删除缓存文件
+                new CacheDataBusiness().DeleteSchemeInfoXml(schemeId);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 分析合买
+        /// </summary>
+        public CommonActionResult AnalysisSchemeTogether(string schemeId)
+        {
+            try
+            {
+                //var createUserId = string.Empty;
+                //var gameCode = string.Empty;
+                //var gameType = string.Empty;
+                //var payBackMoney = 0M;
+                //var canChase = new Sports_Business().AnalysisSchemeTogether(schemeId, out canPayBack, out createUserId, out gameCode, out gameType, out payBackMoney);
+                new Sports_Business().AnalysisSchemeTogether(schemeId);
+                //SportsChase(schemeId);//分析合买失败后直接撤单，不投注
+
+                return new CommonActionResult(true, "分析合买成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("分析合买异常 - " + ex.Message, ex);
+            }
+        }
+        #endregion
     }
 }

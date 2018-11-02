@@ -1241,5 +1241,15 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<C_Together_FollowerRecord>().Where(p => p.SchemeId == schemeId && p.FollowerUserId == followerUserId).FirstOrDefault();
         }
 
+        public C_Temp_Together QueryTemp_Together(string schemeId)
+        {
+         
+            return DB.CreateQuery<C_Temp_Together>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
+        }
+
+        public void DeleteTemp_Together(C_Temp_Together entity)
+        {
+            DB.GetDal<C_Temp_Together>().Delete(entity);
+        }
     }
 }
