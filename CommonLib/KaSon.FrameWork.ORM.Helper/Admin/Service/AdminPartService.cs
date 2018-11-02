@@ -647,7 +647,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 根据Key值查询用户列表
         /// todo:后台权限
         /// </summary>
-        public UserQueryInfo QueryUserByKey(string userKey, string userToken)
+        public UserQueryInfo QueryUserByKey(string userKey)
         {
             var siteBiz = new LocalLoginBusiness();
             return siteBiz.QueryUserByKey(userKey, string.Empty);
@@ -970,6 +970,8 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public CommonActionResult UpdateMobileAuthen(string userId, string mobile, string userToken)
         {
+            // 验证用户身份及权限
+            var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
             try
             {
                 new MobileAuthenticationBusiness().UpdateMobileAuthen(userId, mobile, userToken);
@@ -1030,7 +1032,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 查询用户资金明细
         /// </summary>
-        public UserFundDetailCollection QueryUserFundDetailList(string userId, string keyLine, DateTime fromDate, DateTime toDate, string accountTypeList, string categoryList, int pageIndex, int pageSize, string userToken)
+        public UserFundDetailCollection QueryUserFundDetailList(string userId, string keyLine, DateTime fromDate, DateTime toDate, string accountTypeList, string categoryList, int pageIndex, int pageSize)
         {
             try
             {
@@ -1101,7 +1103,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 查询提现记录列表
         /// </summary>
-        public Withdraw_QueryInfoCollection QueryWithdrawList(string userKey, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, DateTime startTime, DateTime endTime, int sortType, string operUserId, int pageIndex, int pageSize, string bankcode, string userToken)
+        public Withdraw_QueryInfoCollection QueryWithdrawList(string userKey, WithdrawAgentType? agent, WithdrawStatus? status, decimal minMoney, decimal maxMoney, DateTime startTime, DateTime endTime, int sortType, string operUserId, int pageIndex, int pageSize, string bankcode)
         {
             try
             {

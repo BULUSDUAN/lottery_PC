@@ -592,21 +592,91 @@
     },
     {
       "key": "P_Order_QueryAnteCodeListBySchemeId",
-      "Desc": "查询投注订单列表",
+      "Desc": "按keyline查询追号列表",
       "ParamDesc": "@SchemeId:SchemeId",
       "Director": "renjun",
       "SQL": "SELECT c.*,g.DisplayName GameName,T.DisplayName GameTypeName FROM C_Sports_AnteCode c LEFT OUTER JOIN C_Lottery_Game g on g.GameCode=c.GameCode LEFT OUTER JOIN C_Lottery_GameType t on t.GameCode=c.GameCode AND t.GameType=c.GameType WHERE c.SchemeId=@SchemeId ORDER BY c.IssuseNumber",
       "Remark": ""
     },
     {
-      "key": "P_Prize_OrderTicketList",
-      "Desc": "重新派奖",
-      "ParamDesc": "@GameCode:GameCode,@SchemeId:SchemeId",
-      "Director": "renjun",
-      "SQL": "IF(@GameCode='JCZQ') BEGIN SELECT M.* FROM C_JCZQ_MatchResult_Prize M INNER JOIN (SELECT A.GameCode,A.MatchId FROM C_Sports_AnteCode a where a.SchemeId=@SchemeId GROUP BY A.GameCode,A.MatchId ) A ON A.MatchId=M.MatchId END ELSE IF(@GameCode='BJDC') BEGIN SELECT M.*,m.MatchOrderId as MatchIndex FROM C_BJDC_MatchResult_Prize M INNER JOIN (SELECT A.GameCode,A.MatchId,a.IssuseNumber FROM C_Sports_AnteCode a where a.SchemeId=@SchemeId GROUP BY A.GameCode,A.MatchId,a.IssuseNumber) A ON A.MatchId=M.MatchOrderId and a.IssuseNumber=m.IssuseNumber END ELSE IF(@GameCode='JCLQ') BEGIN SELECT M.*,m.HomeScore as HomeTeamScore,m.GuestScore as GuestTeamScore FROM C_JCLQ_MatchResult_Prize M INNER JOIN (SELECT A.GameCode,A.MatchId FROM C_Sports_AnteCode a where a.SchemeId=@SchemeId GROUP BY A.GameCode,A.MatchId ) A ON A.MatchId=M.MatchId  END",
+      "key": "Admin_QueryUserFundDetailListReportByDate",
+      "Desc": "根据日期查询资金报表",
+      "ParamDesc": "@StartTime:StartTime,@EndTime:EndTime,@PageIndex:PageIndex,@PageSize:PageSize",
+      "Director": "lili",
+      "SQL": "SELECT * FROM( select ROW_NUMBER()OVER(ORDER BY f.id DESC) RowIndex, f.Id, f.UserId ,f.AccountType,f.Category,f.KeyLine,f.OperatorId,f.PayType,f.Summary,f.OrderId,f.BeforeBalance,f.PayMoney,f.AfterBalance,f.CreateTime from C_Fund_Detail f where (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize; option(recompile)",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_QueryUserFundDetailListReportByDate",
+      "Desc": "根据日期查询资金报表",
+      "ParamDesc": "@StartTime:StartTime,@EndTime:EndTime,@PageIndex:PageIndex,@PageSize:PageSize",
+      "Director": "lili",
+      "SQL": "SELECT * FROM( select ROW_NUMBER()OVER(ORDER BY f.id DESC) RowIndex, f.Id, f.UserId ,f.AccountType,f.Category,f.KeyLine,f.OperatorId,f.PayType,f.Summary,f.OrderId,f.BeforeBalance,f.PayMoney,f.AfterBalance,f.CreateTime from C_Fund_Detail f where (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize; option(recompile)",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_QueryUserFundDetailListReportByUserId",
+      "Desc": "根据日期查询资金报表用户Id及类型",
+      "ParamDesc": "@UserId:UserId,@StartTime:StartTime,@EndTime:EndTime,@PageIndex:PageIndex,@PageSize:PageSize",
+      "Director": "lili",
+      "SQL": "SELECT * FROM( select ROW_NUMBER()OVER(ORDER BY f.id DESC) RowIndex, f.Id, f.UserId ,f.AccountType,f.Category,f.KeyLine,f.OperatorId,f.PayType,f.Summary,f.OrderId,f.BeforeBalance,f.PayMoney,f.AfterBalance,f.CreateTime from C_Fund_Detail f where f.UserId=@UserId and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) {0} ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_QueryUserFundDetailListReport_PayIn",
+      "Desc": "根据日期查询资金报表总收入",
+      "ParamDesc": "@UserId:UserId,@StartTime:StartTime,@EndTime:EndTime",
+      "Director": "lili",
+      "SQL": "select count(1) PayInCount, isnull(sum(f.PayMoney),0)TotalPayInMoney from C_Fund_Detail f where (@UserId='' or f.UserId=@UserId) and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) and f.PayType=20 {0}",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_QueryUserFundDetailListReport_PayOut",
+      "Desc": "根据日期查询资金报表总收入",
+      "ParamDesc": "@UserId:UserId,@StartTime:StartTime,@EndTime:EndTime",
+      "Director": "lili",
+      "SQL": "select count(1) PayOutCount, ISNULL(sum(f.PayMoney),0)TotalPayOutMoney from C_Fund_Detail f where (@UserId='' or f.UserId=@UserId) and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) and f.PayType=10 {0}",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_GetFinanceSettingsCollection",
+      "Desc": "获取财务人员列表",
+      "ParamDesc": "@PageIndex:PageIndex,@PageSize:PageSize",
+      "Director": "lili",
+      "SQL": "select * from ( SELECT ROW_NUMBER()OVER(ORDER BY FinanceId) RowIndex, isnull(C_FinanceSettings.FinanceId,0)as FinanceId, isnull(C_FinanceSettings.UserId,'')as UserId, isnull(C_FinanceSettings.OperateRank,'')as OperateRank, isnull(C_FinanceSettings.OperateType,'')as OperateType, cast(C_FinanceSettings.minmoney as nvarchar)+'—'+cast(C_FinanceSettings.Maxmoney as nvarchar) as FinanceMoney, isnull(E_Login_Local.LoginName,'')as LoginName, isnull(loc.LoginName,'') AS Operator, isnull(C_FinanceSettings.CreateTime,'')as CreateTime FROM C_FinanceSettings  INNER JOIN E_Login_Local ON C_FinanceSettings.UserId = E_Login_Local.UserId INNER JOIN  E_Login_Local AS loc ON loc.UserId = C_FinanceSettings.OperatorId {0} ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_GetCaiWuOperator",
+      "Desc": "查询财务人员",
+      "ParamDesc": "",
+      "Director": "lili",
+      "SQL": "select u.UserId,LoginName from C_Auth_Users u left join C_Auth_UserRole ur on ur.UserId=u.UserId inner join C_Auth_RoleFunction fr on fr.RoleId=ur.RoleId inner join E_Login_Local loc on loc.UserId=u.UserId where fr.FunctionId = 'C101' group by u.UserId,LoginName",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_GetFinanceSettingsByFinanceId",
+      "Desc": "根据Id查询财务人员",
+      "ParamDesc": "@FinanceId:FinanceId",
+      "Director": "lili",
+      "SQL": "SELECT isnull(C_FinanceSettings.FinanceId,0)as FinanceId, isnull(C_FinanceSettings.UserId,'')as UserId, isnull(C_FinanceSettings.OperateRank,'')as OperateRank, isnull(C_FinanceSettings.OperateType,'')as OperateType, isnull(C_FinanceSettings.Minmoney,0)as MinMoney, isnull(C_FinanceSettings.MaxMoney,0)as MaxMoney, isnull(E_Login_Local.LoginName,'')as LoginName, isnull(loc.LoginName,'') AS Operator, isnull(C_FinanceSettings.CreateTime,'')as CreateTime FROM C_FinanceSettings INNER JOIN E_Login_Local ON C_FinanceSettings.UserId = E_Login_Local.UserId INNER JOIN E_Login_Local AS loc ON loc.UserId = C_FinanceSettings.OperatorId where C_FinanceSettings.FinanceId=@FinanceId",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_QueryUserBalanceHistoryList",
+      "Desc": "查询结余列表",
+      "ParamDesc": "@StartTime:StartTime,@EndTime:EndTime,@PageIndex:PageIndex,@PageSize:PageSize",
+      "Director": "lili",
+      "SQL": "select * from ( SELECT ROW_NUMBER()OVER(ORDER BY Id) RowIndex, BonusBalance,CommissionBalance, CreateTime,CurrentDouDou,ExpertsBalance, FillMoneyBalance,FreezeBalance,Id, RedBagBalance,UserGrowth,UserId, SaveDateTime from C_User_Balance_History where SaveDateTime>=@StartTime and SaveDateTime<=@EndTime {0} ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Admin_QueryUserBalanceHistoryList_Sum",
+      "Desc": "查询结余统计",
+      "ParamDesc": "@StartTime:StartTime,@EndTime:EndTime",
+      "Director": "lili",
+      "SQL": "SELECT Sum(BonusBalance) as TotalBonusBalance,Sum(CommissionBalance) as TotalCommissionBalance, Sum(CurrentDouDou) as TotalDouDou,Sum(ExpertsBalance) as TotalExpertsBalance, Sum(FillMoneyBalance) as TotalFillMoneyBalance,Sum(FreezeBalance) as TotalFreezeBalance, Sum(RedBagBalance) as TotalRedBagBalance, sum(UserGrowth) as TotalUserGrowth,UserId from C_User_Balance_History where SaveDateTime>=@StartTime and SaveDateTime<=@EndTime {0} group by UserId ",
       "Remark": ""
     }
-
-
   ]
 }

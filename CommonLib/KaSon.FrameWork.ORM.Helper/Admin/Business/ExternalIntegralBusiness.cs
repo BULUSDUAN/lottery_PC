@@ -41,21 +41,31 @@ namespace KaSon.FrameWork.ORM.Helper
         public void RefusedWithdraw(string orderId, string refusedMsg, string userId)
         {
             DB.Begin();
-            var fundManager = new FundManager(); ;
-            var entity = fundManager.QueryWithdraw(orderId);
-            if (entity.Status != (int)WithdrawStatus.Requesting)
+            try
             {
-                throw new Exception("该条信息提现状态不能进行拒绝操作 - " + entity.Status);
+                var fundManager = new FundManager(); ;
+                var entity = fundManager.QueryWithdraw(orderId);
+                if (entity.Status != (int)WithdrawStatus.Requesting)
+                {
+                    throw new Exception("该条信息提现状态不能进行拒绝操作 - " + entity.Status);
+                }
+                entity.Status = (int)WithdrawStatus.Refused;
+                entity.ResponseMoney = 0M;
+                entity.ResponseTime = DateTime.Now;
+                entity.ResponseMessage = refusedMsg;
+                entity.ResponseUserId = userId;
+                fundManager.UpdateWithdraw(entity);
+                // 返还资金
+                BusinessHelper.Payin_FrozenBack(BusinessHelper.FundCategory_IntegralRefusedWithdraw, entity.UserId, orderId, entity.RequestMoney, string.Format("拒绝提取积分，返还积分{0:N2}：{1}", entity.RequestMoney, refusedMsg));
+                DB.Commit();
             }
-            entity.Status = (int)WithdrawStatus.Refused;
-            entity.ResponseMoney = 0M;
-            entity.ResponseTime = DateTime.Now;
-            entity.ResponseMessage = refusedMsg;
-            entity.ResponseUserId = userId;
-            fundManager.UpdateWithdraw(entity);
-            // 返还资金
-            BusinessHelper.Payin_FrozenBack(BusinessHelper.FundCategory_IntegralRefusedWithdraw, entity.UserId, orderId, entity.RequestMoney, string.Format("拒绝提取积分，返还积分{0:N2}：{1}", entity.RequestMoney, refusedMsg));
-            DB.Commit();
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
+            
         }
     }
 }

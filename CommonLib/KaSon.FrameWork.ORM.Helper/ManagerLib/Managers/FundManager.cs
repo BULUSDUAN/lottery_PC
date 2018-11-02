@@ -134,5 +134,21 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_Withdraw>().Update(entity);
         }
+
+        /// <summary>
+        /// 查询用户总充值金额
+        /// </summary>
+        public decimal QueryUserTotalFillMoney(string userId)
+        {
+            return DB.CreateQuery<C_FillMoney>().Where(p => p.UserId == userId && p.Status == (int)FillMoneyStatus.Success).Sum(p => p.RequestMoney);
+        }
+
+        /// <summary>
+        /// 查询用户总提现金额
+        /// </summary>
+        public decimal QueryUserTotalWithdrawMoney(string userId)
+        {
+            return DB.CreateQuery<C_Withdraw>().Where(p => p.UserId == userId && p.Status == (int)WithdrawStatus.Success).Sum(p => p.RequestMoney);
+        }
     }
 }
