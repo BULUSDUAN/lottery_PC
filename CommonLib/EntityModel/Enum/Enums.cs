@@ -1755,4 +1755,16 @@ namespace EntityModel.Enum
         /// </summary>
         Withdraw = 1
     }
+
+    public enum MGGameType
+    {
+        /// <summary>
+        /// 普通游戏
+        /// </summary>
+        SMG=0,
+        /// <summary>
+        /// 捕鱼
+        /// </summary>
+        SMF=1
+    }
 }

@@ -570,5 +570,32 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
+
+
+        public async Task<IActionResult> GetIndexGameShow([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                var Key = "APP_IndexGameShow";
+                var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, Key);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = "",
+                    Value = JsonHelper.Deserialize<object>(APP_Common_Value)
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = "查询配置失败" + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage()
+                });
+            }
+        }
     }
 }

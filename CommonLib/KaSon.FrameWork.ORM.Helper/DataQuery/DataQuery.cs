@@ -644,7 +644,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <param name="userId"></param>
         /// <param name="money"></param>
         /// <returns></returns>
-        public CommonActionResult FreezeGameRecharge(string userId, decimal money, string userDisplayName)
+        public CommonActionResult FreezeGameRecharge(string userId, decimal money, string userDisplayName,int gameType)
         {
             var orderId = BettingHelper.GetGameTransferId();
             var msg = string.Format("游戏充值订单号{0}", orderId);
@@ -660,7 +660,8 @@ namespace KaSon.FrameWork.ORM.Helper
                     Status = (int)FillMoneyStatus.Requesting,
                     UserId = userId,
                     TransferType = (int)GameTransferType.Recharge,
-                    UserDisplayName = userDisplayName
+                    UserDisplayName = userDisplayName,
+                    GameType= gameType
                 });
                 DB.Commit();
             }
@@ -754,7 +755,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
         }
 
-        public CommonActionResult AddGameWithdraw_Step1(string userId, decimal money, string userDisplayName)
+        public CommonActionResult AddGameWithdraw_Step1(string userId, decimal money, string userDisplayName,int gameType)
         {
             //var orderId = BettingHelper.GetGameTransferId();
             var orderId = BettingHelper.GetGameTransferId();
@@ -766,7 +767,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 Status = (int)FillMoneyStatus.Requesting,
                 UserId = userId,
                 TransferType = (int)GameTransferType.Withdraw,
-                UserDisplayName = userDisplayName
+                UserDisplayName = userDisplayName,
+                GameType= gameType
             });
             return new CommonActionResult() { IsSuccess = true, ReturnValue = orderId };
         }
@@ -817,7 +819,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     oldModel.UpdateTime = DateTime.Now;
                     oldModel.ProviderSerialNo = providerSerialNo;
                     DB.GetDal<C_Game_Transfer>().Update(oldModel);
-                    BusinessHelper.Payin_To_Balance(AccountType.FillMoney, BusinessHelper.FundCategory_GameWithdraw, oldModel.UserId, oldModel.OrderId, oldModel.RequestMoney,
+                    BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_GameWithdraw, oldModel.UserId, oldModel.OrderId, oldModel.RequestMoney,
                     string.Format("游戏提款成功，金额：{0:N2}元存入账号", oldModel.RequestMoney));
                 }
                 else

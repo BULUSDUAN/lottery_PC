@@ -71,5 +71,12 @@ namespace EntityModel
         [ProtoMember(9)]
         [Field("ProviderSerialNo")]
         public string ProviderSerialNo { get; set; }
+
+        /// <summary>
+        /// 游戏类型（0普通，1捕鱼捕鸟）
+        /// </summary>
+        [ProtoMember(10)]
+        [Field("GameType")]
+        public int GameType { get; set; }
     }
 }

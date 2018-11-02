@@ -152,7 +152,7 @@ namespace Lottery.Service.IModuleServices
         Task<WinNumber_QueryInfo> GetWinNumber(string gameCode, string gameType, string issuseNumber);
 
         [Service(Date = "2018-9-27", Director = "lidi", Name = "冻结需要充值的金额")]
-        Task<CommonActionResult> FreezeGameRecharge(string userId, decimal money, string userDisplayName);
+        Task<CommonActionResult> FreezeGameRecharge(string userId, decimal money, string userDisplayName, int gameType);
 
         [Service(Date = "2018-9-27", Director = "lidi", Name = "游戏充值完成后操作")]
         Task<CommonActionResult> EndFreezeGameRecharge(string orderId, bool isSuccess, string providerSerialNo);
@@ -163,7 +163,7 @@ namespace Lottery.Service.IModuleServices
         //[Service(Date = "2018-9-27", Director = "lidi", Name = "提款完成，修改交易表")]
         //Task<CommonActionResult> EndAddGameWithdraw(string OrderId, bool IsSuccess);
         [Service(Date = "2018-10-25", Director = "lidi", Name = "提款步骤1")]
-        Task<CommonActionResult> AddGameWithdraw_Step1(string userId, decimal money, string userDisplayName);
+        Task<CommonActionResult> AddGameWithdraw_Step1(string userId, decimal money, string userDisplayName, int gameType);
 
         //[Service(Date = "2018-10-25", Director = "lidi", Name = "提款步骤2")]
         //Task<CommonActionResult> AddGameWithdraw_Step2(string userId, string orderId, string providerSerialNo);
