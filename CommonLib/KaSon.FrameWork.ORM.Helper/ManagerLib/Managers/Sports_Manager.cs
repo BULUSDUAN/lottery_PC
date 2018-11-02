@@ -32,6 +32,11 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_Sports_Order_Running>().Add(entity);
         }
+
+        public void UpdateTogetherFollowerRecord(C_Together_FollowerRecord entity)
+        {
+            DB.GetDal<C_Together_FollowerRecord>().Update(entity);
+        }
         //public void SqlBulkAddTable(DataTable dt)
         //{
         //    if (dt.Rows.Count <= 0) return;
@@ -1155,5 +1160,86 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             return info;
         }
+
+        public TicketId_QueryInfoCollection QueryPrizeTicket_OrderIdList(string gameCode, string schemeId)
+        {
+
+            // 通过数据库存储过程进行查询
+            var query = SqlModule.AdminModule.FirstOrDefault(x => x.Key == "P_Prize_OrderTicketList").SQL;
+            var MatchInfo = DB.CreateSQLQuery(query).SetString("GameCode", gameCode).SetString("SchemeId", schemeId).List<MatchInfo>().ToList();
+
+            var result = new TicketId_QueryInfoCollection();
+            result.SportsTicketList = DB.CreateQuery<C_Sports_Ticket>().Where(p => p.SchemeId == schemeId).ToList();
+            result.MatchList = MatchInfo;
+            result.TotalTicketCount = result.SportsTicketList.Count;
+            result.TotalMatchCount = result.MatchList.Count;
+            return result;
+        }
+
+        public List<C_Sports_Order_Running> QueryBrotherSports_Order_Running(string schemeId)
+        {
+           
+            var result = new List<C_Sports_Order_Running>();
+            var sql = string.Format(@"select r.SchemeId,r.UserId,r.GameCode,
+                                    r.GameType,r.PlayType,r.SchemeType,
+                                    r.SchemeSource,r.SchemeBettingCategory,
+                                    r.IssuseNumber,r.Amount,r.BetCount,r.TotalMatchCount,
+                                    r.TotalMoney,r.StopTime,r.TicketStatus,r.TicketId,
+                                    r.TicketLog,r.ProgressStatus,r.BonusStatus,
+                                    r.HitMatchCount,r.PreTaxBonusMoney,r.AfterTaxBonusMoney,
+                                    r.CanChase,r.IsVirtualOrder,r.CreateTime,r.AgentId,r.Security
+ 
+                                    from C_Sports_Order_Running r
+                                    where r.SchemeId in (
+                                    select t.SchemeId 
+                                    from C_Lottery_Scheme t
+                                    where t.KeyLine =(select s.KeyLine from C_Lottery_Scheme s where s.SchemeId='{0}')
+                                    )
+                                    order by r.IssuseNumber ASC", schemeId);
+            var array = DB.CreateSQLQuery(sql).List<C_Sports_Order_Running>();
+            //if (array == null)
+            //    return result;
+            //foreach (var item in array)
+            //{
+              
+            //    result.Add(new Sports_Order_Running
+            //    {
+            //        SchemeId = item.,
+            //        UserId = UsefullHelper.GetDbValue<string>(row[1]),
+            //        GameCode = UsefullHelper.GetDbValue<string>(row[2]),
+            //        GameType = UsefullHelper.GetDbValue<string>(row[3]),
+            //        PlayType = UsefullHelper.GetDbValue<string>(row[4]),
+            //        SchemeType = UsefullHelper.GetDbValue<SchemeType>(row[5]),
+            //        SchemeSource = UsefullHelper.GetDbValue<SchemeSource>(row[6]),
+            //        SchemeBettingCategory = UsefullHelper.GetDbValue<SchemeBettingCategory>(row[7]),
+            //        IssuseNumber = UsefullHelper.GetDbValue<string>(row[8]),
+            //        Amount = UsefullHelper.GetDbValue<int>(row[9]),
+            //        BetCount = UsefullHelper.GetDbValue<int>(row[10]),
+            //        TotalMatchCount = UsefullHelper.GetDbValue<int>(row[11]),
+            //        TotalMoney = UsefullHelper.GetDbValue<decimal>(row[12]),
+            //        StopTime = UsefullHelper.GetDbValue<DateTime>(row[13]),
+            //        TicketStatus = UsefullHelper.GetDbValue<TicketStatus>(row[14]),
+            //        TicketId = UsefullHelper.GetDbValue<string>(row[15]),
+            //        TicketLog = UsefullHelper.GetDbValue<string>(row[16]),
+            //        ProgressStatus = UsefullHelper.GetDbValue<ProgressStatus>(row[17]),
+            //        BonusStatus = UsefullHelper.GetDbValue<BonusStatus>(row[18]),
+            //        HitMatchCount = UsefullHelper.GetDbValue<int>(row[19]),
+            //        PreTaxBonusMoney = UsefullHelper.GetDbValue<decimal>(row[20]),
+            //        AfterTaxBonusMoney = UsefullHelper.GetDbValue<decimal>(row[21]),
+            //        CanChase = UsefullHelper.GetDbValue<bool>(row[22]),
+            //        IsVirtualOrder = UsefullHelper.GetDbValue<bool>(row[23]),
+            //        CreateTime = UsefullHelper.GetDbValue<DateTime>(row[24]),
+            //        AgentId = UsefullHelper.GetDbValue<string>(row[25]),
+            //        Security = UsefullHelper.GetDbValue<TogetherSchemeSecurity>(row[26]),
+            //    });
+            //}
+            return result;
+        }
+        public C_Together_FollowerRecord QueryFollowerRecordBySchemeId(string schemeId, string followerUserId)
+        {
+         
+            return DB.CreateQuery<C_Together_FollowerRecord>().Where(p => p.SchemeId == schemeId && p.FollowerUserId == followerUserId).FirstOrDefault();
+        }
+
     }
 }

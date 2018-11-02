@@ -265,5 +265,11 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
              ).ToList();
         }
+
+        public C_Game_Issuse QueryIssuse(string gameCode, string gameType, string issuseNumber)
+        {
+          
+            return DB.CreateQuery<C_Game_Issuse>().Where(p => p.GameCode == gameCode && (gameType == "" || p.GameType == gameType) && p.IssuseNumber == issuseNumber).FirstOrDefault();
+        }
     }
 }

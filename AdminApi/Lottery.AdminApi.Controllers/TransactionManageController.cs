@@ -358,6 +358,45 @@ namespace Lottery.AdminApi.Controllers
             }
         }
 
+        /// <summary>
+        /// 重新派奖
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult RePrizeOrder(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                if ((string)p.SchemeId == null)
+                    throw new Exception("订单号不能为空！");
+                var result = _service.ManualPrizeOrder((string)p.SchemeId);
+                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsSuccess = false, Msg = ex.Message });
+            }
+        }
+        /// <summary>
+        /// 手工出票
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult ManualBet(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                if ((string)p.SchemeId == null)
+                    throw new Exception("订单号不能为空！");
+                var result = _service.ManualBet((string)p.SchemeId);
+                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsSuccess = false, Msg = ex.Message });
+            }
+        }
+
 
     }
 }

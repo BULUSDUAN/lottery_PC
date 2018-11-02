@@ -337,7 +337,7 @@ namespace KaSon.FrameWork.ORM.Helper
             // 通过数据库存储过程进行查询
             var query = SqlModule.AdminModule.FirstOrDefault(x => x.Key == "P_Order_QueryAnteCodeListBySchemeId").SQL;
             var ListInfo = DB.CreateSQLQuery(query)
-           .SetString("keyLine", keyLine).List<BettingAnteCodeInfo>().ToList(); 
+           .SetString("schemeId", schemeId).List<BettingAnteCodeInfo>().ToList(); 
             return ListInfo;
         }
     }

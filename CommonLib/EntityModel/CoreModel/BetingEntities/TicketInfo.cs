@@ -17,6 +17,11 @@ namespace EntityModel.CoreModel
         /// 票列表
         /// </summary>
         public IList<Sports_TicketQueryInfo> TicketList { get; set; }
+
+        /// <summary>
+        /// 票列表
+        /// </summary>
+        public IList<C_Sports_Ticket> SportsTicketList { get; set; }
         /// <summary>
         /// 记录总数
         /// </summary>

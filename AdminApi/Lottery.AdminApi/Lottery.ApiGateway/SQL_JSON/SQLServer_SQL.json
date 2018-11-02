@@ -592,11 +592,21 @@
     },
     {
       "key": "P_Order_QueryAnteCodeListBySchemeId",
-      "Desc": "按keyline查询追号列表",
+      "Desc": "查询投注订单列表",
       "ParamDesc": "@SchemeId:SchemeId",
       "Director": "renjun",
       "SQL": "SELECT c.*,g.DisplayName GameName,T.DisplayName GameTypeName FROM C_Sports_AnteCode c LEFT OUTER JOIN C_Lottery_Game g on g.GameCode=c.GameCode LEFT OUTER JOIN C_Lottery_GameType t on t.GameCode=c.GameCode AND t.GameType=c.GameType WHERE c.SchemeId=@SchemeId ORDER BY c.IssuseNumber",
       "Remark": ""
+    },
+    {
+      "key": "P_Prize_OrderTicketList",
+      "Desc": "重新派奖",
+      "ParamDesc": "@GameCode:GameCode,@SchemeId:SchemeId",
+      "Director": "renjun",
+      "SQL": "IF(@GameCode='JCZQ') BEGIN SELECT M.* FROM C_JCZQ_MatchResult_Prize M INNER JOIN (SELECT A.GameCode,A.MatchId FROM C_Sports_AnteCode a where a.SchemeId=@SchemeId GROUP BY A.GameCode,A.MatchId ) A ON A.MatchId=M.MatchId END ELSE IF(@GameCode='BJDC') BEGIN SELECT M.*,m.MatchOrderId as MatchIndex FROM C_BJDC_MatchResult_Prize M INNER JOIN (SELECT A.GameCode,A.MatchId,a.IssuseNumber FROM C_Sports_AnteCode a where a.SchemeId=@SchemeId GROUP BY A.GameCode,A.MatchId,a.IssuseNumber) A ON A.MatchId=M.MatchOrderId and a.IssuseNumber=m.IssuseNumber END ELSE IF(@GameCode='JCLQ') BEGIN SELECT M.*,m.HomeScore as HomeTeamScore,m.GuestScore as GuestTeamScore FROM C_JCLQ_MatchResult_Prize M INNER JOIN (SELECT A.GameCode,A.MatchId FROM C_Sports_AnteCode a where a.SchemeId=@SchemeId GROUP BY A.GameCode,A.MatchId ) A ON A.MatchId=M.MatchId  END",
+      "Remark": ""
     }
+
+
   ]
 }

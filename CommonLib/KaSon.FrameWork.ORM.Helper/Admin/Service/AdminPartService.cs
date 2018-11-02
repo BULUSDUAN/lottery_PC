@@ -972,7 +972,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             try
             {
-                new MobileAuthenticationBusiness().UpdateMobileAuthen(userId, mobile, myId);
+                new MobileAuthenticationBusiness().UpdateMobileAuthen(userId, mobile, userToken);
                 return new CommonActionResult(true, "操作成功");
             }
             catch (Exception ex)
@@ -1840,6 +1840,18 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 throw new Exception("操作失败 " + ex.Message, ex);
             }
+        }
+
+        public CommonActionResult ManualBet(string orderId)
+        {
+            new Sports_Business().ManualBet(orderId);
+            return new CommonActionResult(true, "投注出票完成");
+        }
+
+        public CommonActionResult ManualPrizeOrder(string orderId)
+        {
+            new Sports_Business().ManualPrizeOrder(orderId);
+            return new CommonActionResult(true, "票数据派奖完成");
         }
     }
 }
