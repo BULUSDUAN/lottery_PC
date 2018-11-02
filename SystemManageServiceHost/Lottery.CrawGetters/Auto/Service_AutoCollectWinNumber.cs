@@ -7,6 +7,7 @@ using System.Linq;
 using EntityModel.ExceptionExtend;
 using System.Threading.Tasks;
 using System.Threading;
+using MongoDB.Driver;
 
 namespace Lottery.CrawGetters.Auto
 {
@@ -14,19 +15,22 @@ namespace Lottery.CrawGetters.Auto
     /// <summary>
     /// 自动采集中奖号码服务
     /// </summary>
-    public class Service_AutoCollectWinNumber //: IWindowsService
+    public class Service_AutoCollectWinNumber : BaseAutoCollect
     {
         private long BeStop = 0;
         ILogger<Service_AutoCollectWinNumber> _log = null;
         private TimeSpan sleep;
-        Service_AutoCollectWinNumber() {
-            _log= InitConfigInfo.logFactory.CreateLogger<Service_AutoCollectWinNumber>();
-
-        }
-        public Service_AutoCollectWinNumber(TimeSpan sleep):this()
+      
+        private IMongoDatabase mDB;
+        private string gameName = "";
+        public Service_AutoCollectWinNumber(IMongoDatabase _mDB,string _gameName, TimeSpan sleep):base(_gameName,_mDB)
         {
+            _log = InitConfigInfo.logFactory.CreateLogger<Service_AutoCollectWinNumber>();
+            mDB = _mDB;
             this.sleep = sleep;
+            this.gameName = _gameName;
         }
+     
         //if (fatellogger == null) {
         //       fatellogger = ;//.Fatal(message, exception);
         //   }
@@ -119,7 +123,8 @@ namespace Lottery.CrawGetters.Auto
                 }
                 catch (Exception e)
                 {
-                    _log.LogError("", e);
+                    //_log.LogError("", e);
+                    WriteError("Process:" + e.Message);
                 }
                 if (dict != null && dict.Count > 0)
                 {
@@ -160,7 +165,8 @@ namespace Lottery.CrawGetters.Auto
         public string Key="";
 
         private Task thread=null;
-        public void Start(string gameName, Func<string, ConcurrentDictionary<string, string>, Dictionary<string, string>, bool> fn)
+        
+        public void Start( Func<string, ConcurrentDictionary<string, string>, Dictionary<string, string>, bool> fn)
         {
             if (thread != null)
             {
@@ -176,6 +182,7 @@ namespace Lottery.CrawGetters.Auto
                 while (Interlocked.Read(ref BeStop) == 0)
                 {
                     ////TODO：销售期间，暂停采集
+                    WriteLogAll();
                     try
                     {
                         dic= Process(gameName, all, new ISZCWinNumberCrawler[] { new SZCWinNumberCommercial(), new SZCWinNumberQCW() });
@@ -187,17 +194,19 @@ namespace Lottery.CrawGetters.Auto
                             foreach (var item in dic)
                             {
                                 all.TryAdd(item.Key, item.Value);
-                                Console.WriteLine("采集到数据"+item.Key+item.Value);
+                               // Console.WriteLine("采集到数据"+item.Key+item.Value);
+                                WriteLog("采集到数据" + item.Key + item.Value);
                             }
 
+                            WriteLog("成功同步到数据库" );
                         }
                         
                        // return false;
-
+                      // WriteLog(gameName,)
                     }
                     catch (Exception ex)
                     {
-                        _log.LogError("", ex);
+                        WriteError("处理:" + ex.Message);
                     }
                     finally
                     {

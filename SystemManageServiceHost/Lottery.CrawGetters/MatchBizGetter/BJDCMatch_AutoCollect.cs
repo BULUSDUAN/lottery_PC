@@ -24,7 +24,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
 {
   
 
-    public class BJDCMatch_AutoCollect : IBallAutoCollect
+    public class BJDCMatch_AutoCollect : BaseAutoCollect, IAutoCollect
     {
        
         private const string logCategory = "Services.Info";
@@ -41,16 +41,20 @@ namespace Lottery.CrawGetters.MatchBizGetter
         private List<BJDCMatchResultCache> cacheMatchResult = new List<BJDCMatchResultCache>();
         //private MatchManager manager = new MatchManager(DbAccess_Match_Helper.DbAccess);
         private IMongoDatabase mDB;
-        public BJDCMatch_AutoCollect(IMongoDatabase _mDB)
-        {
-            mDB = _mDB;
-        }
-
+      
         public string Category { get; set; }
         public string Key { get; set; }
 
         private Task thread = null;
-        public void Start(string gameCode)
+        private string gameCode { get; set; }
+        private int sleepSecond = 5;
+        public BJDCMatch_AutoCollect(IMongoDatabase _mDB, string _gameName, int _sleepSecond = 5) : base(_gameName + "Match_", _mDB)
+        {
+            this.sleepSecond = _sleepSecond;
+            this.gameCode = _gameName;
+            mDB = _mDB;
+        }
+        public void Start()
         {
 
             
@@ -87,7 +91,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     finally
                     {
-                        Thread.Sleep(2000);
+                        if (isError)
+                        {
+                            Thread.Sleep(2000);
+                        }
+                        else
+                        {
+                            Thread.Sleep(this.sleepSecond*1000);
+                        }
                     }
                 }
             });
@@ -826,7 +837,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
         /// </summary>
         private void WriteBJSingle_SP_Json(string gameType, string issuseNumber, string xmlContent)
         {
-            var tableName = string.Format("SP_{0}", gameType);
+            var tableName = "BJDC_SP_"+ gameType;
             //  var fileFullName = BuildFileFullName(fileName, issuseNumber);
             if (xmlContent=="404")
             {
@@ -855,9 +866,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 case "SPF":
                     var spf_sp = LoadSPF_SPList(root, issuseNumber);
                     //GetNew_ZJQ_SPList
-                   //var spf_DifferSp = Save_SPF_SP_And_GetDiffer(fileFullName, spf_sp);
+                    //var spf_DifferSp = Save_SPF_SP_And_GetDiffer(fileFullName, spf_sp);
+                    spf_sp.ForEach(x => x.GameType = gameType);
+
                     var mFilter = MongoDB.Driver.Builders<BJDC_SPF_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber)
                & Builders<BJDC_SPF_SpInfo>.Filter.Eq(b => b.GameType, gameType);
+                  
+
+
                     var spf_DifferSp = ServiceHelper.Save_And_GetDiffer<BJDC_SPF_SpInfo>(mDB, tableName, spf_sp, mFilter, GetNew_SPF_SPList);
                  //   Write_SPF_SP_Trend_JSON(spf_DifferSp);
                     ServiceHelper.Write_Trend_JSON<BJDC_SPF_SpInfo>(mDB, tableName, spf_DifferSp, CurrentMatchList);
@@ -868,10 +884,11 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 //总进球ZJQ
                 case "ZJQ":
                     var zjq_sp = LoadZJQ_SPList(root, issuseNumber);
-               //var zjq_DifferSp = Save_ZJQ_SP_And_GetDiffer(fileFullName, zjq_sp);
+                    zjq_sp.ForEach(x => x.GameType = gameType);
+                    //var zjq_DifferSp = Save_ZJQ_SP_And_GetDiffer(fileFullName, zjq_sp);
                     //Write_ZJQ_SP_Trend_JSON(zjq_DifferSp);
                     var mFilter_ZJQ = MongoDB.Driver.Builders<BJDC_ZJQ_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber)
-           & Builders<BJDC_ZJQ_SpInfo>.Filter.Eq(b => b.GameType, gameType);
+          & Builders<BJDC_ZJQ_SpInfo>.Filter.Eq(b => b.GameType, gameType);
                     var spf_DifferSp_ZJQ = ServiceHelper.Save_And_GetDiffer<BJDC_ZJQ_SpInfo>(mDB, tableName, zjq_sp, mFilter_ZJQ, GetNew_ZJQ_SPList);
                     //   Write_SPF_SP_Trend_JSON(spf_DifferSp);
                     ServiceHelper.Write_Trend_JSON<BJDC_ZJQ_SpInfo>(mDB, tableName, spf_DifferSp_ZJQ, CurrentMatchList);
@@ -882,6 +899,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     var sxds_sp = LoadSXDS_SPList(root, issuseNumber);
                     //var sxds_DifferSp = Save_SXDS_SP_And_GetDiffer(fileFullName, sxds_sp);
                     //Write_SXDS_SP_Trend_JSON(sxds_DifferSp);
+                    sxds_sp.ForEach(x => x.GameType = gameType);
 
                     var mFilter_SXDS = MongoDB.Driver.Builders<BJDC_SXDS_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber)
     & Builders<BJDC_SXDS_SpInfo>.Filter.Eq(b => b.GameType, gameType);
@@ -895,7 +913,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     var bf_sp = LoadBF_SPList(root, issuseNumber);
                     //var bf_DifferSp = Save_BF_SP_And_GetDiffer(fileFullName, bf_sp);
                     //Write_BF_SP_Trend_JSON(bf_DifferSp);
-
+                    bf_sp.ForEach(x => x.GameType = gameType);
 
                     var mFilter_BF = MongoDB.Driver.Builders<BJDC_BF_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber)
     & Builders<BJDC_BF_SpInfo>.Filter.Eq(b => b.GameType, gameType);
@@ -907,10 +925,10 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 //半全场BJBQC
                 case "BQC":
                     var bqc_sp = LoadBQC_SPList(root, issuseNumber);
-                   // var bqc_DifferSp = Save_BQC_SP_And_GetDiffer(fileFullName, bqc_sp);
+                    // var bqc_DifferSp = Save_BQC_SP_And_GetDiffer(fileFullName, bqc_sp);
                     //Write_BQC_SP_Trend_JSON(bqc_DifferSp);
 
-
+                    bqc_sp.ForEach(x => x.GameType = gameType);
 
 
                     var mFilter_BQC = MongoDB.Driver.Builders<BJDC_BQC_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuseNumber)
@@ -4403,20 +4421,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 timer.Stop();
         }
 
-        public void WriteLog(string log)
-        {
-            Console.WriteLine(log);
-            //if (_logWriter != null)
-            //    _logWriter.Write(logCategory, logInfoSource, LogType.Information, "自动采集北京单场数据", log);
-        }
-
-        public void WriteError(string log)
-        {
-            Console.WriteLine(log);
-            //if (_logWriter != null)
-            //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集北京单场数据异常", log);
-        }
-
+        
         /// <summary>
         /// 采集310win的FXId
         /// </summary>

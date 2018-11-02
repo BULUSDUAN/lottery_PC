@@ -2,19 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lottery.CrawGetters.MatchBizGetter
+namespace Lottery.CrawGetters
 {
     /// <summary>
     ///  球采集接口
     /// </summary>
-   public interface IBallAutoCollect
+   public interface IAutoCollect
     {
          string Category { get; set; }
         string Key { get; set; }
-         void Start(string gameCode);
+         void Start();
         void Stop();
 
-        void WriteLog(string log);
-        void WriteError(string log);
+    
     }
 }

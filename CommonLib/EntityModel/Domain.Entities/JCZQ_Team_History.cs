@@ -1,9 +1,11 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace EntityModel.Domain.Entities
 {
+    [BsonIgnoreExtraElements]
     public class JCZQ_Team_History
     {
        

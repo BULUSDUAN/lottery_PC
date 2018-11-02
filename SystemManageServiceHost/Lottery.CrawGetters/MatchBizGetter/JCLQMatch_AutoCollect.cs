@@ -26,7 +26,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
     /// <summary>
     /// 竞彩篮球
     /// </summary>
-    public class JCLQMatch_AutoCollect : IBallAutoCollect
+    public class JCLQMatch_AutoCollect : BaseAutoCollect, IAutoCollect
     {
     
         private const string logCategory = "Services.Info";
@@ -61,12 +61,16 @@ namespace Lottery.CrawGetters.MatchBizGetter
         public string Key { get; set; }
         public string Category { get; set; }
         private IMongoDatabase mDB;
-        public JCLQMatch_AutoCollect(IMongoDatabase _mDB)
+        private string gameCode { get; set; }
+        private int sleepSecond = 5;
+        public JCLQMatch_AutoCollect(IMongoDatabase _mDB, string _gameName, int _sleepSecond = 5) : base(_gameName + "OZSP", _mDB)
         {
+            this.sleepSecond = _sleepSecond;
+            this.gameCode = _gameName;
             mDB = _mDB;
         }
         private Task thread = null;
-        public void Start(string gameCode)
+        public void Start()
         {
             gameCode = gameCode.ToUpper();
             logInfoSource += gameCode;
@@ -101,7 +105,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     finally
                     {
-                        Thread.Sleep(2000);
+                        if (isError)
+                        {
+                            Thread.Sleep(2000);
+                        }
+                        else
+                        {
+                            Thread.Sleep(this.sleepSecond * 1000);
+                        }
                     }
                 }
             });
@@ -4710,20 +4721,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 timer.Stop();
         }
 
-        public void WriteError(string log)
-        {
-            Console.WriteLine(log);
-            //if (_logWriter != null)
-            //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集竞彩篮球队伍数据", log);
-        }
-
-        public void WriteLog(string log)
-        {
-            Console.WriteLine(log);
-            //if (_logWriter != null)
-            //    _logWriter.Write(logCategory, logInfoSource, LogType.Information, "自动采集竞彩篮球队伍数据", log);
-        }
-
+       
         /// <summary>
         /// 采集310win的FXId
         /// </summary>

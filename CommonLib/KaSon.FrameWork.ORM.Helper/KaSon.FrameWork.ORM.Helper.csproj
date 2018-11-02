@@ -35,8 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SystemManageServiceHost\KaSon.FrameWork.ORM\KaSon.FrameWork.ORM.csproj" />
-    <ProjectReference Include="..\..\SystemManageServiceHost\KaSon.FrameWork.Services\KaSon.FrameWork.Services.csproj" />
     <ProjectReference Include="..\EntityModel\EntityModel.csproj" />
     <ProjectReference Include="..\KaSon.FrameWork.Analyzer\KaSon.FrameWork.Analyzer.csproj" />
     <ProjectReference Include="..\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
@@ -62,6 +60,15 @@
 
   <ItemGroup>
     <Folder Include="LotteryJsonInfo_Operate\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="KaSon.FrameWork.ORM">
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
+    </Reference>
+    <Reference Include="KaSon.FrameWork.Services">
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>

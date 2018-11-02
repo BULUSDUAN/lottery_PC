@@ -40,6 +40,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             {
                 LottertDataDB.Begin();
 
+                try
+                {
+
                 this.ClearGameChartCache("QuerySSQ_JiBenZouSi");
                 this.ClearGameChartCache("QuerySSQ_DX");
                 this.ClearGameChartCache("QuerySSQ_C3");
@@ -59,8 +62,14 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                 AddSSQ_DX(issuseNumber, winNumber);
                 AddSSQ_JiOu(issuseNumber, winNumber);
                 Add_GameWinNumber(issuseNumber, winNumber);
-
-                LottertDataDB.Commit();
+                    LottertDataDB.Commit();
+                }
+                catch (Exception)
+                {
+                    LottertDataDB.Rollback();
+                    throw;
+                }
+               
             }
         }
 

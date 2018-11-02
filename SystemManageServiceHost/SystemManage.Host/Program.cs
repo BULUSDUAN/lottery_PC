@@ -34,6 +34,8 @@ using KaSon.FrameWork.ORM.Helper.AutoTask;
 using kason.Sg.Core.Mongo;
 using MongoDB.Driver;
 using Lottery.CrawGetters;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace SystemManage.Host
 {
@@ -153,6 +155,13 @@ namespace SystemManage.Host
             // LotteryGameManager lotGm = new LotteryGameManager();
             // lotGm.StartInitData();
             //new Sports_Business().Test();
+           
+          
+            Task.Factory.StartNew(async delegate
+            {
+                var obj = await Start_ConfigGameType(Auto_CollectSettings);
+            });
+            //  RedisMatchBusiness.ReloadCurrentBJDCMatch();
             Clear();
 
 
@@ -165,13 +174,75 @@ namespace SystemManage.Host
             Console.Clear();
             Clear();
         }
-        static void Start_ConfigGameType(JToken Auto_CollectSettings)
+        static async Task<object> Start_ConfigGameType(JToken Auto_CollectSettings)
         {
             string strList = Auto_CollectSettings.ToString();
+            var list = new List<StartGameTypeModel>();
+            try
+            {
+                list = JsonHelper.Deserialize<List<StartGameTypeModel>>(strList);
+            }
+            catch (Exception ex)
+            {
 
-            var list = JsonHelper.Deserialize<List<StartGameTypeModel>>(strList);
+                throw;
+            }
+            // Thread.Sleep(5000);
+            try
+            {
+                IServiceProxyProvider _serviceProxyProvider = ServiceLocator.Current.Resolve<IServiceProxyProvider>();
+                foreach (var item in list)
+                {
+                    Dictionary<string, object> model = new Dictionary<string, object>();
+                    string path = item.Path;
+                    Console.WriteLine(path);
+                    if (bool.Parse(item.IsStart.ToString()))//是否启动
+                    {
+
+                        if (!string.IsNullOrEmpty(item.Param.ToString()))
+                        {
+                            var parr = item.Param.ToString().Split(',');
+                            foreach (var item1 in parr)
+                            {
+                                var parr1 = item1.Split('|');
+                                model[parr1[0].Trim()] = parr1[1].Trim();
+                            }
+                        }
+                        try
+                        {
 
 
+                            Console.WriteLine(path);
+
+                            //model["gameName"] = "SSQ";
+
+                            await _serviceProxyProvider.Invoke<object>(model, path);
+                            //byte[] byteArray = System.Text.Encoding.GetEncoding("gb2312").GetBytes(item["Desc"].ToString());
+
+                            ///  string aaa2 = System.Text.Encoding.GetEncoding("gb2312").GetString(byteArray);
+                            Console.WriteLine(string.Format("{0}{1}", item.Desc.ToString(), " 启动了"));
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(string.Format("{0}{1}{2}", item.Desc.ToString(), " 启动失败", ex.Message));
+
+                        }
+
+
+                        //   ServiceLocator.Current.s<IServiceProxyProvider>()
+
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+           
+           return Task.FromResult("");
 
         }
     }
@@ -185,7 +256,10 @@ namespace SystemManage.Host
         /// <summary>
         /// 是否启动
         /// </summary>
-        public bool IsStart { get; set; } 
+        public string IsStart { get; set; }
+        public string Desc { get; set; }
+        public string Param { get; set; }
+        public string Path { get; set; }
     }
 }
 

@@ -18,7 +18,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
     /// <summary>
     /// 采集欧赔
     /// </summary>
-    public class JCZQ_OZSP_AutoCollect : IBallAutoCollect
+    public class JCZQ_OZSP_AutoCollect : BaseAutoCollect, IAutoCollect
     {
       
         private const string logCategory = "Services.Info";
@@ -34,14 +34,17 @@ namespace Lottery.CrawGetters.MatchBizGetter
         public string Category { get; set; }
 
         private IMongoDatabase mDB;
-        public JCZQ_OZSP_AutoCollect(IMongoDatabase _mDB)
+        private string gameCode { get; set; }
+        private int sleepSecond = 5;
+        public JCZQ_OZSP_AutoCollect(IMongoDatabase _mDB, string _gameName, int _sleepSecond = 5) : base(_gameName + "OZSP", _mDB)
         {
+            this.sleepSecond = _sleepSecond;
+            this.gameCode = _gameName;
             mDB = _mDB;
         }
 
-    
         private Task thread = null;
-        public void Start(string gameCode)
+        public void Start()
         {
             gameCode = gameCode.ToUpper();
             logInfoSource += gameCode;
@@ -71,11 +74,19 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     catch
                     {
-                        Thread.Sleep(10000);
+                        Thread.Sleep(2000);
                     }
                     finally
                     {
-                        Thread.Sleep(10000);
+
+                        if (isError)
+                        {
+                            Thread.Sleep(2000);
+                        }
+                        else
+                        {
+                            Thread.Sleep(this.sleepSecond * 1000);
+                        }
                     }
                 }
             });
@@ -419,20 +430,5 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 timer.Stop();
         }
 
-        public void WriteError(string log)
-        {
-            //if (_logWriter != null)
-            //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集竞彩足球队伍数据", log);
-
-
-        }
-
-        public void WriteLog(string log)
-        {
-            //if (_logWriter != null)
-            //    _logWriter.Write(logCategory, logInfoSource, LogType.Information, "自动采集竞彩足球队伍数据", log);
-
-
-        }
     }
 }

@@ -1,4 +1,4 @@
-{
+ï»¿{
   "RedisConfig": {
     "EnableRedis": true,
     "RedisHost": "10.0.3.6",
@@ -19,7 +19,7 @@
     "wwwroot"
   ],
   "PageRegisterDefaultRole": "User",
-  "Sports_SchemeJobSeconds": 20, //×·ºÅ×÷ÒµÊ±¼ä¼ä¸ô£¬Ãëµ¥Î»
+  "Sports_SchemeJobSeconds": 20, //è¿½å·ä½œä¸šæ—¶é—´é—´éš”ï¼Œç§’å•ä½
 
 
 
@@ -28,183 +28,303 @@
   "ResSiteUrl": "http://10.0.3.6:888",
 
   "QueryUserFundDetailFromCache": false,
-  //»º´æÅäÖÃÎÄ¼ş£¬ÔİÊ±Ã»ÓÃµ½Ä¬ÈÏ
+  //ç¼“å­˜é…ç½®æ–‡ä»¶ï¼Œæš‚æ—¶æ²¡ç”¨åˆ°é»˜è®¤
 
-  //±ØĞëÅäÖÃ
+  //å¿…é¡»é…ç½®
   "HostSettings": {
-    "Ip": "127.0.0.1", //·şÎñÆô¶¯IP
+    "Ip": "127.0.0.1", //æœåŠ¡å¯åŠ¨IP
     "WatchInterval": 30,
-    "Port": 10108, //·şÎñÆô¶¯¶Ë¿Ú
-    "Token": "true",
+    "Port": 10108, //æœåŠ¡å¯åŠ¨ç«¯å£
+    "Token": true,
     "RequestCacheEnabled": false
   },
 
-  //"²É¼¯ÅäÖÃÅäÖÃ"
+  //"é‡‡é›†é…ç½®é…ç½®"
   "CrawSettings": {
 
     "SZC_OPEN_URL": "http://101.37.126.96:5633/newly.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}",
     "SZC_OPEN_URL_DAY": "http://101.37.126.96:5633/daily.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}&date={2}",
 
     "SZC_OPEN_MIRROR_URL": "http://www.jiang.com/jsonData/lottery_new_open_list_{0}.json?t={1}",
-    //ÖĞÃñ¿ª²ÉÍø
+    //ä¸­æ°‘å¼€é‡‡ç½‘
     "ZHM_ServiceUrl": "",
     "ZHM_Key": "",
     "ZHM_PartnerId": "",
     "ZHM_Version": "",
     "DataSiteUrl": "http://10.0.3.6:888/MatchData",
-    //½±³Ø²É¼¯
+    //å¥–æ± é‡‡é›†
     "BonusPoolSettings": {
       "CollectBonusPool_InterfaceType_SSQ": "cailele",
       "CollectBonusPool_InterfaceType_DLT": "aicaipiao,cailele"
     },
     "MatchSettings": {
-      "CTZQ_UseProxy": false, //´«Í³×ãÇò²É¼¯ÊÇ·ñÊ¹ÓÃ´úÀí
+      "CTZQ_UseProxy": false, //ä¼ ç»Ÿè¶³çƒé‡‡é›†æ˜¯å¦ä½¿ç”¨ä»£ç†
       "JCZQ_UseProxy": false,
       "JCLQ_UseProxy": false,
       "BJDC_UseProxy": false,
       "ProxyUrl": "",
-      "CTZQ_Result_Source": "310win", //²É¼¯½á¹ûÀ´Ô´:¿ÉÅäÖÃ"310win","cpdyj","aicai" ½±³Ø²É¼¯
-      "JCZQ_Result_Source": "500wan", //²É¼¯½á¹ûÀ´Ô´:¿ÉÅäÖÃ"310win","cpdyj","aicai" ½±³Ø²É¼¯
-      "JCZQ_AdvanceMinutes": -60, //-±¾µØ½áÊøÊ±¼äÌáÇ°Á¿
-      "FXId_Source": "okooo", //·ÖÎöIdÀ´Ô´£¬310win,okooo
-      "JCZQ_Result_Interval": 60000, //²É¼¯½á¹ûÆµÂÊ
+      "CTZQ_Result_Source": "310win", //é‡‡é›†ç»“æœæ¥æº:å¯é…ç½®"310win","cpdyj","aicai" å¥–æ± é‡‡é›†
+      "JCZQ_Result_Source": "500wan", //é‡‡é›†ç»“æœæ¥æº:å¯é…ç½®"310win","cpdyj","aicai" å¥–æ± é‡‡é›†
+      "JCZQ_AdvanceMinutes": -60, //-æœ¬åœ°ç»“æŸæ—¶é—´æå‰é‡
+      "FXId_Source": "okooo", //åˆ†æIdæ¥æºï¼Œ310win,okooo
+      "JCZQ_Result_Interval": 60000, //é‡‡é›†ç»“æœé¢‘ç‡
       "JCZQ_Result_BuildStaticHtml_Times": "",
-      "JCLQ_AdvanceMinutes": -75, //±¾µØ½áÊøÊ±¼äÌáÇ°Á¿
-      "JCZQ_Match_Fun": "new", //¾º²Ê×ãÇò¶ÓÎéÊı¾İ²É¼¯£¨cpdyj£©°æ±¾:¿ÉÅäÖÃ"old","new","zhm"
-      "JCLQ_Result_Source": "ok", //²É¼¯½á¹ûÀ´Ô´:¿ÉÅäÖÃ"310win","cpdyj","aicai"
-      "JCLQ_Match_Fun": "zzjcw", //¾º²ÊÀ¶Çò¶ÓÎéÊı¾İ²É¼¯£¨cpdyj£©°æ±¾:¿ÉÅäÖÃ"old","new"
+      "JCLQ_AdvanceMinutes": -75, //æœ¬åœ°ç»“æŸæ—¶é—´æå‰é‡
+      "JCZQ_Match_Fun": "new", //ç«å½©è¶³çƒé˜Ÿä¼æ•°æ®é‡‡é›†ï¼ˆcpdyjï¼‰ç‰ˆæœ¬:å¯é…ç½®"old","new","zhm"
+      "JCLQ_Result_Source": "ok", //é‡‡é›†ç»“æœæ¥æº:å¯é…ç½®"310win","cpdyj","aicai"
+      "JCLQ_Match_Fun": "zzjcw", //ç«å½©è“çƒé˜Ÿä¼æ•°æ®é‡‡é›†ï¼ˆcpdyjï¼‰ç‰ˆæœ¬:å¯é…ç½®"old","new"
       "JCLQ_Result_CacheTimes": 1,
-      "JCLQ_Result_Day": 1, //²É¼¯½á¹ûµÄÌìÊı
+      "JCLQ_Result_Day": 1, //é‡‡é›†ç»“æœçš„å¤©æ•°
       "BJDC_Result_CacheTimes": 1,
-      "BJDC_Match_Source": "gaunwang", //²É¼¯±ÈÈüÀ´Ô´:¿ÉÅäÖÃ"GuanWang","9188","500wan"
-      "BJDC_AdvanceMinutes": 15, //±¾µØ½áÊøÊ±¼äÌáÇ°Á¿
-      "BJDC_Result_Source": 9188, //²É¼¯½á¹ûÀ´Ô´:¿ÉÅäÖÃ"310win","9188","aicai","okooo"
+      "BJDC_Match_Source": "gaunwang", //é‡‡é›†æ¯”èµ›æ¥æº:å¯é…ç½®"GuanWang","9188","500wan"
+      "BJDC_AdvanceMinutes": 15, //æœ¬åœ°ç»“æŸæ—¶é—´æå‰é‡
+      "BJDC_Result_Source": 9188, //é‡‡é›†ç»“æœæ¥æº:å¯é…ç½®"310win","9188","aicai","okooo"
       "Get_BJDC_TeamInfo": false
 
     },
-    //Êı×Ö²Ê ²ÊÖÖ²É¼¯Í£ÁôÊ±¼ä¼ä¸ô µ¥Î»Ãë
+    //é‡‡é›†åœç•™æ—¶é—´é—´éš” å•ä½ç§’
     "NumLettory_SleepTimeSpanSettings": {
-      "CQSSC": 40,
-      "JX11X5": 20,
-      "SD11X5": 20,
-      "GDKLSF": 20,
-      "JSKS": 20,
-      "SDKLPK3": 20,
-      "FC3D": 20,
-      "PL3": 20,
-      "SSQ": 20,
-      "DLT": 20
+      "CQSSC": 10,
+      "JX11X5": 10,
+      "SD11X5": 10,
+      "GDKLSF": 10,
+      "GD11X5": 10,
+      "JSKS": 10,
+      "SDKLPK3": 10,
+      "FC3D": 10,
+      "PL3": 10,
+      "SSQ": 10,
+      "DLT": 10,
+      "JCLQ": 10,
+      "T14C": 10,
+      "TR9": 10,
+      "T6BQC": 10,
+      "T4CJQ": 10,
+      "JCZQMatch": 10,
+      "JCZQResult": 10,
+      "BJDCOZSP": 10,
+      "BJDCMatchResult": 10
 
 
     }
   },
-  //²É¼¯Æô¶¯ÅäÖÃ
+  //é‡‡é›†å¯åŠ¨é…ç½®
   "Auto_CollectSettings": [
     {
+      "Key": "SSQ_Pool",
+      "IsStart": true,
+      "Desc": "åŒè‰²çƒ å¥–æ± ",
+      "Param": "gameName|SSQ",
+      "Path": "creawser/numcraw/numlettory_winnumber_start"
+
+    },
+    {
+      "Key": "DLT_Pool",
+      "IsStart": true,
+      "Desc": "å¤§ä¹é€ å¥–æ± ",
+      "Param": "gameName|DLT",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
+    },
+    {
       "Key": "CQSSC",
-      "IsStart": true
-      
+      "IsStart": true,
+      "Desc": "é‡åº†æ—¶æ—¶å½© å¼€å¥–å·",
+      "Param": "gameName|CQSSC",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "JX11X5",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "æ±Ÿè¥¿11é€‰5 å¼€å¥–å·",
+      "Param": "gameName|JX11X5",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "SD11X5",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "11é€‰5 å¼€å¥–å·",
+      "Param": "gameName|SD11X5",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "GD11X5",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "GD11é€‰5 å¼€å¥–å·",
+      "Param": "gameName|GD11X5",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "GDKLSF",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "GDKLSF å¼€å¥–å·",
+      "Param": "gameName|GDKLSF",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "JSKS",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "JSKS å¼€å¥–å·",
+      "Param": "gameName|JSKS",
+      "Path": "creawSer/numcreaw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "SDKLPK3",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "SDKLPK3 å¼€å¥–å·",
+      "Param": "gameName|SDKLPK3",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "FC3D",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "FC3D å¼€å¥–å·",
+      "Param": "gameName|FC3D",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "PL3",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "PL3 å¼€å¥–å·",
+      "Param": "gameName|PL3",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "SSQ",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "SSQ å¼€å¥–å·",
+      "Param": "gameName|SSQ",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "DLT",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "DLT å¼€å¥–å·",
+      "Param": "gameName|DLT",
+      "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
-    //´«Í³×ãÇò
+
     {
-      "Key": "T14C",
-      "IsStart": true
-    },
-    {
-      "Key": "TR9",
-      "IsStart": true
-    },
-    {
-      "Key": "T6BQC",
-      "IsStart": true
+      "Key": "T14CMatch",
+      "IsStart": true,
+      "Desc": "14åœºèƒœè´Ÿ èµ›äº‹",
+      "Param": "gameName|T14C,Type|Match",
+      "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
     },
     {
-      "Key": "T4CJQ",
-      "IsStart": true
-    },
-    //¾º²Ê×ãÇò
-    {
-      "Key": "JCZQMatch", //ÈüÊÂ
-      "IsStart": true
+      "Key": "TR9Match",
+      "IsStart": true,
+      "Desc": "èƒœè´Ÿä»»9 èµ›äº‹",
+      "Param": "gameName|TR9,Type|Match",
+      "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
     },
     {
-      "Key": "JCZQResult", //Èü¹û
-      "IsStart": true
+      "Key": "T6BQCMatch",
+      "IsStart": true,
+      "Desc": "6åœºåŠå…¨ èµ›äº‹",
+      "Param": "gameName|T6BQC,Type|Match",
+      "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
     },
     {
-      "Key": "JCZQOZSP", //OZ ÅâÂÊ
-      "IsStart": true
+      "Key": "T4CJQMatch",
+      "IsStart": false,
+      "Desc": "4åœºè¿›çƒ èµ›äº‹",
+      "Param": "gameName|T4CJQ,Type|Match",
+      "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
     },
-    //¾º²ÊÀºÇò
+
+    {
+      "Key": "T14CPool",
+      "IsStart": true,
+      "Desc": "14åœºèƒœè´Ÿ å¥–æ± ",
+      "Param": "gameName|T14C,Type|Pool",
+      "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
+    },
+    {
+      "Key": "TR9Pool",
+      "IsStart": true,
+      "Desc": "èƒœè´Ÿä»»9 å¥–æ± ",
+      "Param": "gameName|TR9,Type|Pool",
+      "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
+    },
+    {
+      "Key": "T6BQCPool",
+      "IsStart": true,
+      "Desc": "6åœºåŠå…¨ å¥–æ± ",
+      "Param": "gameName|T6BQC,Type|Pool",
+      "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
+    },
+    {
+      "Key": "T4CJQPool",
+      "IsStart": true,
+      "Desc": "4åœºè¿›çƒ å¥–æ± ",
+      "Param": "gameName|T4CJQ,Type|Pool",
+      "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
+    },
+
+    {
+      "Key": "JCZQMatch",
+      "IsStart": true,
+
+      "Desc": "ç«å½©è¶³çƒ èµ›äº‹",
+      "Param": "Type|JCZQMatch",
+      "Path": "creawball/ballcraw/JCZQMatch_Result_OZSP_Start"
+    },
+    {
+      "Key": "JCZQResult",
+      "IsStart": true,
+
+      "Desc": "ç«å½©è¶³çƒ èµ›æœ",
+      "Param": "Type|JCZQResult",
+      "Path": "creawball/ballcraw/JCZQMatch_Result_OZSP_Start"
+    },
+    {
+      "Key": "JCZQOZSP",
+      "IsStart": false,
+
+      "Desc": "ç«å½©è¶³çƒ èµ”ç‡",
+      "Param": "Type|JCZQOZSP",
+      "Path": "creawball/ballcraw/JCZQMatch_Result_OZSP_Start"
+    },
+
     {
       "Key": "JCLQ",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "ç«å½©ç¯®çƒ èµ”ç‡",
+      "Param": "",
+      "Path": "creawball/ballcraw/JCLQMatch_Start"
     },
-    //±±¾©µ¥³¡
+
     {
-      "Key": "BJDCMatchResult", //ÈüÊÂ Èü¹û
-      "IsStart": true
+      "Key": "BJDCMatchResult",
+      "IsStart": true,
+      "Desc": "åŒ—äº¬å•åœº èµ›äº‹ èµ›æœ",
+      "Param": "Type|BJDCMatchResult",
+      "Path": "creawball/ballcraw/BJDCMatch_OZSP_Start"
     },
     {
       "Key": "BJDCOZSP",
-      "IsStart": true
+      "IsStart": true,
+      "Desc": "åŒ—äº¬å•åœº èµ”ç‡",
+      "Param": "Type|BJDCOZSP",
+      "Path": "creawball/ballcraw/BJDCMatch_OZSP_Start"
     }
   ],
-  //Mongo Êı¾İ¿âÅäÖÃ
+  //Mongo æ•°æ®åº“é…ç½®
   "MongoSettings": {
     "connectionString": "mongodb://10.0.3.6:27017",
     "SingleInstance": false,
+    "IsStartLog": true,//æ˜¯å¦å¯åŠ¨è®°å½•æ—¥å¿—
     "dbName": "CrawDB",
-    //mogodb ²É¼¯±íÃüÃû
+    //mogodb é‡‡é›†è¡¨å‘½å
     "TableNamesSettings": {
-      "CreawPool": "NumLottery", //Êı×Ö²Ê±íÃû
-      "CTZQMatch": "CTZQMatch" //´«Í³×ãÇò±íÃû
+      "CreawPool": "NumLottery", //æ•°å­—å½©è¡¨å
+      "CTZQMatch": "CTZQMatch" //ä¼ ç»Ÿè¶³çƒè¡¨å
     }
 
   },
-  //±ØĞëÅäÖÃ ·şÎñ·¢ÏÖÅäÖÃ
+  //å¿…é¡»é…ç½® æœåŠ¡å‘ç°é…ç½®
   "ConsulSettings": {
-    "IpAddrs": "127.0.0.1:8500" //·şÎñÆô¶¯IP
+    "IpAddrs": "127.0.0.1:8500" //æœåŠ¡å¯åŠ¨IP
   }
 
 

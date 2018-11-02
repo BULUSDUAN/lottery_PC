@@ -29,8 +29,7 @@ namespace Craw.Service.IModuleServices
     {
 
 
-        [Service(Date = "2018-9-3", Director = "kason", Name = "采集，开奖等登陆服务")]
-        Task<string> Login(string gameName);
+     
 
         [Service(Date = "2018-9-17", Director = "kason", Name = "采集，开奖服务")]
 

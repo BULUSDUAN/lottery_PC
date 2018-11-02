@@ -13,7 +13,7 @@ using System.Xml;
 namespace Lottery.CrawGetters.MatchBizGetter
 {
  
-    public class BJDC_OZSP_AutoCollect : IBallAutoCollect
+    public class BJDC_OZSP_AutoCollect : BaseAutoCollect, IAutoCollect
     {
        // private ILogWriter _logWriter = null;
         private const string logCategory = "Services.Info";
@@ -24,15 +24,20 @@ namespace Lottery.CrawGetters.MatchBizGetter
         private System.Timers.Timer timer = null;
         private string Sp_SavePath = string.Empty;
         private IMongoDatabase mDB;
-        public BJDC_OZSP_AutoCollect(IMongoDatabase _mDB)
-        {
-            mDB = _mDB;
-        }
+     
         public string Category { get; set; }
         public string Key { get; set; }
 
         private Task thread = null;
-        public void Start(string gameCode)
+        private string gameCode { get; set; }
+        private int sleepSecond = 5;
+        public BJDC_OZSP_AutoCollect(IMongoDatabase _mDB, string _gameName, int _sleepSecond = 5) : base(_gameName + "OZSP", _mDB)
+        {
+            this.sleepSecond = _sleepSecond;
+            this.gameCode = _gameName;
+            mDB = _mDB;
+        }
+        public void Start()
         {
             gameCode = gameCode.ToUpper();
             logInfoSource += gameCode;
@@ -67,7 +72,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     finally
                     {
-                        Thread.Sleep(2000);
+                        if (isError)
+                        {
+                            Thread.Sleep(2000);
+                        }
+                        else
+                        {
+                            Thread.Sleep(this.sleepSecond * 1000);
+                        }
                     }
                 }
             });
@@ -507,18 +519,6 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 timer.Stop();
         }
 
-        public void WriteError(string log)
-        {
-            Console.WriteLine(log);
-            //if (_logWriter != null)
-            //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集北京单场数据异常", log);
-        }
-
-        public void WriteLog(string log)
-        {
-            Console.WriteLine(log);
-            //if (_logWriter != null)
-            //    _logWriter.Write(logCategory, logInfoSource, LogType.Information, "自动采集北京单场数据", log);
-        }
+     
     }
 }

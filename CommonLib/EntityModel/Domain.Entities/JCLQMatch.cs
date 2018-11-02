@@ -10,8 +10,10 @@ using System.Text;
 namespace EntityModel.Domain.Entities
 {
     [Entity("C_JCLQ_Match", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class JCLQ_Match_HH : IBallBaseInfo
     {
+        [BsonId]
         public ObjectId _id { get; set; }
 
         /// <summary>

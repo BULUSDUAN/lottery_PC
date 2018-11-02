@@ -22,7 +22,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Craw.Service.ModuleServices
 {
-    [ModuleName("numcreaw")]
+    [ModuleName("NumCraw")]
     public class NumCrawService : KgBaseService, INumCrawService
     {
 
@@ -79,9 +79,9 @@ namespace Craw.Service.ModuleServices
                     if (p == null)
                     {
                         //执行任务
-                        Service_AutoCollectWinNumber auto = new Service_AutoCollectWinNumber(stopTime);
+                        Service_AutoCollectWinNumber auto = new Service_AutoCollectWinNumber(rep.MDB,gameName,stopTime);
                         auto.Key = gameName;
-                        auto.Start(gameName, new CrawORMService(rep.MDB).Start);
+                        auto.Start( new CrawORMService(rep.MDB).Start);
                         aotoCollectList.Add(auto);
                     }
                 }
@@ -159,8 +159,12 @@ namespace Craw.Service.ModuleServices
                     var p = aotoPoolCollectList.Where(b => b.Key == gameName).FirstOrDefault();
                     if (p == null)
                     {
+                        TimeSpan stopTime = TimeSpan.FromSeconds(20);
+                        JToken sleeptimes = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings;
+                        stopTime = TimeSpan.FromSeconds(int.Parse(sleeptimes[gameName].ToString()));
+                        Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool(rep.MDB, gameName, stopTime);
                         //执行任务
-                        Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
+                    //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
                         auto.Key = gameName;
                         auto.Start(gameName, new CrawORMService(rep.MDB).BonusPoolStart);
                         aotoPoolCollectList.Add(auto);
@@ -200,11 +204,6 @@ namespace Craw.Service.ModuleServices
 
 
             return Task.FromResult("成功停止服务"+ gameName);
-        }
-
-        public Task<string> Login(string name)
-        {
-            throw new NotImplementedException();
         }
 
         //WinNumber

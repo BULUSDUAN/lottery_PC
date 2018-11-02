@@ -19,13 +19,15 @@ using System.Threading;
 using System.Collections.Concurrent;
 using Lottery.CrawGetters.Auto;
 using Lottery.CrawGetters.MatchBizGetter;
+using Lottery.CrawGetters;
+using Newtonsoft.Json.Linq;
 
 namespace Craw.Service.ModuleServices
 {
     /// <summary>
     /// 足球 篮球采集
     /// </summary>
-    [ModuleName("ballcreaw")]
+    [ModuleName("BallCraw")]
     public class BallCrawService : KgBaseService, IBallCrawService
     {
 
@@ -37,7 +39,7 @@ namespace Craw.Service.ModuleServices
         ILogger<NumCrawService> _Log;
         private static IList<CTZQMatch_AutoCollect> aotoCollectList = new List<CTZQMatch_AutoCollect>();
 
-        private static IList<IBallAutoCollect> BallAutoCollectList = new List<IBallAutoCollect>();
+        private static IList<IAutoCollect> BallAutoCollectList = new List<IAutoCollect>();
 
         private static IList<Service_AutoCollectBonusPool> aotoPoolCollectList = new List<Service_AutoCollectBonusPool>();
         private readonly CrawRepository rep;
@@ -74,23 +76,29 @@ namespace Craw.Service.ModuleServices
 
                 if (bol)
                 {
-                    IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == gameName && b.Category== Type).FirstOrDefault();
+                    IAutoCollect p = BallAutoCollectList.Where(b => b.Key == gameName && b.Category== Type).FirstOrDefault();
                     if (p == null)
                     {
+                        JToken sleeptimes = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings;
+
 
                         if (Type == "Match")//赛事
                         {
-                            //执行任务
-                            p  = new CTZQMatch_AutoCollect(rep.MDB);
-                            p.Start(gameName);
+                             //执行任务
+                            int sptime =int.Parse( sleeptimes[gameName].ToString());
+                            p  = new CTZQMatch_AutoCollect(rep.MDB, gameName, sptime);
+                            p.Start();
                             p.Key = gameName;
+                            p.Category = Type;
                             BallAutoCollectList.Add(p);
                         }
                         else if (Type == "Pool")
                         {
-                            p = new CTZQPool_AutoCollect(rep.MDB);
-                            p.Start(gameName);
+                            int sptime = int.Parse(sleeptimes[gameName].ToString());
+                            p = new CTZQPool_AutoCollect(rep.MDB, gameName, sptime);
+                            p.Start();
                             p.Key = gameName;
+                            p.Category = Type;
                             BallAutoCollectList.Add(p);
                         }
 
@@ -118,7 +126,7 @@ namespace Craw.Service.ModuleServices
                     case "TR9"://胜负任9
                     case "T6BQC"://6场半全
                     case "T4CJQ": //4场进球
-                        IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == name && b.Category==Type).FirstOrDefault();
+                        IAutoCollect p = BallAutoCollectList.Where(b => b.Key == name && b.Category==Type).FirstOrDefault();
                         if (p != null)
                         {
                             p.Stop();
@@ -148,31 +156,36 @@ namespace Craw.Service.ModuleServices
         {
             lock (aotoCollectList)
             {
+                JToken sleeptimes = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings;
 
-               
-                    IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
+
+
+                IAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
                     if (p == null)
                     {
 
                         if (Type == "JCZQMatch")//赛事
-                        {
-                            //执行任务
-                            p = new JCZQMatch_AutoCollect(rep.MDB);
-                            p.Start("All");
+                    {
+                        int sptime = int.Parse(sleeptimes[Type].ToString());
+                        //执行任务
+                        p = new JCZQMatch_AutoCollect(rep.MDB, "JCZQMatch", sptime);
+                            p.Start();
                             p.Key = Type;
                             BallAutoCollectList.Add(p);
                         }
                     else if (Type == "JCZQResult")
                     {
-                        p = new JCZQMatchResult_AutoCollect(rep.MDB);
-                        p.Start("All");
+                        int sptime = int.Parse(sleeptimes[Type].ToString());
+                        p = new JCZQMatchResult_AutoCollect(rep.MDB, "JCZQResult", sptime);
+                        p.Start();
                         p.Key = Type;
                         BallAutoCollectList.Add(p);
                     }
                     else if (Type == "JCZQOZSP")
                     {
-                        p = new JCZQ_OZSP_AutoCollect(rep.MDB);
-                        p.Start("All");
+                        int sptime = int.Parse(sleeptimes[Type].ToString());
+                        p = new JCZQ_OZSP_AutoCollect(rep.MDB, "JCZQOZSP", sptime);
+                        p.Start();
                         p.Key = Type;
                         BallAutoCollectList.Add(p);
                     }
@@ -193,7 +206,7 @@ namespace Craw.Service.ModuleServices
             {
 
 
-                IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
+                IAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
                 if (p != null)
                 {
 
@@ -211,13 +224,16 @@ namespace Craw.Service.ModuleServices
         public Task<string> JCLQMatch_Start() {
             lock (aotoCollectList)
             {
+                JToken sleeptimes = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings;
+
 
                 string Type = "JCLQ";
-                IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
+                IAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
                 if (p == null)
                 {
-                    p = new JCLQMatch_AutoCollect(rep.MDB);
-                    p.Start("All");
+                    int sptime = int.Parse(sleeptimes[Type].ToString());
+                    p = new JCLQMatch_AutoCollect(rep.MDB, "JCLQ", sptime);
+                    p.Start();
                     p.Key = "JCLQ";
                     BallAutoCollectList.Add(p);
 
@@ -233,7 +249,7 @@ namespace Craw.Service.ModuleServices
             {
 
                 string Type = "JCLQ";
-                IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
+                IAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
                 if (p != null)
                 {
                     p.Stop();
@@ -249,24 +265,27 @@ namespace Craw.Service.ModuleServices
         {
             lock (aotoCollectList)
             {
-                
+                JToken sleeptimes = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings;
 
-                IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
+
+                IAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
                 if (p == null)
                 {
 
                     if (Type == "BJDCMatchResult")//赛事
                     {
+                        int sptime = int.Parse(sleeptimes[Type].ToString());
                         //执行任务
-                        p = new BJDCMatch_AutoCollect(rep.MDB);
-                        p.Start("All");
+                        p = new BJDCMatch_AutoCollect(rep.MDB, "BJDCMatchResult", sptime);
+                        p.Start();
                         p.Key = Type;
                         BallAutoCollectList.Add(p);
                     }
                     else if (Type == "BJDCOZSP")
                     {
-                        p = new BJDC_OZSP_AutoCollect(rep.MDB);
-                        p.Start("All");
+                        int sptime = int.Parse(sleeptimes[Type].ToString());
+                        p = new BJDC_OZSP_AutoCollect(rep.MDB, "BJDCOZSP", sptime);
+                        p.Start();
                         p.Key = Type;
                         BallAutoCollectList.Add(p);
                     }
@@ -285,7 +304,7 @@ namespace Craw.Service.ModuleServices
             {
 
 
-                IBallAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
+                IAutoCollect p = BallAutoCollectList.Where(b => b.Key == Type).FirstOrDefault();
                 if (p != null)
                 {
                     p.Stop();

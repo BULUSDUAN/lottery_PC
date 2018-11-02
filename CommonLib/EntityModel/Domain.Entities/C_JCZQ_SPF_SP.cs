@@ -3,6 +3,7 @@ using EntityModel.Interface;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,8 +14,10 @@ namespace EntityModel.Domain.Entities
     /// 竞彩足球 胜平负SP
     /// </summary>
     [Entity("C_JCZQ_SPF_SP", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class C_JCZQ_SPF_SP : IBallBaseInfo
     {
+        [BsonId]
         public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001

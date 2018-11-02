@@ -30,9 +30,9 @@ namespace Lottery.CrawGetters.MatchBizGetter
     // <summary>
     /// 采集传统足球赛事数据
     /// </summary>
-    public class CTZQPool_AutoCollect : IBallAutoCollect
+    public class CTZQPool_AutoCollect : BaseAutoCollect,IAutoCollect
     {
-        //  private ILogWriter _logWriter = null;
+        //  private ILogWriter _logWri,ter = null;
         private const string logCategory = "Services.Info";
         private string logInfoSource = "Auto_Collect_CTZQMatchPool_Info_";
         private const string logErrorCategory = "Services.Error";
@@ -43,22 +43,21 @@ namespace Lottery.CrawGetters.MatchBizGetter
         private int CTZQ_advanceMinutes = 0;
         private string SavePath = string.Empty;
         private ILogger<CTZQPool_AutoCollect> _logWriter = null;
-        //private MatchManager manager = new MatchManager(DbAccess_Match_Helper.DbAccess);
-        //  private static readonly ILog logger = LogManager.GetLogger(CTZQMatch);
-        //public void Start( string gameCode)
-        //{
-        //    gameCode = gameCode.ToUpper();
-        //    logInfoSource += gameCode;
-        //  //  _logWriter = logWriter;
-
-        //    BeStop = false;
-        ////    CTZQ_advanceMinutes = ServiceHelper.Get_CTZQ_AdvanceMinutes();
-        // //   CollectMatchs(gameCode);
-        //}
+      
         public string Category { get; set; }
         public string Key { get; set; }
         private Task thread = null;
-        public void Start(string gameCode)
+
+        private IMongoDatabase mDB;
+        private string gameCode { get; set; }
+        private int sleepSecond = 5;
+        public CTZQPool_AutoCollect(IMongoDatabase _mDB, string _gameName, int _sleepSecond = 5) : base(_gameName + "Pool", _mDB)
+        {
+            this.sleepSecond = _sleepSecond;
+            this.gameCode = _gameName;
+            mDB = _mDB;
+        }
+        public void Start()
         {
             gameCode = gameCode.ToUpper();
             logInfoSource += gameCode;
@@ -78,6 +77,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 Dictionary<string, string> dic = null;
                 while (Interlocked.Read(ref BeStop) == 0)
                 {
+                    WriteLogAll();
                     ////TODO：销售期间，暂停采集
                     try
                     {
@@ -88,11 +88,18 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     catch 
                     {
-                        Thread.Sleep(10000);
+                        Thread.Sleep(2000);
                     }
                     finally
                     {
-                        Thread.Sleep(10000);
+                        if (isError)
+                        {
+                            Thread.Sleep(2000);
+                        }
+                        else
+                        {
+                            Thread.Sleep(this.sleepSecond * 1000);
+                        }
                     }
                 }
             });
@@ -101,11 +108,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
         }
 
-        private IMongoDatabase mDB;
-        public CTZQPool_AutoCollect(IMongoDatabase _mDB)
-        {
-            mDB = _mDB;
-        }
+      
         //private void CollectMatchs(string gameCode)
         //{
         //    try
@@ -274,7 +277,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             }
                             catch (Exception ex)
                             {
-                                this.WriteLog(string.Format("{0}期导入开奖号码异常：{1}", issuseNumber, ex.Message));
+                                this.WriteError(string.Format("{0}期导入开奖号码异常：{1}", issuseNumber, ex.Message));
                             }
 
 
@@ -637,6 +640,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                         {
                             if (b.Grade == "任九场")
                             {
+                                 
                                 list.Add(new CTZQ_BonusLevelInfo
                                 {
                                     GameCode = "CTZQ",
@@ -647,8 +651,8 @@ namespace Lottery.CrawGetters.MatchBizGetter
                                     IssuseNumber = issuseNumber,
                                     BonusLevel = level,
                                     BonusLevelDisplayName = level_name,
-                                    BonusCount = FormatBonusCount(b.BasicStakes),
-                                    BonusMoney = FormatBonusMoney(b.BasicBonus),
+                                    BonusCount = FormatBonusCount(b.BasicStakes.Value),
+                                    BonusMoney = FormatBonusMoney(b.BasicBonus.Value),
                                     TotalSaleMoney = totalSaleMoney,
                                     BonusBalance = bonusBalance,
                                 });
@@ -677,8 +681,8 @@ namespace Lottery.CrawGetters.MatchBizGetter
                             IssuseNumber = issuseNumber,
                             BonusLevel = level,
                             BonusLevelDisplayName = level_name,
-                            BonusCount = FormatBonusCount((string)b.BasicStakes),
-                            BonusMoney = FormatBonusMoney((string)b.BasicBonus),
+                            BonusCount = FormatBonusCount((string)b.BasicStakes.Value),
+                            BonusMoney = FormatBonusMoney((string)b.BasicBonus.Value),
                             TotalSaleMoney = totalSaleMoney,
                             BonusBalance = bonusBalance,
                         });
@@ -838,7 +842,18 @@ namespace Lottery.CrawGetters.MatchBizGetter
         {
             var money = content.Replace("--", "").Replace(",", "");
             if (string.IsNullOrEmpty(money)) return 0;
-            return int.Parse(money);
+            int retult = 0;
+            try
+            {
+                retult = int.Parse(money);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("FormatBonusCount:" + ex.ToString());
+                Console.WriteLine("FormatBonusCount:"+ content);
+              //  throw;
+            }
+            return retult;
         }
         private decimal FormatBonusMoney(string content)
         {
@@ -1158,17 +1173,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 timer.Stop();
         }
 
-        public void WriteLog(string log)
-        {
-            //if (_logWriter != null)
-            //    _logWriter.Write(logCategory, logInfoSource, LogType.Information, "自动采集传统足球赛事信息", log);
-        }
-
-        public void WriteError(string log)
-        {
-            //if (_logWriter != null)
-            //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集传统足球赛事信息", log);
-        }
+    
 
    
     }

@@ -101,7 +101,17 @@ namespace KaSon.FrameWork.Common.FileOperate
 
            try
            {
-               StreamReader sR2 = new StreamReader(path, Encoding.UTF8);
+                Encoding ED = Encoding.UTF8;
+                //try
+                //{
+                //    ED = Encoding.GetEncoding("GB2312");
+                //}
+                //catch (Exception)
+                //{
+
+                //    ED = Encoding.UTF8;
+                //}
+                   StreamReader sR2 = new StreamReader(path, Encoding.UTF8);
                all= sR2.ReadToEnd();
                sR2.Close();
            }

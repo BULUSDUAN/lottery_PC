@@ -1,6 +1,8 @@
 ﻿using EntityModel.Enum;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,8 +13,11 @@ namespace EntityModel.Domain.Entities
     /// 竞彩足球赛事信息
     /// </summary>
     [Entity("C_JCZQ_Match", Type = EntityType.Table)]
-    public class C_JCZQ_Match_BQC 
+    [BsonIgnoreExtraElements]
+    public class C_JCZQ_Match_BQC
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
         /// </summary>

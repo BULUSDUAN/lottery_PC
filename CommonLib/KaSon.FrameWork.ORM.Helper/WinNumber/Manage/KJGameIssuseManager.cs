@@ -12,20 +12,20 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber.Manage
         /// <summary>
         /// 添加奖期数据
         /// </summary>
-        public void AddKJGameIssuse(params KJGameIssuse[] issuse)
+        public void AddKJGameIssuse(params Common_Game_Issuse[] issuse)
         {
-            LottertDataDB.GetDal<KJGameIssuse>().Add(issuse);
+            LottertDataDB.GetDal<Common_Game_Issuse>().Add(issuse);
         }
 
-        public void UpdateKJGameIssuse(KJGameIssuse entity)
+        public void UpdateKJGameIssuse(Common_Game_Issuse entity)
         {
-            LottertDataDB.GetDal<KJGameIssuse>().Update(entity);           
+            LottertDataDB.GetDal<Common_Game_Issuse>().Update(entity);           
         }
 
-        public KJGameIssuse QueryKJGameIssuse(string gameCode, string issuseNumber)
+        public Common_Game_Issuse QueryKJGameIssuse(string gameCode, string issuseNumber)
         {
            
-            return LottertDataDB.CreateQuery<KJGameIssuse>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber).FirstOrDefault();
+            return LottertDataDB.CreateQuery<Common_Game_Issuse>().Where(p => p.GameCode == gameCode && p.IssuseNumber == issuseNumber).FirstOrDefault();
         }
 
         public KJGameIssuse QueryCurrentIssuseWithOffical(string gameCode)

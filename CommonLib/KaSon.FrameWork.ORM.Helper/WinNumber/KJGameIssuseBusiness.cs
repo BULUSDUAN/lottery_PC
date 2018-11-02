@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using EntityModel;
 using EntityModel.Enum;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Utilities;
@@ -21,7 +22,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                     var issuse = manage.QueryKJGameIssuse(item.GameCode, item.IssuseNumber);
                     if (issuse == null)
                     {
-                        issuse = new KJGameIssuse
+                        issuse = new Common_Game_Issuse
                         {
                             CreateTime = DateTime.Now,
                             GameCode = item.GameCode,
@@ -29,7 +30,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                             IssuseNumber = item.IssuseNumber,
                             StartTime = item.StartTime,
                             WinNumber = string.Empty,
-                            Status = (IssuseStatus)IssuseStatus.OnSale,
+                            Status = (int)IssuseStatus.OnSale,
                             GatewayStopTime = item.BettingStopTime,
                             OfficialStopTime = item.OfficialStopTime,
                             LocalStopTime = item.BettingStopTime.AddSeconds(localAdvanceSeconds),
@@ -69,7 +70,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                 LocalStopTime = issuse.LocalStopTime,
                 OfficialStopTime = issuse.OfficialStopTime,
                 StartTime = issuse.StartTime,
-                Status = issuse.Status,
+                Status =(IssuseStatus) issuse.Status,
                 WinNumber = issuse.WinNumber,
             };
         }
@@ -82,7 +83,7 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                 return;
 
             issuseEntity.WinNumber = winNumber;
-            issuseEntity.Status = IssuseStatus.Stopped;
+            issuseEntity.Status =(int) IssuseStatus.Stopped;
             issuseEntity.AwardTime = DateTime.Now;
             manager.UpdateKJGameIssuse(issuseEntity);
         }

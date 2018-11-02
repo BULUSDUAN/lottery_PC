@@ -33,7 +33,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
     // <summary>
     /// 采集竞猜足球赛事数据
     /// </summary>
-    public class JCZQMatch_AutoCollect : IBallAutoCollect
+    public class JCZQMatch_AutoCollect : BaseAutoCollect, IAutoCollect
     {
         //  private ILogWriter _logWriter = null;
         private const string logCategory = "Services.Info";
@@ -47,18 +47,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
         private string SavePath = string.Empty;
         private ILogger<JCZQMatch_AutoCollect> _logWriter = null;
         private Dictionary<string, string> _Match_Ok_HG = new Dictionary<string, string>();
-        //private MatchManager manager = new MatchManager(DbAccess_Match_Helper.DbAccess);
-        //  private static readonly ILog logger = LogManager.GetLogger(CTZQMatch);
-        //public void Start( string gameCode)
-        //{
-        //    gameCode = gameCode.ToUpper();
-        //    logInfoSource += gameCode;
-        //  //  _logWriter = logWriter;
-
-        //    BeStop = false;
-        ////    CTZQ_advanceMinutes = ServiceHelper.Get_CTZQ_AdvanceMinutes();
-        // //   CollectMatchs(gameCode);
-        //}
+       
         public string Category { get; set; }
         public string Key { get; set; }
         private Task thread = null;
@@ -74,7 +63,16 @@ namespace Lottery.CrawGetters.MatchBizGetter
         private Dictionary<string, string> _MatchStatus = new Dictionary<string, string>();
         private List<string> _ozbList = new List<string>();
         private List<string> _sjbList = new List<string>();
-        public void Start(string gameCode)
+        private IMongoDatabase mDB;
+        private string gameCode { get; set; }
+        private int sleepSecond = 5;
+        public JCZQMatch_AutoCollect(IMongoDatabase _mDB, string _gameName, int _sleepSecond = 5) : base(_gameName + "Match", _mDB)
+        {
+            this.sleepSecond = _sleepSecond;
+            this.gameCode = _gameName;
+            mDB = _mDB;
+        }
+        public void Start()
         {
             gameCode = gameCode.ToUpper();
             logInfoSource += gameCode;
@@ -95,6 +93,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 while (Interlocked.Read(ref BeStop) == 0)
                 {
                     ////TODO：销售期间，暂停采集
+                   WriteLogAll();
                     try
                     {
 
@@ -108,7 +107,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     finally
                     {
-                        Thread.Sleep(2000);
+                        if (isError)
+                        {
+                            Thread.Sleep(2000);
+                        }
+                        else
+                        {
+                            Thread.Sleep(this.sleepSecond * 1000);
+                        }
                     }
                 }
             });
@@ -117,11 +123,8 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
         }
 
-        private IMongoDatabase mDB;
-        public JCZQMatch_AutoCollect(IMongoDatabase _mDB)
-        {
-            mDB = _mDB;
-        }
+     
+        
         //private void CollectMatchs(string gameCode)
         //{
         //    try
@@ -5232,19 +5235,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             //    timer.Stop();
         }
 
-        public void WriteError(string log)
-        {
-            Console.WriteLine(log);
-            //if (_logWriter != null)
-            //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集竞彩足球队伍数据", log);
-        }
-
-        public void WriteLog(string log)
-        {
-            Console.WriteLine(log);
-            //if (_logWriter != null)
-            //    _logWriter.Write(logCategory, logInfoSource, LogType.Information, "自动采集竞彩足球队伍数据", log);
-        }
+       
 
         /// <summary>
         /// 采集310win的FXId

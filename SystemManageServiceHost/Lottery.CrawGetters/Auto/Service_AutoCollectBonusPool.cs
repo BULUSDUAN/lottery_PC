@@ -2,7 +2,7 @@
 using EntityModel.Enum;
 using Lottery.CrawGetters.BonusPoolGetter;
 using Microsoft.Extensions.Logging;
-
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -15,12 +15,13 @@ using System.Threading.Tasks;
 namespace Lottery.CrawGetters.Auto
 {
  
-    public class Service_AutoCollectBonusPool
+    public class Service_AutoCollectBonusPool : BaseAutoCollect
     {
         ILogger<Service_AutoCollectBonusPool> _log = null;
 
         public string Key { get; set; }
         private long BeStop = 0;
+        private TimeSpan sleep;
         //public void Start(string gameName)
         //{
         //    gameName = gameName.ToUpper();
@@ -32,11 +33,16 @@ namespace Lottery.CrawGetters.Auto
         //    CollectBonusPool(gameName);
         //}
         //  private IMongoDatabase mDB;
-       //ILogger<Service_AutoCollectWinNumber> _log = null;
-        public Service_AutoCollectBonusPool()
+        //ILogger<Service_AutoCollectWinNumber> _log = null;
+        private IMongoDatabase mDB;
+        private string gameName = "";
+      
+        public Service_AutoCollectBonusPool(IMongoDatabase _mDB, string _gameName, TimeSpan sleep) : base(_gameName+"Pool", _mDB)
         {
-            //_log = InitConfigInfo.logFactory.CreateLogger<Service_AutoCollectWinNumber>();
-            //mDB = _mDB;
+            _log = InitConfigInfo.logFactory.CreateLogger<Service_AutoCollectBonusPool>();
+            mDB = _mDB;
+          this.sleep = sleep;
+            this.gameName = _gameName;
         }
         private Task thread = null;
         public void Start(string gameCode, Func<string, OpenDataInfo, bool> fn)
@@ -47,11 +53,13 @@ namespace Lottery.CrawGetters.Auto
 
                 while (Interlocked.Read(ref BeStop) == 0)
                 {
+                    this.WriteLogAll();
                     BonusPoolResult bp= CrawStart(gameCode, Nfn);
                     switch (bp)
                     {
                         case BonusPoolResult.Success:
-                           // _log.LogInformation("采集成功");
+                            // _log.LogInformation("采集成功");
+                            this.WriteLog("采集成功 ");
                             break;
                         case BonusPoolResult.Fail:
                             break;
@@ -64,6 +72,7 @@ namespace Lottery.CrawGetters.Auto
                         default:
                             break;
                     }
+                    Thread.Sleep(sleep);
                 }
 
             }, fn);
@@ -139,24 +148,27 @@ namespace Lottery.CrawGetters.Auto
                         catch (Exception ex)
                         {
                             currentTimes++;
-                            //this.WriteLog("采集奖池数据异常 " + ex.ToString());
+                            this.WriteError("采集奖池数据异常 " + ex.ToString());
                         }
                     }
                     if (info.GradeList.Count == 0)
                     {
-                        //this.WriteLog("奖池采集完成，但未获取到奖池信息，请手工处理");
+                        this.WriteLog("奖池采集完成，但未获取到奖池信息，请手工处理");
                         return BonusPoolResult.CompleteNoData;
                     }
                     var bol =  fn(gameCode, info);
-                   
-                    if(!bol) return BonusPoolResult.Fail;
+
+                    if (!bol) {
+                        this.WriteError("数据库同步异常 ");
+                        return BonusPoolResult.Fail;
+                    };
 
 
 
                 }
                 catch (Exception ex)
                 {
-                    return BonusPoolResult.Error;
+                    this.WriteError("异常 " + ex.ToString());
                 }
                
 
@@ -164,6 +176,7 @@ namespace Lottery.CrawGetters.Auto
             }
             catch (Exception ex)
             {
+                this.WriteError("异常 " + ex.ToString());
                 return BonusPoolResult.Error;
             }
             return BonusPoolResult.Success;

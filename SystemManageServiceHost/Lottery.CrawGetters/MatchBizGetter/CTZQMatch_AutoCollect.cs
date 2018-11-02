@@ -31,7 +31,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
     // <summary>
     /// 采集传统足球赛事数据
     /// </summary>
-    public class CTZQMatch_AutoCollect : IBallAutoCollect
+    public class CTZQMatch_AutoCollect : BaseAutoCollect, IAutoCollect
     {
       //  private ILogWriter _logWriter = null;
         private const string logCategory = "Services.Info";
@@ -44,22 +44,20 @@ namespace Lottery.CrawGetters.MatchBizGetter
         private int CTZQ_advanceMinutes = 0;
         private string SavePath = string.Empty;
         private ILogger<CTZQMatch_AutoCollect> _logWriter = null;
-        //private MatchManager manager = new MatchManager(DbAccess_Match_Helper.DbAccess);
-        //  private static readonly ILog logger = LogManager.GetLogger(CTZQMatch);
-        //public void Start( string gameCode)
-        //{
-        //    gameCode = gameCode.ToUpper();
-        //    logInfoSource += gameCode;
-        //  //  _logWriter = logWriter;
-
-        //    BeStop = false;
-        ////    CTZQ_advanceMinutes = ServiceHelper.Get_CTZQ_AdvanceMinutes();
-        // //   CollectMatchs(gameCode);
-        //}
+        private IMongoDatabase mDB;
         public string Category { get; set; }
         public string Key { get; set; }
         private Task thread = null;
-        public void Start(string gameCode)
+        private string gameCode { get; set; }
+        private int sleepSecond = 5;
+        public CTZQMatch_AutoCollect(IMongoDatabase _mDB, string _gameName,int _sleepSecond=5) : base(_gameName + "Match", _mDB)
+        {
+            this.sleepSecond = _sleepSecond;
+            this.gameCode = _gameName;
+            mDB = _mDB;
+        }
+      
+        public void Start()
         {
             gameCode = gameCode.ToUpper();
             logInfoSource += gameCode;
@@ -77,9 +75,11 @@ namespace Lottery.CrawGetters.MatchBizGetter
             {
                // ConcurrentDictionary<string, string> all = new ConcurrentDictionary<string, string>();
                 Dictionary<string, string> dic = null;
+                bool isEx = false;
                 while (Interlocked.Read(ref BeStop) == 0)
                 {
                     ////TODO：销售期间，暂停采集
+                    WriteLogAll();
                     try
                     {
 
@@ -89,11 +89,18 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     catch 
                     {
-                        Thread.Sleep(10000);
+                        Thread.Sleep(2000);
                     }
                     finally
                     {
-                        Thread.Sleep(10000);
+                        if (isError)
+                        {
+                            Thread.Sleep(2000);
+                        }
+                        else {
+                            Thread.Sleep(this.sleepSecond * 1000);
+                        }
+                     
                     }
                 }
             });
@@ -101,54 +108,9 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
 
         }
-
-        private IMongoDatabase mDB;
-        public CTZQMatch_AutoCollect(IMongoDatabase _mDB)
-        {
-            mDB = _mDB;
-        }
-        //private void CollectMatchs(string gameCode)
-        //{
-        //    try
-        //    {
-        //        if (BeStop)
-        //        {
-        //            WriteLog("------------------------BeStop------------------------------");
-        //            return;
-        //        }
-
-        //        var timeSpan = ServiceHelper.GetCollect_CTZQMatch_Interval();
-        //        this.WriteLog(string.Format("开始倒计时 -->{0}毫秒", timeSpan));
-        //        timer = ServiceHelper.ExcuteByTimer(timeSpan, () =>
-        //        {
-        //            try
-        //            {
-        //                this.WriteLog("=======================倒计时完成*************");
-        //                CollectCTZQMatchCore(gameCode);
-        //                this.WriteLog("完成一次足球赛事采集");
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                this.WriteLog("------收集传统足球赛事  异常----------" + ex.ToString());
-        //            }
-        //            finally
-        //            {
-        //                Thread.Sleep(2000);
-        //                //递归
-        //                CollectMatchs(gameCode);
-        //            }
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        this.WriteLog(string.Format("------CollectMatchs异常-----{0}", ex.ToString()));
-        //        ServiceHelper.ExcuteByTimer(2000, () =>
-        //        {
-        //            CollectMatchs(gameCode);
-        //        });
-        //    }
-        //}
-
+       
+       
+     
         /// <summary>
         /// 传统足球采集核心方法
         /// </summary>
@@ -202,6 +164,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 }
                 catch (Exception ex)
                 {
+                    this.WriteError("查询奖期列表数据失败 - " + ex.Message);
                     throw new Exception("查询奖期列表数据失败 - " + ex.Message, ex);
                 }
                 var source = ServiceHelper.GetSystemConfig("CTZQ_Match_Source");
@@ -287,6 +250,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     catch (Exception ex)
                     {
+                        this.WriteError("向数据库写入队伍赛事信息失败 - " + ex.Message);
                         throw new Exception("向数据库写入队伍赛事信息失败 - " + ex.Message, ex);
                     }
 
@@ -343,6 +307,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     catch (Exception ex)
                     {
+                        this.WriteError("向数据库写入队伍赔率信息失败 - " + ex.Message);
                         throw new Exception("向数据库写入队伍赔率信息失败 - " + ex.Message, ex);
                     }
 
@@ -382,6 +347,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     }
                     catch (Exception ex)
                     {
+                        this.WriteError("计算中国竞彩网数据出错 - " + ex.Message);
                         throw new Exception("计算中国竞彩网数据出错", ex);
                     }
                     finally
@@ -459,11 +425,13 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 }
                 catch (Exception ex)
                 {
+                    this.WriteError("向数据库写入奖期数据失败 - " + ex.Message);
                     throw new Exception("向数据库写入奖期数据失败 - " + ex.Message, ex);
                 }
             }
             catch (Exception ex)
             {
+                this.WriteError("失败 - " + ex.Message);
                 throw ex;
             }
         }
@@ -475,17 +443,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
                 timer.Stop();
         }
 
-        public void WriteLog(string log)
-        {
-            //if (_logWriter != null)
-            //    _logWriter.Write(logCategory, logInfoSource, LogType.Information, "自动采集传统足球赛事信息", log);
-        }
-
-        public void WriteError(string log)
-        {
-            //if (_logWriter != null)
-            //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集传统足球赛事信息", log);
-        }
+      
 
         #region 处理奖期数据
 
@@ -620,7 +578,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             }
             catch (Exception ex)
             {
-                this.WriteLog("解析CTZQ期号数据出错 " + ex.ToString());
+                this.WriteError("解析CTZQ期号数据出错 " + ex.ToString());
                 return list;
             }
         }
@@ -650,7 +608,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             }
             catch (Exception ex)
             {
-                this.WriteLog("解析CTZQ期号数据出错 " + ex.ToString());
+                this.WriteError("解析CTZQ期号数据出错 " + ex.ToString());
                 return list;
             }
         }
@@ -865,7 +823,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             }
             catch (Exception ex)
             {
-                this.WriteLog("解析队伍信息出错 " + ex.ToString());
+                this.WriteError("解析队伍信息出错 " + ex.ToString());
                 return list;
             }
         }
@@ -1066,7 +1024,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             }
             catch (Exception ex)
             {
-                this.WriteLog("解析队伍信息出错 " + ex.ToString() + result.ToString());
+                this.WriteError("解析队伍信息出错 " + ex.ToString() + result.ToString());
                 return list;
             }
         }
@@ -1334,7 +1292,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
             }
             catch (Exception ex)
             {
-                this.WriteLog(string.Format("创建目录{0}失败：{1}。", path, ex.ToString()));
+                this.WriteError(string.Format("创建目录{0}失败：{1}。", path, ex.ToString()));
             }
             return Path.Combine(path, fileName);
         }
