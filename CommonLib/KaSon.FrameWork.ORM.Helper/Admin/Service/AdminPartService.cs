@@ -12,6 +12,9 @@ using EntityModel.Redis;
 using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common.JSON;
 using KaSon.FrameWork.Common.Utilities;
+using KaSon.FrameWork.ORM.Helper.WinNumber;
+using System.Diagnostics;
+using System.Globalization;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -1934,6 +1937,494 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 throw new Exception("分析合买异常 - " + ex.Message, ex);
             }
+        }
+        #endregion
+
+        /// <summary>
+        /// 查询订单票数据
+        /// </summary>
+        public Sports_TicketQueryInfoCollection QuerySportsTicketList(string schemeId, int pageIndex, int pageSize)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                var collection = new Sports_Business().QuerySchemeTicketList(schemeId, pageIndex, pageSize);
+
+                return collection;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 手工修改中奖状态
+        /// </summary>
+        public CommonActionResult UpdateSchemeTicket(string ticketId, BonusStatus bonusStatus, decimal preTaxBonusMoney, decimal afterTaxBonusMoney)
+        {
+            //// 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new Sports_Business().UpdateSchemeTicket(ticketId, bonusStatus, preTaxBonusMoney, afterTaxBonusMoney);
+                return new CommonActionResult(true, "修改票数据成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 查询等待派钱的订单列表
+        /// </summary>
+        public Sports_SchemeQueryInfoCollection QueryWaitForPrizeMoneyOrderList(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new Sports_Business().QueryWaitForPrizeMoneyOrderList(startTime, endTime, gameCode, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询等待派钱的订单列表异常 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 足彩派钱
+        /// </summary>
+        public CommonActionResult SportsPrizeMoney(string schemeIdArray)
+        {
+            //// 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                var array = schemeIdArray.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+                var list = new Sports_Business().SportsPrizeMoney(array);
+
+                foreach (var item in list)
+                {
+                    BusinessHelper.ExecPlugin<IOrderPrizeMoney_AfterTranCommit>(new object[] {item.UserId, item.SchemeId, item.GameCode, item.GameType, item.IssuseNumber,
+                        item.TotalMoney, item.PreTaxBonusMoney, item.AfterTaxBonusMoney  });
+                }
+
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("方案派钱异常 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 计算用户战绩
+        /// </summary>
+        public CommonActionResult ComputeUserBeedings(string complateDate)
+        {
+            try
+            {
+                new Sports_Business().ComputeUserBeedings(complateDate);
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("计算用户战绩异常 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 计算用户幸运指数
+        /// </summary>
+        public CommonActionResult ComputeLucyUser()
+        {
+            try
+            {
+                new Sports_Business().ComputeLucyUser();
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("计算用户幸运指数异常 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 计算用户中奖概率
+        /// </summary>
+        public CommonActionResult ComputeBonusPercent()
+        {
+            try
+            {
+                new Sports_Business().ComputeBonusPercent();
+                return new CommonActionResult(true, "操作成功");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("计算中奖概率异常 - " + ex.Message, ex);
+            }
+        }
+
+
+        public static object importLocker = new object();
+        public CommonActionResult ImportWinNumber(string gameCode, string issuseNumber, string winNumber)
+        {
+            try
+            {
+                lock (importLocker)
+                {
+                    ILotteryDataBusiness biz = null;
+                    switch (gameCode)
+                    {
+                        case "SSQ":
+                            biz = new LotteryDataBusiness_SSQ();
+                            break;
+                        case "DLT":
+                            biz = new LotteryDataBusiness_DLT();
+                            break;
+                        case "FC3D":
+                            biz = new LotteryDataBusiness_FC3D();
+                            break;
+                        case "PL3":
+                            biz = new LotteryDataBusiness_PL3();
+                            break;
+                        case "CQSSC":
+                            biz = new LotteryDataBusiness_CQSSC();
+                            break;
+                        case "JX11X5":
+                            biz = new LotteryDataBusiness_JX11X5();
+                            break;
+                        case "CQ11X5":
+                            biz = new LotteryDataBusiness_CQ11X5();
+                            break;
+                        case "CQKLSF":
+                            biz = new LotteryDataBusiness_CQKLSF();
+                            break;
+                        case "DF6J1":
+                            biz = new LotteryDataBusiness_DF6_1();
+                            break;
+                        case "GD11X5":
+                            biz = new LotteryDataBusiness_GD11X5();
+                            break;
+                        case "GDKLSF":
+                            biz = new LotteryDataBusiness_GDKLSF();
+                            break;
+                        case "HBK3":
+                            biz = new LotteryDataBusiness_HBK3();
+                            break;
+                        case "HC1":
+                            biz = new LotteryDataBusiness_HC1();
+                            break;
+                        case "HD15X5":
+                            biz = new LotteryDataBusiness_HD15X5();
+                            break;
+                        case "HNKLSF":
+                            biz = new LotteryDataBusiness_HNKLSF();
+                            break;
+                        case "JLK3":
+                            biz = new LotteryDataBusiness_JLK3();
+                            break;
+                        case "JSKS":
+                            biz = new LotteryDataBusiness_JSK3();
+                            break;
+                        case "JXSSC":
+                            biz = new LotteryDataBusiness_JXSSC();
+                            break;
+                        case "LN11X5":
+                            biz = new LotteryDataBusiness_LN11X5();
+                            break;
+                        case "PL5":
+                            biz = new LotteryDataBusiness_PL5();
+                            break;
+                        case "QLC":
+                            biz = new LotteryDataBusiness_QLC();
+                            break;
+                        case "QXC":
+                            biz = new LotteryDataBusiness_QXC();
+                            break;
+                        case "SDQYH":
+                            biz = new LotteryDataBusiness_SDQYH();
+                            break;
+                        case "SD11X5":
+                            biz = new LotteryDataBusiness_YDJ11();
+                            break;
+                        case "SDKLPK3":
+                            biz = new LotteryDataBusiness_SDKLPK3();
+                            break;
+                        case "CTZQ_T14C":
+                        case "CTZQ_TR9":
+                        case "CTZQ_T6BQC":
+                        case "CTZQ_T4CJQ":
+                            biz = new LotteryDataBusiness_CTZQ(gameCode);
+                            break;
+                        default:
+                            throw new Exception(string.Format("未找到匹配的接口：{0}", gameCode));
+                    }
+                    biz.ImportWinNumber(issuseNumber, winNumber);
+                }
+                return new CommonActionResult(true, "导入成功");
+            }
+            catch (Exception ex)
+            {
+                return new CommonActionResult(false, "导入失败 " + ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 奖期派奖
+        /// </summary>
+        public CommonActionResult IssusePrize(string gameCode, string gameType, string issuseNumber, string winNumber)
+        {
+            var watch = new Stopwatch();
+            watch.Start();
+            try
+            {
+                //奖期派奖
+                new Sports_Business().LotteryIssusePrize(gameCode, gameType, issuseNumber, winNumber);
+                watch.Stop();
+
+                return new CommonActionResult(true, string.Format("奖期派奖完成,用时{0}毫秒", watch.Elapsed.TotalMilliseconds));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+                //watch.Stop();
+                //return new CommonActionResult(true, string.Format("{0},用时{1}毫秒", ex.Message, watch.Elapsed.TotalMilliseconds));
+            }
+        }
+
+        // 批量开启重庆时时彩奖期（每天120期。白天10分钟一期(上午10点开始)，夜场5分钟一期(22点开始)）
+        public CommonActionResult OpenIssuseBatch_Fast(string gameCode, DateTime dateFrom, DateTime dateTo)
+        {
+            switch (gameCode)
+            {
+                case "CQSSC":
+                    var bettingOffset = 90;
+                    var phases = new Dictionary<int, double>();
+                    phases.Add(23, 5);
+                    phases.Add(0, 475);
+                    phases.Add(96, 10);
+                    phases.Add(120, 5);
+                    var issuseFormat = "{0:yyyyMMdd}-{1,3:D3}";
+
+                    var admin = new IssuseBusiness();
+                    for (var date = dateFrom.Date; date <= dateTo.Date; date = date.AddDays(1))
+                    {
+                        admin.OpenIssuseBatch_Fast(gameCode, date, bettingOffset, CheckIsOpenDay, phases, issuseFormat);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+
+                case "JX11X5":
+                    bettingOffset = 120;
+                    phases = new Dictionary<int, double>();
+                    phases.Add(0, 540);
+                    phases.Add(84, 10);
+                    issuseFormat = "{0:yyyyMMdd}-{1,2:D2}";
+
+                    admin = new IssuseBusiness();
+                    for (var date = dateFrom.Date; date <= dateTo.Date; date = date.AddDays(1))
+                    {
+                        admin.OpenIssuseBatch_Fast(gameCode, date, bettingOffset, CheckIsOpenDay, phases, issuseFormat);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+
+                case "SD11X5":
+
+                    bettingOffset = 40;
+                    phases = new Dictionary<int, double>();
+                    phases.Add(0, 506);
+                    phases.Add(87, 10);
+                    issuseFormat = "{0:yyyyMMdd}-{1,2:D2}";
+
+                    admin = new IssuseBusiness();
+                    for (var date = dateFrom.Date; date <= dateTo.Date; date = date.AddDays(1))
+                    {
+                        admin.OpenIssuseBatch_Fast(gameCode, date, bettingOffset, CheckIsOpenDay, phases, issuseFormat);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+
+                case "GD11X5":
+
+                    bettingOffset = 30;
+                    phases = new Dictionary<int, double>();
+                    phases.Add(0, 540);
+                    phases.Add(84, 10);
+                    issuseFormat = "{0:yyyyMMdd}-{1,2:D2}";
+
+                    admin = new IssuseBusiness();
+                    for (var date = dateFrom.Date; date <= dateTo.Date; date = date.AddDays(1))
+                    {
+                        admin.OpenIssuseBatch_Fast(gameCode, date, bettingOffset, CheckIsOpenDay, phases, issuseFormat);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+                case "GDKLSF:":
+
+                    bettingOffset = 30;
+                    phases = new Dictionary<int, double>();
+                    phases.Add(0, 510);
+                    phases.Add(84, 10);
+                    issuseFormat = "{0:yyyyMMdd}-{1,2:D2}";
+
+                    admin = new IssuseBusiness();
+                    for (var date = dateFrom.Date; date <= dateTo.Date; date = date.AddDays(1))
+                    {
+                        admin.OpenIssuseBatch_Fast(gameCode, date, bettingOffset, CheckIsOpenDay, phases, issuseFormat);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+                case "JSKS":
+
+                    bettingOffset = 30;
+                    phases = new Dictionary<int, double>();
+                    phases.Add(0, 510);
+                    phases.Add(82, 10);
+                    issuseFormat = "{0:yyyyMMdd}-{1,2:D2}";
+
+                    admin = new IssuseBusiness();
+                    for (var date = dateFrom.Date; date <= dateTo.Date; date = date.AddDays(1))
+                    {
+                        admin.OpenIssuseBatch_Fast(gameCode, date, bettingOffset, CheckIsOpenDay, phases, issuseFormat);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+
+                case "SDKLPK3":
+
+
+                    bettingOffset = 40;
+                    phases = new Dictionary<int, double>();
+                    phases.Add(0, 501);
+                    phases.Add(88, 10);
+                    issuseFormat = "{0:yyyyMMdd}-{1,2:D2}"; //"{0:yyyy}{2,3:D3}-{1,2:D2}";
+
+                    admin = new IssuseBusiness();
+                    for (var date = dateFrom.Date; date <= dateTo.Date; date = date.AddDays(1))
+                    {
+                        var dateIndex = GetDayIndex(date);
+                        admin.OpenIssuseBatch_Fast(gameCode, date, bettingOffset, CheckIsOpenDay, phases, issuseFormat, dayIndex: dateIndex);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+
+                default:
+
+            throw new ArgumentException("彩种不正确 - " + gameCode);
+
+            }
+        }
+
+        public CommonActionResult OpenIssuseBatch_Daily(string gameCode, int yearFrom, int yearTo)
+        {
+            switch (gameCode)
+            {
+                case "FC3D":
+                  
+                    var issuseFormat = "{0:yyyy}-{1,3:D3}";
+                    var admin = new IssuseBusiness();
+                    for (var year = yearFrom; year <= yearTo; year++)
+                    {
+                        admin.OpenIssuseBatch_Slow(gameCode, year, issuseFormat, CheckIsOpenDay, (d) => d.Date.AddHours(19).AddMinutes(50), 10);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+
+                case "PL3":
+
+                     gameCode = "PL3";
+                     issuseFormat = "{0:yyyy}-{1,3:D3}";
+                     admin = new IssuseBusiness();
+                    for (var year = yearFrom; year <= yearTo; year++)
+                    {
+                        admin.OpenIssuseBatch_Slow(gameCode, year, issuseFormat, CheckIsOpenDay, (d) => d.Date.AddHours(19).AddMinutes(50), 10);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+                default:
+
+                   throw new ArgumentException("彩种不正确 - " + gameCode);
+            }
+        }
+
+        /// <summary>
+        /// 批量开启奖期
+        /// </summary>
+        public CommonActionResult OpenIssuseBatch_Slow(string gameCode, int yearFrom, int yearTo)
+        {
+            switch (gameCode)
+            {
+                case "SSQ":
+                  
+                    var issuseFormat = "{0:yyyy}-{1,3:D3}";
+                    var admin = new IssuseBusiness();
+                    for (var year = yearFrom; year <= yearTo; year++)
+                    {
+                        admin.OpenIssuseBatch_Slow(gameCode, year, issuseFormat, (d) =>
+                        {
+                            if ((d.DayOfWeek == DayOfWeek.Tuesday || d.DayOfWeek == DayOfWeek.Thursday || d.DayOfWeek == DayOfWeek.Sunday))
+                            {
+                                return CheckIsOpenDay(d);
+                            }
+                            return false;
+                        }, (d) => d.Date.AddHours(19).AddMinutes(50), 10);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+
+                case "DLT":
+
+                     issuseFormat = "{0:yyyy}-{1,3:D3}";
+                     admin = new IssuseBusiness();
+                    for (var year = yearFrom; year <= yearTo; year++)
+                    {
+                        admin.OpenIssuseBatch_Slow(gameCode, year, issuseFormat, (d) =>
+                        {
+                            if ((d.DayOfWeek == DayOfWeek.Tuesday || d.DayOfWeek == DayOfWeek.Thursday || d.DayOfWeek == DayOfWeek.Sunday))
+                            {
+                                return CheckIsOpenDay(d);
+                            }
+                            return false;
+                        }, (d) => d.Date.AddHours(19).AddMinutes(50), 10);
+                    }
+                    return new CommonActionResult(true, "操作成功");
+
+                default:
+
+                    throw new ArgumentException("彩种不正确 - " + gameCode);
+            }
+        }
+        private bool CheckIsOpenDay(DateTime date)
+        {
+            var calendar = new ChineseLunisolarCalendar();
+            var lMonth = calendar.GetMonth(date);
+            var lDay = calendar.GetDayOfMonth(date);
+            if (lMonth == 1 && lDay < 7)
+            {
+                return false;
+            }
+            else
+            {
+                date = date.AddDays(1);
+                lMonth = calendar.GetMonth(date);
+                lDay = calendar.GetDayOfMonth(date);
+                if (lMonth == 1 && lDay == 1)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        #region 高频彩开启奖期
+
+        private int GetDayIndex(DateTime date)
+        {
+            var dateIndex = 0;
+            var currentDay = new DateTime(date.Year, 1, 1);
+            for (var i = 0; i < date.DayOfYear; i++)
+            {
+                currentDay = currentDay.AddDays(1);
+                if (CheckIsOpenDay(currentDay))
+                {
+                    dateIndex++;
+                }
+            }
+            return dateIndex;
         }
         #endregion
     }

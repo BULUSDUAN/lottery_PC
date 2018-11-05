@@ -21,7 +21,14 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             this.DB.GetDal<C_Lottery_GameType>().Add(entity);
         }
-       
+        public void UpdateGameIssuse(C_Game_Issuse issuse)
+        {
+            DB.GetDal<C_Game_Issuse>().Update(issuse);
+        }
+        public void AddGameIssuse(params C_Game_Issuse[] issuse)
+        {
+            DB.GetDal<C_Game_Issuse>().Add(issuse);
+        }
         public void UpdateLotteryGame(C_Lottery_Game lotteryGame)
         {
             this.DB.GetDal<C_Lottery_Game>().Update(lotteryGame);

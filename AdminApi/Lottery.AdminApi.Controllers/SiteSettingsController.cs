@@ -25,6 +25,7 @@ namespace Lottery.AdminApi.Controllers
     [ReusltFilter]
     public class SiteSettingsController : BaseController
     {
+        private readonly static AdminService _service = new AdminService();
         #region 新版权限列表
         /// <summary>
         /// 角色管理
@@ -987,5 +988,63 @@ namespace Lottery.AdminApi.Controllers
                 }
             }
         }
+
+        #region 合买数据管理
+       
+        /// <summary>
+        /// 更新用户战绩
+        /// </summary>
+        public JsonResult TogetherComputeUserBeedings(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var date = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.currentDate, "日期不能为空"));
+                var result = _service.ComputeUserBeedings(date.ToString("yyyyMMdd"));
+                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message, });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsSuccess = false, Msg = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// 更新用户幸运指数
+        /// </summary>
+        public JsonResult TogetherComputeLuckyUser(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var datefrom = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.startTime, "日期不能为空"));
+                var dateto = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.endTime, "日期不能为空"));
+                var result = _service.ComputeLucyUser();
+                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message, });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsSuccess = false, Msg = ex.Message });
+            }
+        }
+        /// <summary>
+        /// 更新时间段中奖概率
+        /// </summary>
+        public JsonResult UpdateUserBonusRatio(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var datefrom = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.startTime, "日期不能为空"));
+                var dateto = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.endTime, "日期不能为空"));
+                var result = _service.ComputeBonusPercent();
+                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message, });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsSuccess = false, Msg = ex.Message });
+            }
+        }
+        #endregion
     }
 }

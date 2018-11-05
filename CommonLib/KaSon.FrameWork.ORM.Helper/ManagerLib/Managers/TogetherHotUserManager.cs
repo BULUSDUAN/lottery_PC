@@ -75,5 +75,16 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB.GetDal<C_TogetherHotUser>().Delete(entity);
         }
+
+        public List<C_TogetherHotUser> QueryTogetherHotUserList()
+        {
+          
+            return DB.CreateQuery<C_TogetherHotUser>().ToList();
+        }
+
+        public void UpdateTogetherHotUser(C_TogetherHotUser entity)
+        {
+            DB.GetDal<C_TogetherHotUser>().Update(entity);
+        }
     }
 }
