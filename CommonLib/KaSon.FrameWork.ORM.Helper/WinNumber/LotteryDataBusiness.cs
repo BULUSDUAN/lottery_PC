@@ -126,6 +126,11 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                     {
                         case "SSQ":
                             biz = new LotteryDataBusiness_SSQ();
+
+                            break;
+                           case "HK6":
+                            biz = new LotteryDataBusiness_HK6();
+
                             break;
                         case "DLT":
                             biz = new LotteryDataBusiness_DLT();

@@ -127,6 +127,7 @@ namespace  KaSon.FrameWork.Analyzer.AnalyzerFactory
                 case "PL3":
                     return new GameAnalyzer_时时彩(gameCode) { TotalNumber = 3 };
                 case "SSQ":
+                case "HK6":
                     return new GameAnalyzer_大盘数字彩(gameCode);
                 case "DLT":
                     if (gameType.StartsWith("12X2"))

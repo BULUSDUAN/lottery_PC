@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="protobuf-net" Version="2.3.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Kason.Sg.Core.CPlatform">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.CPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Kason.Sg.Core.ProxyGenerator">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.ProxyGenerator.dll</HintPath>
+    </Reference>
+    <Reference Include="Kason.Sg.Core.System">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.System.dll</HintPath>
+    </Reference>
+    <Reference Include="MessagePack">
+      <HintPath>..\..\FramWorkDLL\MessagePack.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

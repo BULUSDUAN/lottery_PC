@@ -27,6 +27,9 @@ namespace Lottery.CrawGetters
 
         public static string SZC_OPEN_URL { get; set; }
         public static string SZC_OPEN_URL_DAY { get; set; }
+
+        public static string SZC_OPEN_URL_HK6 { get; set; }
+        public static string SZC_OPEN_URL_DAY_HK6 { get; set; }
         public static string ZHM_ServiceUrl { get; set; }
         
         public static string ZHM_Key { get; set; }
@@ -48,6 +51,10 @@ namespace Lottery.CrawGetters
 
             SZC_OPEN_URL=cf["SZC_OPEN_URL"] == null ? "" : cf["SZC_OPEN_URL"].ToString();
             SZC_OPEN_URL_DAY = cf["SZC_OPEN_URL_DAY"] == null ? "" : cf["SZC_OPEN_URL_DAY"].ToString();
+
+            SZC_OPEN_URL = cf["SZC_OPEN_URL_HK6"] == null ? "" : cf["SZC_OPEN_URL_HK6"].ToString();
+            SZC_OPEN_URL_DAY = cf["SZC_OPEN_URL_DAY_HK6"] == null ? "" : cf["SZC_OPEN_URL_DAY_HK6"].ToString();
+
 
             ZHM_ServiceUrl = cf["ZHM_ServiceUrl"] == null ? "" : cf["ZHM_ServiceUrl"].ToString();
             ZHM_Key = cf["ZHM_Key"] == null ? "" : cf["ZHM_Key"].ToString();

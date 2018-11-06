@@ -67,6 +67,7 @@ namespace Craw.Service.ModuleServices
                     case "PL3":
                     case "SSQ":
                     case "DLT":
+                    case "HK6":
                         bol = true;
                         stopTime = TimeSpan.FromSeconds(int.Parse(sleeptimes[gameName].ToString()));
                         break;
@@ -113,6 +114,7 @@ namespace Craw.Service.ModuleServices
                     case "PL3":
                     case "SSQ":
                     case "DLT":
+                    case "HK6":
                         var p = aotoCollectList.Where(b => b.Key == gameName).FirstOrDefault();
                         if (p != null)
                         {

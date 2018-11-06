@@ -109,7 +109,7 @@ namespace Craw.Service.ModuleServices
         
 
 
-            return Task.FromResult( "数字彩采集开奖号-开始服务");
+            return Task.FromResult( "CTZQ-开始服务");
         }
         /// <summary>
         /// 停止服务
@@ -143,7 +143,7 @@ namespace Craw.Service.ModuleServices
             }
 
 
-            return Task.FromResult("数字彩采集开奖号-开始服务");
+            return Task.FromResult(string.Format("{0}-开启服务",Type));
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace Craw.Service.ModuleServices
 
 
 
-            return Task.FromResult("数字彩采集开奖号-开始服务");
+            return Task.FromResult(string.Format("{0}-开启服务", Type));
         }
 
         public Task<string> JCZQMatch_Result_OZSP_Stop(string Type)
@@ -219,7 +219,7 @@ namespace Craw.Service.ModuleServices
 
 
 
-            return Task.FromResult("数字彩采集开奖号-开始服务");
+            return Task.FromResult(string.Format("{0}-停止服务", Type));
         }
         public Task<string> JCLQMatch_Start() {
             lock (aotoCollectList)
@@ -241,7 +241,7 @@ namespace Craw.Service.ModuleServices
                 }
 
             }
-            return Task.FromResult("数字彩采集开奖号-开始服务");
+            return Task.FromResult(string.Format("{0}-开启服务", "JCLQ"));
         }
         public Task<string> JCLQMatch_Stop()
         {
@@ -259,7 +259,7 @@ namespace Craw.Service.ModuleServices
                 }
 
             }
-            return Task.FromResult("数字彩采集开奖号-开始服务");
+            return Task.FromResult(string.Format("{0}-停止服务", "JCLQ"));
         }
         public Task<string> BJDCMatch_OZSP_Start(string Type)
         {
@@ -295,7 +295,8 @@ namespace Craw.Service.ModuleServices
                 }
 
             }
-            return Task.FromResult("数字彩采集开奖号-开始服务");
+           // return Task.FromResult("数字彩采集开奖号-开始服务");
+            return Task.FromResult(string.Format("{0}-开启服务", Type));
         }
 
         public Task<string> BJDCMatch_OZSP_Stop(string Type)
@@ -331,7 +332,7 @@ namespace Craw.Service.ModuleServices
                 }
 
             }
-            return Task.FromResult("数字彩采集开奖号-开始服务");
+            return Task.FromResult(string.Format("{0}-停止服务服务", Type));
         }
         
 
