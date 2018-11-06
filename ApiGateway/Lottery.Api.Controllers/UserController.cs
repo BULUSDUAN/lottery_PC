@@ -1614,7 +1614,7 @@ namespace Lottery.Api.Controllers
                         BankName = info.BankName,
                         BankCardNumber = info.BankCardNumber,
                         TotalCashMoney = cashMoney.GetTotalCashMoney(),
-                        Money = money.ToString("N2"),
+                        Money = decimal.Parse(money).ToString("N2"),
                         ResponseMoney = RequestWithdraw_1.ResponseMoney.ToString("N2"),
                         Commission = Convert.ToInt32(RequestWithdraw_1.RequestMoney.ToString("N2")) - Convert.ToInt32(RequestWithdraw_1.ResponseMoney.ToString("N2")),
                         IsNeedPwd = cashMoney.CheckIsNeedPassword("Withdraw")
