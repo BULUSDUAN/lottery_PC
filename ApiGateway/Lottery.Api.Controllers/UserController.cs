@@ -1614,9 +1614,9 @@ namespace Lottery.Api.Controllers
                         BankName = info.BankName,
                         BankCardNumber = info.BankCardNumber,
                         TotalCashMoney = cashMoney.GetTotalCashMoney(),
-                        Money = money,
-                        ResponseMoney = RequestWithdraw_1.ResponseMoney,
-                        Commission = RequestWithdraw_1.RequestMoney - RequestWithdraw_1.ResponseMoney,
+                        Money = money.ToString("N2"),
+                        ResponseMoney = RequestWithdraw_1.ResponseMoney.ToString("N2"),
+                        Commission = Convert.ToInt32(RequestWithdraw_1.RequestMoney.ToString("N2")) - Convert.ToInt32(RequestWithdraw_1.ResponseMoney.ToString("N2")),
                         IsNeedPwd = cashMoney.CheckIsNeedPassword("Withdraw")
                     }
                 });
