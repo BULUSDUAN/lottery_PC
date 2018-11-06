@@ -137,7 +137,7 @@ namespace Lottery.ApiGateway
             //loggerFactory.AddConsole();
          //   var log = new Log4NetProvider("Config/log4net.config");
          
-            loggerFactory.AddProvider(new Log4NetProvider("Config/log4net.config"));
+            //loggerFactory.AddProvider(new Log4NetProvider("Config/log4net.config"));
 
             InitConfigInfo.logFactory = loggerFactory;
             if (env.IsDevelopment())

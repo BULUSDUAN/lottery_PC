@@ -55,7 +55,27 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new { IsSuccess = false, Msg = ex.Message });
             }
         }
-     
+
+        #endregion
+
+        #region 传统足球
+        public JsonResult DoPrize_CTZQ(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                var gameType = PreconditionAssert.IsNotEmptyString((string)p.gameType, "玩法不能为空");
+                var issuseNumber = PreconditionAssert.IsNotEmptyString((string)p.issuseNumber, "期号不能为空");
+                var winnumber = PreconditionAssert.IsNotEmptyString((string)p.winnumber, "中奖号码不能为空");
+                //var result = _service.QueryUnPrizeTicketAndDoPrizeByGameCode("CTZQ", gameType, issuseNumber, winnumber, -1);
+                //return Json(new { IsSuccess = true, Msg = result });
+                return Json(new { IsSuccess = true, Msg = "" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsSuccess = false, Msg = ex.Message });
+            }
+        }
         #endregion
     }
 }
