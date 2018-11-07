@@ -117,12 +117,12 @@ namespace Lottery.AdminApi.Controllers
                 string verifyCodestr = p.verifyCode;
                 string userName = PreconditionAssert.IsNotEmptyString(userNamestr, "登录账号不能为空！");
                 string passWord = PreconditionAssert.IsNotEmptyString(passWordstr, "登录密码不能为空！");
-                string verifyCode = PreconditionAssert.IsNotEmptyString(verifyCodestr, "验证码不能为空！");
+                //string verifyCode = PreconditionAssert.IsNotEmptyString(verifyCodestr, "验证码不能为空！");
                 var vCode = HttpContext.Session.GetObj<string>("ValidateCode");
-                if (vCode != verifyCode)
-                {
-                    throw new Exception("验证码输入错误！");
-                }
+                //if (vCode != verifyCode)
+                //{
+                //    throw new Exception("验证码输入错误！");
+                //}
                 AdminService service = new AdminService();
                 CurrentUser = service.LoginAdmin(userName, passWord, IpManager.GetClientUserIp(HttpContext));
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功,  Message="登录成功"});

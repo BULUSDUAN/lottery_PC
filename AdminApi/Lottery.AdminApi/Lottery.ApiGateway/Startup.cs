@@ -82,6 +82,15 @@ namespace Lottery.ApiGateway
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(option => {
+                option.AddPolicy("any", builder =>
+                {
+                    builder.AllowAnyOrigin() //允许任何来源的主机访问
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();//指定处理cookie
+                });
+            });
             RegisterController(services);
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSession();

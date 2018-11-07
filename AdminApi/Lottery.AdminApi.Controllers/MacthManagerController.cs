@@ -5,6 +5,7 @@ using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.ORM.Helper;
 using Lottery.AdminApi.Controllers.CommonFilterActtribute;
 using Lottery.AdminApi.Model.HelpModel;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,6 +18,7 @@ namespace Lottery.AdminApi.Controllers
     /// </summary>
     [Area("api")]
     [ReusltFilter]
+    [EnableCors("any")]
     public class MacthManagerController : BaseController
     {
         private static readonly AdminService _service = new AdminService();
