@@ -93,7 +93,7 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                var UserId = p.id;
+                string UserId = p.id;
                 //if (!string.IsNullOrEmpty(ViewBag.UserId))
                 //{
                    var UserResult = _service.QueryUserByKey(UserId);
