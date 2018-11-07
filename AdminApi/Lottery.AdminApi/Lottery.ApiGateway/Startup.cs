@@ -85,10 +85,10 @@ namespace Lottery.ApiGateway
             services.AddCors(option => {
                 option.AddPolicy("any", builder =>
                 {
-                    builder.AllowAnyOrigin() //允许任何来源的主机访问
+                    builder.AllowAnyOrigin()//允许任何站点跨域访问
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowCredentials();//指定处理cookie
+                    .AllowCredentials();
                 });
             });
             RegisterController(services);
@@ -157,20 +157,7 @@ namespace Lottery.ApiGateway
             {
                 app.UseExceptionHandler("/mg/Home/Error");
             }
-           // app.UseCors(builder => builder.WithOrigins("*"));
-            //app.UseCors(builder =>
-            //{
-            //    var policy = Kason.Sg.Core.ApiGateWay.AppConfig.Policy;
-            //    builder.WithOrigins(policy.Origins);
-            //    if (policy.AllowAnyHeader)
-            //        builder.AllowAnyHeader();
-            //    if (policy.AllowAnyMethod)
-            //        builder.AllowAnyMethod();
-            //    if (policy.AllowAnyOrigin)
-            //        builder.AllowAnyOrigin();
-            //    if (policy.AllowCredentials)
-            //        builder.AllowCredentials();
-            //});
+            app.UseCors("any");//注册跨域
             //不使用静态文件
             //var myProvider = new FileExtensionContentTypeProvider();
             //myProvider.Mappings.Add(".tpl", "text/plain");
