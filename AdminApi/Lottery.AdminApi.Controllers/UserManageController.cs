@@ -25,7 +25,6 @@ namespace Lottery.AdminApi.Controllers
     [Area("api")]
     [ReusltFilter]
     [CheckLogin]
-    [EnableCors("any")]
     public class UserManageController :BaseController
     {
         private readonly static AdminService _service = new AdminService();

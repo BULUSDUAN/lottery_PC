@@ -12,14 +12,15 @@ using EntityModel.CoreModel;
 using KaSon.FrameWork.Common;
 using KaSon.FrameWork.Common.Net;
 using KaSon.FrameWork.ORM.Helper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace Lottery.AdminApi.Controllers
 {
- 
-   // [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+
+    // [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class BaseController : Controller
     {
 

@@ -13,6 +13,7 @@ using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.Common.Net;
 using EntityModel;
 using Lottery.AdminApi.Controllers.CommonFilterActtribute;
+using Microsoft.AspNetCore.Cors;
 
 namespace Lottery.AdminApi.Controllers
 {

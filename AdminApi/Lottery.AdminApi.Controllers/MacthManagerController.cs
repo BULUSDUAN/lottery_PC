@@ -18,7 +18,6 @@ namespace Lottery.AdminApi.Controllers
     /// </summary>
     [Area("api")]
     [ReusltFilter]
-    [EnableCors("any")]
     public class MacthManagerController : BaseController
     {
         private static readonly AdminService _service = new AdminService();

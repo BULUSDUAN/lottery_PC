@@ -1,14 +1,8 @@
-﻿using Autofac;
+﻿using System;
+using System.Linq;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Serialization;
 using Kason.Sg.Core.ApiGateWay;
-using Kason.Sg.Core.ApiGateWay.Configurations;
 using Kason.Sg.Core.ApiGateWay.OAuth.Implementation.Configurations;
 using Kason.Sg.Core.Caching.Configurations;
 using Kason.Sg.Core.Codec.MessagePack;
@@ -19,21 +13,23 @@ using Kason.Sg.Core.CPlatform.Utilities;
 using Kason.Sg.Core.DotNetty;
 using Kason.Sg.Core.ProxyGenerator;
 using Kason.Sg.Core.System.Intercept;
-//using Kason.Sg.Core.Zookeeper;
-using Kason.Sg.Core.Caching;
-using Microsoft.AspNetCore.Mvc.Controllers;
+using KaSon.FrameWork.Common;
+using KaSon.FrameWork.Common.Net;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using System;
-using System.Linq;
+//using Kason.Sg.Core.Zookeeper;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 //using Kason.Sg.Core.Zookeeper;
 //using ZookeeperConfigInfo = Kason.Sg.Core.Zookeeper.Configurations.ConfigInfo;
 
 using ApiGateWayConfig = Kason.Sg.Core.ApiGateWay.AppConfig;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.AspNetCore.Http;
-using KaSon.FrameWork.Common.Net;
-using Kason.Sg.Core.Log4net;
-using KaSon.FrameWork.Common;
 
 namespace Lottery.ApiGateway
 {
@@ -61,7 +57,7 @@ namespace Lottery.ApiGateway
         {
             var list = AssemblyHelper.LoadAssembly();
             var feature = new ControllerFeature();
-           // services.AddCors();
+            // services.AddCors();
             services.AddMvc().ConfigureApplicationPartManager(m =>
             {
                 //   var feature = new ControllerFeature();
@@ -82,15 +78,16 @@ namespace Lottery.ApiGateway
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(option => {
-                option.AddPolicy("any", builder =>
-                {
-                    builder.AllowAnyOrigin()//允许任何站点跨域访问
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials();
-                });
-            });
+            //services.AddCors(option =>
+            //{
+            //    option.AddPolicy("any", builder =>
+            //    {
+            //        builder.AllowAnyOrigin()//允许任何站点跨域访问
+            //        .AllowAnyMethod()
+            //        .AllowAnyHeader()
+            //        .AllowCredentials();
+            //    });
+            //});
             RegisterController(services);
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSession();
@@ -115,15 +112,15 @@ namespace Lottery.ApiGateway
                 options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             });
             services.AddLogging();
-         
-               var builder = new ContainerBuilder();
+
+            var builder = new ContainerBuilder();
             builder.Populate(services);
 
             builder.AddMicroService(option =>
             {
                 option.AddClient();
                 //  option.AddCache();
-               
+
                 option.AddClientIntercepted(typeof(CacheProviderInterceptor));
                 //option.UseConsulManager(config);
                 //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
@@ -144,8 +141,8 @@ namespace Lottery.ApiGateway
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider svp)
         {
             //loggerFactory.AddConsole();
-         //   var log = new Log4NetProvider("Config/log4net.config");
-         
+            //   var log = new Log4NetProvider("Config/log4net.config");
+
             //loggerFactory.AddProvider(new Log4NetProvider("Config/log4net.config"));
 
             InitConfigInfo.logFactory = loggerFactory;
@@ -157,7 +154,7 @@ namespace Lottery.ApiGateway
             {
                 app.UseExceptionHandler("/mg/Home/Error");
             }
-            app.UseCors("any");//注册跨域
+            //app.UseCors("any");//注册跨域
             //不使用静态文件
             //var myProvider = new FileExtensionContentTypeProvider();
             //myProvider.Mappings.Add(".tpl", "text/plain");
