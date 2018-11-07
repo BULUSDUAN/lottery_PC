@@ -9574,5 +9574,101 @@ namespace KaSon.FrameWork.ORM.Helper
             //更新Redis缓存
             RedisMatchBusiness.LoadSZCWinNumber(gameCode);
         }
+
+        /// <summary>
+        /// 按彩种查询未派奖的票并执行派奖
+        /// </summary>
+        public string QueryUnPrizeTicketAndDoPrizeByGameCode(string gameCode, string gameType, int count)
+        {
+            if (string.IsNullOrEmpty(gameCode))
+                throw new Exception("彩种不能为空");
+
+            var watch = new Stopwatch();
+
+            var successCount = 0;
+            var failCount = 0;
+            var log = new List<string>();
+            var manager = new Sports_Manager();
+            var poolManager = new Ticket_BonusManager();
+
+            var szcArray = new string[] { "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" };
+            var poolList = new List<T_Ticket_BonusPool>();
+            var ticketList = new List<TicketPrizeInfo>();
+            watch.Start();
+            if (szcArray.Contains(gameCode.ToUpper()))
+            {
+                //数字彩
+                ticketList.AddRange(manager.QuerySZCUnPrizeTicket(gameCode, count));
+            }
+            if (gameCode == "CTZQ")
+            {
+                //传统足球
+                ticketList.AddRange(manager.QueryCTZQUnPrizeticket(gameType, count));
+            }
+            watch.Stop();
+            log.Add(string.Format("查询{0}-{1}-{2}，用时{3}毫秒", gameCode, gameType, count, watch.Elapsed.TotalMilliseconds));
+
+            watch.Restart();
+            var prizeList = new List<TicketBatchPrizeInfo>();
+            foreach (var item in ticketList)
+            {
+                try
+                {
+                    //查询奖池
+                    if (new string[] { "SSQ", "DLT", "CTZQ" }.Contains(gameCode))
+                    {
+                        var pCount = poolList.Where(p => p.GameCode == item.GameCode && (gameType == "" || p.GameType == gameType) && p.IssuseNumber == item.IssuseNumber).Count();
+                        if (pCount <= 0)
+                        {
+                            poolList.AddRange(poolManager.GetBonusPool(item.GameCode, (gameType == "" ? "" : item.GameType), item.IssuseNumber));
+                        }
+                    }
+
+                    var totalPreMoney = 0M;
+                    var totalAfterMoney = 0M;
+                    //计算中奖金额
+                    DoComputeTicketBonusMoney(item.TicketId, item.GameCode.ToUpper(), item.GameType.ToUpper(), item.BetContent, item.Amount, item.IsAppend, item.IssuseNumber, item.WinNumber, poolList, out totalPreMoney, out totalAfterMoney);
+
+                    //更新票数据sql
+                    prizeList.Add(new TicketBatchPrizeInfo
+                    {
+                        //Id = item.Id,
+                        TicketId = item.TicketId,
+                        BonusStatus = totalAfterMoney > 0M ? BonusStatus.Win : BonusStatus.Lose,
+                        PreMoney = totalPreMoney,
+                        AfterMoney = totalAfterMoney,
+                    });
+
+                    //var updateSql = string.Format("update C_Sports_Ticket set PreTaxBonusMoney={0},AfterTaxBonusMoney={1},BonusStatus={2} where ticketId='{3}' "
+                    //    , totalPreMoney, totalAfterMoney, totalAfterMoney > 0M ? 20 : 30, item.TicketId);
+                    //manager.ExecSql(updateSql);
+                    //sqlList.Add(updateSql);
+
+                    successCount++;
+                }
+                catch (Exception ex)
+                {
+                    failCount++;
+                    log.Add(string.Format("票{0} 派奖异常：{1}", item.TicketId, ex.Message));
+                }
+            }
+            watch.Stop();
+            log.Add(string.Format("计算票中奖数据用时{0}毫秒", watch.Elapsed.TotalMilliseconds));
+
+
+            watch.Restart();
+            //批量更新数据库
+            BusinessHelper.UpdateTicketBonus(prizeList);
+            watch.Stop();
+            log.Add(string.Format("执行更新票数据，用时{0}毫秒", watch.Elapsed.TotalMilliseconds));
+            //if (sqlList.Count > 0)
+            //{
+            //    //执行更新sql
+            //    //manager.ExecSql(string.Join(Environment.NewLine, sqlList));
+            //}
+
+            log.Insert(0, string.Format("成功派奖票：{0}条，失败派奖票：{1}条", successCount, failCount));
+            return string.Join(Environment.NewLine, log.ToArray());
+        }
     }
 }

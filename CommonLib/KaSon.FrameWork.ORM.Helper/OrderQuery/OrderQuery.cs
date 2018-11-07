@@ -539,7 +539,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     collection.TotalCount = collection.OrderList.Count;
                     collection.TotalOrderMoney = collection.OrderList.Sum(o => o.TotalMoney);
-                    collection.TotalBuyMoney = collection.OrderList.Sum(o => o.CurrentBettingMoney);
+                    collection.TotalBetMoney = collection.OrderList.Sum(o => o.CurrentBettingMoney);
                     collection.TotalPreTaxBonusMoney = collection.OrderList.Sum(o => o.PreTaxBonusMoney);
                     collection.TotalAfterTaxBonusMoney = collection.OrderList.Sum(o => o.AfterTaxBonusMoney);
                     collection.TotalAddMoney = collection.OrderList.Sum(o => o.AddMoney);

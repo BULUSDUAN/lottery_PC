@@ -663,7 +663,62 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new { IsSuccess = false, Msg = ex.Message });
             }
         }
+
+
+        public JsonResult DoFundIssuseOrder(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string gameCode = PreconditionAssert.IsNotEmptyString(Request.Form["gameCode"], "彩种不能为空！");
+                string issuseNumber = PreconditionAssert.IsNotEmptyString(Request.Form["issuseNumber"], "期号不能为空！");
+                var log = _service.QueryOrderAndFundOrder(gameCode, issuseNumber);
+                return Json(new { IsSuccess = true, Msg = log });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsSuccess = false, Msg = ex.Message });
+            }
+        }
+
+
         #endregion
 
+
+        #region 体彩手工派奖
+
+        public JsonResult DoDispatchPrizeOrder_Sprot(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string orderIdStr = PreconditionAssert.IsNotEmptyString((string)p.orderIdArray, "订单号不能为空！");
+                ViewBag.GameCode = PreconditionAssert.IsNotEmptyString((string)p.gameCode, "订单号不能为空！");
+                var msgList = new List<string>();
+                foreach (var orderId in orderIdStr.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    if (string.IsNullOrEmpty(orderId))
+                        continue;
+                    try
+                    {
+                        var result = _service.PrizeTicket_OrderId(ViewBag.GameCode, orderId);
+                        msgList.Add(string.Format("订单{0}派奖结果：{1}", orderId, result.Message));
+                    }
+                    catch (Exception ex)
+                    {
+                        msgList.Add(string.Format("订单{0}派奖结果：{1}", orderId, ex.Message));
+                    }
+
+                }
+                return Json(new { IsSuccess = true, Msg = string.Join("\r\n", msgList.ToArray()) });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { IsSuccess = false, Msg = ex.Message });
+            }
+
+        }
+
+        #endregion
     }
 }

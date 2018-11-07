@@ -650,10 +650,10 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 根据Key值查询用户列表
         /// todo:后台权限
         /// </summary>
-        public UserQueryInfo QueryUserByKey(string userKey)
+        public UserQueryInfo QueryUserByKey(string UserId)
         {
             var siteBiz = new LocalLoginBusiness();
-            return siteBiz.QueryUserByKey(userKey, string.Empty);
+            return siteBiz.QueryUserByKey(UserId, string.Empty);
         }
         /// <summary>
         /// 根据用户编号查询用户历史登录
@@ -1743,7 +1743,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     collection.TotalCount = collection.OrderList.Count;
                     collection.TotalOrderMoney = collection.OrderList.Sum(o => o.TotalMoney);
-                    collection.TotalBuyMoney = collection.OrderList.Sum(o => o.CurrentBettingMoney);
+                    collection.TotalBetMoney = collection.OrderList.Sum(o => o.CurrentBettingMoney);
                     collection.TotalPreTaxBonusMoney = collection.OrderList.Sum(o => o.PreTaxBonusMoney);
                     collection.TotalAfterTaxBonusMoney = collection.OrderList.Sum(o => o.AfterTaxBonusMoney);
                     collection.TotalAddMoney = collection.OrderList.Sum(o => o.AddMoney);
@@ -2427,5 +2427,56 @@ namespace KaSon.FrameWork.ORM.Helper
             return dateIndex;
         }
         #endregion
+
+        /// <summary>
+        /// 按彩种查询未派奖的票并执行派奖
+        /// </summary>
+        public string QueryUnPrizeTicketAndDoPrizeByGameCode(string gameCode, string gameType, int count)
+        {
+            return new Sports_Business().QueryUnPrizeTicketAndDoPrizeByGameCode(gameCode, gameType, count);
+        }
+
+        /// <summary>
+        /// 根据订单号派奖
+        /// </summary>
+        public CommonActionResult PrizeTicket_OrderId(string gameCode, string orderId)
+        {
+            try
+            {
+                switch (gameCode.ToUpper())
+                {
+                    case "BJDC":
+                        new TicketGatewayAdmin().PrizeBJDCTicket_OrderId(orderId);
+                        break;
+                    case "JCZQ":
+                        new TicketGatewayAdmin().PrizeJCZQTicket_OrderId(orderId);
+                        break;
+                    case "JCLQ":
+                        new TicketGatewayAdmin().PrizeJCLQTicket_OrderId(orderId);
+                        break;
+                    case "CTZQ":
+                        new Sports_Business().ManualPrizeOrder(orderId);
+                        break;
+                    default:
+                        throw new Exception("派奖彩种异常" + gameCode.ToUpper());
+                }
+                string str = new Sports_Business().DoOrderPrize(orderId);
+                return new CommonActionResult(true, str);
+            }
+            catch (Exception ex)
+            {
+                return new CommonActionResult(true, "处理数据过程发生异常 - " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 未开出对应彩种奖期开奖号，按订单本金归还
+        /// </summary>
+        public string QueryOrderAndFundOrder(string gameCode, string issuse)
+        {
+            new Sports_Business().LotteryIssusePrize(gameCode, string.Empty, issuse, "-");
+            //new PrizeBusiness().IssusePrize(gameCode, issuse, string.Empty);
+            return "奖期更新完成";
+        }
     }
 }
