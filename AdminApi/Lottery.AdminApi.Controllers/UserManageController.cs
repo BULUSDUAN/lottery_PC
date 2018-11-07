@@ -9,6 +9,7 @@ using KaSon.FrameWork.Common.Xml;
 using KaSon.FrameWork.ORM.Helper;
 using Lottery.AdminApi.Controllers.CommonFilterActtribute;
 using Lottery.AdminApi.Model.HelpModel;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
