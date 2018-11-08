@@ -324,5 +324,14 @@ namespace KaSon.FrameWork.ORM.Helper
             return collection;
         }
         #endregion
+
+        #region 当天注册人数
+        public int QueryRegisterUserCount()
+        {
+            var today = DateTime.Now.Date;
+            var tomorrow = today.AddDays(1).Date;
+            return DB.CreateQuery<C_User_Register>().Count(p => p.CreateTime >= today && p.CreateTime < tomorrow);
+        }
+        #endregion
     }
 } 

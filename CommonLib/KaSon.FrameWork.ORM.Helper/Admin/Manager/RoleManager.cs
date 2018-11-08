@@ -48,11 +48,11 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = DB.CreateQuery<C_Auth_Function_List>();
             if (roleType == RoleType.WebRole)
             {
-                query = query.Where(p => p.IsWebBasic);
+                query = query.Where(p => p.IsWebBasic==true);
             }
             else if (roleType == RoleType.BackgroundRole)
             {
-                query = query.Where(p => p.IsBackBasic);
+                query = query.Where(p => p.IsBackBasic==true);
             }
             return query.ToList();
         }
@@ -62,7 +62,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 IsAdmin = role.IsAdmin,
                 IsInner = role.IsInner,
-                ParentRoleId = role.ParentRole == null ? "" : role.ParentRole.RoleId,
+                ParentRoleId = role.ParentRole == null ? null : role.ParentRole.RoleId,
                 RoleId = role.RoleId,
                 RoleName = role.RoleName,
                 RoleType = (int)role.RoleType
@@ -93,7 +93,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public RoleFunction GetRoleFunction(string roleId, string functionId)
         {
-            return DB.CreateQuery<C_Auth_Function_List>().Join(DB.CreateQuery<C_Auth_RoleFunction>(), p => p.FunctionId, c => c.FunctionId, (p, c) => new { p, c }).Where(a => a.c.FunctionId == functionId && a.c.RoleId == roleId).Select(p => new RoleFunction()
+            return DB.CreateQuery<C_Auth_Function_List>().Join(DB.CreateQuery<C_Auth_RoleFunction>(), p => p.FunctionId, c => c.FunctionId, (p, c) => new { p, c }).ToList().Where(a => a.c.FunctionId == functionId && a.c.RoleId == roleId).Select(p => new RoleFunction()
             {
                 IId = p.c.IId,
                 FunctionId = p.c.FunctionId,
@@ -117,6 +117,14 @@ namespace KaSon.FrameWork.ORM.Helper
         public IList<C_Auth_Roles> QueryRoleList()
         {
             return DB.CreateQuery<C_Auth_Roles>().OrderBy(x=>x.IsInner||x.IsAdmin).ToList();
+        }
+
+        public List<C_Auth_Function_List> GetMyAllFunction(string userId)
+        {
+            string listSql = SqlModule.AdminModule.First(x => x.Key == "Admin_GetMyAllFunction").SQL;
+            return DB.CreateSQLQuery(listSql)
+               .SetString("UserId", userId)
+               .List<C_Auth_Function_List>().ToList();
         }
     }
 }

@@ -1141,5 +1141,167 @@ namespace KaSon.FrameWork.ORM.Helper
             return Result;
         }
         #endregion
+
+        #region 管理端接口
+        /// <summary>
+        /// 第三方游戏列表
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public ThirdPartyGameCollection ThirdPartyGameDetail(ThirdPartyGameListParam param)
+        {
+            var query = DB.CreateQuery<C_Game_Transfer>().Where(p =>
+           (param.GameType == -1 || p.GameType == param.GameType) &&
+           (param.OrderId == null || param.OrderId == "" || p.OrderId == param.OrderId || p.ProviderSerialNo == param.OrderId) &&
+           (param.Status == -1 || p.GameType == param.Status) &&
+           (param.TransferType == -1 || p.TransferType == param.TransferType) &&
+           (param.UserId == null || param.UserId == "" || p.UserId == param.UserId) &&
+           p.RequestTime >= param.StartTime && p.RequestTime < param.EndTime)
+           .OrderByDescending(p => p.RequestTime);
+            var totalCount = query.Count();
+            var list = query.Skip(param.PageIndex * param.PageSize).Take(param.PageSize).ToList().Select(p => new GameTransfer_ShowModel()
+            {
+                GameType = p.GameType,
+                GameTypeShowName = ((MGGameType)p.GameType).GetRemark(),
+                OrderId = p.OrderId,
+                ProviderSerialNo = p.ProviderSerialNo,
+                RequestMoney = p.RequestMoney,
+                RequestTime = p.RequestTime,
+                Status = p.Status,
+                StatusShowName = ((FillMoneyStatus)p.Status).GetRemark(),
+                TransferType = p.TransferType,
+                TransferTypeShowName = ((GameTransferType)p.TransferType).GetRemark(),
+                UpdateTime = p.UpdateTime,
+                UserDisplayName = p.UserDisplayName,
+                UserId = p.UserId
+            }).ToList();
+            return new ThirdPartyGameCollection()
+            {
+                List = list,
+                TotalCount = totalCount
+            };
+        }
+
+        /// <summary>
+        /// 获取首页数据
+        /// </summary>
+        /// <returns></returns>
+        public List<IndexReportForms> GetIndexReportForms()
+        {
+            var today = DateTime.Now.Date;
+            var tomorrow = today.AddDays(1).Date;
+            var firstDayByMonth= new DateTime(today.Year, today.Month, 1);
+            //注册人数，实名人数，付费人数，当天充值金额，当天提款金额，当月的注册人数，当月的充值金额，当月的提款金额
+            var registerSql = "Select Count(*) as TotalCount,ComeFrom from C_User_Register Where CreateTime >= @beginTime AND CreateTime < @endTime Group by ComeFrom";
+            var realNameSql = "Select Count(*) as TotalCount,ComeFrom from C_User_Register c Inner join E_Authentication_RealName e on c.userId=e.userId where e.CreateTime >= @beginTime AND e.CreateTime < @endTime  group by c.ComeFrom";
+            var paySql = "select Count(*) as TotalCount,ComeFrom from C_User_Register c inner join (select DISTINCT(userId) from E_Blog_Dynamic where CreateTime >= @beginTime AND CreateTime < @endTime ) t on c.userId=t.userId GROUP BY c.ComeFrom";
+            var rechargeSql = @"select sum(ResponseMoney) as TotalMoney,c.ComeFrom from C_FillMoney f inner join C_User_Register c on f.userId = c.userId 
+where f.status=1 and f.FillMoneyAgent !=80 and f.FillMoneyAgent !=90 
+ and f.requestTime>=@beginTime and f.requestTime<@endTime group by c.ComeFrom";
+            var withdrawSql = @"select sum(ResponseMoney) as TotalMoney,c.ComeFrom from C_Withdraw f inner join C_User_Register c on f.userId = c.userId 
+where f.status=3 
+ and f.requestTime>=@beginTime and f.requestTime<@endTime group by c.ComeFrom";
+
+            //当天注册人数
+            var registerToday = DB.CreateSQLQuery(registerSql)
+                .SetString("beginTime", today.ToString("yyyy-MM-dd"))
+                .SetString("endTime", tomorrow.ToString("yyyy-MM-dd"))
+                .List<IndexReportForms_FromCount>();
+            //当月注册人数
+            var registerMonth = DB.CreateSQLQuery(registerSql)
+                .SetString("beginTime", firstDayByMonth.ToString("yyyy-MM-dd"))
+                .SetString("endTime", tomorrow.ToString("yyyy-MM-dd"))
+                .List<IndexReportForms_FromCount>();
+            //实名人数
+            var realNameToday = DB.CreateSQLQuery(realNameSql)
+                .SetString("beginTime", today.ToString("yyyy-MM-dd"))
+                .SetString("endTime", tomorrow.ToString("yyyy-MM-dd"))
+                .List<IndexReportForms_FromCount>();
+            //付费人数
+            var payToday = DB.CreateSQLQuery(paySql)
+                .SetString("beginTime", today.ToString("yyyy-MM-dd"))
+                .SetString("endTime", tomorrow.ToString("yyyy-MM-dd"))
+                .List<IndexReportForms_FromCount>();
+            //当日充值金额
+            var rechargeToday= DB.CreateSQLQuery(rechargeSql)
+                .SetString("beginTime", today.ToString("yyyy-MM-dd"))
+                .SetString("endTime", tomorrow.ToString("yyyy-MM-dd"))
+                .List<IndexReportForms_FromTotalMoney>();
+            //当日提款金额
+            var withdrawToday = DB.CreateSQLQuery(withdrawSql)
+               .SetString("beginTime", today.ToString("yyyy-MM-dd"))
+               .SetString("endTime", tomorrow.ToString("yyyy-MM-dd"))
+               .List<IndexReportForms_FromTotalMoney>();
+            //当月充值金额
+            var rechargeMonth = DB.CreateSQLQuery(rechargeSql)
+                .SetString("beginTime", firstDayByMonth.ToString("yyyy-MM-dd"))
+                .SetString("endTime", tomorrow.ToString("yyyy-MM-dd"))
+                .List<IndexReportForms_FromTotalMoney>();
+            //当月提款金额
+            var withdrawMonth = DB.CreateSQLQuery(withdrawSql)
+               .SetString("beginTime", firstDayByMonth.ToString("yyyy-MM-dd"))
+               .SetString("endTime", tomorrow.ToString("yyyy-MM-dd"))
+               .List<IndexReportForms_FromTotalMoney>();
+            //INNER
+            //IOS
+            //LOCAL
+            //NewAndroid
+            //NewIOS
+            //NewTOUCH
+            //TOUCH
+            var comeFromList = new List<string>()
+            {
+                "INNER",
+                "IOS",
+                "LOCAL",
+                "NewAndroid",
+                "NewIOS",
+                "NewTOUCH",
+                "TOUCH"
+            };
+            var result = new List<IndexReportForms>();
+            foreach (var item in comeFromList)
+            {
+                var model = new IndexReportForms() { Source=item };
+                //当天注册人数
+                var register = registerToday.Where(p => p.ComeFrom == item).FirstOrDefault();
+                if (register == null) model.RegisterCountByDay = 0;
+                else model.RegisterCountByDay = register.TotalCount;
+                //当月注册人数
+                var registerMItem = registerMonth.Where(p => p.ComeFrom == item).FirstOrDefault();
+                if (registerMItem == null) model.RegisterCountByDay = 0;
+                else model.RegisterCountByDay = registerMItem.TotalCount;
+                //实名人数
+                var realName = realNameToday.Where(p => p.ComeFrom == item).FirstOrDefault();
+                if (realName == null) model.ReadNameCount = 0;
+                else model.ReadNameCount = realName.TotalCount;
+                //付费人数
+                var pay = payToday.Where(p => p.ComeFrom == item).FirstOrDefault();
+                if (pay == null) model.PayCount = 0;
+                else model.PayCount = pay.TotalCount;
+                //当日充值金额
+                var recharge = rechargeToday.Where(p => p.ComeFrom == item).FirstOrDefault();
+                if (recharge == null) model.RechargeMoneyByDay = 0m;
+                else model.RechargeMoneyByDay = recharge.TotalMoney;
+                //当日充值金额
+                var withdraw = withdrawToday.Where(p => p.ComeFrom == item).FirstOrDefault();
+                if (withdraw == null) model.WithdrawalMoneyByDay = 0m;
+                else model.WithdrawalMoneyByDay = withdraw.TotalMoney;
+                //当月充值金额
+                var rechargeMItem = rechargeToday.Where(p => p.ComeFrom == item).FirstOrDefault();
+                if (rechargeMItem == null) model.RechargeMoneyByMonth = 0m;
+                else model.RechargeMoneyByMonth = rechargeMItem.TotalMoney;
+                //当日充值金额
+                var withdrawMItem = withdrawMonth.Where(p => p.ComeFrom == item).FirstOrDefault();
+                if (withdrawMItem == null) model.WithdrawalMoneyByMonth = 0m;
+                else model.WithdrawalMoneyByMonth = withdraw.TotalMoney;
+                result.Add(model);
+            }
+            return result;
+        }
+
+        #endregion
+
+
     }
 }

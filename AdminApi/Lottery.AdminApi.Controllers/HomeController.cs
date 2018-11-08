@@ -182,11 +182,21 @@ namespace Lottery.AdminApi.Controllers
                 //    }
                 //}
                 //return menuItems;
+                var flag = CurrentUser.IsAdmin;
+                var functionList = new List<C_Auth_Function_List>();
+                if (!flag)
+                {
+                    functionList = GetAllFunciton();
+                }
                 return JsonEx(new LotteryServiceResponse
                 {
                     Code = AdminResponseCode.成功,
                     Message = "获取菜单成功",
-                    Value = menu,
+                    Value = new {
+                        menu,
+                        isAdmin = flag,
+                        functionList = functionList
+                    },
                 });
             }
             catch (Exception ex)
@@ -204,8 +214,14 @@ namespace Lottery.AdminApi.Controllers
 
         private List<MenuInfo> GetMenuCollection()
         {
+            var service = new AdminService(); 
+            return service.QueryMyMenuCollection(CurrentUser.UserId, CurrentUser.IsAdmin);
+        }
+
+        private List<C_Auth_Function_List> GetAllFunciton()
+        {
             var service = new AdminService();
-            return service.QueryMyMenuCollection(CurrentUser.UserToken);
+            return service.GetMyAllFunciton(CurrentUser.UserId);
         }
     }
 }

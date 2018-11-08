@@ -44,5 +44,7 @@ namespace KaSon.FrameWork.ORM.Helper
             };
             return result;
         }
+
+        
     }
 }

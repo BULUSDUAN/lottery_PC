@@ -88,14 +88,15 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public List<MenuInfo> QueryMyMenuCollection(string userToken)
+        public List<MenuInfo> QueryMyMenuCollection(string userId,bool adminFlag)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication_Admin(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication_Admin(userToken);
 
             var biz = new AdminMenuBusiness();
             List<E_Menu_List> list;
-            if (GameBizAuthBusiness.CheckIsAdmin(userToken))
+            //GameBizAuthBusiness.CheckIsAdmin(userToken)
+            if (adminFlag)
             {
                 list = biz.QueryAllMenuList();
             }
@@ -122,10 +123,10 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <param name="roleId"></param>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public RoleInfo_Query GetSystemRoleById(string roleId, string userToken)
+        public RoleInfo_Query GetSystemRoleById(string roleId)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
             var authBiz = new GameBizAuthBusiness();
             return authBiz.GetSystemRoleById(roleId);
@@ -155,7 +156,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult AddSystemRole(RoleInfo_Add roleInfo, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
             //PreconditionAssert.IsNotEmptyString(roleInfo.RoleId, "添加的角色编号不能为空");
             //PreconditionAssert.IsNotEmptyString(roleInfo.RoleName, "添加的角色名称不能为空");
@@ -174,7 +175,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public CommonActionResult UpdateSystemRole(RoleInfo_Update roleInfo, string userToken)
         {
             // 验证用户身份及权限
-            var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
             PreconditionAssert.IsNotEmptyString(roleInfo.RoleId, "修改的角色编号不能为空");
             PreconditionAssert.IsNotEmptyString(roleInfo.RoleName, "修改的角色名称不能为空");
@@ -893,6 +894,57 @@ namespace KaSon.FrameWork.ORM.Helper
             try
             {
                 return new UserBusiness().QueryUserBalanceHistoryList(userId, startTime, endTime, pageIndex, pageSize);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+        
+        /// <summary>
+        /// 获取第三方游戏的充值与提款列表
+        /// </summary>
+        /// <param name="param"></param>
+        /// <returns></returns>
+        public ThirdPartyGameCollection ThirdPartyGameDetail(ThirdPartyGameListParam param)
+        {
+            try
+            {
+                return new DataQuery().ThirdPartyGameDetail(param);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public List<IndexReportForms> GetIndexReportForms()
+        {
+            try
+            {
+                var date = DateTime.Now.Date;
+                //当天注册的人
+                //var todayRegisterCount = new UserBalanceManager().QueryRegisterUserCount();
+                var query = new DataQuery();
+                return query.GetIndexReportForms();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 根据UserId获得他当前角色所有的权限
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public List<C_Auth_Function_List> GetMyAllFunciton(string userId)
+        {
+            try
+            {
+                var biz = new GameBizAuthBusiness();
+                return biz.GetMyAllFunction(userId);
             }
             catch (Exception ex)
             {

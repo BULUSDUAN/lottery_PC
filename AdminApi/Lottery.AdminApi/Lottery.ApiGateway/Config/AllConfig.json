@@ -35,5 +35,6 @@
     "PreName": "DJW",
     "URL": "http://api.mtechgame.com/generic"
   },
-  "FillMoney_Enable_GateWay": "yifulian_express=快捷支付|yifulian_upay=银联扫码|jinxin_bank=网银支付|jinxin_express=快捷支付|lagou_h5alipaywap=支付宝(扫码)|Alipay=支付宝(转账)"
+  "FillMoney_Enable_GateWay": "yifulian_express=快捷支付|yifulian_upay=银联扫码|jinxin_bank=网银支付|jinxin_express=快捷支付|lagou_h5alipaywap=支付宝(扫码)|Alipay=支付宝(转账)",
+  "WebSiteUrl": "10.0.3.20:1799"
 }
