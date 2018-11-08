@@ -65,17 +65,17 @@ namespace Lottery.AdminApi.Controllers
                 //ViewBag.CZMX_CZBS = CheckRights("CZMX_CZBS");
                 //ViewBag.CZMX_QQCZJE = CheckRights("CZMX_QQCZJE");
                 //ViewBag.CZMX_WCCZJQ = CheckRights("CZMX_WCCZJQ");
-                var service = new AdminService();
+                //var service = new AdminService();
                 var UserKey = string.IsNullOrEmpty(userKey) ? "" : userKey.Trim();
                 var OrderId = string.IsNullOrEmpty(orderId) ? "" : orderId.Trim();
                 var UserResult = new UserQueryInfo();
                 if (!string.IsNullOrEmpty(UserKey))
-                    UserResult = service.QueryUserByKey(ViewBag.UserKey);
+                    UserResult = _service.QueryUserByKey(UserKey);
                 var StartTime = string.IsNullOrEmpty(startTimeStr) ? DateTime.Now : DateTime.Parse(startTimeStr);
                 var EndTime = string.IsNullOrEmpty(endTimeStr) ? DateTime.Now : DateTime.Parse(endTimeStr);
                 var PageIndex = string.IsNullOrEmpty(pageIndexStr) ? base.PageIndex : int.Parse(pageIndexStr);
                 var PageSize = string.IsNullOrEmpty(pageSizeStr) ? base.PageSize : int.Parse(pageSizeStr);
-                var FillDetail = service.QueryFillMoneyList(ViewBag.UserKey,
+                var FillDetail = _service.QueryFillMoneyList(UserKey,
                     agentType,
                     status,
                     schemeSource,
@@ -105,7 +105,7 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 手工完成充值
         /// </summary>
-        public ActionResult CompleteFillMoney(LotteryServiceRequest entity)
+        public IActionResult CompleteFillMoney(LotteryServiceRequest entity)
         {
             try
             {
@@ -2080,6 +2080,81 @@ namespace Lottery.AdminApi.Controllers
                 });
             }
         }
+        #endregion
+
+        #region 第三方游戏提款存款列表
+        /// <summary>
+        /// 提款存款列表
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public IActionResult ThirdPartyGameList(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string gameTypeStr = p.gameType;
+                string userId = p.userId;
+                string orderId = p.orderId;
+                string transferTypeStr = p.transferType;
+                string statusStr = p.status;
+                string endTimeStr = p.endTime;
+                string startTimeStr = p.startTime;
+                string pageIndexStr = p.pageIndex;
+                string pageSizeStr = p.pageSize;
+                var param = new ThirdPartyGameListParam();
+                param.GameType = string.IsNullOrEmpty(gameTypeStr) ? -1 : Convert.ToInt32(gameTypeStr);
+                param.TransferType = string.IsNullOrEmpty(transferTypeStr) ? -1 : Convert.ToInt32(transferTypeStr);
+                param.Status = string.IsNullOrEmpty(statusStr) ? -1 : Convert.ToInt32(statusStr);
+                param.StartTime = string.IsNullOrEmpty(startTimeStr) ? DateTime.Now.AddMonths(-1).Date : Convert.ToDateTime(startTimeStr).Date;
+                param.EndTime = string.IsNullOrEmpty(endTimeStr) ? DateTime.Now.AddDays(1).Date : Convert.ToDateTime(endTimeStr).Date;
+                param.OrderId = string.IsNullOrEmpty(orderId)?"": orderId;
+                param.UserId = string.IsNullOrEmpty(userId) ? "" : userId;
+                param.PageIndex = string.IsNullOrEmpty(pageIndexStr)?base.PageIndex:Convert.ToInt32(pageIndexStr);
+                param.PageSize = string.IsNullOrEmpty(pageSizeStr) ? base.PageIndex : Convert.ToInt32(pageSizeStr);
+                var list = _service.ThirdPartyGameDetail(param);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.成功,
+                    Message = "查询成功",
+                    Value = list
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()
+                });
+            }
+        }
+
+        #endregion
+
+        #region 首页报表
+        public IActionResult GetIndexReportForms()
+        {
+            try
+            {
+                var report = _service.GetIndexReportForms();
+                return Json(new LotteryServiceResponse() {
+                    Code = AdminResponseCode.成功 ,
+                    Message = "查询成功",
+                    Value=report
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()
+                });
+            }
+            
+        }
+
         #endregion
     }
 }

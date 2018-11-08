@@ -748,5 +748,14 @@ namespace KaSon.FrameWork.ORM.Helper
             var list = roleManager.QueryRoleList().ToList();
             return list;
         }
+
+        public List<C_Auth_Function_List> GetMyAllFunction(string userId)
+        {
+            //select cf.* from C_Auth_RoleFunction cr inner join C_Auth_UserRole cu on (cr.RoleId=cu.roleId)
+            //INNER JOIN C_Auth_Function_List cf on(cr.functionId = cf.functionId) where cu.userId = '10004'
+            //and cr.Status = 0
+            var roleManager = new RoleManager();
+            return roleManager.GetMyAllFunction(userId);
+        }
     }
 }

@@ -11,9 +11,13 @@ using KaSon.FrameWork.Common.Utilities;
 using EntityModel;
 using EntityModel.Communication;
 using KaSon.FrameWork.Common.Net;
+using Lottery.AdminApi.Controllers.CommonFilterActtribute;
 
 namespace Lottery.AdminApi.Controllers
 {
+    [Area("api")]
+    [ReusltFilter]
+    [CheckLogin]
     public class ContentManageController : BaseController
     {
         #region 公告管理
@@ -80,7 +84,7 @@ namespace Lottery.AdminApi.Controllers
                     throw new Exception("对不起，您的权限不足！");
                 var p = JsonHelper.Decode(entity.Param);
                 string bulletinId = p.bulletinId;
-                var enableStatus = p.EnableStatus;
+                string enableStatus = p.enableStatus;
                 var id = Convert.ToInt64(PreconditionAssert.IsNotEmptyString(bulletinId, "修改指定参数ID丢失"));
                 var status = Convert.ToInt32(PreconditionAssert.IsNotEmptyString(enableStatus, "启用或禁用类型丢失"));
                 var service = new AdminService();
@@ -93,7 +97,7 @@ namespace Lottery.AdminApi.Controllers
                 //    var result = service.DisnableBullein(id);
                 //}
                 var result = service.ChangeBulleinStatus(id, (EnableStatus)status,CurrentUser.UserId);
-                new SiteSettingsController().BulletinInner();
+                //new SiteSettingsController().BulletinInner();
                 return Json(new LotteryServiceResponse {  Code = result.IsSuccess? AdminResponseCode.成功: AdminResponseCode.失败, Message = result.Message });
             }
             catch (Exception ex)
@@ -138,10 +142,10 @@ namespace Lottery.AdminApi.Controllers
         {
             try
             {
-                if (!CheckRights("FBGG100"))
-                    throw new Exception("对不起，您的权限不足！");
+                //if (!CheckRights("FBGG100"))
+                //    throw new Exception("对不起，您的权限不足！");
                 var p = JsonHelper.Decode(entity.Param);
-                var bulletinIdStr = p.bulletinId;
+                string bulletinIdStr = p.bulletinId;
                 if (string.IsNullOrEmpty(bulletinIdStr))
                 {
                     throw new Exception("指定参数ID丢失");
@@ -188,7 +192,7 @@ namespace Lottery.AdminApi.Controllers
             string publishId = p.publishId;
             try
             {
-                bulletin.Title = PreconditionAssert.IsNotEmptyString(Request.Form["title"], "公告标题不能为空");
+                bulletin.Title = PreconditionAssert.IsNotEmptyString(title, "公告标题不能为空");
                 bulletin.Content = PreconditionAssert.IsNotEmptyString(content, "公告内容不能为空");
                 PreconditionAssert.IsNotEmptyString(effectiveFrom, "有效时间不能为空");
                 PreconditionAssert.IsNotEmptyString(effectiveTo, "有效时间不能为空");

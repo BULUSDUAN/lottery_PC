@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Redis\redisSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

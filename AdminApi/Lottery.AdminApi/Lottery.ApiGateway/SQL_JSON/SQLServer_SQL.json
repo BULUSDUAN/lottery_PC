@@ -685,6 +685,14 @@
       "Director": "lili",
       "SQL": "SELECT Sum(BonusBalance) as TotalBonusBalance,Sum(CommissionBalance) as TotalCommissionBalance, Sum(CurrentDouDou) as TotalDouDou,Sum(ExpertsBalance) as TotalExpertsBalance, Sum(FillMoneyBalance) as TotalFillMoneyBalance,Sum(FreezeBalance) as TotalFreezeBalance, Sum(RedBagBalance) as TotalRedBagBalance, sum(UserGrowth) as TotalUserGrowth,UserId from C_User_Balance_History where SaveDateTime>=@StartTime and SaveDateTime<=@EndTime {0} group by UserId ",
       "Remark": ""
+    },
+    {
+      "key": "Admin_GetMyAllFunction",
+      "Desc": "查询用户的所有权限",
+      "ParamDesc": "@UserId:UserId",
+      "Director": "lili",
+      "SQL": "select cf.* from C_Auth_RoleFunction cr inner join C_Auth_UserRole cu on (cr.RoleId=cu.roleId)  INNER JOIN C_Auth_Function_List cf on (cr.functionId=cf.functionId) where cu.userId=@UserId  and cr.Status = 0",
+      "Remark": ""
     }
   ]
 }

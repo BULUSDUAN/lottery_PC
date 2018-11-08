@@ -1,6 +1,7 @@
 ﻿using ProtoBuf;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace EntityModel.Enum
@@ -235,14 +236,20 @@ namespace EntityModel.Enum
         /// <summary>
         /// 充值中
         /// </summary>
+        /// 
+        [Remark("转帐中")]
         Requesting = 0,
         /// <summary>
         /// 成功
         /// </summary>
+        /// 
+        [Remark("成功")]
         Success = 1,
         /// <summary>
         /// 失败
         /// </summary>
+        /// 
+        [Remark("失败")]
         Failed = 2
     }
     /// <summary>
@@ -1602,10 +1609,14 @@ namespace EntityModel.Enum
         /// <summary>
         /// 充值
         /// </summary>
+        /// 
+        [Remark("充值")]
         Recharge = 0,
         /// <summary>
         /// 提款
         /// </summary>
+        /// 
+        [Remark("提款")]
         Withdraw = 1
     }
     /// <summary>
@@ -1647,10 +1658,80 @@ namespace EntityModel.Enum
         /// <summary>
         /// 普通游戏
         /// </summary>
+        /// 
+        [Remark("SMG")]
         SMG = 0,
         /// <summary>
         /// 捕鱼
         /// </summary>
+        /// 
+        [Remark("SMF")]
         SMF = 1
     }
+
+    #region 枚举标签
+    /// <summary>
+    /// 备注特性
+    /// </summary>
+    public class RemarkAttribute : Attribute
+    {
+        private string m_remark;
+        public RemarkAttribute(string remark)
+        {
+            this.m_remark = remark;
+        }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remark
+        {
+            get { return m_remark; }
+            set { m_remark = value; }
+        }
+        /// <summary>
+        /// 获取枚举的备注信息
+        /// </summary>
+        /// <param name="val">枚举值</param>
+        /// <returns></returns>
+        public static string GetEnumRemark(System.Enum val)
+        {
+            Type type = val.GetType();
+            FieldInfo fd = type.GetField(val.ToString());
+            if (fd == null)
+                return string.Empty;
+            object[] attrs = fd.GetCustomAttributes(typeof(RemarkAttribute), false);
+            string name = string.Empty;
+            foreach (RemarkAttribute attr in attrs)
+            {
+                name = attr.Remark;
+            }
+            return name;
+        }
+    }
+    /// <summary>
+    /// 枚举扩展类
+    /// </summary>
+    public static class EnumExtension
+    {
+        /// <summary>
+        /// 获取枚举的备注信息
+        /// </summary>
+        /// <param name="em"></param>
+        /// <returns></returns>
+        public static string GetRemark(this System.Enum em)
+        {
+            Type type = em.GetType();
+            FieldInfo fd = type.GetField(em.ToString());
+            if (fd == null)
+                return string.Empty;
+            object[] attrs = fd.GetCustomAttributes(typeof(RemarkAttribute), false);
+            string name = string.Empty;
+            foreach (RemarkAttribute attr in attrs)
+            {
+                name = attr.Remark;
+            }
+            return name;
+        }
+    }
+    #endregion
 }
