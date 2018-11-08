@@ -1840,21 +1840,22 @@ namespace Lottery.Api.Controllers
 
             List<WebPayItem> list = new List<WebPayItem>();
             var baselist = loadPayConfig();
-            foreach (WebPayItem item in baselist)
+            foreach (var item in gateWayArray)
             {
-                foreach (var getway in gateWayArray)
-                {
-                    if (getway.Split('=')[0] == item.gateway)
-                    {
-                        list.Add(buildPayUrl(item, os));
-                    }
-                }
-                //if (!gateWayArray.Contains(item.gateway.ToLower()))
-                //{
-                //    continue;
-                //}
-                //list.Add(buildPayUrl(item, os));
+                var obj = baselist.Find(a => a.gateway == item.Split('=')[0]);
+                if (obj != null)
+                    list.Add(buildPayUrl(obj, os));
             }
+            //foreach (WebPayItem item in baselist)
+            //{
+            //    foreach (var getway in gateWayArray)
+            //    {
+            //        if (getway.Split('=')[0] == item.gateway)
+            //        {
+            //            list.Add(buildPayUrl(item, os));
+            //        }
+            //    }
+            //}
             return new { pay = list };
         }
         private static List<WebPayItem> loadPayConfig()
