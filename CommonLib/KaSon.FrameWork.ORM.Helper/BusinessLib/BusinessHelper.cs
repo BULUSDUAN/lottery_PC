@@ -3086,5 +3086,76 @@ namespace KaSon.FrameWork.ORM.Helper
                 BusinessHelper.Payback_To_Balance(BusinessHelper.FundCategory_ChaseBack, userId, chaseOrder.KeyLine, totalMoney, string.Format("停止追号，返还投注资金{0:N2}元", totalMoney));
             }
         }
+
+        /// <summary>
+        /// 更新数据库票数据
+        /// </summary>
+        public static void UpdateTicketBonus(List<TicketBatchPrizeInfo> list)
+        {
+            if (list.Count <= 0) return;
+
+            //查找出未中奖的票并更新
+            foreach (var item in list.GroupBy(p => new { Pre = p.PreMoney, After = p.AfterMoney }))
+            {
+                //查询相同奖金的票数据
+                var currentList = list.Where(p => p.AfterMoney == item.Key.After && p.PreMoney == item.Key.Pre).ToArray();
+                if (currentList.Length <= 0) continue;
+
+                var pageIndex = 0;
+                var pageSize = 100;
+                while (true)
+                {
+                    var pageList = currentList.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+
+                    DoUpdateTicketList(pageList, item.Key.Pre, item.Key.After);
+
+                    if (pageList.Count < pageSize)
+                        break;
+
+                    pageIndex++;
+                }
+            }
+        }
+
+        private static void DoUpdateTicketList(List<TicketBatchPrizeInfo> currentList, decimal pre, decimal after)
+        {
+            if (currentList.Count == 0) return;
+            var manager = new Sports_Manager();
+            var sqlList = new List<string>();
+
+            if (after <= 0)
+            {
+                //未中奖
+                if (currentList.Count == 1)
+                {
+                    sqlList.Add(string.Format("update C_Sports_Ticket set BonusStatus=30,PrizeDateTime=getdate() where ticketId='{0}' and BonusStatus=0 ", currentList[0].TicketId));
+                }
+                else
+                {
+                    sqlList.Add(string.Format("update C_Sports_Ticket set BonusStatus=30,PrizeDateTime=getdate() where ticketId in ({0})  and BonusStatus=0", string.Join(",", currentList.Select(p => string.Format("'{0}'", p.TicketId)).ToArray())));
+                }
+            }
+            else
+            {
+                //已中奖
+                if (currentList.Count == 1)
+                {
+                    sqlList.Add(string.Format("update C_Sports_Ticket set PreTaxBonusMoney={0},AfterTaxBonusMoney={1},BonusStatus={2},PrizeDateTime=getdate() where ticketId='{3}' and BonusStatus=0 "
+                                , pre, after, after > 0M ? "20" : "30", currentList[0].TicketId));
+                }
+                else
+                {
+                    sqlList.Add(string.Format("update C_Sports_Ticket set PreTaxBonusMoney={0},AfterTaxBonusMoney={1},BonusStatus={2},PrizeDateTime=getdate() where ticketId in ({3}) and BonusStatus=0 "
+                                , pre, after, after > 0M ? "20" : "30", string.Join(",", currentList.Select(p => string.Format("'{0}'", p.TicketId)).ToArray())));
+                }
+            }
+
+            if (sqlList.Count > 0)
+            {
+                //sqlList.Insert(0, "BEGIN TRANSACTION--开始事务");
+                //sqlList.Add("COMMIT TRANSACTION--事务提交语句");
+                manager.ExecSql(string.Join(Environment.NewLine, sqlList.ToArray()));
+            }
+        }
     }
 }

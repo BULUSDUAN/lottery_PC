@@ -7,6 +7,7 @@ using System.Linq;
 using EntityModel.LotteryJsonInfo;
 using KaSon.FrameWork.Common.JSON;
 using KaSon.FrameWork.Common.Net;
+using EntityModel.Enum;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -766,5 +767,112 @@ namespace KaSon.FrameWork.ORM.Helper
             //var singleCode = sportsManager.QuerySingleScheme_AnteCode(schemeId);
             //Update_CTZQ_Single_HitCount(singleCode, bonusCodeArray);
         }
+
+        // 批量开启高频彩奖期
+        public void OpenIssuseBatch_Fast(string gameCode, DateTime date, int bettingOffset, Func<DateTime, bool> checkIsOpenDay, Dictionary<int, double> phases, string issuseFormat, Func<int, DateTime, DateTime> eachIssuseOffsetHander = null, int dayIndex = 0)
+        {
+            var i = 1;
+            var collection = new LocalIssuse_AddInfoCollection();
+            var offset = date.Date;
+            foreach (var phase in phases)
+            {
+                if (phase.Key <= 0)
+                {
+                    offset = offset.AddMinutes(phase.Value);
+                    continue;
+                }
+                for (; i <= phase.Key; i++)
+                {
+                    if (checkIsOpenDay(date))
+                    {
+                        if (eachIssuseOffsetHander != null)
+                        {
+                            offset = eachIssuseOffsetHander(i, offset);
+                        }
+                        var issuseNumber = string.Format(issuseFormat, date, i, dayIndex);
+                        var info = new LocalIssuse_AddInfo
+                        {
+                            GameCode = gameCode,
+                            IssuseNumber = issuseNumber,
+                        };
+                        info.StartTime = offset;
+                        offset = offset.AddMinutes(phase.Value);
+                        info.OfficialStopTime = offset;
+                        info.BettingStopTime = offset;
+                        collection.Add(info);
+                    }
+                }
+            }
+            var delay = int.Parse(new CacheDataBusiness().QueryCoreConfigFromRedis("Site.GameDelay." + gameCode.ToUpper()));
+            OpenIssuse(collection, delay);
+        }
+        /// <summary>
+        /// 开启奖期
+        /// </summary>
+        public void OpenIssuse(LocalIssuse_AddInfoCollection list, int localAdvanceSeconds)
+        {
+            var manager = new LotteryGameManager();
+            foreach (var item in list)
+            {
+                var issuse = manager.QueryGameIssuse(item.GameCode, item.IssuseNumber);
+                if (issuse == null)
+                {
+                    issuse = new C_Game_Issuse
+                    {
+                        CreateTime = DateTime.Now,
+                        GameCode = item.GameCode,
+                        GameCode_IssuseNumber = string.Format("{0}|{1}", item.GameCode, item.IssuseNumber),
+                        IssuseNumber = item.IssuseNumber,
+                        StartTime = item.StartTime,
+                        WinNumber = string.Empty,
+                        Status = (int)IssuseStatus.OnSale,
+                        GatewayStopTime = item.BettingStopTime,
+                        OfficialStopTime = item.OfficialStopTime,
+                        LocalStopTime = item.BettingStopTime.AddSeconds(-localAdvanceSeconds),
+                    };
+                    manager.AddGameIssuse(issuse);
+                }
+                else
+                {
+                    if (issuse.LocalStopTime != item.BettingStopTime.AddSeconds(-localAdvanceSeconds))
+                    {
+                        issuse.OfficialStopTime = item.OfficialStopTime;
+                        issuse.GatewayStopTime = item.BettingStopTime;
+                        issuse.LocalStopTime = item.BettingStopTime.AddSeconds(-localAdvanceSeconds);
+                        manager.UpdateGameIssuse(issuse);
+                    }
+                }
+            }
+        }
+
+        // 批量开启低频彩以及每日彩奖期，如 双色球、福彩3D
+        public void OpenIssuseBatch_Slow(string gameCode, int year, string issuseFormat, Func<DateTime, bool> checkIsOpenDay, Func<DateTime, DateTime> getOfficialStopTime, int bettingStopTimeOffsetMinutes)
+        {
+            var startDate = new DateTime(year, 1, 1);
+            var endDate = new DateTime(year + 1, 1, 1);
+            var i = 1;
+            var startTime = startDate;
+            var collection = new LocalIssuse_AddInfoCollection();
+            for (var date = startDate; date < endDate; date = date.AddDays(1))
+            {
+                if (checkIsOpenDay(date))
+                {
+                    var issuseNumber = string.Format(issuseFormat, date, i++);
+                    var info = new LocalIssuse_AddInfo
+                    {
+                        GameCode = gameCode,
+                        IssuseNumber = issuseNumber,
+                    };
+                    info.StartTime = startTime;
+                    info.OfficialStopTime = getOfficialStopTime(date);
+                    info.BettingStopTime = info.OfficialStopTime;
+                    collection.Add(info);
+                    //startTime = info.OfficialStopTime.AddHours(3);
+                }
+            }
+            var delay = int.Parse(new CacheDataBusiness().QueryCoreConfigFromRedis("Site.GameDelay." + gameCode.ToUpper()));
+            OpenIssuse(collection, delay);
+        }
+
     }
 }

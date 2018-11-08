@@ -8506,5 +8506,1169 @@ namespace KaSon.FrameWork.ORM.Helper
                 totalAfterMoney += ticketAfterMoney;
             }
         }
+
+        /// <summary>
+        /// 移动运行中的订单数据到完成订单数据
+        /// </summary>
+        public void MoveRunningOrderToComplateOrder(string schemeId)
+        {
+            //开启事务
+       
+                DB.Begin();
+
+                var sportsManager = new Sports_Manager();
+                var order = sportsManager.QuerySports_Order_Running(schemeId);
+                if (order == null)
+                    throw new Exception(string.Format("找不到订单{0}的Running的信息，可能是订单已移动到Complate", schemeId));
+
+                var manager = new SchemeManager();
+                var orderDetail = manager.QueryOrderDetail(schemeId);
+                if (orderDetail == null)
+                    throw new Exception(string.Format("找不到方案{0}的orderDetail信息", schemeId));
+
+                order.TicketStatus = (int)TicketStatus.Ticketed;
+                order.ProgressStatus = (int)ProgressStatus.Complate;
+                var complateOrder = new C_Sports_Order_Complate
+                {
+                    SchemeId = order.SchemeId,
+                    GameCode = order.GameCode,
+                    GameType = order.GameType,
+                    PlayType = order.PlayType,
+                    IssuseNumber = order.IssuseNumber,
+                    TotalMoney = order.TotalMoney,
+                    Amount = order.Amount,
+                    TotalMatchCount = order.TotalMatchCount,
+                    TicketStatus = order.TicketStatus,
+                    BonusStatus = order.BonusStatus,
+                    AfterTaxBonusMoney = order.AfterTaxBonusMoney,
+                    CanChase = order.CanChase,
+                    IsVirtualOrder = order.IsVirtualOrder,
+                    CreateTime = order.CreateTime,
+                    PreTaxBonusMoney = order.PreTaxBonusMoney,
+                    ProgressStatus = order.ProgressStatus,
+                    SchemeType = order.SchemeType,
+                    TicketId = order.TicketId,
+                    TicketLog = order.TicketLog + "|后台手工移动订单",
+                    UserId = order.UserId,
+                    AgentId = order.AgentId,
+                    SchemeSource = order.SchemeSource,
+                    SchemeBettingCategory = order.SchemeBettingCategory,
+                    StopTime = order.StopTime,
+                    ComplateDate = DateTime.Now.ToString("yyyyMMdd"),
+                    ComplateDateTime = DateTime.Now,
+                    BetCount = order.BetCount,
+                    IsPrizeMoney = false,
+                    BonusCount = 0,
+                    HitMatchCount = order.HitMatchCount,
+                    RightCount = order.RightCount,
+                    Error1Count = order.Error1Count,
+                    Error2Count = order.Error2Count,
+                    AddMoney = 0M,
+                    DistributionWay = (int)AddMoneyDistributionWay.Average,
+                    AddMoneyDescription = string.Empty,
+                    BonusCountDescription = string.Empty,
+                    BonusCountDisplayName = string.Empty,
+                    Security = order.Security,
+                    BetTime = order.BetTime,
+                    SuccessMoney = order.SuccessMoney,
+                    ExtensionOne = order.ExtensionOne,
+                    TicketGateway = order.TicketGateway,
+                    TicketProgress = order.TicketProgress,
+                    Attach = order.Attach,
+                    IsAppend = order.IsAppend,
+                    RedBagMoney = order.RedBagMoney,
+                    TicketTime = order.TicketTime,
+                    TotalPayRebateMoney = order.TotalPayRebateMoney,
+                    RealPayRebateMoney = order.RealPayRebateMoney,
+                    //QueryTicketStopTime = order.QueryTicketStopTime,
+                    MinBonusMoney = order.MinBonusMoney,
+                    MaxBonusMoney = order.MaxBonusMoney,
+                    IsPayRebate = order.IsPayRebate,
+                    IsSplitTickets = order.IsSplitTickets,
+                };
+                sportsManager.UpdateSports_Order_Running(order);
+                sportsManager.AddSports_Order_Complate(complateOrder);
+                sportsManager.DeleteSports_Order_Running(order);
+
+                orderDetail.TicketStatus = order.TicketStatus;
+                orderDetail.ProgressStatus = order.ProgressStatus;
+                orderDetail.ComplateTime = DateTime.Now;
+                orderDetail.BonusStatus = order.BonusStatus;
+                orderDetail.CurrentBettingMoney = order.IsVirtualOrder ? 0 : orderDetail.TotalMoney;
+                orderDetail.PreTaxBonusMoney = order.PreTaxBonusMoney;
+                orderDetail.AfterTaxBonusMoney = order.AfterTaxBonusMoney;
+                manager.UpdateOrderDetail(orderDetail);
+
+            DB.Commit();
+            
+        }
+
+        /// <summary>
+        /// 手工设置订单中奖数据
+        /// </summary>
+        public void ManualSetOrderBonusMoney(string schemeId, decimal bonusMoney, int bonusCount, int hitMatchCount, string bonusCountDescription, string bonusCountDisplayName)
+        {
+            C_Sports_Order_Complate order = null;
+            //开启事务
+        
+                DB.Begin();
+
+                var sportsManager = new Sports_Manager();
+                order = sportsManager.QuerySports_Order_Complate(schemeId);
+                if (order == null)
+                    throw new Exception(string.Format("找不到订单{0}的QuerySports_Order_Complate信息", schemeId));
+                //if (order.SchemeType == SchemeType.ChaseBetting)
+                //    throw new Exception("此方法不能用于【追号订单】");
+
+                var schemeManager = new SchemeManager();
+                var orderDetail = schemeManager.QueryOrderDetail(schemeId);
+                if (orderDetail == null)
+                    throw new Exception(string.Format("找不到订单{0}的orderDetail的信息", schemeId));
+
+                order.IsPrizeMoney = false;
+                order.BonusStatus = (int)BonusStatus.Win;
+                order.PreTaxBonusMoney = bonusMoney;
+                order.AfterTaxBonusMoney = bonusMoney;
+                if (bonusCount != -1)
+                    order.BonusCount = bonusCount;
+                if (hitMatchCount != -1)
+                    order.HitMatchCount = hitMatchCount;
+                if (!string.IsNullOrEmpty(bonusCountDescription))
+                    order.BonusCountDescription = bonusCountDescription;
+                if (!string.IsNullOrEmpty(bonusCountDisplayName))
+                    order.BonusCountDisplayName = bonusCountDisplayName;
+                sportsManager.UpdateSports_Order_Complate(order);
+
+                orderDetail.PreTaxBonusMoney = bonusMoney;
+                orderDetail.AfterTaxBonusMoney = bonusMoney;
+                orderDetail.BonusStatus = (int)BonusStatus.Win;
+                schemeManager.UpdateOrderDetail(orderDetail);
+
+                if (order.SchemeType ==(int)SchemeType.TogetherBetting)
+                    SetTogetherOrder(sportsManager, schemeId, order.AfterTaxBonusMoney);
+
+                DB.Commit();
+            
+            try
+            {
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IOrderPrize_AfterTranCommit>(new object[] { order.UserId, schemeId, order.GameCode, order.GameType, order.IssuseNumber, order.TotalMoney, true, order.PreTaxBonusMoney, order.AfterTaxBonusMoney, order.IsVirtualOrder, DateTime.Now });
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private static void SetTogetherOrder(Sports_Manager sportsManager, string schemeId, decimal bonusMoney)
+        {
+            var main = sportsManager.QuerySports_Together(schemeId);
+            main.ProgressStatus = (int)TogetherSchemeProgress.Completed;
+            sportsManager.UpdateSports_Together(main);
+
+            //提成
+            var deductMoney = 0M;
+            if (bonusMoney > main.TotalMoney)
+                deductMoney = bonusMoney * main.BonusDeduct / 100;
+            var totalMoney = bonusMoney - deductMoney;
+            var singleMoney = totalMoney / main.TotalCount;
+            foreach (var join in sportsManager.QuerySports_TogetherSucessJoin(schemeId))
+            {
+                join.PreTaxBonusMoney = join.BuyCount * singleMoney;
+                join.AfterTaxBonusMoney = join.BuyCount * singleMoney;
+                sportsManager.UpdateSports_TogetherJoin(join);
+                //订制跟单奖金更新
+                if (join.JoinType == (int)TogetherJoinType.FollowerJoin)
+                {
+                    var f = sportsManager.QueryFollowerRecordBySchemeId(main.SchemeId, join.JoinUserId);
+                    if (f == null) continue;
+                    f.BonusMoney = join.BuyCount * singleMoney;
+                    sportsManager.UpdateTogetherFollowerRecord(f);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 手工设置订单为不中奖
+        /// </summary>
+        public void ManualSetOrderNotBonus(string schemeId, int hitMatchCount)
+        {
+            //开启事务
+          
+                DB.Begin();
+
+                var sportsManager = new Sports_Manager();
+                var order = sportsManager.QuerySports_Order_Complate(schemeId);
+                if (order == null)
+                    throw new Exception(string.Format("找不到订单{0}的QuerySports_Order_Complate信息", schemeId));
+                if (order.SchemeType == (int)SchemeType.ChaseBetting)
+                    throw new Exception("此方法不能用于【追号订单】");
+                if (order.IsPrizeMoney)
+                    throw new Exception("订单已派发奖金");
+
+                var schemeManager = new SchemeManager();
+                var orderDetail = schemeManager.QueryOrderDetail(schemeId);
+                if (orderDetail == null)
+                    throw new Exception(string.Format("找不到订单{0}的orderDetail的信息", schemeId));
+
+                order.BonusStatus = (int)BonusStatus.Lose;
+                order.PreTaxBonusMoney = 0M;
+                order.AfterTaxBonusMoney = 0M;
+                order.BonusCount = 0;
+                order.HitMatchCount = hitMatchCount;
+                order.BonusCountDescription = string.Empty;
+                order.BonusCountDisplayName = string.Empty;
+                sportsManager.UpdateSports_Order_Complate(order);
+
+                orderDetail.PreTaxBonusMoney = 0M;
+                orderDetail.AfterTaxBonusMoney = 0M;
+                orderDetail.BonusStatus = (int)BonusStatus.Lose;
+                schemeManager.UpdateOrderDetail(orderDetail);
+
+                if (order.SchemeType == (int)SchemeType.TogetherBetting)
+                    SetTogetherOrder(sportsManager, schemeId, 0M);
+
+               DB.Commit();
+            
+        }
+
+        /// <summary>
+        /// 分析合买
+        /// </summary>
+        public void AnalysisSchemeTogether(string schemeId)
+        {
+            C_Sports_Order_Running runningOrder = null;
+            string errorMsg = string.Empty;
+            var sportsManager = new Sports_Manager();
+            //开启事务
+            
+                DB.Begin();
+
+                var sportsOrder = sportsManager.QuerySports_Order_Running(schemeId);
+                if (sportsOrder == null)
+                    throw new Exception("查询方案信息Order_Running失败");
+                runningOrder = sportsOrder;
+                var main = sportsManager.QuerySports_Together(schemeId);
+                if (main == null)
+                    throw new Exception("查询方案信息Together失败");
+                //if (main.IsPayBackGuarantees)
+                //    throw new Exception("订单已退还用户保底");
+                var manager = new SchemeManager();
+                var orderDetail = manager.QueryOrderDetail(schemeId);
+                if (orderDetail == null)
+                    throw new Exception("查询方案orderDetail 失败");
+                var temp = sportsManager.QueryTemp_Together(schemeId);
+                if (temp == null)
+                    throw new Exception("订单已执行过分析");
+                if (main.ProgressStatus == (int)TogetherSchemeProgress.Cancel)
+                    throw new Exception("订单已撤单");
+                var anteCodeList = sportsManager.QuerySportsAnteCodeBySchemeId(schemeId);
+                while (true)
+                {
+                    if (main.ProgressStatus != (int)TogetherSchemeProgress.Finish && main.ProgressStatus != (int)TogetherSchemeProgress.Standard)
+                    {
+                        errorMsg = string.Format("合买失败，截止{0}，方案奖态为{1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), main.ProgressStatus);
+                        break;
+                    }
+                    if (main.SoldCount + main.Guarantees + main.SystemGuarantees < main.TotalCount)
+                    {
+                        errorMsg = string.Format("合买失败，截止{0}，方案销售份数、发起人保底份数、系统保底份数未达到条件。", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        break;
+                    }
+                    if (anteCodeList == null || anteCodeList.Count <= 0)
+                    {
+                        errorMsg = string.Format("当前方案未上传投注内容且已过系统保存日期，截止日期{0}", temp.StopTime);
+                        break;
+                    }
+                    break;
+                }
+
+                while (true)
+                {
+                    if (!string.IsNullOrEmpty(errorMsg))
+                    {
+                        //失败
+                        #region 合买失败
+
+                        foreach (var item in sportsManager.QuerySports_TogetherSucessJoin(schemeId))
+                        {
+                            item.JoinSucess = false;
+                            item.JoinLog += errorMsg;
+                            sportsManager.UpdateSports_TogetherJoin(item);
+                            if (item.JoinType == (int)TogetherJoinType.SystemGuarantees)
+                                continue;
+
+                            var t = string.Empty;
+                            var realBuyCount = item.RealBuyCount;
+                            switch (item.JoinType)
+                            {
+                                case (int)TogetherJoinType.Subscription:
+                                    t = "认购";
+                                    break;
+                                case (int)TogetherJoinType.FollowerJoin:
+                                    t = "订制跟单";
+                                    break;
+                                case (int)TogetherJoinType.Join:
+                                    t = "参与";
+                                    break;
+                                case (int)TogetherJoinType.Guarantees:
+                                    realBuyCount = item.BuyCount;
+                                    t = "保底";
+                                    break;
+                            }
+                            //var joinMoney = item.Price * item.RealBuyCount;
+                            var joinMoney = item.Price * realBuyCount;
+                            //退钱
+                            if (joinMoney > 0)
+                                BusinessHelper.Payback_To_Balance(BusinessHelper.FundCategory_TogetherFail, item.JoinUserId, string.Format("{0}_{1}", schemeId, item.Id)
+                                    , joinMoney, string.Format("合买失败，返还{0}资金{1:N2}元", t, joinMoney));
+                        }
+
+                        //分析合买失败后撤单
+                        main.IsPayBackGuarantees = true;
+                        main.ProgressStatus = (int)TogetherSchemeProgress.AutoStop;
+                        sportsManager.UpdateSports_Together(main);
+
+                        orderDetail.ProgressStatus = (int)ProgressStatus.Aborted;
+                        orderDetail.ComplateTime = DateTime.Now;
+                        orderDetail.BonusStatus = (int)BonusStatus.Lose;
+                        orderDetail.TicketStatus = (int)TicketStatus.Error;
+                        orderDetail.CurrentBettingMoney = 0M;
+                        orderDetail.IsVirtualOrder = true;
+                        manager.UpdateOrderDetail(orderDetail);
+
+                        sportsOrder.IsPayRebate = true;
+                        sportsOrder.BonusStatus = (int)BonusStatus.Lose;
+                        sportsOrder.CanChase = false;
+                        sportsOrder.ProgressStatus = (int)ProgressStatus.Aborted;
+                        sportsOrder.TicketStatus = (int)TicketStatus.Error;
+                        sportsOrder.IsVirtualOrder = true;
+                        sportsOrder.TicketLog = errorMsg + "|分析合买失败撤单|" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        sportsManager.UpdateSports_Order_Running(sportsOrder);
+
+                        OrderFailToEnd(schemeId, sportsManager, sportsOrder);
+
+                        #endregion
+                        break;
+                    }
+
+                    //成功
+                    //系统保底
+                    #region 合买成功
+
+                    //退还用户保底
+                    var joinEntity = sportsManager.QuerySports_TogetherJoin(schemeId, TogetherJoinType.Guarantees);
+                    if (joinEntity != null)
+                    {
+                        var tooMuchMoney = (joinEntity.BuyCount - joinEntity.RealBuyCount) * joinEntity.Price;
+                        if (tooMuchMoney > 0M)
+                        {
+                            var summary = string.Format("计划保底{0}份，实际参与保底{1}份，返还保底资金{2:N2}元", joinEntity.BuyCount, joinEntity.RealBuyCount, tooMuchMoney);
+                            BusinessHelper.Payback_To_Balance(BusinessHelper.FundCategory_ReturnGuarantees, joinEntity.JoinUserId
+                              , string.Format("{0}_{1}", schemeId, joinEntity.Id), tooMuchMoney, summary);
+                        }
+                    }
+                    //系统保底
+                    var systemGuaranteesEntity = sportsManager.QuerySports_TogetherJoin(schemeId, TogetherJoinType.SystemGuarantees);
+                    if (systemGuaranteesEntity != null && systemGuaranteesEntity.RealBuyCount > 0)
+                    {
+                        systemGuaranteesEntity.JoinSucess = true;
+                        sportsManager.UpdateSports_TogetherJoin(systemGuaranteesEntity);
+                    }
+
+                    //main.SystemGuarantees = (sysGuarantees > 0 ? sysGuarantees : 0);
+                    main.Progress = 1M;
+                    main.ProgressStatus = (int)TogetherSchemeProgress.Finish;
+                    main.SoldCount = main.TotalCount;
+                    main.IsPayBackGuarantees = true;
+                    sportsManager.UpdateSports_Together(main);
+
+                    //处理参与信息
+                    foreach (var item in sportsManager.QuerySports_TogetherSucessJoin(schemeId))
+                    {
+                        item.JoinLog += "  合买成功。";
+                        sportsManager.UpdateSports_TogetherJoin(item);
+                    }
+                    if (orderDetail.TicketStatus != (int)TicketStatus.Ticketed)
+                        orderDetail.IsVirtualOrder = false;
+                    manager.UpdateOrderDetail(orderDetail);
+                    if (sportsOrder.TicketStatus != (int)TicketStatus.Ticketed)
+                        sportsOrder.IsVirtualOrder = false;
+                    sportsManager.UpdateSports_Order_Running(sportsOrder);
+
+                    #endregion
+
+                    break;
+                }
+
+                //清除临时表数据
+                if (temp != null)
+                    sportsManager.DeleteTemp_Together(temp);
+
+            DB.Commit();
+            
+
+            if (string.IsNullOrEmpty(errorMsg))
+            {
+                if (RedisHelperEx.EnableRedis)
+                {
+                    if (runningOrder.SchemeBettingCategory == (int)SchemeBettingCategory.SingleBetting || runningOrder.SchemeBettingCategory == (int)SchemeBettingCategory.XianFaQiHSC)
+                    {
+                        //单式上传方式投注的订单
+                        var redisWaitOrder_Single = new RedisWaitTicketOrderSingle
+                        {
+                            RunningOrder = runningOrder,
+                            AnteCode = new Sports_Manager().QuerySingleScheme_AnteCode(schemeId)
+                        };
+                        RedisOrderBusiness.AddOrderToRedis(runningOrder.GameCode, redisWaitOrder_Single);
+                        //RedisOrderBusiness.AddOrderToWaitSplitList(redisWaitOrder_Single);
+                    }
+                    else
+                    {
+                        //普通投注方式的订单
+                        var redisWaitOrder = new RedisWaitTicketOrder
+                        {
+                            RunningOrder = runningOrder,
+                            AnteCodeList = new Sports_Manager().QuerySportsAnteCodeBySchemeId(schemeId)
+                        };
+                        RedisOrderBusiness.AddOrderToRedis(runningOrder.GameCode, redisWaitOrder);
+                        //RedisOrderBusiness.AddOrderToWaitSplitList(redisWaitOrder);
+                    }
+                }
+                else
+                {
+                    DoSplitOrderTickets(schemeId);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 手工修改中奖状态
+        /// </summary>
+        public void UpdateSchemeTicket(string ticketId, BonusStatus bonusStatus, decimal preTaxBonusMoney, decimal afterTaxBonusMoney)
+        {
+            var sportManager = new Sports_Manager();
+            var entity = sportManager.QueryTicket(ticketId);
+            entity.BonusStatus = (int)bonusStatus;
+            entity.PreTaxBonusMoney = preTaxBonusMoney;
+            entity.AfterTaxBonusMoney = afterTaxBonusMoney;
+            sportManager.UpdateSports_Ticket(entity);
+        }
+
+        /// <summary>
+        /// 查询等待派钱的订单列表
+        /// </summary>
+        public Sports_SchemeQueryInfoCollection QueryWaitForPrizeMoneyOrderList(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize)
+        {
+            var result = new Sports_SchemeQueryInfoCollection();
+            var totalCount = 0;
+            result.List.AddRange(new Sports_Manager().QueryWaitForPrizeMoneyOrderList(startTime, endTime, gameCode, pageIndex, pageSize, out totalCount));
+            result.TotalCount = totalCount;
+            return result;
+        }
+
+        /// <summary>
+        /// 足彩派钱
+        /// </summary>
+        public List<Sports_SchemeQueryInfo> SportsPrizeMoney(string[] schemeIdArray)
+        {
+            var list = new List<Sports_SchemeQueryInfo>();
+            //开启事务
+          
+                DB.Begin();
+
+                var sportsManager = new Sports_Manager();
+                foreach (var schemeId in schemeIdArray)
+                {
+                    var order = sportsManager.QuerySports_Order_Complate(schemeId);
+                    if (order == null) continue;
+                    if (order.BonusStatus != (int)BonusStatus.Win) continue;
+                    if (order.IsPrizeMoney) continue;
+
+                    order.IsPrizeMoney = true;
+                    sportsManager.UpdateSports_Order_Complate(order);
+                    if (order.IsVirtualOrder) continue;
+
+                    var game = new LotteryGameManager().LoadGame(order.GameCode);
+                    var userManager = new UserManager();
+
+                    //if (order.SchemeType == SchemeType.GeneralBetting || order.SchemeType == SchemeType.ChaseBetting || order.SchemeType == SchemeType.SaveScheme)
+                    if (order.SchemeType == (int)SchemeType.GeneralBetting || order.SchemeType == (int)SchemeType.ChaseBetting || order.SchemeType == (int)SchemeType.SingleCopy)
+                    {
+                        if (order.AfterTaxBonusMoney > 0)
+                        {
+                            if (order.SchemeType == (int)SchemeType.SingleCopy)//抄单订单，派奖时需减去奖金提成的金额
+                            {
+                                var bdfxManager = new TotalSingleTreasureManager();
+                                var bdfxRecorSingleEntity = bdfxManager.QueryBDFXRecordSingleCopyBySchemeId(schemeId);
+                                var realBonusMoney = order.AfterTaxBonusMoney;
+                                var commissionMoney = 0M;
+                                if (bdfxRecorSingleEntity != null)
+                                {
+                                    var BDFXEntity = bdfxManager.QueryTotalSingleTreasureBySchemeId(bdfxRecorSingleEntity.BDXFSchemeId);
+                                    if (BDFXEntity != null)
+                                    {
+                                        //计算提成金额
+                                        if ((order.AfterTaxBonusMoney - order.TotalMoney) > 0)
+                                        {
+                                            commissionMoney = (order.AfterTaxBonusMoney - order.TotalMoney) * BDFXEntity.Commission / 100M;
+                                            commissionMoney = Math.Truncate(commissionMoney * 100) / 100M;
+                                            realBonusMoney = order.AfterTaxBonusMoney - commissionMoney;
+                                            //返提成
+                                            if (commissionMoney > 0)
+                                            {
+                                                BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_BDFXCommissionMoney, BDFXEntity.UserId, schemeId, commissionMoney,
+                                                    string.Format("抄单订单{0}中奖{1:N2}元,提成{2:N0}%,获得奖金盈利提成金额{3:N2}元.", schemeId, order.AfterTaxBonusMoney, BDFXEntity.Commission, commissionMoney));
+                                            }
+                                        }
+                                    }
+                                }
+                                //返奖金
+                                BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_Bonus, order.UserId, schemeId, realBonusMoney,
+                                        string.Format("抄单订单{0}中奖{1:N2}元,扣除奖金盈利提成金额{2:N2}元,实得奖金{3:N2}元.", schemeId, order.AfterTaxBonusMoney, commissionMoney, realBonusMoney));
+                            }
+                            else
+                            {
+                                BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_Bonus, order.UserId, schemeId, order.AfterTaxBonusMoney,
+                                    string.Format("中奖奖金{0:N2}元.", order.AfterTaxBonusMoney));
+                            }
+                        }
+
+                        if (order.AddMoney > 0)
+                            BusinessHelper.Payin_To_Balance(order.AddMoneyDescription == "10" ? AccountType.Bonus : AccountType.RedBag, BusinessHelper.FundCategory_Bonus, order.UserId, schemeId, order.AddMoney,
+                                                        string.Format("活动赠送{0:N2}元.", order.AddMoney));
+                    }
+                    if (order.SchemeType == (int)SchemeType.TogetherBetting)
+                    {
+                        var main = sportsManager.QuerySports_Together(schemeId);
+                        //提成
+                        var deductMoney = 0M;
+                        if (order.AfterTaxBonusMoney > main.TotalMoney)
+                            deductMoney = (order.AfterTaxBonusMoney - main.TotalMoney) * main.BonusDeduct / 100;
+                        //提成金额，只能给合买发起者
+                        if (deductMoney > 0M)
+                            BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_Deduct, order.UserId, schemeId, deductMoney,
+                                string.Format("订单{0}， 佣金{1:N2}元。", schemeId, deductMoney));
+
+
+                        //中奖金额,分发到所有参与合买的用户的奖金账户
+                        var bonusMoney = order.AfterTaxBonusMoney - deductMoney;
+                        var singleMoney = bonusMoney / main.TotalCount;
+                        foreach (var join in sportsManager.QuerySports_TogetherSucessJoin(schemeId))
+                        {
+                            if (join.JoinType == (int)TogetherJoinType.SystemGuarantees) continue;
+                            //发参与奖金
+                            var joinMoney = join.RealBuyCount * singleMoney;
+                            //派钱
+                            if (joinMoney > 0M)
+                                BusinessHelper.Payin_To_Balance(AccountType.Bonus, BusinessHelper.FundCategory_Bonus, join.JoinUserId, schemeId, joinMoney,
+                                    string.Format("中奖分成，奖金￥{0:N2}元。", joinMoney));
+                        }
+                        if (order.AddMoney > 0M)
+                        {
+                            //加奖金额分配给发起者
+                            if (order.DistributionWay == (int)AddMoneyDistributionWay.CreaterOnly)
+                            {
+                                //加奖
+                                if (order.AddMoney > 0)
+                                    BusinessHelper.Payin_To_Balance(order.AddMoneyDescription == "10" ? AccountType.Bonus : AccountType.RedBag, BusinessHelper.FundCategory_Activity, order.UserId, schemeId, order.AddMoney,
+                                        string.Format("活动赠送{0:N2}元。", order.AddMoney), RedBagCategory.Activity);
+                            }
+                            //处理加奖
+                            if (order.DistributionWay == (int)AddMoneyDistributionWay.Average)
+                            {
+                                var addMonesinglePrice = order.AddMoney / main.TotalCount;
+                                foreach (var join in sportsManager.QuerySports_TogetherSucessJoin(schemeId))
+                                {
+                                    if (join.JoinType == (int)TogetherJoinType.SystemGuarantees) continue;
+                                    //发参与奖金
+                                    var joinMoney = join.RealBuyCount * addMonesinglePrice;
+                                    //派钱
+                                    BusinessHelper.Payin_To_Balance(order.AddMoneyDescription == "10" ? AccountType.Bonus : AccountType.RedBag, BusinessHelper.FundCategory_Activity, join.JoinUserId, schemeId, joinMoney,
+                                        string.Format("订单{0}活动赠送{1:N2}元。", schemeId, joinMoney), RedBagCategory.Activity);
+                                }
+                            }
+                            //加奖金额分配给发起者
+                            if (order.DistributionWay == (int)AddMoneyDistributionWay.JoinerOnly)
+                            {
+                                //订单发起者没有加奖
+                                var joinList = sportsManager.QuerySports_TogetherSucessJoin(schemeId);
+                                var createrList = joinList.Where(p => p.JoinUserId == order.UserId).ToList();
+                                var createJoinCount = createrList.Count == 0 ? 0 : createrList.Sum(p => p.RealBuyCount);
+                                var addMonesinglePrice = order.AddMoney / (main.TotalCount - createJoinCount);
+                                foreach (var join in joinList)
+                                {
+                                    if (join.JoinType == (int)TogetherJoinType.SystemGuarantees) continue;
+                                    if (join.JoinUserId == order.UserId) continue;
+                                    //发参与奖金
+                                    var joinMoney = join.RealBuyCount * addMonesinglePrice;
+                                    //派钱
+                                    BusinessHelper.Payin_To_Balance(order.AddMoneyDescription == "10" ? AccountType.Bonus : AccountType.RedBag, BusinessHelper.FundCategory_Activity, join.JoinUserId, schemeId, joinMoney,
+                                        string.Format("订单{0}活动赠送{1:N2}元。", schemeId, joinMoney), RedBagCategory.Activity);
+                                }
+                            }
+                        }
+                    }
+
+                    list.Add(new Sports_SchemeQueryInfo
+                    {
+                        UserId = order.UserId,
+                        SchemeId = schemeId,
+                        GameCode = order.GameCode,
+                        GameType = order.GameType,
+                        IssuseNumber = order.IssuseNumber,
+                        TotalMoney = order.TotalMoney,
+                        PreTaxBonusMoney = order.PreTaxBonusMoney,
+                        AfterTaxBonusMoney = order.AfterTaxBonusMoney,
+                    });
+                }
+
+            DB.Commit();
+            
+            return list;
+        }
+
+        /// <summary>
+        /// 计算用户战绩，一天一次
+        /// </summary>
+        public void ComputeUserBeedings(string complateDate)
+        {
+            //开启事务
+     
+               DB.Begin();
+
+                //最新战绩计算方式，以订单为单位计算
+                var sportsManager = new Sports_Manager();
+                //var updateBeedingList = new List<UserBeedings>();
+                var totalOrderList = sportsManager.QuerySports_Order_ComplateByComplateDate(complateDate);
+                //totalOrderList = totalOrderList.Where(s => s.SchemeId == "JCZQ14082458").ToList();//测试
+                var gameCodeArray = new string[] { "BJDC", "JCZQ", "JCLQ", "CTZQ", "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" };
+                foreach (var gameCode in gameCodeArray)
+                {
+                    var gameTypeArray = GetGameTypeArray(gameCode);
+                    foreach (var gameType in gameTypeArray)
+                    {
+                        if (totalOrderList.Count == 0) continue;
+                        foreach (var order in totalOrderList)
+                        {
+                            if (order.GameCode == gameCode && order.GameType == gameType)
+                            {
+                                var beeding = sportsManager.QueryUserBeedings(order.UserId, gameCode, gameType);
+                                if (beeding == null) continue;
+                                var gainMoney = order.AfterTaxBonusMoney - order.TotalMoney;
+                                beeding.UpdateTime = DateTime.Now;
+                                beeding.TotalBonusTimes += order.BonusStatus == (int)BonusStatus.Win ? 1 : 0;
+                                beeding.TotalBonusMoney += order.AfterTaxBonusMoney;
+                                beeding.TotalOrderCount += 1;
+                                beeding.TotalBetMoney += order.TotalMoney;
+                                //计算战绩
+                                ComputeOneUserBeeding(beeding, gainMoney, order.IsVirtualOrder);
+                                sportsManager.UpdateUserBeedings(beeding);
+                            }
+                        }
+                    }
+                }
+               DB.Commit();
+        }
+
+        private string[] GetGameTypeArray(string gameCode)
+        {
+            switch (gameCode)
+            {
+                case "BJDC":
+                    return new string[] { "SPF", "ZJQ", "SXDS", "BF", "BQC" };
+                case "JCZQ":
+                    return new string[] { "SPF", "BRQSPF", "BF", "ZJQ", "BQC", "HH" };
+                case "JCLQ":
+                    return new string[] { "SF", "RFSF", "SFC", "DXF", "HH" };
+                case "CTZQ":
+                    return new string[] { "T14C", "TR9", "T6BQC", "T4CJQ" };
+                    //todo  其它彩种
+            }
+            return new string[] { };
+        }
+
+        private void ComputeOneUserBeeding(C_User_Beedings beeding, decimal gainMoney, bool isVirtualOrder)
+        {
+            var lotteryArray = new string[] { "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" };
+            var sportsArray = new string[] { "CTZQ", "BJDC", "JCZQ", "JCLQ" };
+
+            if (lotteryArray.Contains(beeding.GameCode))
+            {
+                //数字彩计算规则
+                #region 数字彩
+
+                if (gainMoney < 500)
+                    return;
+                if (gainMoney >= 500 && gainMoney < 1000)
+                {
+                    //一枚金星
+                    if (isVirtualOrder)
+                    {
+                        beeding.SilverStarCount++;
+                    }
+                    else
+                    {
+                        beeding.GoldStarCount++;
+                    }
+                }
+                if (gainMoney >= 1000 && gainMoney < 10000)
+                {
+                    //奖励N枚金星（N枚金星=盈利金额÷1000）
+                    int count = (int)Math.Floor(gainMoney / 1000);
+                    if (isVirtualOrder)
+                    {
+                        beeding.SilverStarCount += count;
+                    }
+                    else
+                    {
+                        beeding.GoldStarCount += count;
+                    }
+                }
+                if (gainMoney >= 10000 && gainMoney < 10000 * 10)
+                {
+                    //奖励N座金钻（N枚金钻=盈利金额÷1万）；
+                    int count = (int)Math.Floor(gainMoney / 10000);
+                    if (isVirtualOrder)
+                    {
+                        beeding.SilverDiamondsCount += count;
+                    }
+                    else
+                    {
+                        beeding.GoldDiamondsCount += count;
+                    }
+                }
+                if (gainMoney >= 10000 * 10 && gainMoney < 10000 * 100)
+                {
+                    //奖励N顶金奖杯（N枚金奖杯=盈利金额÷10万）
+                    int count = (int)Math.Floor(gainMoney / (10 * 10000));
+                    if (isVirtualOrder)
+                    {
+                        beeding.SilverCupCount += count;
+                    }
+                    else
+                    {
+                        beeding.GoldCupCount += count;
+                    }
+                }
+                if (gainMoney >= 10000 * 100)
+                {
+                    //1个金冠
+                    if (isVirtualOrder)
+                    {
+                        beeding.SilverCrownCount++;
+                    }
+                    else
+                    {
+                        beeding.GoldCrownCount++;
+                    }
+                }
+
+                #endregion
+            }
+            if (sportsArray.Contains(beeding.GameCode))
+            {
+                //足彩计算规则
+                #region 足彩
+
+                if (gainMoney < 1000)
+                    return;
+                if (gainMoney >= 1000 && gainMoney < 10000)
+                {
+                    //一枚金星
+                    if (isVirtualOrder)
+                    {
+                        beeding.SilverStarCount++;
+                    }
+                    else
+                    {
+                        beeding.GoldStarCount++;
+                    }
+                }
+                if (gainMoney >= 10000 && gainMoney < 10000 * 10)
+                {
+                    //奖励N颗金星（N颗金星=盈利金额÷5000）；
+                    int count = (int)Math.Floor(gainMoney / 5000);
+                    if (isVirtualOrder)
+                    {
+                        beeding.SilverStarCount += count;
+                    }
+                    else
+                    {
+                        beeding.GoldStarCount += count;
+                    }
+                }
+                if (gainMoney >= 10000 * 10 && gainMoney < 10000 * 100)
+                {
+                    //奖励N座金钻（N座金钻=盈利金额÷10万）；
+                    int count = (int)Math.Floor(gainMoney / (10000 * 10));
+                    if (isVirtualOrder)
+                    {
+                        beeding.SilverDiamondsCount += count;
+                    }
+                    else
+                    {
+                        beeding.GoldDiamondsCount += count;
+                    }
+                }
+                if (gainMoney >= 10000 * 100)
+                {
+                    //（N座金奖杯=盈利金额÷100万）
+                    int count = (int)Math.Floor(gainMoney / (10000 * 100));
+                    if (isVirtualOrder)
+                    {
+                        beeding.SilverCupCount += count;
+                    }
+                    else
+                    {
+                        beeding.GoldCupCount += count;
+                    }
+                }
+                #endregion
+            }
+
+            #region 计算是否需要进位
+
+            //金
+            if (beeding.GoldStarCount >= 5)
+            {
+                int jinWei = beeding.GoldStarCount / 5;
+                var spare = beeding.GoldStarCount - (5 * jinWei); ;
+                beeding.GoldStarCount = spare;
+                beeding.GoldDiamondsCount += jinWei;
+            }
+            if (beeding.GoldDiamondsCount >= 5)
+            {
+                int jinWei = beeding.GoldDiamondsCount / 5;
+                var spare = beeding.GoldDiamondsCount - (5 * jinWei); ;
+                beeding.GoldDiamondsCount = spare;
+                beeding.GoldCupCount += jinWei;
+            }
+            if (beeding.GoldCupCount >= 5)
+            {
+                int jinWei = beeding.GoldCupCount / 5;
+                var spare = beeding.GoldCupCount - (5 * jinWei); ;
+                beeding.GoldCupCount = spare;
+                beeding.GoldCrownCount += jinWei;
+            }
+
+            //银
+            if (beeding.SilverStarCount >= 5)
+            {
+                int jinWei = beeding.SilverStarCount / 5;
+                var spare = beeding.SilverStarCount - (5 * jinWei); ;
+                beeding.SilverStarCount = spare;
+                beeding.SilverDiamondsCount += jinWei;
+            }
+            if (beeding.SilverDiamondsCount >= 5)
+            {
+                int jinWei = beeding.SilverDiamondsCount / 5;
+                var spare = beeding.SilverDiamondsCount - (5 * jinWei); ;
+                beeding.SilverDiamondsCount = spare;
+                beeding.SilverCupCount += jinWei;
+            }
+            if (beeding.SilverCupCount >= 5)
+            {
+                int jinWei = beeding.SilverCupCount / 5;
+                var spare = beeding.SilverCupCount - (5 * jinWei); ;
+                beeding.SilverCupCount = spare;
+                beeding.SilverCrownCount += jinWei;
+            }
+            #endregion
+        }
+
+        /// <summary>
+        /// 计算幸运用户，计算当天
+        /// </summary>
+        public void ComputeLucyUser()
+        {
+            DateTime startTime = DateTime.Now.AddDays(-1);
+            DateTime endTime = DateTime.Now.AddDays(1);
+            //开启事务
+        
+            DB.Begin();
+
+                var sportsManager = new Sports_Manager();
+                var gameCodeArray = new string[] { "BJDC", "JCZQ", "JCLQ", "CTZQ", "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JXSSQ", "JX11X5", "SD11X5", "GD11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" };
+                foreach (var gameCode in gameCodeArray)
+                {
+                    var gameTypeArray = GetGameTypeArray(gameCode);
+                    foreach (var gameType in gameTypeArray)
+                    {
+                        foreach (var beeding in sportsManager.QueryUserBeedingsList(gameCode, gameType))
+                        {
+                            var orderList = sportsManager.QuerySports_Order_ComplateByComplateTime(beeding.UserId, gameCode, gameType, startTime, endTime);
+                            //beeding.ShowLuck = false;
+                            while (true)
+                            {
+                                if (orderList.Count < 10)
+                                    break;
+                                //if (orderList.Count(p => p.AfterTaxBonusMoney >= p.TotalMoney * 2) > 0)
+                                //    beeding.ShowLuck = true;
+                                break;
+                            }
+                            sportsManager.UpdateUserBeedings(beeding);
+                        }
+                    }
+                    if (gameTypeArray.Length == 0)
+                    {
+                        foreach (var beeding in sportsManager.QueryUserBeedingsList(gameCode, string.Empty))
+                        {
+                            var orderList = sportsManager.QuerySports_Order_ComplateByComplateTime(beeding.UserId, gameCode, string.Empty, startTime, endTime);
+                            //beeding.ShowLuck = false;
+                            while (true)
+                            {
+                                if (orderList.Count < 10)
+                                    break;
+                                //if (orderList.Count(p => p.AfterTaxBonusMoney >= p.TotalMoney * 2) > 0)
+                                //    beeding.ShowLuck = true;
+                                break;
+                            }
+                            sportsManager.UpdateUserBeedings(beeding);
+                        }
+                    }
+                
+            }
+            DB.Commit();
+        }
+
+        /// <summary>
+        /// 计算中奖概率，每天一次，但是计算最一个月的订单数据
+        /// </summary>
+        public void ComputeBonusPercent()
+        {
+            DateTime startTime = DateTime.Now.AddDays(-7);
+            DateTime endTime = DateTime.Now.AddDays(1);
+
+            //开启事务
+
+              DB.Begin();
+
+                var sportsManager = new Sports_Manager();
+                var gameCodeArray = new string[] { "BJDC", "JCZQ", "JCLQ", "CTZQ", "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" };
+                var currentDate = endTime.ToString("yyyyMMdd");
+
+                var totalOrderList = sportsManager.QuerySports_Order_ComplateByComplateTime(startTime, endTime);
+                foreach (var gameCode in gameCodeArray)
+                {
+                    var currentOrder = new List<C_Sports_Order_Complate>();
+                    var gameTypeArray = GetGameTypeArray(gameCode);
+                    if (gameTypeArray.Length == 0)
+                    {
+                        //数字彩
+                        currentOrder = totalOrderList.Where(p => p.GameCode == gameCode).ToList();
+                        foreach (var u in currentOrder.GroupBy(p => p.UserId))
+                        {
+                            var userTotalOrderList = currentOrder.Where(p => p.UserId == u.Key).ToList();
+                            //加上此行，如果近一月没有订单，也不会清空中奖概率
+                            //if (userTotalOrderList.Count == 0) continue;
+                            var userWinOrderList = userTotalOrderList.Where(p => p.BonusStatus == (int)BonusStatus.Win).ToList();
+                            var bounsPercent = userTotalOrderList.Count == 0 ? 0M : (decimal)userWinOrderList.Count / userTotalOrderList.Count;
+                            //查询用户中奖概率数据
+                            var current = sportsManager.QueryUserBonusPercent(u.Key, gameCode, string.Empty);
+                            if (current == null) continue;
+
+                            current.TotalOrderCount = userTotalOrderList.Count;
+                            current.BonusOrderCount = userWinOrderList.Count;
+                            current.CurrentDate = currentDate;
+                            current.BonusPercent = bounsPercent;
+                            sportsManager.UpdateUserBonusPercent(current);
+                        }
+
+                        continue;
+                    }
+                    //足彩
+                    foreach (var gameType in gameTypeArray)
+                    {
+                        currentOrder = totalOrderList.Where(p => p.GameCode == gameCode && p.GameType == gameType).ToList();
+                        foreach (var u in currentOrder.GroupBy(p => p.UserId))
+                        {
+                            var userTotalOrderList = currentOrder.Where(p => p.UserId == u.Key).ToList();
+                            //加上此行，如果近一月没有订单，也不会清空中奖概率
+                            //if (userTotalOrderList.Count == 0) continue;
+                            var userWinOrderList = userTotalOrderList.Where(p => p.BonusStatus == (int)BonusStatus.Win).ToList();
+                            var bounsPercent = userTotalOrderList.Count == 0 ? 0M : (decimal)userWinOrderList.Count / userTotalOrderList.Count;
+                            //查询用户中奖概率数据
+                            var current = sportsManager.QueryUserBonusPercent(u.Key, gameCode, gameType);
+                            if (current == null) continue;
+
+                            current.TotalOrderCount = userTotalOrderList.Count;
+                            current.BonusOrderCount = userWinOrderList.Count;
+                            current.CurrentDate = currentDate;
+                            current.BonusPercent = bounsPercent;
+                            sportsManager.UpdateUserBonusPercent(current);
+                        }
+                    }
+                }
+
+                //更新合买红人
+                var hotManager = new TogetherHotUserManager();
+                var list = hotManager.QueryTogetherHotUserList();
+                foreach (var item in list)
+                {
+                    var orderList = sportsManager.QueryWinSports_Order_ComplateByComplateTime(item.UserId, DateTime.Now.AddDays(-7), DateTime.Now);
+                    var sum = orderList.Sum(p => p.AfterTaxBonusMoney);
+                    if (sum <= 0) continue;
+
+                    item.WeeksWinMoney = sum;
+                    hotManager.UpdateTogetherHotUser(item);
+                }
+
+            //更新名家命中率
+            //var experManager = new ExperterSchemeManager();
+            //foreach (var exper in experManager.QueryAllExperter())
+            //{
+            //    //总（6个月）
+            //    var totalSchemeList = experManager.QueryExperterSchemeList(exper.UserId, DateTime.Now.AddMonths(-12), DateTime.Now);
+            //    var totalWinSchemeList = totalSchemeList.Where(p => p.BonusStatus == BonusStatus.Win).ToList();
+
+            //    //月
+            //    var monthSchemeList = totalSchemeList.Where(p => p.CreateTime >= DateTime.Now.AddMonths(-1) && p.CreateTime < DateTime.Now).ToList();
+            //    var monthWinSchemeList = monthSchemeList.Where(p => p.BonusStatus == BonusStatus.Win).ToList();
+
+            //    //周
+            //    var weekSchemeList = monthSchemeList.Where(p => p.CreateTime >= DateTime.Now.AddDays(-7) && p.CreateTime < DateTime.Now).ToList();
+            //    var weekWinSchemeList = weekSchemeList.Where(p => p.BonusStatus == BonusStatus.Win).ToList();
+
+            //    //命中率
+            //    exper.TotalShooting = totalSchemeList.Count == 0 ? 0M : (decimal)totalWinSchemeList.Count / totalSchemeList.Count;
+            //    exper.MonthShooting = monthSchemeList.Count == 0 ? 0M : (decimal)monthWinSchemeList.Count / monthSchemeList.Count;
+            //    exper.WeekShooting = weekSchemeList.Count == 0 ? 0M : (decimal)weekWinSchemeList.Count / weekSchemeList.Count;
+            //    //回报率
+            //    exper.TotalRate = totalSchemeList.Count == 0 || totalSchemeList.Sum(p => p.BetMoney) == 0M ? 0M : totalSchemeList.Sum(p => p.BonusMoney) / totalSchemeList.Sum(p => p.BetMoney);
+            //    exper.MonthRate = monthSchemeList.Count == 0 || monthSchemeList.Sum(p => p.BetMoney) == 0M ? 0M : monthSchemeList.Sum(p => p.BonusMoney) / monthSchemeList.Sum(p => p.BetMoney);
+            //    exper.WeekRate = weekSchemeList.Count == 0 || weekSchemeList.Sum(p => p.BetMoney) == 0M ? 0M : weekSchemeList.Sum(p => p.BonusMoney) / weekSchemeList.Sum(p => p.BetMoney);
+
+            //    experManager.UpdateExperter(exper);
+            //}
+
+            DB.Commit();
+            
+        }
+
+        /// <summary>
+        /// 传统足球、数字彩奖期派奖
+        /// </summary>
+        public void LotteryIssusePrize(string gameCode, string gameType, string issuseNumber, string winNumber)
+        {
+            if (string.IsNullOrEmpty(issuseNumber))
+                throw new Exception("期号不能为空");
+            if (string.IsNullOrEmpty(winNumber))
+                throw new Exception("开奖号不能为空");
+
+            var lotteryManager = new LotteryGameManager();
+            var issuseEntity = lotteryManager.QueryGameIssuseByKey(gameCode, gameType, issuseNumber);
+            if (issuseEntity == null)
+                throw new Exception(string.Format("奖期{0}.{1}.{2}不存在", gameCode, gameType, issuseNumber));
+            if (issuseEntity.OfficialStopTime > DateTime.Now)
+                throw new Exception(string.Format("奖期{0}销售未结束，不能派奖", issuseNumber));
+            //if (issuseEntity.Status == IssuseStatus.Awarded)
+            //    throw new Exception(string.Format("奖期{0}.{1}.{2}奖期状态不正确", gameCode, gameType, issuseNumber));
+            if (issuseEntity.Status == (int)IssuseStatus.Stopped)
+                throw new Exception(string.Format("奖期{0}.{1}.{2}奖期已派奖", gameCode, gameType, issuseNumber));
+
+            issuseEntity.Status = (int)IssuseStatus.Stopped;
+            issuseEntity.AwardTime = DateTime.Now;
+            issuseEntity.WinNumber = winNumber;
+            lotteryManager.UpdateGameIssuse(issuseEntity);
+
+            //更新Redis缓存
+            RedisMatchBusiness.LoadSZCWinNumber(gameCode);
+        }
+
+        /// <summary>
+        /// 按彩种查询未派奖的票并执行派奖
+        /// </summary>
+        public string QueryUnPrizeTicketAndDoPrizeByGameCode(string gameCode, string gameType, int count)
+        {
+            if (string.IsNullOrEmpty(gameCode))
+                throw new Exception("彩种不能为空");
+
+            var watch = new Stopwatch();
+
+            var successCount = 0;
+            var failCount = 0;
+            var log = new List<string>();
+            var manager = new Sports_Manager();
+            var poolManager = new Ticket_BonusManager();
+
+            var szcArray = new string[] { "SSQ", "DLT", "FC3D", "PL3", "CQSSC", "JX11X5", "SD11X5", "GD11X5", "GDKLSF", "JSKS", "SDKLPK3" };
+            var poolList = new List<T_Ticket_BonusPool>();
+            var ticketList = new List<TicketPrizeInfo>();
+            watch.Start();
+            if (szcArray.Contains(gameCode.ToUpper()))
+            {
+                //数字彩
+                ticketList.AddRange(manager.QuerySZCUnPrizeTicket(gameCode, count));
+            }
+            if (gameCode == "CTZQ")
+            {
+                //传统足球
+                ticketList.AddRange(manager.QueryCTZQUnPrizeticket(gameType, count));
+            }
+            watch.Stop();
+            log.Add(string.Format("查询{0}-{1}-{2}，用时{3}毫秒", gameCode, gameType, count, watch.Elapsed.TotalMilliseconds));
+
+            watch.Restart();
+            var prizeList = new List<TicketBatchPrizeInfo>();
+            foreach (var item in ticketList)
+            {
+                try
+                {
+                    //查询奖池
+                    if (new string[] { "SSQ", "DLT", "CTZQ" }.Contains(gameCode))
+                    {
+                        var pCount = poolList.Where(p => p.GameCode == item.GameCode && (gameType == "" || p.GameType == gameType) && p.IssuseNumber == item.IssuseNumber).Count();
+                        if (pCount <= 0)
+                        {
+                            poolList.AddRange(poolManager.GetBonusPool(item.GameCode, (gameType == "" ? "" : item.GameType), item.IssuseNumber));
+                        }
+                    }
+
+                    var totalPreMoney = 0M;
+                    var totalAfterMoney = 0M;
+                    //计算中奖金额
+                    DoComputeTicketBonusMoney(item.TicketId, item.GameCode.ToUpper(), item.GameType.ToUpper(), item.BetContent, item.Amount, item.IsAppend, item.IssuseNumber, item.WinNumber, poolList, out totalPreMoney, out totalAfterMoney);
+
+                    //更新票数据sql
+                    prizeList.Add(new TicketBatchPrizeInfo
+                    {
+                        //Id = item.Id,
+                        TicketId = item.TicketId,
+                        BonusStatus = totalAfterMoney > 0M ? BonusStatus.Win : BonusStatus.Lose,
+                        PreMoney = totalPreMoney,
+                        AfterMoney = totalAfterMoney,
+                    });
+
+                    //var updateSql = string.Format("update C_Sports_Ticket set PreTaxBonusMoney={0},AfterTaxBonusMoney={1},BonusStatus={2} where ticketId='{3}' "
+                    //    , totalPreMoney, totalAfterMoney, totalAfterMoney > 0M ? 20 : 30, item.TicketId);
+                    //manager.ExecSql(updateSql);
+                    //sqlList.Add(updateSql);
+
+                    successCount++;
+                }
+                catch (Exception ex)
+                {
+                    failCount++;
+                    log.Add(string.Format("票{0} 派奖异常：{1}", item.TicketId, ex.Message));
+                }
+            }
+            watch.Stop();
+            log.Add(string.Format("计算票中奖数据用时{0}毫秒", watch.Elapsed.TotalMilliseconds));
+
+
+            watch.Restart();
+            //批量更新数据库
+            BusinessHelper.UpdateTicketBonus(prizeList);
+            watch.Stop();
+            log.Add(string.Format("执行更新票数据，用时{0}毫秒", watch.Elapsed.TotalMilliseconds));
+            //if (sqlList.Count > 0)
+            //{
+            //    //执行更新sql
+            //    //manager.ExecSql(string.Join(Environment.NewLine, sqlList));
+            //}
+
+            log.Insert(0, string.Format("成功派奖票：{0}条，失败派奖票：{1}条", successCount, failCount));
+            return string.Join(Environment.NewLine, log.ToArray());
+        }
     }
 }

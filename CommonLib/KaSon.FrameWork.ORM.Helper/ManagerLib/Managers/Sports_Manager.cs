@@ -1241,5 +1241,198 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<C_Together_FollowerRecord>().Where(p => p.SchemeId == schemeId && p.FollowerUserId == followerUserId).FirstOrDefault();
         }
 
+        public C_Temp_Together QueryTemp_Together(string schemeId)
+        {
+         
+            return DB.CreateQuery<C_Temp_Together>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
+        }
+
+        public void DeleteTemp_Together(C_Temp_Together entity)
+        {
+            DB.GetDal<C_Temp_Together>().Delete(entity);
+        }
+
+        public void UpdateSports_Ticket(C_Sports_Ticket entity)
+        {
+            DB.GetDal<C_Sports_Ticket>().Update(entity);
+        }
+
+        public List<Sports_SchemeQueryInfo> QueryWaitForPrizeMoneyOrderList(DateTime startTime, DateTime endTime, string gameCode, int pageIndex, int pageSize, out int totalCount)
+        {
+         
+            pageIndex = pageIndex < 0 ? 0 : pageIndex;
+            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+            var query = from r in DB.CreateQuery<C_Sports_Order_Complate>()
+                        join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
+                        where (r.ComplateDateTime >= startTime && r.ComplateDateTime < endTime)
+                        && (gameCode == string.Empty || r.GameCode == gameCode)
+                        && (r.AfterTaxBonusMoney + r.AddMoney) > 0M
+                        //&& r.BonusStatus == BonusStatus.Win
+                        && r.IsPrizeMoney == false
+                        && r.IsVirtualOrder == false
+                        select new {r,u };
+            totalCount = query.Count();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(p => new Sports_SchemeQueryInfo
+            {
+                UserId = p.u.UserId,
+                UserDisplayName = p.u.DisplayName,
+                HideDisplayNameCount = p.u.HideDisplayNameCount,
+                GameDisplayName = BettingHelper.FormatGameCode(p.r.GameCode),
+                GameCode = p.r.GameCode,
+                Amount = p.r.Amount,
+                BonusStatus = (BonusStatus)p.r.BonusStatus,
+                CreateTime = p.r.CreateTime,
+                GameType = p.r.GameType,
+                GameTypeDisplayName = p.r.SchemeBettingCategory == (int)SchemeBettingCategory.ErXuanYi ? "主客二选一" : BettingHelper.FormatGameType(p.r.GameCode, p.r.GameType),
+                IssuseNumber = p.r.IssuseNumber,
+                PlayType = p.r.PlayType,
+                Security = (TogetherSchemeSecurity)p.r.Security,
+                IsVirtualOrder = p.r.IsVirtualOrder,
+                ProgressStatus = (ProgressStatus)p.r.ProgressStatus,
+                SchemeId = p.r.SchemeId,
+                SchemeType = (SchemeType)p.r.SchemeType,
+                TicketId = p.r.TicketId,
+                TicketLog = p.r.TicketLog,
+                TicketStatus = (TicketStatus)p.r.TicketStatus,
+                TotalMatchCount = p.r.TotalMatchCount,
+                TotalMoney = p.r.TotalMoney,
+                BetCount = p.r.BetCount,
+                PreTaxBonusMoney = p.r.PreTaxBonusMoney,
+                AfterTaxBonusMoney = p.r.AfterTaxBonusMoney,
+                BonusCount = p.r.BonusCount,
+                IsPrizeMoney = p.r.IsPrizeMoney,
+                HitMatchCount = p.r.HitMatchCount,
+                StopTime = p.r.StopTime,
+                AddMoney = p.r.AddMoney,
+                AddMoneyDescription = p.r.AddMoneyDescription,
+            }).ToList();
+        }
+
+        public List<C_Sports_Order_Complate> QuerySports_Order_ComplateByComplateDate(string complateDate)
+        {
+            
+            var query = from c in DB.CreateQuery<C_Sports_Order_Complate>()
+                        where c.ComplateDate == complateDate
+                        orderby c.ComplateDateTime ascending
+                        select c;
+            return query.ToList();
+        }
+
+        public List<C_User_Beedings> QueryUserBeedingsList(string gameCode, string gameType)
+        {
+          
+            return DB.CreateQuery<C_User_Beedings>().Where(p => p.GameCode == gameCode && (gameType == string.Empty || p.GameType == gameType)).ToList();
+        }
+
+        public List<Sports_Order_Complate> QuerySports_Order_ComplateByComplateTime(string userId, string gameCode, string gameType, DateTime startTime, DateTime endTime)
+        {
+           
+            var query = from c in DB.CreateQuery<Sports_Order_Complate>()
+                        where c.ComplateDateTime >= startTime && c.ComplateDateTime < endTime
+                        && c.IsVirtualOrder == false
+                        && c.UserId == userId && (gameCode == string.Empty || c.GameCode == gameCode) && (gameType == string.Empty || c.GameType == gameType)
+                        orderby c.ComplateDateTime descending
+                        select c;
+            return query.ToList();
+        }
+        public List<C_Sports_Order_Complate> QuerySports_Order_ComplateByComplateTime(DateTime startTime, DateTime endTime)
+        {
+          
+            var query = from c in DB.CreateQuery<C_Sports_Order_Complate>()
+                        where c.ComplateDateTime >= startTime && c.ComplateDateTime < endTime
+                        && c.IsVirtualOrder == false
+                        orderby c.ComplateDateTime descending
+                        select c;
+            return query.ToList();
+        }
+
+        public void UpdateUserBonusPercent(C_User_BonusPercent entity)
+        {
+            DB.GetDal<C_User_BonusPercent>().Update(entity);
+        }
+
+        public List<C_Sports_Order_Complate> QueryWinSports_Order_ComplateByComplateTime(string userId, DateTime startTime, DateTime endTime)
+        {
+          
+            var query = from c in DB.CreateQuery<C_Sports_Order_Complate>()
+                        where c.ComplateDateTime >= startTime && c.ComplateDateTime < endTime
+                        && c.IsVirtualOrder == false
+                        && c.UserId == userId
+                        && c.BonusStatus == (int)BonusStatus.Win
+                        orderby c.ComplateDateTime descending
+                        select c;
+            return query.ToList();
+        }
+
+        public List<TicketPrizeInfo> QuerySZCUnPrizeTicket(string gameCode, int count)
+        {
+            if (count <= 0)
+                count = 100;
+          
+            var sql = string.Format(@"select top {0} t.ticketId,t.gamecode,t.gametype,t.betcontent,t.amount,t.isappend,t.issusenumber,i.WinNumber,t.id
+                                        from C_Sports_Ticket t
+                                        left join C_Game_Issuse i on t.gamecode=i.gamecode and t.IssuseNumber=i.IssuseNumber
+                                        where t.BonusStatus=0 and t.TicketStatus=90 
+                                        and i.WinNumber is not null 
+                                        and i.Status=30
+                                        and  i.WinNumber<>''
+                                        and i.gamecode='{1}'
+                                        order by t.issusenumber asc", count, gameCode);
+            var list = DB.CreateSQLQuery(sql).List<TicketPrizeInfo>().ToList();
+            //var ticketList = new List<TicketPrizeInfo>();
+            //foreach (var item in list)
+            //{
+            //    if (item == null)
+            //        continue;
+            //    var array = item as object[];
+            //    ticketList.Add(new TicketPrizeInfo
+            //    {
+            //        TicketId = UsefullHelper.GetDbValue<string>(array[0]),
+            //        GameCode = UsefullHelper.GetDbValue<string>(array[1]),
+            //        GameType = UsefullHelper.GetDbValue<string>(array[2]),
+            //        BetContent = UsefullHelper.GetDbValue<string>(array[3]),
+            //        Amount = UsefullHelper.GetDbValue<int>(array[4]),
+            //        IsAppend = UsefullHelper.GetDbValue<bool>(array[5]),
+            //        IssuseNumber = UsefullHelper.GetDbValue<string>(array[6]),
+            //        WinNumber = UsefullHelper.GetDbValue<string>(array[7]),
+            //        Id = UsefullHelper.GetDbValue<long>(array[8]),
+            //    });
+            //}
+            return list;
+        }
+        public List<TicketPrizeInfo> QueryCTZQUnPrizeticket(string gameType, int count)
+        {
+            if (count <= 0)
+                count = 100;
+        
+            var sql = string.Format(@"select top {0} t.ticketId,t.gamecode,t.gametype,t.betcontent,t.amount,t.isappend,t.issusenumber,p.WinNumber,t.id
+                                    from C_Sports_Ticket t
+                                    left join [T_Ticket_BonusPool] p on t.gamecode=p.gamecode and t.gametype=p.gametype and t.issusenumber =p.issusenumber
+                                    where t.gamecode='ctzq' and t.gametype='{1}' and t.bonusstatus=0 and t.TicketStatus=90 
+                                    and p.bonuslevel=1 and p.BonusCount>0 and p.BonusMoney>0
+                                    and p.WinNumber<>''
+                                    order by t.issusenumber asc ", count, gameType);
+            var list = DB.CreateSQLQuery(sql).List<TicketPrizeInfo>().ToList();
+            //var ticketList = new List<TicketPrizeInfo>();
+            //foreach (var item in list)
+            //{
+            //    if (item == null)
+            //        continue;
+            //    var array = item as object[];
+            //    ticketList.Add(new TicketPrizeInfo
+            //    {
+            //        TicketId = UsefullHelper.GetDbValue<string>(array[0]),
+            //        GameCode = UsefullHelper.GetDbValue<string>(array[1]),
+            //        GameType = UsefullHelper.GetDbValue<string>(array[2]),
+            //        BetContent = UsefullHelper.GetDbValue<string>(array[3]),
+            //        Amount = UsefullHelper.GetDbValue<int>(array[4]),
+            //        IsAppend = UsefullHelper.GetDbValue<bool>(array[5]),
+            //        IssuseNumber = UsefullHelper.GetDbValue<string>(array[6]),
+            //        WinNumber = UsefullHelper.GetDbValue<string>(array[7]),
+            //        Id = UsefullHelper.GetDbValue<long>(array[8]),
+            //    });
+            //}
+            return list;
+        }
     }
 }

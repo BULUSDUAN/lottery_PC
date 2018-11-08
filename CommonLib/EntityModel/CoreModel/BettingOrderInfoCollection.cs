@@ -13,7 +13,7 @@ namespace EntityModel.CoreModel
         [ProtoMember(1)]
         public int TotalUserCount { get; set; }
         [ProtoMember(2)]
-        public decimal TotalBuyMoney { get; set; }
+        public decimal TotalBetMoney { get; set; }
         [ProtoMember(3)]
         public decimal TotalOrderMoney { get; set; }
         [ProtoMember(4)]
