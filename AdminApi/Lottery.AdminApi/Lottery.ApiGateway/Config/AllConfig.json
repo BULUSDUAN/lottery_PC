@@ -18,7 +18,7 @@
   "ResSiteUrl": "http://10.0.3.6:888",
   "ResourceSiteUrl_res": "http://10.0.3.6:788/test.touch",
   "ISConsoleLog": true,
-  "Host": "http://*:729",
+  "Host": "http://*:11729",
   "DataSiteUrl": "http://10.0.3.6:888/MatchData",
   "ResourceSiteUrl": "http://localhost:788/test",
   "ResourceSitePostUrl": "http://localhost:788/test",
@@ -26,7 +26,7 @@
   "WebSiteEName": "iqucai",
   //必须配置 服务发现配置
   "ConsulSettings": {
-    "IpAddrs": "127.0.0.1:8500", //服务启动IP 10.0.3.27:8501
+    "IpAddrs": "10.0.3.27:8501", //服务启动IP 10.0.3.27:8501
     "Token": "16c5413b-276c-45ab-9b0e-9664126f1163"
   },
   "GameApi": {

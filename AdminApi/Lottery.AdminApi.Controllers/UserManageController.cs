@@ -9,6 +9,7 @@ using KaSon.FrameWork.Common.Xml;
 using KaSon.FrameWork.ORM.Helper;
 using Lottery.AdminApi.Controllers.CommonFilterActtribute;
 using Lottery.AdminApi.Model.HelpModel;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                var UserId = p.id;
+                string UserId = p.id;
                 //if (!string.IsNullOrEmpty(ViewBag.UserId))
                 //{
                    var UserResult = _service.QueryUserByKey(UserId);
