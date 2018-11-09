@@ -1435,5 +1435,11 @@ namespace KaSon.FrameWork.ORM.Helper
             //}
             return list;
         }
+
+        public C_Sports_AnteCode QueryOneSportsAnteCodeBySchemeId(string schemeId)
+        {
+          
+            return DB.CreateQuery<C_Sports_AnteCode>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
+        }
     }
 }

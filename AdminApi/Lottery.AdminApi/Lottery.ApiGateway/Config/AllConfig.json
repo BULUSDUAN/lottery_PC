@@ -22,6 +22,7 @@
   "DataSiteUrl": "http://10.0.3.6:888/MatchData",
   "ResourceSiteUrl": "http://localhost:788/test",
   "ResourceSitePostUrl": "http://localhost:788/test",
+  "MatchRoot": "http://10.0.3.6/MatchData",
   "UpLoadPostPath": "/UpLoad/upload_json.aspx",
   "WebSiteEName": "iqucai",
   //必须配置 服务发现配置
