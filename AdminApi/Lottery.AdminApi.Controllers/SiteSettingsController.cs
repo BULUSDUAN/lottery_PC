@@ -73,7 +73,7 @@ namespace Lottery.AdminApi.Controllers
                 var service = new AdminService();
                 if (!string.IsNullOrEmpty(roleId))
                 {
-                    roleList = service.GetSystemRoleById(roleId, CurrentUser.UserToken);
+                    roleList = service.GetSystemRoleById(roleId);
                     ViewBag.RoleById = roleList;
                 }
                 var functionList = service.QueryLowerLevelFuncitonList();
@@ -128,11 +128,11 @@ namespace Lottery.AdminApi.Controllers
                     throw new LogicException("对不起，您的权限不足！");
                 }
                 var p = JsonHelper.Decode(entity.Param);
-                string RoleName = p.RoleName;
-                string RoleId = p.RoleId;
-                int? RoleType = p.RoleType;
-                bool? IsAdmin = p.IsAdmin;
-                string FunctionIds = p.FunctionIds;
+                string RoleName = p.roleName;
+                string RoleId = p.roleId;
+                int? RoleType = p.roleType;
+                bool? IsAdmin = p.isAdmin;
+                string FunctionIds = p.functionIds;
                 RoleInfo_Add roleInfo = new RoleInfo_Add();
                 roleInfo.RoleName = PreconditionAssert.IsNotEmptyString(RoleName, "角色名不能为空");
                 roleInfo.RoleId = PreconditionAssert.IsNotEmptyString(RoleId, "角色编号不能为空");
@@ -188,20 +188,20 @@ namespace Lottery.AdminApi.Controllers
                 }
                 var service = new AdminService();
                 var p = JsonHelper.Decode(entity.Param);
-                string RoleName = p.RoleName;
-                string RoleId = p.RoleId;
-                string FunctionIds = p.FunctionIds;
+                string RoleName = p.roleName;
+                string RoleId = p.roleId;
+                string FunctionIds = p.functionIds;
                 var roleInfo = new RoleInfo_Update();
                 roleInfo.RoleName = PreconditionAssert.IsNotEmptyString(RoleName, "角色名不能为空");
                 roleInfo.RoleId = PreconditionAssert.IsNotEmptyString(RoleId, "角色编号不能为空");
-                var roleById = service.GetSystemRoleById(RoleId, CurrentUser.UserToken);
+                var roleById = service.GetSystemRoleById(RoleId);
                 if (roleById.IsAdmin)
                 {
                     var _result = service.UpdateSystemRole(roleInfo, CurrentUser.UserToken);
                     return Json(new LotteryServiceResponse
                     {
                         Code = _result.IsSuccess ? AdminResponseCode.成功 : AdminResponseCode.失败,
-                        Message = "新增成功"
+                        Message = "更新成功"
                     });
                 }
                 var funIds = PreconditionAssert.IsNotEmptyString(FunctionIds, "功能编号集异常").Split(',');
@@ -232,7 +232,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = result.IsSuccess ? AdminResponseCode.成功 : AdminResponseCode.失败,
-                    Message = "新增成功"
+                    Message = "更新成功"
                 });
             }
             catch (Exception ex)
@@ -1001,11 +1001,15 @@ namespace Lottery.AdminApi.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 var date = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.currentDate, "日期不能为空"));
                 var result = _service.ComputeUserBeedings(date.ToString("yyyyMMdd"));
-                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message, });
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = result.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()
+                });
             }
         }
 
@@ -1020,11 +1024,15 @@ namespace Lottery.AdminApi.Controllers
                 var datefrom = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.startTime, "日期不能为空"));
                 var dateto = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.endTime, "日期不能为空"));
                 var result = _service.ComputeLucyUser();
-                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message, });
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = result.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()
+                });
             }
         }
         /// <summary>
@@ -1038,11 +1046,15 @@ namespace Lottery.AdminApi.Controllers
                 var datefrom = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.startTime, "日期不能为空"));
                 var dateto = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.endTime, "日期不能为空"));
                 var result = _service.ComputeBonusPercent();
-                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message, });
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = result.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()
+                });
             }
         }
         #endregion
