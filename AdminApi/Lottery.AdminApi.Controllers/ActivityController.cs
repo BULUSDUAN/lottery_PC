@@ -212,6 +212,18 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
+        public IActionResult GetGameCodeAndGameType()
+        {
+            try
+            {
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = _service.GetGameCodeAndGameType() });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+            
+        }
 
         public IActionResult AddAddBonusMoneyConfig(LotteryServiceRequest entity)
         {

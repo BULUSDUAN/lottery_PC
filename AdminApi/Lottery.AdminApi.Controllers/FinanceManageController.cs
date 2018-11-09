@@ -22,7 +22,7 @@ namespace Lottery.AdminApi.Controllers
     /// 财务管理
     /// </summary>
     [Area("api")]
-    [ReusltFilter]
+    //[ReusltFilter]
     public class FinanceManageController : BaseController
     {
         private readonly static AdminService _service = new AdminService();

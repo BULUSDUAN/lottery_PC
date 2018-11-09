@@ -57,7 +57,7 @@ namespace Lottery.ApiGateway
         {
             var list = AssemblyHelper.LoadAssembly();
             var feature = new ControllerFeature();
-            // services.AddCors();
+            //services.AddCors();
             services.AddMvc().ConfigureApplicationPartManager(m =>
             {
                 //   var feature = new ControllerFeature();
@@ -78,15 +78,10 @@ namespace Lottery.ApiGateway
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //services.AddCors(option =>
-            //{
-            //    option.AddPolicy("any", builder =>
-            //    {
-            //        builder.AllowAnyOrigin()//允许任何站点跨域访问
-            //        .AllowAnyMethod()
-            //        .AllowAnyHeader()
-            //        .AllowCredentials();
-            //    });
+            services.AddCors();//注册跨域
+            //services.Configure<CookiePolicyOptions>(option => {
+            //    //option.CheckConsentNeeded = context => false;
+            //    option.MinimumSameSitePolicy = SameSiteMode.None;
             //});
             RegisterController(services);
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -102,7 +97,7 @@ namespace Lottery.ApiGateway
 
             //var config = new ConfigInfo(consul, reloadOnChange: true);
             //config.Token = Token;
-
+            
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(CustomExceptionFilterAttribute));
@@ -154,10 +149,18 @@ namespace Lottery.ApiGateway
             {
                 app.UseExceptionHandler("/mg/Home/Error");
             }
-            //app.UseCors("any");//注册跨域
+
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials()
+                  .AllowAnyOrigin();
+            });
             //不使用静态文件
             //var myProvider = new FileExtensionContentTypeProvider();
-            //myProvider.Mappings.Add(".tpl", "text/plain");
+            ////myProvider.Mappings.Add(".html", "text/plain");
             //app.UseStaticFiles(new StaticFileOptions() { ContentTypeProvider = myProvider });
             //app.UseStaticFiles();
 

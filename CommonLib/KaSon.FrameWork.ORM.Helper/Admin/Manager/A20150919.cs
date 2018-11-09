@@ -1063,6 +1063,7 @@ namespace KaSon.FrameWork.ORM.Helper
             r.AddRange(manager.QueryAddBonusMoneyConfig());
             return r;
         }
+         
 
         /// <summary>
         /// 增加加奖配置
@@ -1093,6 +1094,10 @@ namespace KaSon.FrameWork.ORM.Helper
             if (old == null)
                 return;
             manager.DeleteA20150919_加奖配置(old);
+        }
+        public GameList GetGameCodeAndGameType()
+        {
+            return new A20150919Manager().GetGameCodeAndGameType();
         }
     }
 

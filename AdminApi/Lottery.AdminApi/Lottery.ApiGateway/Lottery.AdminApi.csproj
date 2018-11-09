@@ -5,13 +5,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Redis\redisSettings.json" />
-    <Content Remove="SQL_JSON\MyServer_SQL.json" />
-    <Content Remove="SQL_JSON\SQLServer_SQL.json" />
+    <Compile Remove="wwwroot\images\**" />
+    <Compile Remove="wwwroot\js\**" />
+    <Compile Remove="wwwroot\lib\**" />
+    <Content Remove="wwwroot\images\**" />
+    <Content Remove="wwwroot\js\**" />
+    <Content Remove="wwwroot\lib\**" />
+    <EmbeddedResource Remove="wwwroot\images\**" />
+    <EmbeddedResource Remove="wwwroot\js\**" />
+    <EmbeddedResource Remove="wwwroot\lib\**" />
+    <None Remove="wwwroot\images\**" />
+    <None Remove="wwwroot\js\**" />
+    <None Remove="wwwroot\lib\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <Content Remove="Redis\redisSettings.json" />
+    <Content Remove="SQL_JSON\MyServer_SQL.json" />
+    <Content Remove="SQL_JSON\SQLServer_SQL.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -125,6 +136,10 @@
     <None Update="Config\log4net.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties SQL_3JSON_4SQLServer_3SQL_1json__JSONSchema="查询财务人员" Config_4AllConfig_1json__JSONSchema="http://json.schemastore.org/bootstraprc" Config_4gatewaySettings_1json__JSONSchema="http://json.schemastore.org/babelrc" /></VisualStudio></ProjectExtensions>

@@ -23,7 +23,7 @@ namespace Lottery.AdminApi.Controllers
     /// 会员管理
     /// </summary>
     [Area("api")]
-    [ReusltFilter]
+    //[ReusltFilter]
     [CheckLogin]
     public class UserManageController :BaseController
     {

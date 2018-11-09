@@ -22,7 +22,7 @@ namespace Lottery.AdminApi.Controllers
     /// 权限控制器
     /// </summary>
     [Area("api")]
-    [ReusltFilter]
+    //[ReusltFilter]
     public class SiteSettingsController : BaseController
     {
         private readonly static AdminService _service = new AdminService();

@@ -279,6 +279,26 @@ namespace KaSon.FrameWork.ORM.Helper
             return query;
                 
         }
+        public GameList GetGameCodeAndGameType()
+        {
+            var result = new GameList
+            {
+                _gameCodeInfo = DB.CreateQuery<C_Lottery_Game>().Where(x => x.EnableStatus == 0).ToList()
+                .Select(x => new GameCodeinfo()
+                {
+                    GameName = x.DisplayName,
+                    GameCode = x.GameCode
+                }).ToList(),
+                _gameTypeInfo = DB.CreateQuery<C_Lottery_GameType>().Where(x => x.EnableStatus == 0).ToList()
+                .Select(x => new GameTypeinfo()
+                {
+                    GameCode=x.GameCode,
+                    GameType = x.GameType,
+                    GameTypeName = x.DisplayName
+                }).ToList()
+            };
+            return result;
+        }
 
     }
 }
