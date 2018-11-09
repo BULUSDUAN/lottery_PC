@@ -256,16 +256,6 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = (from c in DB.CreateQuery<E_A20150919_列表用户不加奖>()
                          join u in DB.CreateQuery<C_User_Register>() on c.UserId equals u.UserId
                          where (userId==string.Empty || c.UserId == userId)
-                         //select new { c, u }).ToList().Select(p => new UserGameCodeNotAddMoneyInfo()
-                         //{
-                         //    CreateTime = p.c.CreateTime,
-                         //    GameCode = p.c.GameCode,
-                         //    Id = p.c.Id,
-                         //    UserId = p.c.UserId,
-                         //    UserName = p.u.DisplayName,
-                         //    GameType = p.c.GameType,
-                         //    PlayType = p.c.PlayType,
-                         //}).ToList();
                          select new UserGameCodeNotAddMoneyInfo
                          {
                              CreateTime = c.CreateTime,
