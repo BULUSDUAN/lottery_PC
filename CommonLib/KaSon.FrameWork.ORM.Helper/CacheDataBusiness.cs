@@ -39,6 +39,12 @@ namespace KaSon.FrameWork.ORM.Helper
             return config;
 
         }
+        public void ClearCoreConfigByKey(string key)
+        {
+            var RedisKeyH = "CoreConfig_";
+            var RedisKey = RedisKeyH + key;
+             RedisHelperEx.DB_Other.Del(RedisKey);
+        }
 
         /// <summary>
         /// 从Redis中查询系统配置
@@ -333,8 +339,8 @@ namespace KaSon.FrameWork.ORM.Helper
         public void UpdateCoreConfigInfo(C_Core_Config info)
         {
             var manager = new UserIntegralManager();
-            var entity = manager.QueryCoreConfig(info.Id);
-            if (entity == null) return;
+            var entity = manager.QueryCoreConfig(info.ConfigKey);
+            if (entity == null) throw new LogicException("未查询到对应数据");
             entity.ConfigName = info.ConfigName;
             entity.ConfigValue = info.ConfigValue;
             entity.CreateTime = DateTime.Now;
@@ -343,7 +349,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void DeleteSchemeInfoXml(string schemeId)
         {
-            if (string.IsNullOrEmpty(schemeId)) return;
+            if (string.IsNullOrEmpty(schemeId)) throw new LogicException("方案编号不能为空");
             var fileName = GetSchemeFileFullName(schemeId);
             if (File.Exists(fileName))
             {
