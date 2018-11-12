@@ -23,7 +23,7 @@ namespace Lottery.AdminApi.Controllers
     // [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
     public class BaseController : Controller
     {
-
+        public static Dictionary<string, ShowUserBindInfo> LoginUser { get; set; }
         IKgLog log = null;
         public BaseController() {
             log = new Log4Log();

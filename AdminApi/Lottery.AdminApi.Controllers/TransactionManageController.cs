@@ -144,14 +144,14 @@ namespace Lottery.AdminApi.Controllers
                     ViewBag.SchemeSource = "";
                 //BettingOrderInfoCollection orderList = base.QueryClient.QueryBettingOrderList(ViewBag.UserKey, schemeType, progressStatus,
                 //    bonusStatus, betCategory, null, ViewBag.GameCode, ViewBag.StartTime, ViewBag.EndTime.AddDays(1), sortType, ViewBag.PageIndex, ViewBag.PageSize, CurrentUser.UserToken, ticketStatus, schemeSource);
-                var orderInfo = new OrderInfo();
+                var orderInfo = new BettingInfo();
                 BettingOrderInfoCollection orderList = _service.QueryBettingOrderList(UserKey, schemeType, progressStatus,
                 BonusStatu, betCategorys, null, GameCode, StartTime, EndTime.AddDays(1), sortType, PageIndex, PageSize, CurrentUser.UserToken, FieldName, ticketStatus, schemeSource);
-                orderInfo.BettingOrderInfo = orderList;
+                orderInfo.OrdersSearchResult = orderList;
                 if (orderList != null)
                 {
                     IEnumerable<IGrouping<DateTime, BettingOrderInfo>> groupList = orderList.OrderList.GroupBy(o => o.BetTime.Date);
-                    orderInfo.BettingOrder = groupList;
+                    //orderInfo.GroupOrderList = groupList;
                    
                 }
 
@@ -200,13 +200,13 @@ namespace Lottery.AdminApi.Controllers
                     schemeType = (SchemeType)Convert.ToInt32((string)p.schemeType);
                 }
                  var SchemeType = schemeType;
-                var orderInfo = new OrderInfo();
+                var orderInfo = new BettingInfo();
                 BettingOrderInfoCollection orderList = _service.QueryBettingOrderList(UserKey, schemeType, ProgressStatus.Running, null, null, null, GameCode, StartTime, EndTime, -1, PageIndex, PageSize, CurrentUser.UserToken, null);
-                orderInfo.BettingOrderInfo = orderList;
+                orderInfo.OrdersSearchResult = orderList;
                 if (orderList != null)
                 {
                     IEnumerable<IGrouping<DateTime, BettingOrderInfo>> groupList = orderList.OrderList.GroupBy(o => o.CreateTime.Date);
-                    orderInfo.BettingOrder = groupList;
+                    //orderInfo.GroupOrderList = groupList;
                 }
 
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = orderInfo });
@@ -608,7 +608,7 @@ namespace Lottery.AdminApi.Controllers
                 if (orderList != null)
                 {
                     IEnumerable<IGrouping<DateTime, Sports_SchemeQueryInfo>> groupList = orderList.List.GroupBy(o => o.CreateTime.Date);
-                    orderInfo.GroupOrderList = groupList;
+                    //orderInfo.GroupOrderList = groupList;
                 }
 
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = orderInfo });

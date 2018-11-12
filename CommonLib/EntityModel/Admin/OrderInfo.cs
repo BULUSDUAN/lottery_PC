@@ -8,12 +8,19 @@ namespace EntityModel
 {
    public class OrderInfo
     {
-        public BettingOrderInfoCollection BettingOrderInfo;
+       
         public Sports_SchemeQueryInfoCollection OrdersSearchResult;
-        public IEnumerable<IGrouping<DateTime, BettingOrderInfo>> BettingOrder;
-        public IEnumerable<IGrouping<DateTime, Sports_SchemeQueryInfo>> GroupOrderList;
+      
+        //public IEnumerable<IGrouping<DateTime, Sports_SchemeQueryInfo>> GroupOrderList;
         
     }
+
+    public class BettingInfo
+    {
+        public BettingOrderInfoCollection OrdersSearchResult;
+        //public IEnumerable<IGrouping<DateTime, BettingOrderInfo>> GroupOrderList;
+    }
+
 
     public class OrderDetailInfo
     {

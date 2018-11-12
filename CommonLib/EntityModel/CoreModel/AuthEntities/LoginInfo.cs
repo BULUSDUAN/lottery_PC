@@ -213,5 +213,10 @@ namespace EntityModel.CoreModel
             //return this.FillMoneyBalance + this.BonusBalance + this.ExpertsBalance;
         }
     }
+
+    public class ShowUserBindInfo : LoginInfo
+    {
+        public DateTime UpdateTime { get; set; }
+    }
 }
 
