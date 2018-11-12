@@ -2742,22 +2742,22 @@ namespace KaSon.FrameWork.ORM.Helper
                     .SetInt("@pageIndex", pageIndex)
                     .SetInt("@pageSize", pageSize).First<BettingOrderInfoCollection>();
                 result.TotalUserCount = 1;
-                string pagelistsql = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryBettingOrderHasUserIDPageList").SQL;
-                result.OrderList=DB.CreateSQLQuery(pagelistsql)
-                     .SetString("@UserId", userIdOrName)
-                    .SetInt("@schemeType", schemeType.HasValue ? (int)schemeType.Value : -1)
-                    .SetInt("progressStatus", progressStatus.HasValue ? (int)progressStatus.Value : -1)
-                    .SetInt("@betCategory", betCategory.HasValue ? (int)betCategory.Value : -1)
-                    .SetInt("@bonusStatus", bonusStatus.HasValue ? (int)bonusStatus.Value : -1)
-                    .SetInt("@isVirtual", isVirtual.HasValue ? (isVirtual.Value ? 1 : 0) : -1)
-                    .SetInt("@schemeSource", schemeSource.HasValue ? (int)schemeSource.Value : -1)
-                    .SetString("@gameCode", gameCode)
-                    .SetString("@fromDate", startTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
-                    .SetString("@toDate", endTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
-                    .SetInt("@sortType", sortType)
-                    .SetString("@agentId", agentId)
-                    .SetInt("@pageIndex", pageIndex)
-                    .SetInt("@pageSize", pageSize).List<BettingOrderInfo>();
+                //string pagelistsql = SqlModule.AdminModule.First(x => x.Key == "Debug_QueryBettingOrderHasUserIDPageList").SQL;
+                //result.OrderList=DB.CreateSQLQuery(pagelistsql)
+                //     .SetString("@UserId", userIdOrName)
+                //    .SetInt("@schemeType", schemeType.HasValue ? (int)schemeType.Value : -1)
+                //    .SetInt("progressStatus", progressStatus.HasValue ? (int)progressStatus.Value : -1)
+                //    .SetInt("@betCategory", betCategory.HasValue ? (int)betCategory.Value : -1)
+                //    .SetInt("@bonusStatus", bonusStatus.HasValue ? (int)bonusStatus.Value : -1)
+                //    .SetInt("@isVirtual", isVirtual.HasValue ? (isVirtual.Value ? 1 : 0) : -1)
+                //    .SetInt("@schemeSource", schemeSource.HasValue ? (int)schemeSource.Value : -1)
+                //    .SetString("@gameCode", gameCode)
+                //    .SetString("@fromDate", startTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                //    .SetString("@toDate", endTime.Date.ToString("yyyy-MM-dd HH:mm:ss"))
+                //    .SetInt("@sortType", sortType)
+                //    .SetString("@agentId", agentId)
+                //    .SetInt("@pageIndex", pageIndex)
+                //    .SetInt("@pageSize", pageSize).List<BettingOrderInfo>();
             }
             return result;
         }
