@@ -294,7 +294,7 @@ namespace Lottery.AdminApi.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 string userIdList = p.userId;
                 string gameCode = p.gameCode;
-                string gameType = p.gameType;
+                string gameType = string.Empty;
                 string playType = p.playType;
                 if (string.IsNullOrEmpty(gameCode))
                     throw new LogicException("彩种传入不能为空。");
