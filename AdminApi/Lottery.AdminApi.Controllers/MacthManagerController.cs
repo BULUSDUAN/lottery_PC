@@ -17,7 +17,7 @@ namespace Lottery.AdminApi.Controllers
     /// 比赛管理
     /// </summary>
     [Area("api")]
-    [ReusltFilter]
+    //[ReusltFilter]
     public class MacthManagerController : BaseController
     {
         private static readonly AdminService _service = new AdminService();

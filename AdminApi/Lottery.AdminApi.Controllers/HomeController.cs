@@ -18,7 +18,8 @@ using Microsoft.AspNetCore.Cors;
 namespace Lottery.AdminApi.Controllers
 {
     [Area("api")]
-    [ReusltFilter]
+    //[ReusltFilter]
+    //[EnableCors("any")]
     public class HomeController:BaseController
     {
         #region 验证码相关函数

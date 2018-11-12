@@ -34,6 +34,7 @@ namespace EntityModel.Interface
         /// <param name="winNumber">中奖号码</param>
         /// <returns>返回中奖的奖等列表</returns>
         SportBonusResult CaculateBonus(ISportAnteCode[] antecodeList, ISportResult[] winNumberList);
+
     }
    
     public interface ISportResult

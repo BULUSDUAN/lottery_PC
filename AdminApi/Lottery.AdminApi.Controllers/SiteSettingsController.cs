@@ -22,7 +22,7 @@ namespace Lottery.AdminApi.Controllers
     /// 权限控制器
     /// </summary>
     [Area("api")]
-    [ReusltFilter]
+    //[ReusltFilter]
     public class SiteSettingsController : BaseController
     {
         private readonly static AdminService _service = new AdminService();
@@ -1001,11 +1001,15 @@ namespace Lottery.AdminApi.Controllers
                 var p = JsonHelper.Decode(entity.Param);
                 var date = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.currentDate, "日期不能为空"));
                 var result = _service.ComputeUserBeedings(date.ToString("yyyyMMdd"));
-                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message, });
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = result.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()
+                });
             }
         }
 
@@ -1020,11 +1024,15 @@ namespace Lottery.AdminApi.Controllers
                 var datefrom = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.startTime, "日期不能为空"));
                 var dateto = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.endTime, "日期不能为空"));
                 var result = _service.ComputeLucyUser();
-                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message, });
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = result.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()
+                });
             }
         }
         /// <summary>
@@ -1038,11 +1046,15 @@ namespace Lottery.AdminApi.Controllers
                 var datefrom = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.startTime, "日期不能为空"));
                 var dateto = DateTime.Parse(PreconditionAssert.IsNotEmptyString((string)p.endTime, "日期不能为空"));
                 var result = _service.ComputeBonusPercent();
-                return Json(new { IsSuccess = result.IsSuccess, Msg = result.Message, });
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = result.Message });
             }
             catch (Exception ex)
             {
-                return Json(new { IsSuccess = false, Msg = ex.Message });
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString()
+                });
             }
         }
         #endregion

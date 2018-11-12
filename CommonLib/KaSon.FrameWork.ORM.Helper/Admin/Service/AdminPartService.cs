@@ -167,6 +167,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return new A20150919_AddBonusMoney().QueryAddBonusMoneyConfig();
         }
+        public GameList GetGameCodeAndGameType()
+        {
+            return new A20150919_AddBonusMoney().GetGameCodeAndGameType();
+        }
 
         /// <summary>
         /// 删除加奖配置
@@ -1694,6 +1698,8 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
+
+       
         /// <summary>
         /// 删除订单缓存
         /// </summary>

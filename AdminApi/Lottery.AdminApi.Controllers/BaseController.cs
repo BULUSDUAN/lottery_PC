@@ -80,8 +80,14 @@ namespace Lottery.AdminApi.Controllers
         {
             get
             {
-                var userInfo = HttpContext.Session.GetObj<LoginInfo>("CurrentUser");
-                return userInfo;
+                // var userInfo = HttpContext.Session.GetObj<LoginInfo>("CurrentUser");
+                return new LoginInfo()
+                {
+                    UserId = "10032",
+                    DisplayName = "laogan",
+                    IsAdmin = true,
+                    FunctionList=new List<string>()
+                };
             }
             set
             {

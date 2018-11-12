@@ -1262,50 +1262,51 @@ namespace KaSon.FrameWork.ORM.Helper
          
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
-            var query = from r in DB.CreateQuery<C_Sports_Order_Complate>()
+            var query = (from r in DB.CreateQuery<C_Sports_Order_Complate>()
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where (r.ComplateDateTime >= startTime && r.ComplateDateTime < endTime)
                         && (gameCode == string.Empty || r.GameCode == gameCode)
                         && (r.AfterTaxBonusMoney + r.AddMoney) > 0M
                         //&& r.BonusStatus == BonusStatus.Win
                         && r.IsPrizeMoney == false
-                        && r.IsVirtualOrder == false
-                        select new {r,u };
+                        && r.IsVirtualOrder == false select new {r,u }
+                         ).ToList().Select(p => new Sports_SchemeQueryInfo
+                        {
+
+                            UserId = p.u.UserId,
+                            UserDisplayName = p.u.DisplayName,
+                            HideDisplayNameCount = p.u.HideDisplayNameCount,
+                            GameDisplayName = BettingHelper.FormatGameCode(p.r.GameCode),
+                            GameCode = p.r.GameCode,
+                            Amount = p.r.Amount,
+                            BonusStatus = (BonusStatus)p.r.BonusStatus,
+                            CreateTime = p.r.CreateTime,
+                            GameType = p.r.GameType,
+                            GameTypeDisplayName = p.r.SchemeBettingCategory == (int)SchemeBettingCategory.ErXuanYi ? "主客二选一" : BettingHelper.FormatGameType(p.r.GameCode, p.r.GameType),
+                            IssuseNumber = p.r.IssuseNumber,
+                            PlayType = p.r.PlayType,
+                            Security = (TogetherSchemeSecurity)p.r.Security,
+                            IsVirtualOrder = p.r.IsVirtualOrder,
+                            ProgressStatus = (ProgressStatus)p.r.ProgressStatus,
+                            SchemeId = p.r.SchemeId,
+                            SchemeType = (SchemeType)p.r.SchemeType,
+                            TicketId = p.r.TicketId,
+                            TicketLog = p.r.TicketLog,
+                            TicketStatus = (TicketStatus)p.r.TicketStatus,
+                            TotalMatchCount = p.r.TotalMatchCount,
+                            TotalMoney = p.r.TotalMoney,
+                            BetCount = p.r.BetCount,
+                            PreTaxBonusMoney = p.r.PreTaxBonusMoney,
+                            AfterTaxBonusMoney = p.r.AfterTaxBonusMoney,
+                            BonusCount = p.r.BonusCount,
+                            IsPrizeMoney = p.r.IsPrizeMoney,
+                            HitMatchCount = p.r.HitMatchCount,
+                            StopTime = p.r.StopTime,
+                            AddMoney = p.r.AddMoney,
+                            AddMoneyDescription = p.r.AddMoneyDescription,
+                        });
             totalCount = query.Count();
-            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList().Select(p => new Sports_SchemeQueryInfo
-            {
-                UserId = p.u.UserId,
-                UserDisplayName = p.u.DisplayName,
-                HideDisplayNameCount = p.u.HideDisplayNameCount,
-                GameDisplayName = BettingHelper.FormatGameCode(p.r.GameCode),
-                GameCode = p.r.GameCode,
-                Amount = p.r.Amount,
-                BonusStatus = (BonusStatus)p.r.BonusStatus,
-                CreateTime = p.r.CreateTime,
-                GameType = p.r.GameType,
-                GameTypeDisplayName = p.r.SchemeBettingCategory == (int)SchemeBettingCategory.ErXuanYi ? "主客二选一" : BettingHelper.FormatGameType(p.r.GameCode, p.r.GameType),
-                IssuseNumber = p.r.IssuseNumber,
-                PlayType = p.r.PlayType,
-                Security = (TogetherSchemeSecurity)p.r.Security,
-                IsVirtualOrder = p.r.IsVirtualOrder,
-                ProgressStatus = (ProgressStatus)p.r.ProgressStatus,
-                SchemeId = p.r.SchemeId,
-                SchemeType = (SchemeType)p.r.SchemeType,
-                TicketId = p.r.TicketId,
-                TicketLog = p.r.TicketLog,
-                TicketStatus = (TicketStatus)p.r.TicketStatus,
-                TotalMatchCount = p.r.TotalMatchCount,
-                TotalMoney = p.r.TotalMoney,
-                BetCount = p.r.BetCount,
-                PreTaxBonusMoney = p.r.PreTaxBonusMoney,
-                AfterTaxBonusMoney = p.r.AfterTaxBonusMoney,
-                BonusCount = p.r.BonusCount,
-                IsPrizeMoney = p.r.IsPrizeMoney,
-                HitMatchCount = p.r.HitMatchCount,
-                StopTime = p.r.StopTime,
-                AddMoney = p.r.AddMoney,
-                AddMoneyDescription = p.r.AddMoneyDescription,
-            }).ToList();
+            return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }
 
         public List<C_Sports_Order_Complate> QuerySports_Order_ComplateByComplateDate(string complateDate)
@@ -1324,10 +1325,10 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<C_User_Beedings>().Where(p => p.GameCode == gameCode && (gameType == string.Empty || p.GameType == gameType)).ToList();
         }
 
-        public List<Sports_Order_Complate> QuerySports_Order_ComplateByComplateTime(string userId, string gameCode, string gameType, DateTime startTime, DateTime endTime)
+        public List<C_Sports_Order_Complate> QuerySports_Order_ComplateByComplateTime(string userId, string gameCode, string gameType, DateTime startTime, DateTime endTime)
         {
            
-            var query = from c in DB.CreateQuery<Sports_Order_Complate>()
+            var query = from c in DB.CreateQuery<C_Sports_Order_Complate>()
                         where c.ComplateDateTime >= startTime && c.ComplateDateTime < endTime
                         && c.IsVirtualOrder == false
                         && c.UserId == userId && (gameCode == string.Empty || c.GameCode == gameCode) && (gameType == string.Empty || c.GameType == gameType)
@@ -1433,6 +1434,12 @@ namespace KaSon.FrameWork.ORM.Helper
             //    });
             //}
             return list;
+        }
+
+        public C_Sports_AnteCode QueryOneSportsAnteCodeBySchemeId(string schemeId)
+        {
+          
+            return DB.CreateQuery<C_Sports_AnteCode>().Where(p => p.SchemeId == schemeId).FirstOrDefault();
         }
     }
 }

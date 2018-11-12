@@ -544,7 +544,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var maxGiveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FillMoneyMaxGiveRedBagOneMonth"));
             //本月赠送金额已达到最大
             if (givedMoney >= maxGiveMoney)
-                throw new Exception("用户本月已达到最大赠送红包数");
+                throw new LogicException("用户本月已达到最大赠送红包数");
             var configList = manager.QueryA20150919_充值送红包配置();
             E_A20150919_充值送红包配置 rule = null;
             foreach (var config in configList)
@@ -558,7 +558,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             //未达到任何一条赠送规则
             if (rule == null)
-                throw new Exception("充值金额未查找到赠送规则");
+                throw new LogicException("充值金额未查找到赠送规则");
             //赠送红包
             var giveMoney = rule.GiveMoney;//要赠送的红包
                                            //要赠送的红包+已经获取的红包>当月最大赠送红包
@@ -567,11 +567,11 @@ namespace KaSon.FrameWork.ORM.Helper
                 giveMoney = maxGiveMoney - givedMoney;//当月最大赠送红包-已经获取的红包
             }
             if (giveMoney <= 0)
-                throw new Exception("用户本月已赠送红包 加 当前赠送红包 已达到最大配置");
+                throw new LogicException("用户本月已赠送红包 加 当前赠送红包 已达到最大配置");
 
 
 
-            //throw new Exception("用户本月已赠送红包 加 当前赠送红包 已达到最大配置");
+            //throw new LogicException("用户本月已赠送红包 加 当前赠送红包 已达到最大配置");
             BusinessHelper.Payin_To_Balance(AccountType.RedBag,
                 BusinessHelper.FundCategory_Activity, userId, orderId,
                 giveMoney, string.Format("充值金额大于等于{0}元，赠送红包{1}元", rule.FillMoney, rule.GiveMoney.ToString("N2")), RedBagCategory.FillMoney);
@@ -1063,6 +1063,7 @@ namespace KaSon.FrameWork.ORM.Helper
             r.AddRange(manager.QueryAddBonusMoneyConfig());
             return r;
         }
+         
 
         /// <summary>
         /// 增加加奖配置
@@ -1094,6 +1095,10 @@ namespace KaSon.FrameWork.ORM.Helper
                 return;
             manager.DeleteA20150919_加奖配置(old);
         }
+        public GameList GetGameCodeAndGameType()
+        {
+            return new A20150919Manager().GetGameCodeAndGameType();
+        }
     }
 
     /// <summary>
@@ -1124,7 +1129,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var manager = new A20150919Manager();
             var config = manager.QueryRedBagUseConfig(gameCode);
             if (config != null)
-                throw new Exception("已有彩种使用规则");
+                throw new LogicException("已有彩种使用规则");
 
             manager.AddA20150919_红包使用配置(new E_A20150919_红包使用配置
             {
@@ -1212,11 +1217,11 @@ namespace KaSon.FrameWork.ORM.Helper
             var manager = new UserBalanceManager();
             var userEntity = manager.QueryUserRegister(userId);
             if (userEntity == null)
-                throw new Exception(string.Format("{0}用户不存在。", userId));
+                throw new LogicException(string.Format("{0}用户不存在。", userId));
             var activityManager = new A20150919Manager();
             var activityEntity = activityManager.QueryA20150919_列表用户不加奖(userId, gameCode, gameType, playType);
             if (activityEntity != null)
-                throw new Exception(string.Format("{0}用户下{1}彩种已存在不加奖。", userId, gameCode));
+                throw new LogicException(string.Format("{0}用户下{1}彩种已存在不加奖。", userId, gameCode));
             activityManager.AddA20150919_列表用户不加奖(new E_A20150919_列表用户不加奖
             {
                 CreateTime = DateTime.Now,

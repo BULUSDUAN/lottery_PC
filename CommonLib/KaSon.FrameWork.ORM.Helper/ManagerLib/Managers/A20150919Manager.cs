@@ -256,16 +256,6 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = (from c in DB.CreateQuery<E_A20150919_列表用户不加奖>()
                          join u in DB.CreateQuery<C_User_Register>() on c.UserId equals u.UserId
                          where (userId==string.Empty || c.UserId == userId)
-                         //select new { c, u }).ToList().Select(p => new UserGameCodeNotAddMoneyInfo()
-                         //{
-                         //    CreateTime = p.c.CreateTime,
-                         //    GameCode = p.c.GameCode,
-                         //    Id = p.c.Id,
-                         //    UserId = p.c.UserId,
-                         //    UserName = p.u.DisplayName,
-                         //    GameType = p.c.GameType,
-                         //    PlayType = p.c.PlayType,
-                         //}).ToList();
                          select new UserGameCodeNotAddMoneyInfo
                          {
                              CreateTime = c.CreateTime,
@@ -278,6 +268,26 @@ namespace KaSon.FrameWork.ORM.Helper
                          }).ToList();
             return query;
                 
+        }
+        public GameList GetGameCodeAndGameType()
+        {
+            var result = new GameList
+            {
+                _gameCodeInfo = DB.CreateQuery<C_Lottery_Game>().Where(x => x.EnableStatus == 0).ToList()
+                .Select(x => new GameCodeinfo()
+                {
+                    GameName = x.DisplayName,
+                    GameCode = x.GameCode
+                }).ToList(),
+                _gameTypeInfo = DB.CreateQuery<C_Lottery_GameType>().Where(x => x.EnableStatus == 0).ToList()
+                .Select(x => new GameTypeinfo()
+                {
+                    GameCode=x.GameCode,
+                    GameType = x.GameType,
+                    GameTypeName = x.DisplayName
+                }).ToList()
+            };
+            return result;
         }
 
     }
