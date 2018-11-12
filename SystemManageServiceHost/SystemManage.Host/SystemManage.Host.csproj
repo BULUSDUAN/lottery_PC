@@ -19,6 +19,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
     <PackageReference Include="MySql.Data" Version="6.10.7" />
     <PackageReference Include="StackExchange.Redis" Version="1.2.6" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
@@ -78,6 +79,9 @@
     <Reference Include="Kason.Sg.Core.Log4net">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Log4net.dll</HintPath>
     </Reference>
+    <Reference Include="kason.Sg.Core.Mongo">
+      <HintPath>..\..\FramWorkDLL\kason.Sg.Core.Mongo.dll</HintPath>
+    </Reference>
     <Reference Include="Kason.Sg.Core.Nlog">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Nlog.dll</HintPath>
     </Reference>
@@ -130,5 +134,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties Config_4AllConfig_1json__JSONSchema="http://json.schemastore.org/bowerrc" /></VisualStudio></ProjectExtensions>
 
 </Project>

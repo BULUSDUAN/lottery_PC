@@ -5,11 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
     <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
   </ItemGroup>
 
 </Project>
