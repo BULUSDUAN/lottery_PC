@@ -236,7 +236,8 @@ namespace Lottery.AdminApi.Controllers
                     catch
                     {
                     }
-                    return Json(new { IsSuccess = noticeResult.IsSuccess, Msg = noticeResult.Message });
+                    return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = noticeResult.Message });
+              
                 }
                 else
                 {
@@ -296,8 +297,8 @@ namespace Lottery.AdminApi.Controllers
                 string key = p.key;
                 string category = p.category;
                 string gameCode = p.gameCode;
-                string pageIndexStr = p.gameCode;
-                string pageSizeStr = p.gameCode;
+                string pageIndexStr = p.pageIndex;
+                string pageSizeStr = p.pageSize;
                 key = string.IsNullOrEmpty(key) ? "" : key;
                 category = string.IsNullOrEmpty(category) ? "" : category;
                 gameCode = string.IsNullOrEmpty(gameCode) ? "" : gameCode;
