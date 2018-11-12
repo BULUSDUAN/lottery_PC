@@ -76,32 +76,24 @@ namespace Lottery.AdminApi.Controllers
         /// <summary>
         /// 当前用户
         /// </summary>
-        public LoginInfo CurrentUser
+        public ShowUserBindInfo CurrentUser
         {
             get
             {
+                var param = HttpContext.Request.Form["param"];
+                var p = JsonHelper.Decode(param);
+                string userToken = p.userToken;
+                if (string.IsNullOrEmpty(userToken)) return new ShowUserBindInfo();
+                var userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication_Admin(userToken);
+                return GetUserInfo(userId);
                 // var userInfo = HttpContext.Session.GetObj<LoginInfo>("CurrentUser");
-                return new LoginInfo()
-                {
-                    UserId = "10032",
-                    DisplayName = "laogan",
-                    IsAdmin = true,
-                    FunctionList=new List<string>()
-                };
-            }
-            set
-            {
-                if (value == null)
-                {
-                    HttpContext.Session.Clear();
-                }
-                else
-                {
-                    HttpContext.Session.SetObj<LoginInfo>("CurrentUser", value);
-                }
-               
-                //Session.Timeout = 120;
-                
+                //return new LoginInfo()
+                //{
+                //    UserId = "10032",
+                //    DisplayName = "laogan",
+                //    IsAdmin = true,
+                //    FunctionList=new List<string>()
+                //};
             }
         }
         /// <summary>
@@ -457,6 +449,66 @@ namespace Lottery.AdminApi.Controllers
                     return defalutValue;
                 }
             }
+        }
+
+        /// <summary>
+        /// 登陆时间超过两小时则清除
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <returns></returns>
+        public static bool UserIsLogin(string UserId)
+        {
+            try
+            {
+                var info = LoginUser[UserId];
+                if (info == null) return false;
+                var now = DateTime.Now;
+                if (info.LoginTime < now.AddHours(-2))
+                {
+                    LoginUser.Remove(UserId);
+                    return false;
+                }
+                else
+                {
+                    info.LoginTime = now;
+                    LoginUser[UserId] = info;
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
+        }
+
+        public static ShowUserBindInfo GetUserInfo(string UserId)
+        {
+            var info = LoginUser[UserId];
+            return info;
+        }
+
+        public static void SetUser(LoginInfo info)
+        {
+            ShowUserBindInfo model = new ShowUserBindInfo()
+            {
+                IsSuccess = true,
+                Message = "登录成功",
+                CreateTime = info.CreateTime,
+                LoginFrom = "ADMIN",
+                RegType = info.RegType,
+                Referrer = info.Referrer,
+                UserId = info.UserId,
+                VipLevel = info.VipLevel,
+                LoginName = info.LoginName,
+                DisplayName = info.LoginName,
+                UserToken = info.UserToken,
+                FunctionList = info.FunctionList,
+                IsAdmin = info.IsAdmin,
+                LoginTime=DateTime.Now
+            };
+            if (LoginUser == null) LoginUser = new Dictionary<string, ShowUserBindInfo>();
+             LoginUser[info.UserId] = model;
         }
     }
 }

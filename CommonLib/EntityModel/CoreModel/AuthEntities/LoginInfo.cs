@@ -216,7 +216,7 @@ namespace EntityModel.CoreModel
 
     public class ShowUserBindInfo : LoginInfo
     {
-        public DateTime UpdateTime { get; set; }
+        public DateTime LoginTime { get; set; }
     }
 }
 

@@ -236,7 +236,7 @@ namespace Lottery.AdminApi.Controllers
                     catch
                     {
                     }
-                    return Json(new { IsSuccess = noticeResult.IsSuccess, Msg = noticeResult.Message });
+                    return Json(new LotteryServiceResponse { Code = noticeResult.IsSuccess ? AdminResponseCode.成功 : AdminResponseCode.失败, Message = noticeResult.Message });
                 }
                 else
                 {
