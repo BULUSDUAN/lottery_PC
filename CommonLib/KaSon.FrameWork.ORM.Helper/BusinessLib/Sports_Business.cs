@@ -30,7 +30,7 @@ using EntityModel.Domain.Entities;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
-    public class Sports_Business: DBbase
+    public class Sports_Business : DBbase
     {
         // ILogger<Sports_Business> _Log;
         // public class Sports_Business(ILogger<BettingRepository>)
@@ -45,10 +45,11 @@ namespace KaSon.FrameWork.ORM.Helper
         {
 
         }
-        public void Test() {
+        public void Test()
+        {
             string sql = @"SELECT * FROM T_JCLQ_Odds_SF O INNER JOIN (SELECT MAX(Id) [MaxId] " +
                 "FROM T_JCLQ_Odds_SF WHERE [MatchId] ='181031301' ) T ON O.[Id]=T.[MaxId]";
-          var one=  DB.CreateSQLQuery(sql).First<T_JCLQ_Odds_SF>();
+            var one = DB.CreateSQLQuery(sql).First<T_JCLQ_Odds_SF>();
             Console.WriteLine(one);
         }
         public IndexMatch_Collection AddIndexMatch(string indexMatchList)
@@ -112,7 +113,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 case NoticeType.BJDC_Match_SFGG:
                     var SFGGParamArray = text.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
                     var SFGGdMatchIdArray = SFGGParamArray[1].Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
-                    new IssuseBusiness(mDB).Update_SFGG_MatchList("BJDC_Match_SFGG_List",SFGGParamArray[0], SFGGdMatchIdArray);
+                    new IssuseBusiness(mDB).Update_SFGG_MatchList("BJDC_Match_SFGG_List", SFGGParamArray[0], SFGGdMatchIdArray);
                     break;
                 case NoticeType.BJDC_MatchResult:
                     var matchResultParamArray = text.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
@@ -185,7 +186,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //过关
                 case NoticeType.JCZQ_SPF_SP:
                     new TicketGatewayAdmin().UpdateOddsList_JCZQ_SPF("JCZQ_SPF_SP", "JCZQ", "SPF", text.Split('_'), false);
-                  //  new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_SPF_SPInfo, JCZQ_Odds_SPF>("JCZQ", "SPF", text.Split('_'), false);
+                    //  new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_SPF_SPInfo, JCZQ_Odds_SPF>("JCZQ", "SPF", text.Split('_'), false);
                     break;
                 case NoticeType.JCZQ_BRQSPF_SP:
                     //UpdateOddsList_JCLQ_RFSFF
@@ -194,7 +195,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 case NoticeType.JCZQ_ZJQ_SP:
                     new TicketGatewayAdmin().UpdateOddsList_JCZQ_ZJQ("JCZQ_ZJQ_SP", "JCZQ", "ZJQ", text.Split('_'), false);
-                   // new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_ZJQ_SPInfo, JCZQ_Odds_ZJQ>("JCZQ", "ZJQ", text.Split('_'), false);
+                    // new TicketGatewayAdmin().UpdateOddsList_JCZQ<JCZQ_ZJQ_SPInfo, JCZQ_Odds_ZJQ>("JCZQ", "ZJQ", text.Split('_'), false);
 
 
                     break;
@@ -226,7 +227,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 //过关
                 case NoticeType.JCLQ_SF_SP:
-                    new TicketGatewayAdmin() { MonDB=mDB}.UpdateOddsList_JCLQ<JCLQ_SF_SPInfo, T_JCLQ_Odds_SF>("JCLQ_DXF_SP", "JCLQ", "SF", text.Split('_'), false);
+                    new TicketGatewayAdmin() { MonDB = mDB }.UpdateOddsList_JCLQ<JCLQ_SF_SPInfo, T_JCLQ_Odds_SF>("JCLQ_DXF_SP", "JCLQ", "SF", text.Split('_'), false);
                     break;
                 case NoticeType.JCLQ_RFSF_SP:
                     new TicketGatewayAdmin() { MonDB = mDB }.UpdateOddsList_JCLQ<JCLQ_RFSF_SPInfo, T_JCLQ_Odds_RFSF>("JCLQ_RFSF_SP", "JCLQ", "RFSF", text.Split('_'), false);
@@ -235,7 +236,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     new TicketGatewayAdmin() { MonDB = mDB }.UpdateOddsList_JCLQ<JCLQ_SFC_SPInfo, T_JCLQ_Odds_SFC>("JCLQ_SFC_SP", "JCLQ", "SFC", text.Split('_'), false);
                     break;
                 case NoticeType.JCLQ_DXF_SP:
-                    new TicketGatewayAdmin() { MonDB = mDB }.UpdateOddsList_JCLQ<JCLQ_DXF_SPInfo, T_JCLQ_Odds_DXF>("JCLQ_DXF_SP","JCLQ", "DXF", text.Split('_'), false);
+                    new TicketGatewayAdmin() { MonDB = mDB }.UpdateOddsList_JCLQ<JCLQ_DXF_SPInfo, T_JCLQ_Odds_DXF>("JCLQ_DXF_SP", "JCLQ", "DXF", text.Split('_'), false);
                     break;
                 #endregion
 
@@ -763,8 +764,8 @@ namespace KaSon.FrameWork.ORM.Helper
                     DB.Rollback();
                     throw ex;
                 }
-               
-               // biz.CommitTran();
+
+                // biz.CommitTran();
             }
             return schemeId;
         }
@@ -837,10 +838,10 @@ namespace KaSon.FrameWork.ORM.Helper
 
             return list;
         }
-    
-   
-     
-       public TicketCollection AnalyzeOrder(GatewayTicketOrder order)
+
+
+
+        public TicketCollection AnalyzeOrder(GatewayTicketOrder order)
         {
             Order o = new Order()
             {
@@ -862,7 +863,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     });
                 }
             }
-            var ticketList = BettingHelper. AnalyzeTickets(o);
+            var ticketList = BettingHelper.AnalyzeTickets(o);
             ticketList.AnalyzeOrderEx(order.GameCode, order.Price);
             if (ticketList.TotalMoney != order.TotalMoney)
             {
@@ -918,7 +919,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     var betType = ticket.BetCount <= 1 ? "DS" : "FS";
-                    var info = new 
+                    var info = new
                     {
                         OrderId = orderInfo.OrderId + "|" + (index++).ToString("D3"),
                         BetType = BettingHelper.ConvertGameType(orderInfo.GameCode, ticket.GameType, betType, ticket.BetCount),
@@ -954,26 +955,26 @@ namespace KaSon.FrameWork.ORM.Helper
                     //r["CreateTime"] = DateTime.Now;
                     //r["LocOdds"] = locOdds;
 
-                    item.Id  = index;
-                    item.GameCode  = orderInfo.GameCode.ToUpper();
-                    item.GameType  = ticket.GameType.ToUpper();
-                    item.SchemeId  = orderInfo.OrderId;
-                    item.TicketId  = info.OrderId;
-                    item.IssuseNumber  = orderInfo.IssuseNumber;
-                    item.PlayType  = info.BetType;
-                    item.BetContent  = info.BetContent;
-                    item.TicketStatus  = 90;
-                    item.Amount  = info.Multiple;
-                    item.BetUnits  = info.BetUnits;
-                    item.BetMoney  = info.BetMoney;
-                    item.PrintNumber3  = Guid.NewGuid().ToString("N").ToUpper();
-                    item.IsAppend  = orderInfo.IsAppend;
-                    item.BonusStatus  = 0;
-                    item.PreTaxBonusMoney  = 0M;
-                    item.AfterTaxBonusMoney  = 0M;
-                    item.PrintDateTime  = DateTime.Now;
-                    item.CreateTime  = DateTime.Now;
-                    item.LocOdds  = locOdds;
+                    item.Id = index;
+                    item.GameCode = orderInfo.GameCode.ToUpper();
+                    item.GameType = ticket.GameType.ToUpper();
+                    item.SchemeId = orderInfo.OrderId;
+                    item.TicketId = info.OrderId;
+                    item.IssuseNumber = orderInfo.IssuseNumber;
+                    item.PlayType = info.BetType;
+                    item.BetContent = info.BetContent;
+                    item.TicketStatus = 90;
+                    item.Amount = info.Multiple;
+                    item.BetUnits = info.BetUnits;
+                    item.BetMoney = info.BetMoney;
+                    item.PrintNumber3 = Guid.NewGuid().ToString("N").ToUpper();
+                    item.IsAppend = orderInfo.IsAppend;
+                    item.BonusStatus = 0;
+                    item.PreTaxBonusMoney = 0M;
+                    item.AfterTaxBonusMoney = 0M;
+                    item.PrintDateTime = DateTime.Now;
+                    item.CreateTime = DateTime.Now;
+                    item.LocOdds = locOdds;
 
                     if (string.IsNullOrEmpty(gameType))
                         gameType = ticket.GameType.ToUpper();
@@ -1010,7 +1011,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 catch (Exception exp)
                 {
 
-                    Log4Log.Error("SqlBulkAddTableError-"+orderInfo.OrderId, exp);
+                    Log4Log.Error("SqlBulkAddTableError-" + orderInfo.OrderId, exp);
                     return;
                 }
                 //manager.ExecSql(sql.ToString());
@@ -1642,8 +1643,8 @@ namespace KaSon.FrameWork.ORM.Helper
             }
 
             //投注流程计时
-         //   var watch = new Stopwatch();
-          //  watch.Start();
+            //   var watch = new Stopwatch();
+            //  watch.Start();
             info.GameCode = info.GameCode.ToUpper();
             info.GameType = info.GameType.ToUpper();
             if (string.IsNullOrEmpty(schemeId))
@@ -1663,9 +1664,9 @@ namespace KaSon.FrameWork.ORM.Helper
                      info.IssuseNumber, info.Amount, totalCount, info.TotalMatchCount, info.TotalMoney, stopTime, info.SchemeSource, info.Security,
                      SchemeType.GeneralBetting, true, false, user.UserId, user.AgentId, info.CurrentBetTime, info.ActivityType, info.Attach, false, redBagMoney,
                      canTicket ? ProgressStatus.Running : ProgressStatus.Waitting, canTicket ? TicketStatus.Ticketed : TicketStatus.Waitting);
-             //   IList<C_Sports_AnteCode> anteList = new List<C_Sports_AnteCode>();
+                //   IList<C_Sports_AnteCode> anteList = new List<C_Sports_AnteCode>();
 
-               
+
                 foreach (var item in info.AnteCodeList)
                 {
                     var entityAnteCode = new C_Sports_AnteCode
@@ -1683,7 +1684,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         Odds = string.Empty,
                     };
                     anteCodeList.Add(entityAnteCode);
-                   
+
                     //sportsManager.AddSports_AnteCode(entityAnteCode);
                 }
                 //kson 批量优化录入
@@ -1718,7 +1719,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             #region 拆票
 
-          //  watch.Restart();
+            //  watch.Restart();
             if (RedisHelperEx.EnableRedis)
             {
                 var reidsWaitOrder = new RedisWaitTicketOrder
@@ -1846,7 +1847,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 #region 保存订单、票数据
                 try
                 {
-                   
+
                     switch (order.GameCode.ToUpper())
                     {
                         case "BJDC":
@@ -1879,11 +1880,11 @@ namespace KaSon.FrameWork.ORM.Helper
                     DB.Rollback();
                     throw EX;
                 }
-               
+
 
                 #endregion
 
-              
+
             }
 
             //拆票
@@ -2018,26 +2019,26 @@ namespace KaSon.FrameWork.ORM.Helper
                         //r["PrintDateTime"] = DateTime.Now;
                         //r["CreateTime"] = DateTime.Now;
 
-                        r.GameCode  = order.GameCode.ToUpper();
-                        r.GameType  = order.GameType.ToUpper();
-                        r.SchemeId  = order.OrderId;
-                        r.TicketId  = ticketId;
-                        r.IssuseNumber  = ConvertIssuseNumber(order.GameCode, order.IssuseNumber);
-                        r.PlayType  = string.Format("P{0}", betType);
-                        r.BetContent  = string.Join("/", locBetContentList);
-                        r.TicketStatus  = 90;
-                        r.Amount  = currentAmount;
-                        r.BetUnits  = 1;
-                        r.BetMoney  = ticketMoney;
-                        r.PrintNumber3  = Guid.NewGuid().ToString("N").ToUpper();
-                        r.MatchIdList  = string.Join(",", matchIdList.ToArray());
-                        r.LocOdds  = locOddStr;
-                        r.IsAppend  = false;
-                        r.BonusStatus  = 0;
-                        r.PreTaxBonusMoney  = 0M;
-                        r.AfterTaxBonusMoney  = 0M;
-                        r.PrintDateTime  = DateTime.Now;
-                        r.CreateTime  = DateTime.Now;
+                        r.GameCode = order.GameCode.ToUpper();
+                        r.GameType = order.GameType.ToUpper();
+                        r.SchemeId = order.OrderId;
+                        r.TicketId = ticketId;
+                        r.IssuseNumber = ConvertIssuseNumber(order.GameCode, order.IssuseNumber);
+                        r.PlayType = string.Format("P{0}", betType);
+                        r.BetContent = string.Join("/", locBetContentList);
+                        r.TicketStatus = 90;
+                        r.Amount = currentAmount;
+                        r.BetUnits = 1;
+                        r.BetMoney = ticketMoney;
+                        r.PrintNumber3 = Guid.NewGuid().ToString("N").ToUpper();
+                        r.MatchIdList = string.Join(",", matchIdList.ToArray());
+                        r.LocOdds = locOddStr;
+                        r.IsAppend = false;
+                        r.BonusStatus = 0;
+                        r.PreTaxBonusMoney = 0M;
+                        r.AfterTaxBonusMoney = 0M;
+                        r.PrintDateTime = DateTime.Now;
+                        r.CreateTime = DateTime.Now;
 
                         redisTicketList.Add(new RedisTicketInfo
                         {
@@ -2182,7 +2183,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
 
                 var betType = ticket.BetCount <= 1 ? "DS" : "FS";
-                var info = new 
+                var info = new
                 {
                     OrderId = orderInfo.OrderId + "|" + (index++).ToString("D3"),
                     BetType = BettingHelper.ConvertGameType(orderInfo.GameCode, ticket.GameType, betType, ticket.BetCount),
@@ -2218,25 +2219,25 @@ namespace KaSon.FrameWork.ORM.Helper
                 //r["LocOdds"] = locOdds;
 
 
-                r.GameCode  = orderInfo.GameCode.ToUpper();
-                r.GameType  = ticket.GameType.ToUpper();
-                r.SchemeId  = orderInfo.OrderId;
-                r.TicketId  = info.OrderId;
-                r.IssuseNumber  = orderInfo.IssuseNumber;
-                r.PlayType  = info.BetType;
-                r.BetContent  = info.BetContent;
-                r.TicketStatus  = 90;
-                r.Amount  = info.Multiple;
-                r.BetUnits  = info.BetUnits;
-                r.BetMoney  = info.BetMoney;
-                r.PrintNumber3  = Guid.NewGuid().ToString("N").ToUpper();
-                r.IsAppend  = orderInfo.IsAppend;
-                r.BonusStatus  = 0;
-                r.PreTaxBonusMoney  = 0M;
-                r.AfterTaxBonusMoney  = 0M;
-                r.PrintDateTime  = DateTime.Now;
-                r.CreateTime  = DateTime.Now;
-                r.LocOdds  = locOdds;
+                r.GameCode = orderInfo.GameCode.ToUpper();
+                r.GameType = ticket.GameType.ToUpper();
+                r.SchemeId = orderInfo.OrderId;
+                r.TicketId = info.OrderId;
+                r.IssuseNumber = orderInfo.IssuseNumber;
+                r.PlayType = info.BetType;
+                r.BetContent = info.BetContent;
+                r.TicketStatus = 90;
+                r.Amount = info.Multiple;
+                r.BetUnits = info.BetUnits;
+                r.BetMoney = info.BetMoney;
+                r.PrintNumber3 = Guid.NewGuid().ToString("N").ToUpper();
+                r.IsAppend = orderInfo.IsAppend;
+                r.BonusStatus = 0;
+                r.PreTaxBonusMoney = 0M;
+                r.AfterTaxBonusMoney = 0M;
+                r.PrintDateTime = DateTime.Now;
+                r.CreateTime = DateTime.Now;
+                r.LocOdds = locOdds;
                 if (string.IsNullOrEmpty(gameType))
                     gameType = ticket.GameType.ToUpper();
                 redisTicketList.Add(new RedisTicketInfo
@@ -2320,7 +2321,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //var key = string.Format("{0}_{1}", order.GameCode.ToUpper(), "StopTicketing");
             //string AppSetting = DBbase.GlobalConfig[key].ToString();
             if (BettingHelper.CanRequestBet(order.GameCode))
-               // if (!BusinessHelper.CanRequestBet(order.GameCode))
+                // if (!BusinessHelper.CanRequestBet(order.GameCode))
                 //return;
                 return string.Format("彩种{0}暂时不能出票", order.GameCode);
             var anteCodeList = sportsManager.QuerySportsAnteCodeBySchemeId(schemeId);
@@ -2525,7 +2526,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             watch.Stop();
             log.Add("3)拆分和修改订单数据 " + watch.Elapsed.TotalMilliseconds);
-            Log4Log.Fatal("DoSplitOrderTickets-"+ schemeId+","+ string.Join(Environment.NewLine, log.ToArray()));
+            Log4Log.Fatal("DoSplitOrderTickets-" + schemeId + "," + string.Join(Environment.NewLine, log.ToArray()));
             return string.Join(Environment.NewLine, log);
         }
 
@@ -2537,7 +2538,8 @@ namespace KaSon.FrameWork.ORM.Helper
             if (string.IsNullOrEmpty(schemeId))
                 return;
             //return "订单号不能为空";
-            Task.Factory.StartNew((o) => {
+            Task.Factory.StartNew((o) =>
+            {
                 try
                 {
                     DoSplitOrderTicketsWithNoThread(o.ToString());
@@ -2549,7 +2551,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }, schemeId);
             //ThreadPool.QueueUserWorkItem((o) =>
             //{
-               
+
             //}, schemeId);
 
             //new Thread(() =>
@@ -2603,7 +2605,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 IssuseNumber = issuseNumber,
                 PlayType = playType,
                 PreTaxBonusMoney = 0M,
-                ProgressStatus =(int) progressStatus,
+                ProgressStatus = (int)progressStatus,
                 SchemeId = schemeId,
                 SchemeType = (int)schemeType,
                 SchemeBettingCategory = (int)category,
@@ -2636,7 +2638,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 IsSplitTickets = ticketStatus == TicketStatus.Ticketed,
                 TicketTime = ticketTime,
             };
-           // sportsManager.AddSports_Order_Running(order);
+            // sportsManager.AddSports_Order_Running(order);
             DB.GetDal<C_Sports_Order_Running>().Add(order);
             //订单总表信息
             var orderDetail = new C_OrderDetail
@@ -2759,7 +2761,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 TicketTime = ticketTime,
             };
             // sportsManager.AddSports_Order_Running(order);
-          //  DB.GetDal<C_Sports_Order_Running>().Add(order);
+            //  DB.GetDal<C_Sports_Order_Running>().Add(order);
             //订单总表信息
             var orderDetail = new C_OrderDetail
             {
@@ -2877,7 +2879,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            DB.Begin();
 
             try
             {
@@ -2930,7 +2932,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw ex;
             }
 
-               
+
             //}
 
 
@@ -3015,7 +3017,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            DB.Begin();
 
             try
             {
@@ -3212,7 +3214,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            DB.Begin();
             try
             {
                 #region 修改订单相关信息
@@ -3719,7 +3721,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public string LotteryBetting(LotteryBettingInfo info, string userId, string balancePassword, string place, decimal redBagMoney)
         {
             //时间记录变量
-            long businessDT = 0, orderDT = 0, dataDT = 0, gametypesDT = 0, IssuseDT = 0, userDT = 0,oneDataDt=0, oneDataDt1=0, oneDataDt2=0;
+            long businessDT = 0, orderDT = 0, dataDT = 0, gametypesDT = 0, IssuseDT = 0, userDT = 0, oneDataDt = 0, oneDataDt1 = 0, oneDataDt2 = 0;
             var watch = new Stopwatch();
             watch.Start();
             //UserRegister 
@@ -3730,7 +3732,7 @@ namespace KaSon.FrameWork.ORM.Helper
             info.UserId = userId;
             //查询用户用时
             userDT = watch.ElapsedMilliseconds;
-           // 
+            // 
             //Redis订单列表
             var redisOrderList = new RedisWaitTicketOrderList();
 
@@ -3780,7 +3782,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (codeMoney != info.TotalMoney)
                 throw new LogicException("投注期号总金额与方案总金额不匹配");
 
-        
+
             string ctzqGameType = string.Empty;
             if (!string.IsNullOrEmpty(info.GameCode) && info.GameCode.ToUpper() == "CTZQ")
                 ctzqGameType = info.AnteCodeList[0].GameType.ToUpper();
@@ -3792,7 +3794,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             #endregion
             //数据验证用时
-             dataDT = watch.ElapsedMilliseconds;
+            dataDT = watch.ElapsedMilliseconds;
             //
 
 
@@ -3807,11 +3809,11 @@ namespace KaSon.FrameWork.ORM.Helper
             if (string.IsNullOrEmpty(keyLine))
                 keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
             var orderIndex = 1;
-            var totalBetMoney = 0M; 
+            var totalBetMoney = 0M;
             var currentIssuseNumberList = new List<C_Game_Issuse>();
             //查询彩种用时
-             gametypesDT = watch.ElapsedMilliseconds;
-          //  
+            gametypesDT = watch.ElapsedMilliseconds;
+            //  
             //期号处理
             foreach (var issuse in info.IssuseNumberList)
             {
@@ -3825,7 +3827,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 currentIssuseNumberList.Add(currentIssuseNumber);
             }
             //期号处理用时
-             IssuseDT = watch.ElapsedMilliseconds;
+            IssuseDT = watch.ElapsedMilliseconds;
             //  
             try
             {
@@ -3864,87 +3866,93 @@ namespace KaSon.FrameWork.ORM.Helper
                             schemeId = keyLine;
                     }
 
-                        
-                        var gameTypeList = new List<GameTypeInfo>();
-                        foreach (var item in info.AnteCodeList)
+
+                    var gameTypeList = new List<GameTypeInfo>();
+                    foreach (var item in info.AnteCodeList)
+                    {
+                        var codeEntity = new C_Sports_AnteCode
                         {
-                            var codeEntity = new C_Sports_AnteCode
-                            {
-                                AnteCode = item.AnteCode,
-                                BonusStatus = (int)BonusStatus.Waitting,
-                                CreateTime = info.CurrentBetTime,// DateTime.Now,
-                                GameCode = info.GameCode,
-                                GameType = item.GameType.ToUpper(),
-                                IsDan = item.IsDan,
-                                IssuseNumber = issuse.IssuseNumber,
-                                MatchId = string.Empty,
-                                Odds = string.Empty,
-                                PlayType = string.Empty,
-                                SchemeId = schemeId,
-                            };
-                            anteCodeList.Add(codeEntity);
-                            //sportsManager.AddSports_AnteCode(codeEntity);
-                            //var gameType = lotteryManager.QueryGameType(info.GameCode, item.GameType);
-                            var gameType = gameTypes.FirstOrDefault(a => a.Game.GameCode == info.GameCode && a.GameType == item.GameType.ToUpper());
-                            if (gameType != null && !gameTypeList.Contains(gameType))
-                            {
-                                gameTypeList.Add(gameType);
-                            }
+                            AnteCode = item.AnteCode,
+                            BonusStatus = (int)BonusStatus.Waitting,
+                            CreateTime = info.CurrentBetTime,// DateTime.Now,
+                            GameCode = info.GameCode,
+                            GameType = item.GameType.ToUpper(),
+                            IsDan = item.IsDan,
+                            IssuseNumber = issuse.IssuseNumber,
+                            MatchId = string.Empty,
+                            Odds = string.Empty,
+                            PlayType = string.Empty,
+                            SchemeId = schemeId,
+                        };
+                        anteCodeList.Add(codeEntity);
+                        //sportsManager.AddSports_AnteCode(codeEntity);
+                        //var gameType = lotteryManager.QueryGameType(info.GameCode, item.GameType);
+                        var gameType = gameTypes.FirstOrDefault(a => a.Game.GameCode == info.GameCode && a.GameType == item.GameType.ToUpper());
+                        if (gameType != null && !gameTypeList.Contains(gameType))
+                        {
+                            gameTypeList.Add(gameType);
                         }
+                    }
+
+
+
+
+
+
                     //kason测试 赋值
                     info.SchemeId = schemeId;
-                        var currentIssuseMoney = totalNumberZhu * issuse.Amount * ((info.IsAppend && info.GameCode == "DLT") ? 3M : 2M);
-                        if (string.IsNullOrEmpty(firstSchemeId))
-                        {
-                            firstSchemeId = schemeId;
-                        }
-                        if (firstMoney == 0M)
-                        {
-                            firstMoney = currentIssuseMoney;
-                        }
-                        if (string.IsNullOrEmpty(keyLine))
-                        {
-                            keyLine = schemeId;
-                        }
-                        else
-                        {
+                    var currentIssuseMoney = totalNumberZhu * issuse.Amount * ((info.IsAppend && info.GameCode == "DLT") ? 3M : 2M);
+                    if (string.IsNullOrEmpty(firstSchemeId))
+                    {
+                        firstSchemeId = schemeId;
+                    }
+                    if (firstMoney == 0M)
+                    {
+                        firstMoney = currentIssuseMoney;
+                    }
+                    if (string.IsNullOrEmpty(keyLine))
+                    {
+                        keyLine = schemeId;
+                    }
+                    else
+                    {
                         Scheme_List.Add(new C_Lottery_Scheme
-                            {
-                                OrderIndex = orderIndex,
-                                KeyLine = keyLine,
-                                SchemeId = schemeId,
-                                CreateTime = DateTime.Now,
-                                IsComplate = false,
-                                IssuseNumber = issuse.IssuseNumber,
-                            });
-                        }
-                        var canTicket = BettingHelper.CanRequestBet(info.GameCode);
-                        var entity = AddRunningOrderAndOrderDetail_BackList(schemeId, info.BettingCategory, info.GameCode, string.Join(",", (from g in gameTypeList group g by g.GameType into g select g.Key).ToArray()),
-                              string.Empty, info.StopAfterBonus, issuse.IssuseNumber, issuse.Amount, totalNumberZhu, 0, currentIssuseMoney, currentIssuseNumber.OfficialStopTime, info.SchemeSource, info.Security,
-                              info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting, orderIndex == 1, false, user.UserId, user.AgentId,
-                              orderIndex == 1 ? info.CurrentBetTime : currentIssuseNumber.StartTime, info.ActivityType, "", info.IsAppend, redBagMoney,
-                              (orderIndex == 1 ? (canTicket ? ProgressStatus.Running : ProgressStatus.Waitting) : ProgressStatus.Waitting),
-                              (orderIndex == 1 ? (canTicket ? TicketStatus.Ticketed : TicketStatus.Waitting) : TicketStatus.Waitting));
-                        totalBetMoney += currentIssuseMoney;
-
-                        //启用了Redis
-                        if (RedisHelperEx.EnableRedis)
                         {
-                            var runningOrder = new RedisWaitTicketOrder
-                            {
-                                AnteCodeList = anteCodeList,
-                                RunningOrder = entity.Order_Running,
-                                KeyLine = keyLine,
-                                StopAfterBonus = info.StopAfterBonus,
-                                SchemeType = info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting
-                            };
-                            //追号方式 存入Redis订单列表
-                            redisOrderList.OrderList.Add(runningOrder);
-                        }
+                            OrderIndex = orderIndex,
+                            KeyLine = keyLine,
+                            SchemeId = schemeId,
+                            CreateTime = DateTime.Now,
+                            IsComplate = false,
+                            IssuseNumber = issuse.IssuseNumber,
+                        });
+                    }
+                    var canTicket = BettingHelper.CanRequestBet(info.GameCode);
+                    var entity = AddRunningOrderAndOrderDetail_BackList(schemeId, info.BettingCategory, info.GameCode, string.Join(",", (from g in gameTypeList group g by g.GameType into g select g.Key).ToArray()),
+                          string.Empty, info.StopAfterBonus, issuse.IssuseNumber, issuse.Amount, totalNumberZhu, 0, currentIssuseMoney, currentIssuseNumber.OfficialStopTime, info.SchemeSource, info.Security,
+                          info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting, orderIndex == 1, false, user.UserId, user.AgentId,
+                          orderIndex == 1 ? info.CurrentBetTime : currentIssuseNumber.StartTime, info.ActivityType, "", info.IsAppend, redBagMoney,
+                          (orderIndex == 1 ? (canTicket ? ProgressStatus.Running : ProgressStatus.Waitting) : ProgressStatus.Waitting),
+                          (orderIndex == 1 ? (canTicket ? TicketStatus.Ticketed : TicketStatus.Waitting) : TicketStatus.Waitting));
+                    totalBetMoney += currentIssuseMoney;
+
+                    //启用了Redis
+                    if (RedisHelperEx.EnableRedis)
+                    {
+                        var runningOrder = new RedisWaitTicketOrder
+                        {
+                            AnteCodeList = anteCodeList,
+                            RunningOrder = entity.Order_Running,
+                            KeyLine = keyLine,
+                            StopAfterBonus = info.StopAfterBonus,
+                            SchemeType = info.IssuseNumberList.Count == 1 ? SchemeType.GeneralBetting : SchemeType.ChaseBetting
+                        };
+                        //追号方式 存入Redis订单列表
+                        redisOrderList.OrderList.Add(runningOrder);
+                    }
 
                     Order_Running_List.Add(entity.Order_Running);
                     OrderDetail_List.Add(entity.OrderDetail);
-                orderIndex++;
+                    orderIndex++;
                 }
 
                 //订单构建用时
@@ -3979,7 +3987,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
                         #endregion
                     }
-                    oneDataDt2= watch.ElapsedMilliseconds;
+                    oneDataDt2 = watch.ElapsedMilliseconds;
                     #region 支付
 
                     //摇钱树订单，不扣用户的钱，扣代理商余额
@@ -4035,11 +4043,11 @@ namespace KaSon.FrameWork.ORM.Helper
 
                     #endregion
 
-                  
+
                     DB.Commit();
                     //扣款录入订单用时间
                     businessDT = watch.ElapsedMilliseconds;
-                  //  
+                    //  
                 }
                 catch (Exception ex1)
                 {
@@ -4064,7 +4072,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //if (watch.Elapsed.TotalMilliseconds > 1000)
                 //    writerLog.WriteLog("LotteryBetting", "SQL", (int)LogType.Warning, "存入订单、号码、扣钱操作", string.Format("总用时：{0}毫秒", watch.Elapsed.TotalMilliseconds));
 
-              
+
                 //
                 if (RedisHelperEx.EnableRedis)
                 {
@@ -4075,7 +4083,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         redisOrderList.StopAfterBonus = info.StopAfterBonus;
                         RedisOrderBusiness.AddOrderToWaitSplitList(info.GameCode, redisOrderList);
                         //序列化订单到文件
-                       // Task.Factory.StartNew();
+                        // Task.Factory.StartNew();
                         SerializChaseOrder(info, keyLine);
                     }
                     else
@@ -4086,40 +4094,40 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
                 }
                 long redisDT = watch.ElapsedMilliseconds;
-              //  
+                //  
                 //拆票
                 if (!RedisHelperEx.EnableRedis)
                     DoSplitOrderTickets(firstSchemeId);
 
                 //watch.Stop();
-                if (watch.Elapsed.TotalMilliseconds >300)
+                if (watch.Elapsed.TotalMilliseconds > 300)
                 {
                     StringBuilder sb = new StringBuilder();
-                sb.Append("LotteryBetting + Redis + 投注耗时记录 \r\n");
-                sb.Append("userDT 查询用户信息：" + userDT.ToString() + " \r\n");
-                sb.Append("dataDT  数据验证时间：" + (dataDT - userDT).ToString() + " \r\n");
-                sb.Append("gametypesDT 彩种处理时间：" + (gametypesDT - dataDT).ToString() + " \r\n");
-                sb.Append("IssuseDT 期号处理时间：" + (IssuseDT- gametypesDT).ToString() + " \r\n");
+                    sb.Append("LotteryBetting + Redis + 投注耗时记录 \r\n");
+                    sb.Append("userDT 查询用户信息：" + userDT.ToString() + " \r\n");
+                    sb.Append("dataDT  数据验证时间：" + (dataDT - userDT).ToString() + " \r\n");
+                    sb.Append("gametypesDT 彩种处理时间：" + (gametypesDT - dataDT).ToString() + " \r\n");
+                    sb.Append("IssuseDT 期号处理时间：" + (IssuseDT - gametypesDT).ToString() + " \r\n");
 
-                sb.Append("orderDT 订单构建用时：" + (orderDT- IssuseDT).ToString() + " \r\n");
+                    sb.Append("orderDT 订单构建用时：" + (orderDT - IssuseDT).ToString() + " \r\n");
 
-                sb.Append("oneDataDt C_OrderDetail录入订单处理时间：" + (oneDataDt- orderDT).ToString() + " \r\n");
-                sb.Append("oneDataDt1 C_Sports_Order_Running录入订单处理时间：" + (oneDataDt1- oneDataDt).ToString() + " \r\n");
+                    sb.Append("oneDataDt C_OrderDetail录入订单处理时间：" + (oneDataDt - orderDT).ToString() + " \r\n");
+                    sb.Append("oneDataDt1 C_Sports_Order_Running录入订单处理时间：" + (oneDataDt1 - oneDataDt).ToString() + " \r\n");
 
-                sb.Append("发送短信录处理时间：" + (oneDataDt2 - oneDataDt1).ToString() + " \r\n");
+                    sb.Append("发送短信录处理时间：" + (oneDataDt2 - oneDataDt1).ToString() + " \r\n");
 
-                sb.Append("扣款用时 ：" + (businessDT- oneDataDt2).ToString() + " \r\n");
-               
+                    sb.Append("扣款用时 ：" + (businessDT - oneDataDt2).ToString() + " \r\n");
 
-             
-                
-                sb.Append("redisDT redis录入订单处理时间：" + (redisDT- businessDT).ToString() + " \r\n");
-               
-             
-                sb.Append(keyLine+",订单总用时毫秒:" +watch.Elapsed.TotalMilliseconds.ToString() + " \r\n");
-                //录入跟踪信息
-                Log4Log.Fatal(sb.ToString());
-              //  Console.WriteLine(sb.ToString());
+
+
+
+                    sb.Append("redisDT redis录入订单处理时间：" + (redisDT - businessDT).ToString() + " \r\n");
+
+
+                    sb.Append(keyLine + ",订单总用时毫秒:" + watch.Elapsed.TotalMilliseconds.ToString() + " \r\n");
+                    //录入跟踪信息
+                    Log4Log.Fatal(sb.ToString());
+                    //  Console.WriteLine(sb.ToString());
                 }
                 //刷新用户在Redis中的余额
                 BusinessHelper.RefreshRedisUserBalance(userId);
@@ -4218,25 +4226,25 @@ namespace KaSon.FrameWork.ORM.Helper
             //using (var biz = new GameBizBusinessManagement())
             //{
 
-                var gameInfo = lotteryManager.LoadGame(info.GameCode);
-                var userManager = new UserBalanceManager();
-                var user = userManager.LoadUserRegister(userId);
-                var schemeManager = new SchemeManager();
-                var sportsManager = new Sports_Manager();
-                keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
-                if (info.IssuseNumberList.Count > 1)
-                    throw new LogicException("保存的订单只能投注一期");
-                var orderIndex = 1;
-                var IssuseNumberList = new List<C_Game_Issuse>();
-                foreach (var issuse in info.IssuseNumberList)
-                {
-                    var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.GameCode.ToUpper() == "CTZQ" ? info.AnteCodeList[0].GameType.ToUpper() : string.Empty, issuse.IssuseNumber);
-                    if (currentIssuseNumber == null)
-                        throw new LogicException(string.Format("奖期{0}不存在", issuse.IssuseNumber));
-                    if (currentIssuseNumber.LocalStopTime < DateTime.Now)
-                        throw new LogicException(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
-                    IssuseNumberList.Add(currentIssuseNumber);
-                }
+            var gameInfo = lotteryManager.LoadGame(info.GameCode);
+            var userManager = new UserBalanceManager();
+            var user = userManager.LoadUserRegister(userId);
+            var schemeManager = new SchemeManager();
+            var sportsManager = new Sports_Manager();
+            keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
+            if (info.IssuseNumberList.Count > 1)
+                throw new LogicException("保存的订单只能投注一期");
+            var orderIndex = 1;
+            var IssuseNumberList = new List<C_Game_Issuse>();
+            foreach (var issuse in info.IssuseNumberList)
+            {
+                var currentIssuseNumber = lotteryManager.QueryGameIssuseByKey(info.GameCode, info.GameCode.ToUpper() == "CTZQ" ? info.AnteCodeList[0].GameType.ToUpper() : string.Empty, issuse.IssuseNumber);
+                if (currentIssuseNumber == null)
+                    throw new LogicException(string.Format("奖期{0}不存在", issuse.IssuseNumber));
+                if (currentIssuseNumber.LocalStopTime < DateTime.Now)
+                    throw new LogicException(string.Format("奖期{0}结束时间为{1}", issuse.IssuseNumber, currentIssuseNumber.LocalStopTime.ToString("yyyy-MM-dd HH:mm")));
+                IssuseNumberList.Add(currentIssuseNumber);
+            }
             DB.Begin();
             try
             {
@@ -4295,11 +4303,11 @@ namespace KaSon.FrameWork.ORM.Helper
                             IssuseNumber = issuse.IssuseNumber,
                         });
                     }
-                   var model= AddRunningOrderAndOrderDetail_BackList(schemeId, info.BettingCategory, info.GameCode, string.Join(",", (from g in gameTypeList group g by g.GameType into g select g.Key).ToArray()),
-                        string.Empty, info.StopAfterBonus, issuse.IssuseNumber, issuse.Amount, totalNumberZhu, 0, currentIssuseMoney, currentIssuseNumber.OfficialStopTime, info.SchemeSource, info.Security,
-                        SchemeType.SaveScheme, false, true, user.UserId, user.AgentId, info.CurrentBetTime, info.ActivityType, "", info.IsAppend, 0M, ProgressStatus.Waitting, TicketStatus.Waitting);
+                    var model = AddRunningOrderAndOrderDetail_BackList(schemeId, info.BettingCategory, info.GameCode, string.Join(",", (from g in gameTypeList group g by g.GameType into g select g.Key).ToArray()),
+                         string.Empty, info.StopAfterBonus, issuse.IssuseNumber, issuse.Amount, totalNumberZhu, 0, currentIssuseMoney, currentIssuseNumber.OfficialStopTime, info.SchemeSource, info.Security,
+                         SchemeType.SaveScheme, false, true, user.UserId, user.AgentId, info.CurrentBetTime, info.ActivityType, "", info.IsAppend, 0M, ProgressStatus.Waitting, TicketStatus.Waitting);
 
-                   // sportsManager.AddUserSaveOrder();
+                    // sportsManager.AddUserSaveOrder();
                     userSaveOrderList.Add(new C_UserSaveOrder
                     {
                         SchemeId = schemeId,
@@ -4411,7 +4419,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            DB.Begin();
 
             try
             {
@@ -4572,27 +4580,27 @@ namespace KaSon.FrameWork.ORM.Helper
                 //r["PrintDateTime"] = DateTime.Now;
                 //r["CreateTime"] = DateTime.Now;
 
-                r.GameCode  = ticket.GameCode.ToUpper();
-                r.GameType  = ticket.GameType.ToUpper();
-                r.SchemeId  = ticket.OrderId;
-                r.TicketId  = ticket.Id;
-                r.IssuseNumber  = ticket.IssuseNumber;
-                r.PlayType  = ticket.PlayType;
-                r.BetContent  = betContent;
-                r.LocOdds  = locOddStr;
-                r.TicketStatus  = 90;
-                r.Amount  = ticket.Amount;
-                r.BetUnits  = ticket.BetCount;
-                r.BetMoney  = ticket.TotalMoney;
-                r.MatchIdList  = ticket.ToAnteString_zhongminToMatchId();
-                r.PrintNumber3  = Guid.NewGuid().ToString("N").ToUpper();
-                r.IsAppend  = false;
-                r.BonusStatus  = 0;
-                r.PreTaxBonusMoney  = 0M;
-                r.AfterTaxBonusMoney  = 0M;
-                r.PrintDateTime  = DateTime.Now;
-                r.CreateTime  = DateTime.Now;
-                
+                r.GameCode = ticket.GameCode.ToUpper();
+                r.GameType = ticket.GameType.ToUpper();
+                r.SchemeId = ticket.OrderId;
+                r.TicketId = ticket.Id;
+                r.IssuseNumber = ticket.IssuseNumber;
+                r.PlayType = ticket.PlayType;
+                r.BetContent = betContent;
+                r.LocOdds = locOddStr;
+                r.TicketStatus = 90;
+                r.Amount = ticket.Amount;
+                r.BetUnits = ticket.BetCount;
+                r.BetMoney = ticket.TotalMoney;
+                r.MatchIdList = ticket.ToAnteString_zhongminToMatchId();
+                r.PrintNumber3 = Guid.NewGuid().ToString("N").ToUpper();
+                r.IsAppend = false;
+                r.BonusStatus = 0;
+                r.PreTaxBonusMoney = 0M;
+                r.AfterTaxBonusMoney = 0M;
+                r.PrintDateTime = DateTime.Now;
+                r.CreateTime = DateTime.Now;
+
                 ticketTable.Add(r);
 
                 redisTicketList.Add(new RedisTicketInfo
@@ -4688,7 +4696,7 @@ namespace KaSon.FrameWork.ORM.Helper
             SchemeSource schemeSource, TogetherSchemeSecurity security, int totalMatchCount, DateTime stopTime, bool isUploadAnteCode,
             decimal schemeDeduct, string userId, string userAgent, string balancePassword, int sysGuarantees, bool isTop, SchemeBettingCategory category, string issuseNumber)
         {
-           // var canChase = false;
+            // var canChase = false;
             stopTime = stopTime.AddMinutes(-5);
 
             if (DateTime.Now >= stopTime)
@@ -5030,7 +5038,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            DB.Begin();
 
             try
             {
@@ -5195,7 +5203,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            DB.Begin();
 
             try
             {
@@ -5282,7 +5290,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            DB.Begin();
 
             try
             {
@@ -5373,23 +5381,23 @@ namespace KaSon.FrameWork.ORM.Helper
             //    DB.Begin();
             //try
             //{
-                var sportsManager = new Sports_Manager();
-                var entity = sportsManager.QueryTogetherFollowerRule(ruleId);
-                if (entity == null)
-                    throw new LogicException("找不到相关的订制跟单");
-                if (entity.FollowerUserId != info.FollowerUserId)
-                    throw new LogicException("跟单规则不是此用户所订制");
+            var sportsManager = new Sports_Manager();
+            var entity = sportsManager.QueryTogetherFollowerRule(ruleId);
+            if (entity == null)
+                throw new LogicException("找不到相关的订制跟单");
+            if (entity.FollowerUserId != info.FollowerUserId)
+                throw new LogicException("跟单规则不是此用户所订制");
 
-                entity.CancelNoBonusSchemeCount = info.CancelNoBonusSchemeCount;
-                entity.CancelWhenSurplusNotMatch = info.CancelWhenSurplusNotMatch;
-                entity.FollowerCount = info.FollowerCount;
-                entity.FollowerPercent = info.FollowerPercent;
-                entity.IsEnable = info.IsEnable;
-                entity.MaxSchemeMoney = info.MaxSchemeMoney;
-                entity.MinSchemeMoney = info.MinSchemeMoney;
-                entity.SchemeCount = info.SchemeCount;
-                entity.StopFollowerMinBalance = info.StopFollowerMinBalance;
-                sportsManager.UpdateTogetherFollowerRule(entity);
+            entity.CancelNoBonusSchemeCount = info.CancelNoBonusSchemeCount;
+            entity.CancelWhenSurplusNotMatch = info.CancelWhenSurplusNotMatch;
+            entity.FollowerCount = info.FollowerCount;
+            entity.FollowerPercent = info.FollowerPercent;
+            entity.IsEnable = info.IsEnable;
+            entity.MaxSchemeMoney = info.MaxSchemeMoney;
+            entity.MinSchemeMoney = info.MinSchemeMoney;
+            entity.SchemeCount = info.SchemeCount;
+            entity.StopFollowerMinBalance = info.StopFollowerMinBalance;
+            sportsManager.UpdateTogetherFollowerRule(entity);
 
             //    DB.Commit();
             //}
@@ -5441,7 +5449,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
             try
             {
-                
+
 
                 var sportsManager = new Sports_Manager();
                 var entity = sportsManager.QueryTogetherFollowerRule(info.CreaterUserId, info.FollowerUserId, info.GameCode, info.GameType);
@@ -5514,7 +5522,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            DB.Begin();
             try
             {
                 var sportsManager = new Sports_Manager();
@@ -5606,7 +5614,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            DB.Begin();
 
             try
             {
@@ -5702,7 +5710,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
             //using (var biz = new GameBizBusinessManagement())
             //{
-                DB.Begin();
+            DB.Begin();
             try
             {
                 info.GameCode = info.GameCode.ToUpper();

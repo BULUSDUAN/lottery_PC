@@ -64,7 +64,7 @@
 
   <ItemGroup>
     <Reference Include="KaSon.FrameWork.ORM">
-      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
+      <HintPath>..\..\FramWorkDLL\HK6DLL\KaSon.FrameWork.ORM.dll</HintPath>
     </Reference>
     <Reference Include="KaSon.FrameWork.Services">
       <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
