@@ -2484,5 +2484,27 @@ namespace KaSon.FrameWork.ORM.Helper
             //new PrizeBusiness().IssusePrize(gameCode, issuse, string.Empty);
             return "奖期更新完成";
         }
+
+
+
+        /// <summary>
+        /// 查询总平台、pc、安卓、ios、wap当天的注册人数、实名人数、付费人数
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public MemberTotalCollection QueryMemberTotal()
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                //return new GameBusiness().QueryMemberTotal();
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询统计会员分布出错 - " + ex.Message, ex);
+            }
+        }
     }
 }

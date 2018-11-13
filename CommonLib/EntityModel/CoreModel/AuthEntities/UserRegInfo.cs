@@ -482,6 +482,121 @@ namespace EntityModel.CoreModel
         /// </summary>
         public decimal PayMoney { get; set; }
 
+    }
+        /// <summary>
+        /// 查询统计会员分布
+        /// </summary>
+        public class MemberSpreadInfo
+        {
+            /// <summary>
+            /// 省名
+            /// </summary>
+            public string ProvinceName { get; set; }
+            /// <summary>
+            /// 统计数量
+            /// </summary>
+            public int tcount { get; set; }
+        }
+        /// <summary>
+        /// 查询统计会员分布
+        /// </summary>
+        public class MemberSpreadInfoCollection
+        {
+            public MemberSpreadInfoCollection()
+            {
+                infoList = new List<MemberSpreadInfo>();
+            }
+            public int TotalCount { get; set; }
+            public List<MemberSpreadInfo> infoList { get; set; }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public class MemberTotalInfo
+        {
+            /// <summary>
+            /// 每天
+            /// </summary>
+            public string Day { get; set; }
+            /// <summary>
+            /// 当天总人数统计
+            /// </summary>
+            public int TotalCount { get; set; }
+            /// <summary>
+            /// 当天pc统计
+            /// </summary>
+            public int PcTotalCount { get; set; }
+            /// <summary>
+            /// 当天老触屏统计
+            /// </summary>
+            public int TouchTotalCount { get; set; }
+            /// <summary>
+            /// 当天Android统计
+            /// </summary>
+            public int AndroidTotalCount { get; set; }
+            /// <summary>
+            /// 当天Ios统计
+            /// </summary>
+            public int IosTotalCount { get; set; }
+            /// <summary>
+            /// 当天新触屏统计
+            /// </summary>
+            public int NewTouchTotalCount { get; set; }
+            /// <summary>
+            /// 当天充值统计
+            /// </summary>
+            public int FillMoneyTotalCount { get; set; }
+            /// <summary>
+            /// 当天实名统计
+            /// </summary>
+            public int AuthTotalCount { get; set; }
+            /// <summary>
+            /// 当天新android统计
+            /// </summary>
+            public int NewAndroidCount { get; set; }
+            /// <summary>
+            /// 当天新ios统计
+            /// </summary>
+            public int NewIOSCount { get; set; }
+        }
+        /// <summary>
+        /// 查询总平台、pc、安卓、ios、wap当天的注册人数、实名人数、付费人数
+        /// </summary>
+        public class MemberTotalCollection
+        {
+            public MemberTotalCollection()
+            {
+                list = new List<MemberTotalInfo>();
+            }
+            public List<MemberTotalInfo> list { get; set; }
 
+        }
+        /// <summary>
+        /// 查询统计充值提现信息（按月统计）
+        /// </summary>
+        public class FillMoneyWithdrawInfo
+        {
+            /// <summary>
+            /// 月份
+            /// </summary>
+            public string Month { get; set; }
+            /// <summary>
+            /// money总和
+            /// </summary>
+            public int TotalMoney { get; set; }
+        }
+        /// <summary>
+        /// 查询统计充值提现信息（按月统计）
+        /// </summary>
+        public class FillMoneyWithdrawInfoCollection
+        {
+            public FillMoneyWithdrawInfoCollection()
+            {
+                fillMoneyInfoList = new List<FillMoneyWithdrawInfo>();
+                WithdrawInfoList = new List<FillMoneyWithdrawInfo>();
+            }
+            public List<FillMoneyWithdrawInfo> fillMoneyInfoList { get; set; }
+            public List<FillMoneyWithdrawInfo> WithdrawInfoList { get; set; }
+        
     }
 }

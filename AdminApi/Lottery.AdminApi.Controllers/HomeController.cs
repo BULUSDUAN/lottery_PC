@@ -15,6 +15,7 @@ using EntityModel;
 using Lottery.AdminApi.Controllers.CommonFilterActtribute;
 using Microsoft.AspNetCore.Cors;
 using KaSon.FrameWork.Common.Redis;
+using EntityModel.CoreModel;
 
 namespace Lottery.AdminApi.Controllers
 {
@@ -244,6 +245,78 @@ namespace Lottery.AdminApi.Controllers
         {
             var service = new AdminService();
             return service.GetMyAllFunciton(CurrentUser.UserId);
+        }
+
+        /// <summary>
+        /// 查询总注册、pc、安卓、ios、wap 当天的注册人数、实名人数、充值人数统计情况
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult QueryMemberTotal()
+        {
+            try
+            {
+                var service = new AdminService();
+                var Day = "[";
+                var TotalCount = "[";
+                var PcTotalCount = "[";
+                var TouchTotalCount = "[";
+                var AndroidTotalCount = "[";
+                var IosTotalCount = "[";
+                var NewTouchTotalCount = "[";
+                var FillMoneyTotalCount = "[";
+                var AuthTotalCount = "[";
+                MemberTotalCollection mtc = service.QueryMemberTotal();
+                foreach (MemberTotalInfo mti in mtc.list)
+                {
+                    Day += string.Format(mti.Day.Replace("-", "") + ",");
+                    TotalCount += string.Format(mti.TotalCount + ",");
+                    PcTotalCount += string.Format(mti.PcTotalCount + ",");
+                    TouchTotalCount += string.Format(mti.TouchTotalCount + ",");
+                    AndroidTotalCount += string.Format(mti.AndroidTotalCount + ",");
+                    IosTotalCount += string.Format(mti.IosTotalCount + ",");
+                    NewTouchTotalCount += string.Format(mti.NewTouchTotalCount + ",");
+                    FillMoneyTotalCount += string.Format(mti.FillMoneyTotalCount + ",");
+                    AuthTotalCount += string.Format(mti.AuthTotalCount + ",");
+                }
+                Day += "]";
+                TotalCount += "]";
+                PcTotalCount += "]";
+                TouchTotalCount += "]";
+                AndroidTotalCount += "]";
+                IosTotalCount += "]";
+                NewTouchTotalCount += "]";
+                FillMoneyTotalCount += "]";
+                AuthTotalCount += "]";
+                return Json(new
+                {
+                    IsSuccess = true,
+                    MsgDay = Day.ToString(),
+                    MsgTotalCount = TotalCount.ToString(),
+                    MsgPcTotalCount = PcTotalCount.ToString(),
+                    MsgTouchTotalCount = TouchTotalCount.ToString(),
+                    MsgAndroidTotalCount = AndroidTotalCount.ToString(),
+                    MsgIosTotalCount = IosTotalCount.ToString(),
+                    MsgNewTouchTotalCount = NewTouchTotalCount.ToString(),
+                    MsgFillMoneyTotalCount = FillMoneyTotalCount.ToString(),
+                    MsgAuthTotalCount = AuthTotalCount.ToString()
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    IsSuccess = false,
+                    MsgDay = "",
+                    MsgTotalCount = "",
+                    MsgPcTotalCount = "",
+                    MsgTouchTotalCount = "",
+                    MsgAndroidTotalCount = "",
+                    MsgIosTotalCount = "",
+                    MsgNewTouchTotalCount = "",
+                    MsgFillMoneyTotalCount = "",
+                    MsgAuthTotalCount = ""
+                });
+            }
         }
     }
 }
