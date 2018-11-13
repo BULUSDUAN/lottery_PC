@@ -133,11 +133,11 @@ namespace KaSon.FrameWork.ORM.Helper
         public void UpdateBulletin(E_SiteMessage_Bulletin_List bulletin, string updateBy)
         {
             var bulletinManager = new BulletinManager();
-            {
-                var entity = bulletinManager.GetBulletinById(bulletin.Id);
-                entity.UpdateBy = updateBy;
-                bulletinManager.UpdateBulletin(entity);
-            }
+            var entity = bulletinManager.GetBulletinById(bulletin.Id);
+                bulletin.CreateTime = entity.CreateTime;
+                bulletin.CreateBy = entity.CreateBy;
+                bulletin.UpdateBy = updateBy;
+                bulletinManager.UpdateBulletin(bulletin);
         }
 
         #region 文章相关
@@ -164,7 +164,7 @@ namespace KaSon.FrameWork.ORM.Helper
             manager.DeleteArticle(entity);
         }
 
-        public ArticleInfo_Query QueryArticleInfoById(string articleId, bool isAddReadCount)
+        public E_SiteMessage_Article_List QueryArticleInfoById(string articleId, bool isAddReadCount)
         {
             var manager = new ArticleManager();
             var entity = manager.GetArticleById(articleId);
@@ -177,8 +177,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 entity.ReadCount++;
                 manager.UpdateArticle(entity);
             }
-            var info = new ArticleInfo_Query();
-            return info;
+            return entity;
         }
         public string SubmitArticle(E_SiteMessage_Article_List article)
         {
@@ -231,6 +230,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //    StaticPath = "",
             //};
             article.Id = id;
+            article.GameCode = article.GameCode;
             article.ShowIndex = 0;
             article.ReadCount = 0;
             article.PreId = lastId;

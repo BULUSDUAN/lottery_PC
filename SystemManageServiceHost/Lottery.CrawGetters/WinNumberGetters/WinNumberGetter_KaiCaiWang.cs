@@ -20,10 +20,12 @@ namespace Lottery.CrawGetters
         ///     采集地址
         /// </summary>
         private static readonly string API_URL = InitConfigInfo.SZC_OPEN_URL;
-             //  "http://c.apiplus.cn/newly.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}";
-
+        private static readonly string API_URL_HK6 = InitConfigInfo.SZC_OPEN_URL_HK6;
+        //  "http://c.apiplus.cn/newly.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}";
+        //http://d.apiplus.net:8888/daily.do?token=f9e18eb66b794d91&code=hk6&format=json&date=2018-12-2
         private static readonly string API_URL_DAY = InitConfigInfo.SZC_OPEN_URL_DAY; //AppSettingsHelper.GetString("SZC_OPEN_URL_DAY")
-            //"http://c.apiplus.cn/daily.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}&date={2}";
+        private static readonly string API_URL_DAY_HK6 = InitConfigInfo.SZC_OPEN_URL_DAY_HK6;
+        //"http://c.apiplus.cn/daily.do?token=f9e18eb66b794d91&code={0}&format=json&random={1}&date={2}";
 
         private static readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -80,6 +82,10 @@ namespace Lottery.CrawGetters
             //TODO:防止采集过快
             //?code=cqssc&date=2016-11-19
             var url = string.Format(API_URL, gameCode.ToLower(), DateTime.Now.Ticks);
+            if (gameCode.ToLower()=="hk6")
+            {
+                url = string.Format(API_URL_HK6, gameCode.ToLower(), DateTime.Now.Ticks); 
+            }
             if (Parse(gameCode, PostManagerWithProxy.Get(url, Encoding.UTF8), dic) == 0)
                 return dic;
             //21分钟采集一次
@@ -94,11 +100,16 @@ namespace Lottery.CrawGetters
             })
             {
                 url = string.Format(API_URL_DAY, gameCode.ToLower(), DateTime.Now.Ticks, dt.ToString("yyyy-MM-dd"));
+                if (gameCode.ToLower() == "hk6")
+                {
+                    url = string.Format(API_URL_DAY_HK6, gameCode.ToLower(), DateTime.Now.Ticks, dt.ToString("yyyy-MM-dd"));
+                }
                 Thread.Sleep(TimeSpan.FromSeconds(5));
                 deay();
                 if (Parse(gameCode, PostManagerWithProxy.Get(url, Encoding.UTF8), dic) == 0)
                     succeed = false;
             }
+
             //if (succeed)
             //    cache.SetKey(gameCode, TimeSpan.FromMinutes(49), 0);
             return dic;
@@ -116,8 +127,10 @@ namespace Lottery.CrawGetters
                 case "JX11X5":
                 case "FC3D":
                 case "PL3":
+               
                     break;
                 case "SSQ":
+                case "HK6":
                 case "DLT":
                     winNumber = winNumber.Replace("+", "|");
                     break;

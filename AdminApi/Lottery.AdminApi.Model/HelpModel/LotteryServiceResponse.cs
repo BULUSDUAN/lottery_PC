@@ -6,10 +6,10 @@ namespace Lottery.AdminApi.Model.HelpModel
 {
     public class LotteryServiceResponse
     {
-        ///// <summary>
-        ///// 消息序号（与传入时一样）
-        ///// </summary>
-        //public string MsgId { get; set; }
+        /// <summary>
+        /// 消息序号（与传入时一样）
+        /// </summary>
+        public string MsgId { get; set; }
         /// <summary>
         /// 结果码
         /// </summary>

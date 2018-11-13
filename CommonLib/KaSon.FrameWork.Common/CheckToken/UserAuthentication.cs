@@ -52,5 +52,26 @@ namespace KaSon.FrameWork.Common.CheckToken
                 throw new Exception("用户身份验证失败，请检查是否已登录", ex);
             }
         }
+
+
+        public static string ValidateAuthentication_Admin(string userToken)
+        {
+            try
+            {
+                var rlt = UserTokenHelper.AnalyzeUserToken(userToken);
+                if (!rlt.ContainsKey("LI"))
+                {
+                    throw new Exception("用户身份验证失败");
+                }
+                string userid = rlt["LI"];
+                if (string.IsNullOrEmpty(userid))
+                    throw new Exception("用户身份验证失败");
+                return userid;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("用户身份验证失败，请检查是否已登录", ex);
+            }
+        }
     }
 }

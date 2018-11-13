@@ -22,7 +22,7 @@ using SystemManage.Base.Controllers;
 
 namespace SystemManage.Craw.Controllers
 {
-    [Area("Craw")]
+    [Area("CrawApi")]
     public class HomeController : BaseController
     {
 

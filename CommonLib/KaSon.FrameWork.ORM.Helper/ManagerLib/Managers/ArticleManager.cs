@@ -64,7 +64,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<E_SiteMessage_KeywordOfArticle> QuerKeywordOfArticle()
         {
-            return DB.CreateQuery<E_SiteMessage_KeywordOfArticle>().Where(p => p.IsEnable && p.KeyWords != string.Empty && p.Link != string.Empty).ToList();
+            return DB.CreateQuery<E_SiteMessage_KeywordOfArticle>().Where(p => p.IsEnable==true && p.KeyWords != string.Empty && p.Link != string.Empty).ToList();
         }
 
         public E_SiteMessage_Article_List QueryLastArticle(string category)
@@ -84,11 +84,8 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             foreach (var item in indexCollection)
             {
-                var hql = "update Article d set d.ShowIndex=@ShowIndex where d.Id=@Id";
-                var query = DB.CreateSQLQuery(hql)
-                    .SetInt("@ShowIndex",item.Value)
-                    .SetString("@Id",item.Key);
-                query.Excute();
+                var sql = string.Format(@"update E_SiteMessage_Article_List set E_SiteMessage_Article_List.ShowIndex='{0}' where E_SiteMessage_Article_List.Id='{1}'", item.Value, item.Key);
+                var query = DB.CreateSQLQuery(sql).Excute();
             }
         }
     }
