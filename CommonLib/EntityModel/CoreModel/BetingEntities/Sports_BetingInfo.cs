@@ -10,10 +10,82 @@ using ProtoBuf;
 
 namespace EntityModel.CoreModel
 {
+    [Serializable]
+    public class HK6Sports_OrderInfo
+    {
+        public string content { get; set; }
+
+        /// <summary>
+        /// 玩法标签
+        /// </summary>
+        public string playedTag { get; set; }
+
+        /// <summary>
+        /// 玩法编号
+        /// </summary>
+        public int playedId { get; set; }
+
+        /// <summary>
+        /// 投注号码
+        /// </summary>
+        public string betingCode { get; set; }
+
+        /// <summary>
+        /// 每一注总价
+        /// </summary>
+        public decimal totalPrice { get; set; }
+
+        public decimal unitPrice { get; set; }
+
+    }
+    
     /// <summary>
-    /// 普通投注对象
+    ///  追号和加倍实体
     /// </summary>
     [Serializable]
+    public class HK6Sports_PlanInfo
+    {
+        /// <summary>
+        /// 倍数
+        /// </summary>
+        public int multiple { get; set; }
+
+        /// <summary>
+        /// 期号
+        /// </summary>
+        public int issueNo { get; set; }
+
+       
+
+    }
+
+    public class HK6Sports_BetingInfo
+    {
+        /// <summary>
+        /// 期号
+        /// </summary>
+        public int issueNo { get; set; }
+
+        /// <summary>
+        /// 彩种
+        /// </summary>
+        public string gameCode { get; set; } = "HK6";
+
+        public IList<HK6Sports_OrderInfo> orderList { get; set; }
+        public IList<HK6Sports_PlanInfo> planList { get; set; }
+
+        /// <summary>
+        /// 追期赢停止追期
+        /// </summary>
+        public int winStop { get; set; } = 0;
+
+        public DateTime CurrentBetTime { get; set; }
+    }
+
+        /// <summary>
+        /// 普通投注对象
+        /// </summary>
+        [Serializable]
     [ProtoContract]
     public class Sports_BetingInfo
     {

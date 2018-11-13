@@ -1,0 +1,6 @@
+2018-09-17 14:22:09,707 [24] WARN  Kason.Sg.Core.CPlatform.Routing.Implementation.DefaultServiceRouteProvider [(null)] - 根据服务路由路径：creawser/creaw/numlettory_winnumber_start，找不到相关服务信息。
+2018-09-17 14:24:43,591 [4] WARN  Kason.Sg.Core.CPlatform.Routing.Implementation.DefaultServiceRouteProvider [(null)] - 根据服务路由路径：creawser/creaw/numlettory_winnumber_start，找不到相关服务信息。
+2018-09-17 14:25:09,770 [18] WARN  Kason.Sg.Core.CPlatform.Routing.Implementation.DefaultServiceRouteProvider [(null)] - 根据服务路由路径：creawser/creaw/numlettory_winnumber_start，找不到相关服务信息。
+2018-09-17 14:26:29,016 [15] WARN  Kason.Sg.Core.CPlatform.Routing.Implementation.DefaultServiceRouteProvider [(null)] - 根据服务路由路径：creawser/creaw/numlettory_winnumber_start，找不到相关服务信息。
+2018-09-17 14:29:25,663 [4] WARN  Kason.Sg.Core.CPlatform.Routing.Implementation.DefaultServiceRouteProvider [(null)] - 根据服务路由路径：creawser/creaw/numlettory_winnumber_start，找不到相关服务信息。
+2018-09-17 14:33:48,750 [4] WARN  Kason.Sg.Core.CPlatform.Routing.Implementation.DefaultServiceRouteProvider [(null)] - 根据服务路由路径：creawser/creaw/numlettory_winnumber_start，找不到相关服务信息。

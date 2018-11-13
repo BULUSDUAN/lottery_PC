@@ -606,7 +606,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 根据编号查询文章信息_后台
         /// todo:后台权限
         /// </summary>
-        public ArticleInfo_Query QueryArticleById_Admin(string articleId)
+        public E_SiteMessage_Article_List QueryArticleById_Admin(string articleId)
         {
             //// 验证用户身份及权限
             //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);

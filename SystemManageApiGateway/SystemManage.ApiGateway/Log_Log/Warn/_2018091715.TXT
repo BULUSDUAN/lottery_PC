@@ -1,0 +1,4 @@
+2018-09-17 15:15:56,080 [5] WARN  Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers.Implementation.DefaultAddressResolver [(null)] - 根据服务id：Craw.Service.IModuleServices.ICrawService.NumLettory_WinNumber_Start_gameName，找不到可用的地址。
+2018-09-17 15:16:01,385 [5] WARN  Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers.Implementation.DefaultAddressResolver [(null)] - 根据服务id：Craw.Service.IModuleServices.ICrawService.NumLettory_WinNumber_Start_gameName，找不到可用的地址。
+2018-09-17 15:16:02,829 [34] WARN  Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers.Implementation.DefaultAddressResolver [(null)] - 根据服务id：Craw.Service.IModuleServices.ICrawService.NumLettory_WinNumber_Start_gameName，找不到可用的地址。
+2018-09-17 15:16:04,358 [46] WARN  Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers.Implementation.DefaultAddressResolver [(null)] - 根据服务id：Craw.Service.IModuleServices.ICrawService.NumLettory_WinNumber_Start_gameName，找不到可用的地址。

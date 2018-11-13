@@ -157,16 +157,16 @@ namespace Lottery.CrawGetters
     }
 
 
-    public class JSONHelper
-    {
-        public static string Serialize<T>(T obj)
-        {
-            return Serialize(obj);
-        }
+    //public class JSONHelper
+    //{
+    //    public static string Serialize<T>(T obj)
+    //    {
+    //        return Serialize(obj);
+    //    }
 
-        public static T Deserialize<T>(string json)
-        {
-            return Deserialize<T>(json);
-        }
-    }
+    //    public static T Deserialize<T>(string json)
+    //    {
+    //        return Deserialize<T>(json);
+    //    }
+    //}
 }
