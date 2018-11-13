@@ -59,10 +59,10 @@ namespace Lottery.Service.Host
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
                         .UseConsulManager(config)
                         .UseDotNettyTransport()
-                        .UseRabbitMQTransport()
-                        .AddRabbitMQAdapt()
+                        //.UseRabbitMQTransport()
+                        //.AddRabbitMQAdapt()
 
-                        .AddCache()
+                       // .AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
                         //{
                         //    kafkaOption.Servers = "127.0.0.1";
@@ -77,9 +77,9 @@ namespace Lottery.Service.Host
                         builder.Register(p => new CPlatformContainer(ServiceLocator.Current));
                     });
                 })
-                .SubscribeAt()
-                // .UseLog4net(LogLevel.Error, "Config/log4net.config")
-                .UseNLog(LogLevel.Error, "Config/NLog.config")
+                //.SubscribeAt()
+               .UseLog4net(LogLevel.Error, "Config/log4net.config")
+               // .UseNLog(LogLevel.Error, "Config/NLog.config")
                 //.UseServer("127.0.0.1", 98)
                 //.UseServer("127.0.0.1", 98，“true”) //自动生成Token
                 //.UseServer("127.0.0.1", 98，“123456789”) //固定密码Token
@@ -93,10 +93,10 @@ namespace Lottery.Service.Host
                     options.MaxConcurrentRequests = 2000;
                 })
                 // .UseServiceCache()
-                .Configure(build =>
-                build.AddEventBusJson(RebbitMqSettings))
-                .Configure(build =>
-                build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
+                //.Configure(build =>
+                //build.AddEventBusJson(RebbitMqSettings))
+                //.Configure(build =>
+                //build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                   .Configure(build =>
                 build.AddCPlatformJSON(HostSettings))
                 .UseProxy()
@@ -119,6 +119,7 @@ namespace Lottery.Service.Host
                 });
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
             }
+            Console.ReadLine();
         }
 
 
