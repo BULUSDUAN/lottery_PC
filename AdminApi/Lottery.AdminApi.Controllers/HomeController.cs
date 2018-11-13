@@ -14,6 +14,7 @@ using KaSon.FrameWork.Common.Net;
 using EntityModel;
 using Lottery.AdminApi.Controllers.CommonFilterActtribute;
 using Microsoft.AspNetCore.Cors;
+using KaSon.FrameWork.Common.Redis;
 
 namespace Lottery.AdminApi.Controllers
 {
@@ -54,12 +55,18 @@ namespace Lottery.AdminApi.Controllers
                     result.Code = AdminResponseCode.成功;
                     result.Message = "成功获取验证码";
                     string base64 = Convert.ToBase64String(img);
-                    HttpContext.Session.SetObj<string>("ValidateCode", num.ToString());
+                    //返回的key
+                    var guidkey = Guid.NewGuid().ToString("N");
+                    string key = "R_" + guidkey;
+                    var db = RedisHelperEx.DB_Other;
+                    var flag = db.Set(key, num.ToString(), 60 * 10);
+                    //HttpContext.Session.SetObj<string>("ValidateCode", num.ToString());
                     if (!base64.StartsWith("data:image"))
                     {
                         base64 = "data:image/gif;base64," + base64;
                     }
                     result.Value = base64;
+                    result.MsgId = guidkey;
                 }
                 return JsonEx(result);
             }
@@ -117,17 +124,31 @@ namespace Lottery.AdminApi.Controllers
                 string userNamestr = p.userName;
                 string passWordstr = p.passWord;
                 string verifyCodestr = p.verifyCode;
+                string MsgId = p.MsgId;
                 string userName = PreconditionAssert.IsNotEmptyString(userNamestr, "登录账号不能为空！");
                 string passWord = PreconditionAssert.IsNotEmptyString(passWordstr, "登录密码不能为空！");
-                //string verifyCode = PreconditionAssert.IsNotEmptyString(verifyCodestr, "验证码不能为空！");
-                var vCode = HttpContext.Session.GetObj<string>("ValidateCode");
+                MsgId = PreconditionAssert.IsNotEmptyString(MsgId, "验证码有误");
+                string verifyCode = PreconditionAssert.IsNotEmptyString(verifyCodestr, "验证码不能为空！");
+                //var vCode = HttpContext.Session.GetObj<string>("ValidateCode");
                 //if (vCode != verifyCode)
                 //{
                 //    throw new Exception("验证码输入错误！");
                 //}
+                string key = "R_" + MsgId;
+                var db = RedisHelperEx.DB_Other;
+                var theNum = db.Get(key);
+                if (verifyCode != theNum)
+                {
+                    throw new Exception("验证码输入有误或已超时");
+                }
                 AdminService service = new AdminService();
-                CurrentUser = service.LoginAdmin(userName, passWord, IpManager.GetClientUserIp(HttpContext));
-                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功,  Message="登录成功"});
+                var model= service.LoginAdmin(userName, passWord, IpManager.GetClientUserIp(HttpContext));
+                if (model != null && model.IsSuccess)
+                {
+                    SetUser(model);
+                    return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "登录成功", Value = model.UserToken });
+                }
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = model==null?"登陆失败":model.Message });
             }
             catch (Exception ex)
             {

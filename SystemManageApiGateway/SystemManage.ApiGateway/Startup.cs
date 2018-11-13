@@ -33,6 +33,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Http;
 using KaSon.FrameWork.Common.Net;
 using Kason.Sg.Core.Log4net;
+using KaSon.FrameWork.Common;
 
 namespace Lottery.ApiGateway
 {
@@ -89,6 +90,15 @@ namespace Lottery.ApiGateway
         private IServiceProvider RegisterAutofac(IServiceCollection services)
         {
             var registerConfig = ApiGateWayConfig.Register;
+            string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
+            string Token = ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"] != null ? ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"].ToString() : "";
+            var config = new ConfigInfo(consul,
+                    "MagAndCraw/serviceRoutes/",
+                    "MagAndCraw/serviceSubscribers/",
+                    "MagAndCraw/serviceCommands/",
+                    "MagAndCraw/serviceCaches/")
+            { ReloadOnChange = true,Token= Token };
+
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(CustomExceptionFilterAttribute));
@@ -112,12 +122,7 @@ namespace Lottery.ApiGateway
             //    string cachePath = "services/serviceCaches/", bool reloadOnChange = false);
 
                 option.AddClientIntercepted(typeof(CacheProviderInterceptor));
-                option.UseConsulManager(new ConfigInfo(registerConfig.Address,
-                    "MagAndCraw/serviceRoutes/",
-                    "MagAndCraw/serviceSubscribers/",
-                    "MagAndCraw/serviceCommands/",
-                    "MagAndCraw/serviceCaches/")
-                { ReloadOnChange=true });
+                option.UseConsulManager(config);
                 //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
                 // if (registerConfig.Provider == RegisterProvider.Consul)
                 //else if (registerConfig.Provider == RegisterProvider.Zookeeper)

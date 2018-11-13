@@ -7209,13 +7209,15 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void UpdateCoreConfigInfo(string configKey, string configValue)
         {
-            var config = new CacheDataBusiness().QueryCoreConfigByKey(configKey);
+            var Business = new CacheDataBusiness();
+            var config = Business.QueryCoreConfigByKey(configKey);
             if (config != null)
             {
                 config.ConfigKey = configKey;
                 config.ConfigValue = configValue;
                 config.CreateTime = DateTime.Now;
-                new CacheDataBusiness().UpdateCoreConfigInfo(config);
+                Business.UpdateCoreConfigInfo(config);
+                Business.ClearCoreConfigByKey(config.ConfigKey);
             }
         }
 

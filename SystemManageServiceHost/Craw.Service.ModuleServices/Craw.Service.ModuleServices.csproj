@@ -11,23 +11,20 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="protobuf-net" Version="2.3.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
     <ProjectReference Include="..\Craw.Service.IModuleServices\Craw.Service.IModuleServices.csproj" />
     <ProjectReference Include="..\Lottery.CrawGetters\Lottery.CrawGetters.csproj" />
     <ProjectReference Include="..\SystemManage.ModuleBaseServices\SystemManage.ModuleBaseServices.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="KaSon.FrameWork.ORM">
-      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
-    </Reference>
-    <Reference Include="KaSon.FrameWork.Services">
-      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
-    </Reference>
     <Reference Include="Kason.Sg.Core.Caching">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Caching.dll</HintPath>
     </Reference>
