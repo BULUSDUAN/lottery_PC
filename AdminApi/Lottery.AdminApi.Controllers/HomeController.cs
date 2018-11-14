@@ -24,6 +24,7 @@ namespace Lottery.AdminApi.Controllers
     //[EnableCors("any")]
     public class HomeController:BaseController
     {
+      
         #region 验证码相关函数
         //生成验证码并返回一个结果
         public IActionResult CreateValidateCode()
@@ -247,6 +248,115 @@ namespace Lottery.AdminApi.Controllers
             return service.GetMyAllFunciton(CurrentUser.UserId);
         }
 
+        #region 首页
+   
+    
+        public ActionResult Index(LotteryServiceRequest entity)
+        {
+            try
+            {
+                object Infos;
+                var service = new AdminService();
+                var p = JsonHelper.Decode(entity.Param);
+                int id = 0;
+                if (!int.TryParse(CurrentUser.UserId, out id))
+                {
+                    id = 0;
+                }
+
+                if (id < 100000)
+                {
+                     Infos = service.QuerySiteSummary();
+                }
+                else
+                {
+                     Infos = null;
+                }
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = Infos });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message, Value = "" });
+            }
+        }
+
+        /// <summary>
+        /// 查询统计会员分布
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult MemberSpread()
+        {
+            try
+            {
+                var service = new AdminService();
+                var str = "[";
+                //会员分布
+                MemberSpreadInfoCollection msic = service.QueryMemberSpread();
+                foreach (MemberSpreadInfo msi in msic.infoList)
+                {
+                    str += string.Format(" ['" + msi.ProvinceName + "', " + msi.tcount + "],");
+                }
+                str += "]";
+                //ViewBag.MemberSpread = str.ToString();
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = str.ToString() });
+              
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message, Value = "" });
+            }
+        }
+        /// <summary>
+        /// 查询统计充值提现信息（按月统计）
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult FillMoneyWithdrawInfo()
+        {
+            try
+            {
+                var service = new AdminService();
+                var strFm = "[";
+                var strMonth = "[";
+                //充值
+                FillMoneyWithdrawInfoCollection fm = service.FillMoneyWithdrawInfo();
+                foreach (FillMoneyWithdrawInfo fmi in fm.fillMoneyInfoList)
+                {
+                    strFm += string.Format(fmi.TotalMoney + ",");
+                    strMonth += string.Format(fmi.Month.Replace("-", "") + ",");
+                }
+                strFm += "]";
+                strMonth += "]";
+                //提现
+                var strWd = "[";
+                foreach (FillMoneyWithdrawInfo wdi in fm.WithdrawInfoList)
+                {
+                    strWd += string.Format(wdi.TotalMoney + ",");
+                }
+                strWd += "]";
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = new {
+                    MsgFm = strFm.ToString(),
+                    MsgWd = strWd.ToString(),
+                    MsgMonth = strMonth.ToString()
+                } });
+               
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.Message,
+                    Value = new
+                    {
+                        MsgFm = "",
+                        MsgWd = "",
+                        MsgMonth = ""
+                    }
+                });
+            }
+        }
+
         /// <summary>
         /// 查询总注册、pc、安卓、ios、wap 当天的注册人数、实名人数、充值人数统计情况
         /// </summary>
@@ -265,6 +375,8 @@ namespace Lottery.AdminApi.Controllers
                 var NewTouchTotalCount = "[";
                 var FillMoneyTotalCount = "[";
                 var AuthTotalCount = "[";
+                var NewAndroidCount = "[";
+                var NewIOSCount = "[";
                 MemberTotalCollection mtc = service.QueryMemberTotal();
                 foreach (MemberTotalInfo mti in mtc.list)
                 {
@@ -277,6 +389,8 @@ namespace Lottery.AdminApi.Controllers
                     NewTouchTotalCount += string.Format(mti.NewTouchTotalCount + ",");
                     FillMoneyTotalCount += string.Format(mti.FillMoneyTotalCount + ",");
                     AuthTotalCount += string.Format(mti.AuthTotalCount + ",");
+                    NewAndroidCount += string.Format(mti.NewAndroidCount + ",");
+                    NewIOSCount += string.Format(mti.NewIOSCount + ",");
                 }
                 Day += "]";
                 TotalCount += "]";
@@ -287,7 +401,9 @@ namespace Lottery.AdminApi.Controllers
                 NewTouchTotalCount += "]";
                 FillMoneyTotalCount += "]";
                 AuthTotalCount += "]";
-                return Json(new
+                NewAndroidCount += "]";
+                NewIOSCount += "]";
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = new
                 {
                     IsSuccess = true,
                     MsgDay = Day.ToString(),
@@ -298,25 +414,39 @@ namespace Lottery.AdminApi.Controllers
                     MsgIosTotalCount = IosTotalCount.ToString(),
                     MsgNewTouchTotalCount = NewTouchTotalCount.ToString(),
                     MsgFillMoneyTotalCount = FillMoneyTotalCount.ToString(),
-                    MsgAuthTotalCount = AuthTotalCount.ToString()
+                    MsgAuthTotalCount = AuthTotalCount.ToString(),
+                    MsgNewAndroidCount = NewAndroidCount.ToString(),
+                    MsgNewIOSCount = NewIOSCount.ToString(),
+                }
                 });
+              
             }
             catch (Exception ex)
             {
-                return Json(new
+                return JsonEx(new LotteryServiceResponse
                 {
-                    IsSuccess = false,
-                    MsgDay = "",
-                    MsgTotalCount = "",
-                    MsgPcTotalCount = "",
-                    MsgTouchTotalCount = "",
-                    MsgAndroidTotalCount = "",
-                    MsgIosTotalCount = "",
-                    MsgNewTouchTotalCount = "",
-                    MsgFillMoneyTotalCount = "",
-                    MsgAuthTotalCount = ""
+                    Code = AdminResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Value= new
+                    {
+                        IsSuccess = false,
+                        MsgDay = "",
+                        MsgTotalCount = "",
+                        MsgPcTotalCount = "",
+                        MsgTouchTotalCount = "",
+                        MsgAndroidTotalCount = "",
+                        MsgIosTotalCount = "",
+                        MsgNewTouchTotalCount = "",
+                        MsgFillMoneyTotalCount = "",
+                        MsgAuthTotalCount = "",
+                        MsgNewAndroidCount = "",
+                        MsgNewIOSCount = ""
+                    }
+
                 });
             }
         }
+
+        #endregion
     }
 }

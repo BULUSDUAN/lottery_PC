@@ -50,7 +50,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = AdminResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Message = ex.ToGetMessage(),
                 });
             }
         }
