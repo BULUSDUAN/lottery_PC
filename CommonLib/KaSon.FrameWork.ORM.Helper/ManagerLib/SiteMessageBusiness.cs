@@ -240,6 +240,9 @@ namespace KaSon.FrameWork.ORM.Helper
             article.Description = content;
             article.CreateTime = DateTime.Now;
             article.UpdateTime = DateTime.Now;
+            article.UpdateUserKey = article.CreateUserKey;
+            article.UpdateUserDisplayName = article.CreateUserDisplayName;
+          
             manager.AddArticle(article);
             return id;
         }
@@ -296,6 +299,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var manager = new BulletinManager();
             var entity = manager.QueryBannerManager(bannerId);
+            if (entity == null)
+            {
+                throw new ArgumentException("指定编号的文章不存在");
+            }
             manager.DeleteBanner(entity);
         }
 

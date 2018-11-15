@@ -2378,6 +2378,16 @@ namespace Lottery.Api.Controllers
                             {
                                 oddlist_ctzq = Json_CTZQ.MatchList_WEB(issuseNumber, gameType); ;
                             }
+                            if (gameType.ToUpper() == "TR9" || gameType.ToUpper() == "T14C" || oddlist_ctzq != null && oddlist_ctzq.Count > 0)
+                            {
+                                foreach (var item in oddlist_ctzq)
+                                {
+                                    if (string.IsNullOrEmpty(item.AverageOdds))
+                                    {
+                                        item.AverageOdds = "0|0|0";
+                                    }
+                                }
+                            }
                             matchDataList.AddRange(oddlist_ctzq);
                         }
                         break;

@@ -1749,7 +1749,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     collection.TotalCount = collection.OrderList.Count;
                     collection.TotalOrderMoney = collection.OrderList.Sum(o => o.TotalMoney);
-                    collection.TotalBetMoney = collection.OrderList.Sum(o => o.CurrentBettingMoney);
+                    collection.TotalBuyMoney = collection.OrderList.Sum(o => o.CurrentBettingMoney);
                     collection.TotalPreTaxBonusMoney = collection.OrderList.Sum(o => o.PreTaxBonusMoney);
                     collection.TotalAfterTaxBonusMoney = collection.OrderList.Sum(o => o.AfterTaxBonusMoney);
                     collection.TotalAddMoney = collection.OrderList.Sum(o => o.AddMoney);
@@ -2483,6 +2483,92 @@ namespace KaSon.FrameWork.ORM.Helper
             new Sports_Business().LotteryIssusePrize(gameCode, string.Empty, issuse, "-");
             //new PrizeBusiness().IssusePrize(gameCode, issuse, string.Empty);
             return "奖期更新完成";
+        }
+
+
+        /// <summary>
+        /// 查询统计会员分布 前十名省会注册 实名 绑定卡的
+        /// </summary>
+        /// <returns></returns>
+        public MemberSpreadInfoCollection QueryMemberSpread()
+        {
+           
+            try
+            {
+                return new GameBusiness().QueryMemberSpread();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询统计会员分布出错 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询统计充值提现信息（按月统计）
+        /// </summary>
+        /// <returns></returns>
+        public FillMoneyWithdrawInfoCollection FillMoneyWithdrawInfo()
+        {
+           
+            try
+            {
+                return new GameBusiness().FillMoneyWithdrawInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询统计充值提现信息 - " + ex.Message, ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 查询总平台、pc、安卓、ios、wap当天的注册人数、实名人数、付费人数
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public MemberTotalCollection QueryMemberTotal()
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new GameBusiness().QueryMemberTotal();
+               
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询统计会员分布出错 - " + ex.Message, ex);
+            }
+        }
+
+        public bool CheckIsAuthenticationFunction(string functionId, string needRight, string userToken)
+        {
+            try
+            {
+                // 验证用户身份及权限
+                string userId;
+                GameBizAuthBusiness.ValidateAuthentication(userToken, needRight, functionId, out userId);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 查询站点描述信息
+        /// </summary>
+        public SiteSummaryInfo QuerySiteSummary()
+        {
+        
+            try
+            {
+                return new GameBusiness().QuerySiteSummary();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
     }
 }
