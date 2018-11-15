@@ -417,10 +417,11 @@ namespace Lottery.CrawGetters.MatchBizGetter
                     foreach (var item in matchResult_310)
                     {
                         var result_Ok = matchResult_ZhiDing.Where(p => p.MatchId == item.MatchId).FirstOrDefault();
-                        //var result_500 = matchResult_ZhiDing_F.Where(p => p.MatchId == item.MatchId).FirstOrDefault();
+                        var result_500 = matchResult_ZhiDing_F.Where(p => p.MatchId == item.MatchId).FirstOrDefault();
                         //if (result_Ok == null && result_500 == null) continue;
 
                         var isResultEques = false;
+                        var isResultEques500 = false;
                         if (result_Ok != null)
                         {
                             if ((item.DXF_Result == result_Ok.DXF_Result) && (item.SF_Result == result_Ok.SF_Result)
@@ -428,14 +429,14 @@ namespace Lottery.CrawGetters.MatchBizGetter
                               && (item.HomeScore == result_Ok.HomeScore) && (item.GuestScore == result_Ok.GuestScore))
                                 isResultEques = true;
                         }
-                        //if (result_500 != null && !isResultEques)
-                        //{
-                        //    if ((item.DXF_Result == result_500.DXF_Result) && (item.SF_Result == result_500.SF_Result)
-                        //     && (item.RFSF_Result == result_500.RFSF_Result) && (item.SFC_Result == result_500.SFC_Result)
-                        //     && (item.HomeScore == result_500.HomeScore) && (item.GuestScore == result_500.GuestScore))
-                        //        isResultEques = true;
-                        //}
-                        if (!isResultEques)
+                        if (result_500 != null)//(result_500 != null && !isResultEques)//
+                        {
+                            if ((item.DXF_Result == result_500.DXF_Result) && (item.SF_Result == result_500.SF_Result)
+                             && (item.RFSF_Result == result_500.RFSF_Result) && (item.SFC_Result == result_500.SFC_Result)
+                             && (item.HomeScore == result_500.HomeScore) && (item.GuestScore == result_500.GuestScore))
+                                isResultEques500 = true;// isResultEques = true;// 
+                        }
+                        if (!isResultEques || !isResultEques500) // (!isResultEques)// 同时比较两次 
                             continue;
 
                         matchResult.Add(item);
