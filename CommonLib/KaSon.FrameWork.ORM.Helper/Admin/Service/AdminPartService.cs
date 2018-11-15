@@ -435,6 +435,23 @@ namespace KaSon.FrameWork.ORM.Helper
         #endregion
 
         #region 禁用比赛
+
+        /// <summary>
+        /// 查询彩种状态
+        /// </summary>
+        public LotteryGameInfoCollection QueryLotteryGameList()
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new GameBusiness().LotteryGame();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
         public CoreJCZQMatchInfoCollection QueryCurrentJCZQMatchInfo(string userToken)
         {
             // 验证用户身份及权限
