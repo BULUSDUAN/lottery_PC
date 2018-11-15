@@ -440,7 +440,7 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 //if (!CheckRights("U102"))
-                if (CheckRights("HYGLCKYHXQ110"))//查看会员详情
+                if (!CheckRights("HYGLCKYHXQ110"))//查看会员详情
                     throw new Exception("对不起，您的权限不足！");
                 var p = JsonHelper.Decode(entity.Param);
                 UserViewEntity ViewModel = new UserViewEntity();
