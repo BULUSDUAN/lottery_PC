@@ -531,7 +531,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new Exception(ex.Message, ex);
             }
         }
-        public CommonActionResult UpdateLotteryGame(string userToken, string gameCode, int enableStatus)
+        public CommonActionResult UpdateLotteryGame(string gameCode, int enableStatus)
         {
             // 验证用户身份及权限
             //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);

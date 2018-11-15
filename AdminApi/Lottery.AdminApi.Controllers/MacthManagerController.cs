@@ -227,7 +227,7 @@ namespace Lottery.AdminApi.Controllers
                 var gameCode = (string)p.gameCode;
                 var status = int.Parse((string)p.status);
 
-                _service.UpdateLotteryGame(CurrentUser.UserToken, gameCode, status);
+                _service.UpdateLotteryGame(gameCode, status);
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "修改成功！" });
             }
             catch (Exception ex)
