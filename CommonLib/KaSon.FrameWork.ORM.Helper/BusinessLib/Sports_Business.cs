@@ -7548,7 +7548,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 TotalCount = 0
             };
             var query = from s in DB.CreateQuery<C_Index_Match>()
-                        where (matchId == string.Empty || s.MatchId == matchId || s.MatchName == matchId) && (hasImg == "-1" || s.ImgPath == string.Empty)
+                        where (matchId == "" || s.MatchId == matchId || s.MatchName == matchId) && (hasImg == "-1" || s.ImgPath == "")
                         select new IndexMatchInfo
                         {
                             Id = s.Id,

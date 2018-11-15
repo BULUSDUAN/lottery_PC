@@ -126,16 +126,7 @@ namespace KaSon.FrameWork.ORM.Helper
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
             var query = from t in DB.CreateQuery<C_User_Balance_FreezeList>()
                         where t.UserId == userId
-                        select new UserBalanceFreezeInfo
-                        {
-                            Id = t.Id,
-                            UserId = t.UserId,
-                            OrderId = t.OrderId,
-                            FreezeMoney = t.FreezeMoney,
-                            Category =(FrozenCategory)Convert.ToInt32(t.Category),
-                            Description = t.Description,
-                            CreateTime = t.CreateTime,
-                        };
+                        select t;
 
             totalCount = query.Count();
             if (totalCount > 0)
@@ -149,8 +140,16 @@ namespace KaSon.FrameWork.ORM.Helper
             return query
                 .OrderByDescending(u => u.CreateTime)
                 .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToList();
+                .Take(pageSize).ToList().Select(t=> new UserBalanceFreezeInfo
+                {
+                    Id = t.Id,
+                    UserId = t.UserId,
+                    OrderId = t.OrderId,
+                    FreezeMoney = t.FreezeMoney,
+                    Category = (FrozenCategory)Convert.ToInt32(t.Category),
+                    Description = t.Description,
+                    CreateTime = t.CreateTime,
+                }).ToList();
         }
         public C_User_Register GetUserRegister(string userId)
         {

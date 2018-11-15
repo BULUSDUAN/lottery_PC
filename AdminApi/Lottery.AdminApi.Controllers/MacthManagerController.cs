@@ -227,7 +227,7 @@ namespace Lottery.AdminApi.Controllers
                 var gameCode = (string)p.gameCode;
                 var status = int.Parse((string)p.status);
 
-                _service.UpdateLotteryGame(CurrentUser.UserToken, gameCode, status);
+                _service.UpdateLotteryGame(gameCode, status);
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "修改成功！" });
             }
             catch (Exception ex)
@@ -293,6 +293,20 @@ namespace Lottery.AdminApi.Controllers
                     imgPath = LoadImageFile(loadFile, "/images/add/", matchId);
                 var result = _service.UpdateIndexMatch(Convert.ToInt32(id), imgPath);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = result.Message });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        //禁用比赛
+        public IActionResult GetGameStateList()
+        {
+            try
+            {
+                if (!CheckRights("B103"))
+                    throw new Exception("对不起，您的权限不足！");
+                return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = _service.QueryLotteryGameList() });
             }
             catch (Exception ex)
             {

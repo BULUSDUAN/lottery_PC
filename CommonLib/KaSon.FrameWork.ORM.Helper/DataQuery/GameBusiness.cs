@@ -20,15 +20,15 @@ namespace KaSon.FrameWork.ORM.Helper
             var _gameList = new GameBusiness().QueryGameInfoCollection();
             return _gameList;
         }
-        ///// <summary>
-        ///// 所有彩种状态
-        ///// </summary>
-        //public LotteryGameInfoCollection LotteryGame()
-        //{
-        //    var result = new LotteryGameInfoCollection();
-        //    result.AddRange(new DataQuery().QueryLotteryGameList());
-        //    return result;
-        //}
+        /// <summary>
+        /// 所有彩种状态
+        /// </summary>
+        public LotteryGameInfoCollection LotteryGame()
+        {
+            var result = new LotteryGameInfoCollection();
+            result.AddRange(new DataQuery().QueryLotteryGameList());
+            return result;
+        }
         ///// <summary>
         ///// 更新彩种状态
         ///// </summary>

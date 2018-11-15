@@ -435,6 +435,23 @@ namespace KaSon.FrameWork.ORM.Helper
         #endregion
 
         #region 禁用比赛
+
+        /// <summary>
+        /// 查询彩种状态
+        /// </summary>
+        public LotteryGameInfoCollection QueryLotteryGameList()
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new GameBusiness().LotteryGame();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
         public CoreJCZQMatchInfoCollection QueryCurrentJCZQMatchInfo(string userToken)
         {
             // 验证用户身份及权限
@@ -514,7 +531,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new Exception(ex.Message, ex);
             }
         }
-        public CommonActionResult UpdateLotteryGame(string userToken, string gameCode, int enableStatus)
+        public CommonActionResult UpdateLotteryGame(string gameCode, int enableStatus)
         {
             // 验证用户身份及权限
             //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
@@ -662,7 +679,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 根据用户编号查询用户历史登录
         /// </summary>
-        public UserLoginHistoryCollection QueryCache_UserLoginHistoryCollectionByUserId(string userId, string userToken)
+        public UserLoginHistoryCollection QueryCache_UserLoginHistoryCollectionByUserId(string userId)
         {
             try
             {
@@ -676,7 +693,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 根据用户编号查询银行卡信息
         /// </summary>
-        public C_BankCard QueryBankCardByUserId(string userId, string userToken)
+        public C_BankCard QueryBankCardByUserId(string userId)
         {
             return new BankCardBusiness().BankCardById(userId);
         }
@@ -684,7 +701,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 获取口令
         /// todo:后台权限
         /// </summary>
-        public CommonActionResult GetUserTokenByKey(string userId, string userToken)
+        public CommonActionResult GetUserTokenByKey(string userId)
         {
             // 验证用户身份及权限
             //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
