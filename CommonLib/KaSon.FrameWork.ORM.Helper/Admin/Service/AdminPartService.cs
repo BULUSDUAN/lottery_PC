@@ -679,7 +679,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 根据用户编号查询用户历史登录
         /// </summary>
-        public UserLoginHistoryCollection QueryCache_UserLoginHistoryCollectionByUserId(string userId, string userToken)
+        public UserLoginHistoryCollection QueryCache_UserLoginHistoryCollectionByUserId(string userId)
         {
             try
             {
@@ -693,7 +693,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 根据用户编号查询银行卡信息
         /// </summary>
-        public C_BankCard QueryBankCardByUserId(string userId, string userToken)
+        public C_BankCard QueryBankCardByUserId(string userId)
         {
             return new BankCardBusiness().BankCardById(userId);
         }
@@ -701,7 +701,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 获取口令
         /// todo:后台权限
         /// </summary>
-        public CommonActionResult GetUserTokenByKey(string userId, string userToken)
+        public CommonActionResult GetUserTokenByKey(string userId)
         {
             // 验证用户身份及权限
             //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);

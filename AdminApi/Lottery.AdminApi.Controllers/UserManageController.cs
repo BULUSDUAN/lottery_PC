@@ -464,11 +464,11 @@ namespace Lottery.AdminApi.Controllers
                     UserQueryInfo userResult = _service.QueryUserByKey(userId);
                     ViewModel.UserResult = userResult;
                     ViewModel.HistoryLogin = _service.QueryCache_UserLoginHistoryCollectionByUserId(
-                        userId, CurrentUser.UserToken);
+                        userId);
 
                     try
                     {
-                        ViewModel.Bank = _service.QueryBankCardByUserId(userId, CurrentUser.UserToken);
+                        ViewModel.Bank = _service.QueryBankCardByUserId(userId);
                     }
                     catch (Exception)
                     {
@@ -476,7 +476,7 @@ namespace Lottery.AdminApi.Controllers
                     }
 
 
-                    var result = _service.GetUserTokenByKey(userId, CurrentUser.UserToken);
+                    var result = _service.GetUserTokenByKey(userId);
                     if (result.IsSuccess)
                     {
                         ViewModel.UserToken = result.ReturnValue;
