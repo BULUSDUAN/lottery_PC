@@ -339,7 +339,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public void UpdateCoreConfigInfo(C_Core_Config info)
         {
             var manager = new UserIntegralManager();
-            var entity = manager.QueryCoreConfig(info.ConfigKey);
+            var entity = manager.QueryCoreConfig(info.Id);
             if (entity == null) throw new LogicException("未查询到对应数据");
             entity.ConfigName = info.ConfigName;
             entity.ConfigValue = info.ConfigValue;

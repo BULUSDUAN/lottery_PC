@@ -73,7 +73,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public void AddUserRole(List<C_Auth_UserRole> entity)
         {
-            DB.GetDal<C_Auth_UserRole>().BulkAdd(entity);
+            DB.GetDal<C_Auth_UserRole>().Add(entity);
         }
 
         public C_Auth_Roles LoadRole(string roleId)
@@ -98,7 +98,7 @@ namespace KaSon.FrameWork.ORM.Helper
             {
                 foreach (var item in result)
                 {
-                    strBud.Append(item);
+                    strBud.Append(item.RoleId);
                     strBud.Append("%item%");
                 }
             }

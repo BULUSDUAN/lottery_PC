@@ -83,9 +83,9 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.GetDal<C_Core_Config>().Update(entity);
         }
 
-        public C_Core_Config QueryCoreConfig(string configKey)
+        public C_Core_Config QueryCoreConfig(int Id)
         {
-            return DB.CreateQuery<C_Core_Config>().Where(p => p.ConfigKey == configKey).FirstOrDefault();
+            return DB.CreateQuery<C_Core_Config>().Where(p => p.Id == Id).FirstOrDefault();
         }
 
         public List<CoreConfigInfo> QueryAllCoreConfig()
