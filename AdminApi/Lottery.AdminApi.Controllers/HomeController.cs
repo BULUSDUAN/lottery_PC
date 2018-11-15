@@ -127,20 +127,15 @@ namespace Lottery.AdminApi.Controllers
                 string MsgId = p.MsgId;
                 string userName = PreconditionAssert.IsNotEmptyString(userNamestr, "登录账号不能为空！");
                 string passWord = PreconditionAssert.IsNotEmptyString(passWordstr, "登录密码不能为空！");
-                MsgId = PreconditionAssert.IsNotEmptyString(MsgId, "验证码有误");
-                string verifyCode = PreconditionAssert.IsNotEmptyString(verifyCodestr, "验证码不能为空！");
-                //var vCode = HttpContext.Session.GetObj<string>("ValidateCode");
-                //if (vCode != verifyCode)
+                //MsgId = PreconditionAssert.IsNotEmptyString(MsgId, "验证码有误");
+
+                //string key = "R_" + MsgId;
+                //var db = RedisHelperEx.DB_Other;
+                //var theNum = db.Get(key);
+                //if (verifyCode != theNum)
                 //{
-                //    throw new Exception("验证码输入错误！");
+                //    throw new Exception("验证码输入有误或已超时");
                 //}
-                string key = "R_" + MsgId;
-                var db = RedisHelperEx.DB_Other;
-                var theNum = db.Get(key);
-                if (verifyCode != theNum)
-                {
-                    throw new Exception("验证码输入有误或已超时");
-                }
                 AdminService service = new AdminService();
                 var model= service.LoginAdmin(userName, passWord, IpManager.GetClientUserIp(HttpContext));
                 if (model != null && model.IsSuccess)
