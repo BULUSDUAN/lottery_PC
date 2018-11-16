@@ -208,7 +208,9 @@ namespace Lottery.AdminApi.Controllers
                 int Days = string.IsNullOrWhiteSpace((string)p.days) ? 14 : int.Parse((string)p.days);
                 int PageIndex = string.IsNullOrWhiteSpace((string)p.pageIndex) ? base.PageIndex : int.Parse((string)p.pageIndex);
                 int PageSize = string.IsNullOrWhiteSpace((string)p.pageSize) ? base.PageSize : int.Parse((string)p.pageSize);
-                var NotOnlineRecentlyList =_service.QueryNotOnlineRecentlyList(Days,PageIndex,PageSize);
+                int Earnings = string.IsNullOrWhiteSpace((string)p.earnings) ? 0 : int.Parse((string)p.earnings);
+                string theEarnings = EarningsList[Earnings];
+                var NotOnlineRecentlyList =_service.QueryNotOnlineRecentlyList(Days,PageIndex,PageSize,theEarnings);
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Value = NotOnlineRecentlyList });
             }
             catch (Exception ex)
@@ -438,7 +440,7 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 //if (!CheckRights("U102"))
-                if (CheckRights("HYGLCKYHXQ110"))//查看会员详情
+                if (!CheckRights("HYGLCKYHXQ110"))//查看会员详情
                     throw new Exception("对不起，您的权限不足！");
                 var p = JsonHelper.Decode(entity.Param);
                 UserViewEntity ViewModel = new UserViewEntity();
@@ -462,11 +464,11 @@ namespace Lottery.AdminApi.Controllers
                     UserQueryInfo userResult = _service.QueryUserByKey(userId);
                     ViewModel.UserResult = userResult;
                     ViewModel.HistoryLogin = _service.QueryCache_UserLoginHistoryCollectionByUserId(
-                        userId, CurrentUser.UserToken);
+                        userId);
 
                     try
                     {
-                        ViewModel.Bank = _service.QueryBankCardByUserId(userId, CurrentUser.UserToken);
+                        ViewModel.Bank = _service.QueryBankCardByUserId(userId);
                     }
                     catch (Exception)
                     {
@@ -474,7 +476,7 @@ namespace Lottery.AdminApi.Controllers
                     }
 
 
-                    var result = _service.GetUserTokenByKey(userId, CurrentUser.UserToken);
+                    var result = _service.GetUserTokenByKey(userId);
                     if (result.IsSuccess)
                     {
                         ViewModel.UserToken = result.ReturnValue;

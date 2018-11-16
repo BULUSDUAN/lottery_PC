@@ -64,7 +64,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<E_SiteMessage_KeywordOfArticle> QuerKeywordOfArticle()
         {
-            return DB.CreateQuery<E_SiteMessage_KeywordOfArticle>().Where(p => p.IsEnable==true && p.KeyWords != string.Empty && p.Link != string.Empty).ToList();
+            return DB.CreateQuery<E_SiteMessage_KeywordOfArticle>().Where(p => p.IsEnable==true && p.KeyWords != null && p.Link != null).ToList();
         }
 
         public E_SiteMessage_Article_List QueryLastArticle(string category)

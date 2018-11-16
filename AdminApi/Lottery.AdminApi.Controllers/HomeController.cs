@@ -15,6 +15,7 @@ using EntityModel;
 using Lottery.AdminApi.Controllers.CommonFilterActtribute;
 using Microsoft.AspNetCore.Cors;
 using KaSon.FrameWork.Common.Redis;
+using EntityModel.CoreModel;
 
 namespace Lottery.AdminApi.Controllers
 {
@@ -23,6 +24,7 @@ namespace Lottery.AdminApi.Controllers
     //[EnableCors("any")]
     public class HomeController:BaseController
     {
+      
         #region 验证码相关函数
         //生成验证码并返回一个结果
         public IActionResult CreateValidateCode()
@@ -127,20 +129,15 @@ namespace Lottery.AdminApi.Controllers
                 string MsgId = p.MsgId;
                 string userName = PreconditionAssert.IsNotEmptyString(userNamestr, "登录账号不能为空！");
                 string passWord = PreconditionAssert.IsNotEmptyString(passWordstr, "登录密码不能为空！");
-                MsgId = PreconditionAssert.IsNotEmptyString(MsgId, "验证码有误");
-                string verifyCode = PreconditionAssert.IsNotEmptyString(verifyCodestr, "验证码不能为空！");
-                //var vCode = HttpContext.Session.GetObj<string>("ValidateCode");
-                //if (vCode != verifyCode)
+                //MsgId = PreconditionAssert.IsNotEmptyString(MsgId, "验证码有误");
+
+                //string key = "R_" + MsgId;
+                //var db = RedisHelperEx.DB_Other;
+                //var theNum = db.Get(key);
+                //if (verifyCode != theNum)
                 //{
-                //    throw new Exception("验证码输入错误！");
+                //    throw new Exception("验证码输入有误或已超时");
                 //}
-                string key = "R_" + MsgId;
-                var db = RedisHelperEx.DB_Other;
-                var theNum = db.Get(key);
-                if (verifyCode != theNum)
-                {
-                    throw new Exception("验证码输入有误或已超时");
-                }
                 AdminService service = new AdminService();
                 var model= service.LoginAdmin(userName, passWord, IpManager.GetClientUserIp(HttpContext));
                 if (model != null && model.IsSuccess)
@@ -245,5 +242,211 @@ namespace Lottery.AdminApi.Controllers
             var service = new AdminService();
             return service.GetMyAllFunciton(CurrentUser.UserId);
         }
+
+        #region 首页
+   
+    
+        public ActionResult Index(LotteryServiceRequest entity)
+        {
+            try
+            {
+                object Infos;
+                var service = new AdminService();
+                var p = JsonHelper.Decode(entity.Param);
+                int id = 0;
+                if (!int.TryParse(CurrentUser.UserId, out id))
+                {
+                    id = 0;
+                }
+
+                if (id < 100000)
+                {
+                     Infos = service.QuerySiteSummary();
+                }
+                else
+                {
+                     Infos = null;
+                }
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = Infos });
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message, Value = "" });
+            }
+        }
+
+        /// <summary>
+        /// 查询统计会员分布
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult MemberSpread()
+        {
+            try
+            {
+                var service = new AdminService();
+               // var str = "";
+                Dictionary<string, int> dic = new Dictionary<string, int>();
+                //会员分布
+                MemberSpreadInfoCollection msic = service.QueryMemberSpread();
+                //foreach (MemberSpreadInfo msi in msic.infoList)
+                //{
+                //    // str += string.Format(" '" + msi.ProvinceName + "', " + msi.tcount + ",");
+                //    dic.Add(msi.ProvinceName, msi.tcount);
+                //}
+
+       
+
+               // str = str.Trim(',');
+                //ViewBag.MemberSpread = str.ToString();
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = msic.infoList });
+              
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.失败, Message = ex.Message, Value = "" });
+            }
+        }
+        /// <summary>
+        /// 查询统计充值提现信息（按月统计）
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult FillMoneyWithdrawInfo()
+        {
+            try
+            {
+                var service = new AdminService();
+                var strFm = "";
+                var strMonth = "";
+                //充值
+                FillMoneyWithdrawInfoCollection fm = service.FillMoneyWithdrawInfo();
+                foreach (FillMoneyWithdrawInfo fmi in fm.fillMoneyInfoList)
+                {
+                    strFm += string.Format(fmi.TotalMoney + ",");
+                    strMonth += string.Format(fmi.Month.Replace("-", "") + ",");
+                }
+                strFm = strFm.Trim(',');
+                strMonth = strMonth.Trim(',');
+                //提现
+                var strWd = "";
+                foreach (FillMoneyWithdrawInfo wdi in fm.WithdrawInfoList)
+                {
+                    strWd += string.Format(wdi.TotalMoney + ",");
+                }
+                strWd = strWd.Trim(',');
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = new {
+                    MsgFm = strFm.ToString(),
+                    MsgWd = strWd.ToString(),
+                    MsgMonth = strMonth.ToString()
+                } });
+               
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.Message,
+                    Value = new
+                    {
+                        MsgFm = "",
+                        MsgWd = "",
+                        MsgMonth = ""
+                    }
+                });
+            }
+        }
+
+        /// <summary>
+        /// 查询总注册、pc、安卓、ios、wap 当天的注册人数、实名人数、充值人数统计情况
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult QueryMemberTotal()
+        {
+            try
+            {
+                var service = new AdminService();
+                var Day = "";
+                var TotalCount = "";
+                var PcTotalCount = "";
+                var TouchTotalCount = "";
+                var AndroidTotalCount = "";
+                var IosTotalCount = "";
+                var NewTouchTotalCount = "";
+                var FillMoneyTotalCount = "";
+                var AuthTotalCount = "";
+                var NewAndroidCount = "";
+                var NewIOSCount = "";
+                MemberTotalCollection mtc = service.QueryMemberTotal();
+                foreach (MemberTotalInfo mti in mtc.list)
+                {
+                    Day += string.Format(mti.Day.Replace("-", "") + ",");
+                    TotalCount += string.Format(mti.TotalCount + ",");
+                    PcTotalCount += string.Format(mti.PcTotalCount + ",");
+                    TouchTotalCount += string.Format(mti.TouchTotalCount + ",");
+                    AndroidTotalCount += string.Format(mti.AndroidTotalCount + ",");
+                    IosTotalCount += string.Format(mti.IosTotalCount + ",");
+                    NewTouchTotalCount += string.Format(mti.NewTouchTotalCount + ",");
+                    FillMoneyTotalCount += string.Format(mti.FillMoneyTotalCount + ",");
+                    AuthTotalCount += string.Format(mti.AuthTotalCount + ",");
+                    NewAndroidCount += string.Format(mti.NewAndroidCount + ",");
+                    NewIOSCount += string.Format(mti.NewIOSCount + ",");
+                }
+                Day = Day.Trim(',');
+                TotalCount = TotalCount.Trim(',');
+                PcTotalCount = PcTotalCount.Trim(',');
+                TouchTotalCount = TouchTotalCount.Trim(',');
+                AndroidTotalCount = AndroidTotalCount.Trim(',');
+                IosTotalCount = IosTotalCount.Trim(',');
+                NewTouchTotalCount = NewTouchTotalCount.Trim(',');
+                FillMoneyTotalCount = FillMoneyTotalCount.Trim(',');
+                AuthTotalCount = AuthTotalCount.Trim(',');
+                NewAndroidCount = NewAndroidCount.Trim(',');
+                NewIOSCount = NewIOSCount.Trim(',');
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = new
+                {
+                    IsSuccess = true,
+                    MsgDay = Day.ToString(),
+                    MsgTotalCount = TotalCount.ToString(),
+                    MsgPcTotalCount = PcTotalCount.ToString(),
+                    MsgTouchTotalCount = TouchTotalCount.ToString(),
+                    MsgAndroidTotalCount = AndroidTotalCount.ToString(),
+                    MsgIosTotalCount = IosTotalCount.ToString(),
+                    MsgNewTouchTotalCount = NewTouchTotalCount.ToString(),
+                    MsgFillMoneyTotalCount = FillMoneyTotalCount.ToString(),
+                    MsgAuthTotalCount = AuthTotalCount.ToString(),
+                    MsgNewAndroidCount = NewAndroidCount.ToString(),
+                    MsgNewIOSCount = NewIOSCount.ToString(),
+                }
+                });
+              
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = AdminResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    Value= new
+                    {
+                        IsSuccess = false,
+                        MsgDay = "",
+                        MsgTotalCount = "",
+                        MsgPcTotalCount = "",
+                        MsgTouchTotalCount = "",
+                        MsgAndroidTotalCount = "",
+                        MsgIosTotalCount = "",
+                        MsgNewTouchTotalCount = "",
+                        MsgFillMoneyTotalCount = "",
+                        MsgAuthTotalCount = "",
+                        MsgNewAndroidCount = "",
+                        MsgNewIOSCount = ""
+                    }
+
+                });
+            }
+        }
+
+        #endregion
     }
 }

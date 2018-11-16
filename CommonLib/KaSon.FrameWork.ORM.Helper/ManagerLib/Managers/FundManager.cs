@@ -150,5 +150,34 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return DB.CreateQuery<C_Withdraw>().Where(p => p.UserId == userId && p.Status == (int)WithdrawStatus.Success).Sum(p => p.RequestMoney);
         }
+
+        public decimal QueryMonthFillMoney()
+        {
+            var startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0);
+            var endTime = DateTime.Today.AddDays(1);
+
+           
+            var query = DB.CreateQuery<C_FillMoney>().Where(p => p.Status == (int)FillMoneyStatus.Success
+               
+                && (p.FillMoneyAgent != (int)FillMoneyAgentType.ManualAdd && p.FillMoneyAgent != (int)FillMoneyAgentType.ManualDeduct)
+                && p.RequestTime >= startTime
+                && p.RequestTime < endTime);
+            if (query.Count() == 0) return 0M;
+            return query.Sum(p => p.ResponseMoney);
+        }
+        public decimal QueryMonthWithdraw()
+        {
+            var startTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1, 0, 0, 0);
+            var endTime = DateTime.Today.AddDays(1);
+
+           
+            var query = DB.CreateQuery<C_Withdraw>().Where(p => p.Status == (int)WithdrawStatus.Success
+                //&& p.ResponseMoney.HasValue
+                //&& p.ResponseTime.HasValue
+                && p.RequestTime >= startTime
+                && p.RequestTime < endTime);
+            if (query.Count() == 0) return 0M;
+            return query.Sum(p => p.ResponseMoney);
+        }
     }
 }

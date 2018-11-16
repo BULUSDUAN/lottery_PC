@@ -126,16 +126,7 @@ namespace KaSon.FrameWork.ORM.Helper
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
             var query = from t in DB.CreateQuery<C_User_Balance_FreezeList>()
                         where t.UserId == userId
-                        select new UserBalanceFreezeInfo
-                        {
-                            Id = t.Id,
-                            UserId = t.UserId,
-                            OrderId = t.OrderId,
-                            FreezeMoney = t.FreezeMoney,
-                            Category =(FrozenCategory)Convert.ToInt32(t.Category),
-                            Description = t.Description,
-                            CreateTime = t.CreateTime,
-                        };
+                        select t;
 
             totalCount = query.Count();
             if (totalCount > 0)
@@ -149,8 +140,16 @@ namespace KaSon.FrameWork.ORM.Helper
             return query
                 .OrderByDescending(u => u.CreateTime)
                 .Skip(pageIndex * pageSize)
-                .Take(pageSize)
-                .ToList();
+                .Take(pageSize).ToList().Select(t=> new UserBalanceFreezeInfo
+                {
+                    Id = t.Id,
+                    UserId = t.UserId,
+                    OrderId = t.OrderId,
+                    FreezeMoney = t.FreezeMoney,
+                    Category = (FrozenCategory)Convert.ToInt32(t.Category),
+                    Description = t.Description,
+                    CreateTime = t.CreateTime,
+                }).ToList();
         }
         public C_User_Register GetUserRegister(string userId)
         {
@@ -220,6 +219,31 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
             }
             return strResult;
+        }
+
+        public dynamic QueryCommonAndBonusMoney()
+        {
+          
+            //var query = from b in this.Session.Query<UserBalance>()
+            //            join r in this.Session.Query<UserRegister>() on b.UserId equals r.UserId
+            //            where (!r.IsIgnoreReport.HasValue || !r.IsIgnoreReport.Value) && r.IsEnable
+            //            select new
+            //            {
+            //                CommonMoney = b.CommonBalance,
+            //                BonusMoney = b.BonusBalance,
+            //            };
+            //if (query.Count() == 0)
+            //    return new
+            //    {
+
+            //        TotalCommonMoney = 0M,
+            //        TotalBonusMoney = 0M,
+            //    };
+            return new
+            {
+                TotalCommonMoney = 0M,// query.Sum(p => p.CommonMoney),
+                TotalBonusMoney = 0M,//query.Sum(p => p.BonusMoney),
+            };
         }
 
         /// <summary>
@@ -330,8 +354,96 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var today = DateTime.Now.Date;
             var tomorrow = today.AddDays(1).Date;
-            return DB.CreateQuery<C_User_Register>().Count(p => p.CreateTime >= today && p.CreateTime < tomorrow);
+            int number= DB.CreateQuery<C_User_Register>().Where(p => p.CreateTime >= today && p.CreateTime < tomorrow).Count();
+            return number;
         }
+             
         #endregion
+
+
+
+        /// <summary>
+        /// 查询统计会员分布
+        /// </summary>
+        /// <returns></returns>
+        public MemberSpreadInfoCollection QueryMemberSpread()
+        {
+
+            var sql = string.Format(@"----1 统计公司各省份人数 取前9个 其他----  
+                                    select * from   
+                                    (       --统计前9个省份的人数  
+                                            (select  top 9 c.ProvinceName, COUNT(*) tcount from C_User_Register r
+                                      inner join E_Authentication_RealName n on r.UserId=n.UserId
+                                      inner join C_BankCard c on r.UserId=c.UserId
+                                       group by c.ProvinceName order by tcount desc )  
+                                        --合并查询结果 合并其他省份的人数  
+                                        union   
+                                            (       --合并第9名之后的 为 其他省份  人数  
+                                                     select '其他省份' torigo ,SUM(t3.tcount) tcount from  
+                                                     (  
+                                                        --统计从第9名之后的省份人数  
+                                                         select *from     
+                                                         (  
+                                                         select ROW_NUMBER() OVER(Order by t1.tcount desc ) as rowin,* from   
+                                                               (  
+                                                                select  c.ProvinceName, COUNT(*) tcount from C_User_Register r
+                                           inner join E_Authentication_RealName n on r.UserId=n.UserId
+                                           inner join C_BankCard c on r.UserId=c.UserId
+                                            group by c.ProvinceName   
+                                                               ) t1  
+                                                          ) t2 where t2.rowin>9    
+                                                     ) t3  
+                                            )   
+                                            --人数从大到小排序  
+                                    )  as t4 order by t4.tcount desc");
+            var query = DB.CreateSQLQuery(sql).List<MemberSpreadInfo>();
+            MemberSpreadInfoCollection list = new MemberSpreadInfoCollection();
+            list.infoList = query.ToList();           
+            return list;
+            
+        }
+        /// <summary>
+        /// 查询统计充值提现信息（按月统计）
+        /// </summary>
+        /// <returns></returns>
+        public FillMoneyWithdrawInfoCollection FillMoneyWithdrawInfo()
+        {
+          
+            var sqlFm = string.Format(@"select convert(varchar(10),RequestTime,120) as 'Month',sum(ResponseMoney) as 'TotalMoney' from C_FillMoney where Status=1 and RequestTime>=DateAdd(m,-1,getdate()) group by convert(varchar(10),RequestTime,120) order by convert(varchar(10),RequestTime,120)");
+            var queryFm = DB.CreateSQLQuery(sqlFm).List<FillMoneyWithdrawInfo>();
+            var sqlwd = string.Format(@"select convert(varchar(10),RequestTime,120) as 'Month',sum(ResponseMoney) as 'TotalMoney' from C_Withdraw where Status=3 and RequestTime>=DateAdd(m,-1,getdate()) group by convert(varchar(10),RequestTime,120) order by convert(varchar(10),RequestTime,120)");
+            var querywd = DB.CreateSQLQuery(sqlwd).List<FillMoneyWithdrawInfo>();
+            FillMoneyWithdrawInfoCollection list = new FillMoneyWithdrawInfoCollection();
+            list.fillMoneyInfoList = queryFm.ToList();
+            list.WithdrawInfoList = querywd.ToList();
+            return list;
+        }
+        /// <summary>
+        /// 查询总平台、pc、安卓、ios、wap当天的注册人数、实名人数、付费人数
+        /// </summary>
+        /// <returns></returns>
+        public MemberTotalCollection QueryMemberTotal()
+        {
+
+            var sqlStr = @"select convert(varchar(10),c.CreateTime,120) as 'Day',count(1) as 'TotalCount', 
+                            sum(case when c.ComeFrom='LOCAL' then 1 else 0 end ) as 'PcTotalCount',
+                            sum(case when c.ComeFrom='TOUCH' then 1 else 0 end ) as 'TouchTotalCount',
+                            sum(case when c.ComeFrom='NewTOUCH' then 1 else 0 end ) as 'NewTouchTotalCount',
+                            sum(case when c.ComeFrom='android' then 1 else 0 end ) as 'AndroidTotalCount',
+                            sum(case when c.ComeFrom='ios' then 1 else 0 end ) as 'IosTotalCount',
+                            sum(case when c.IsFillMoney='1' then 1 else 0 end ) as 'FillMoneyTotalCount',
+                            sum(case when er.AuthTotalCount>0 then 1 else 0 end ) as 'AuthTotalCount',
+                            sum(case when c.ComeFrom='NewAndroid' then 1 else 0 end ) as 'NewAndroidTotalCount',
+                            sum(case when c.ComeFrom='NewIOS' then 1 else 0 end ) as 'NewIOSTotalCount' 
+                            from C_User_Register c 
+                            left join (select e.UserId,count(1) as 'AuthTotalCount' from E_Authentication_RealName e  group by convert(varchar(10),e.CreateTime,120),UserId) as er on c.UserId=er.UserId
+                            where  c.CreateTime>=DateAdd(m,-1,getdate())
+                             group by convert(varchar(10),c.CreateTime,120) 
+                             order by convert(varchar(10),c.CreateTime,120)";
+            var query = DB.CreateSQLQuery(sqlStr).List<MemberTotalInfo>();
+            MemberTotalCollection mtc = new MemberTotalCollection();
+            mtc.list = query.ToList();
+            return mtc;
+        }
     }
 } 

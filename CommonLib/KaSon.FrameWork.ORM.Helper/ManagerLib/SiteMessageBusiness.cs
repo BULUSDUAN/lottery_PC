@@ -33,8 +33,6 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void UpdateArticleStaticPath(string articleId, string staticPath, string preId, string nextId)
         {
-
-            DB.Begin();
             var manager = new ArticleManager();
             var entity = manager.QueryArticle(articleId);
             if (entity == null)
@@ -61,8 +59,6 @@ namespace KaSon.FrameWork.ORM.Helper
                 next.PreTitle = entity.Title.Length > 50 ? entity.Title.Substring(0, 50) : entity.Title;
                 manager.UpdateArticle(next);
             }
-            DB.Commit();
-
         }
 
         public void AddSysOperationLog(string userId, string operUserId, string menuName, string desc)
@@ -240,6 +236,9 @@ namespace KaSon.FrameWork.ORM.Helper
             article.Description = content;
             article.CreateTime = DateTime.Now;
             article.UpdateTime = DateTime.Now;
+            article.UpdateUserKey = article.CreateUserKey;
+            article.UpdateUserDisplayName = article.CreateUserDisplayName;
+          
             manager.AddArticle(article);
             return id;
         }
@@ -296,6 +295,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var manager = new BulletinManager();
             var entity = manager.QueryBannerManager(bannerId);
+            if (entity == null)
+            {
+                throw new ArgumentException("指定编号的文章不存在");
+            }
             manager.DeleteBanner(entity);
         }
 

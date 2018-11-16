@@ -224,7 +224,6 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public InnerMailInfo_Query ReadInnerMail(string innerMailId, string UserId)
         {
-            DB.Begin();
             if (!IsMyInnerMail(innerMailId, UserId))
             {
                 throw new SiteMessageException(string.Format("此站内信不属于指定用户。站内信：{0}；用户：{1}。", innerMailId, UserId));
@@ -232,20 +231,17 @@ namespace KaSon.FrameWork.ORM.Helper
             var read = new DataQuery();
             read.ReadInnerMail(innerMailId, UserId);
             var info = QueryInnerMailDetailById(innerMailId);
-            DB.Commit();
             return info;
         }
 
         public CommonActionResult DeleteInnerMail(string innerMailId, string userId)
         {
 
-            DB.Begin();
             if (!IsMyInnerMail(innerMailId, userId))
             {
                 throw new SiteMessageException(string.Format("此站内信不属于指定用户。站内信：{0}；用户：{1}。", innerMailId, userId));
             }
             deleteInnerMail(innerMailId, userId);
-            DB.Commit();
             return new CommonActionResult(true, "删除站内信完成。");
         }
 

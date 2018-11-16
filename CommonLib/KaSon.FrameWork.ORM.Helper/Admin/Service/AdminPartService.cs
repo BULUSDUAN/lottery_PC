@@ -435,6 +435,23 @@ namespace KaSon.FrameWork.ORM.Helper
         #endregion
 
         #region 禁用比赛
+
+        /// <summary>
+        /// 查询彩种状态
+        /// </summary>
+        public LotteryGameInfoCollection QueryLotteryGameList()
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new GameBusiness().LotteryGame();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
         public CoreJCZQMatchInfoCollection QueryCurrentJCZQMatchInfo(string userToken)
         {
             // 验证用户身份及权限
@@ -514,7 +531,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new Exception(ex.Message, ex);
             }
         }
-        public CommonActionResult UpdateLotteryGame(string userToken, string gameCode, int enableStatus)
+        public CommonActionResult UpdateLotteryGame(string gameCode, int enableStatus)
         {
             // 验证用户身份及权限
             //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
@@ -662,7 +679,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 根据用户编号查询用户历史登录
         /// </summary>
-        public UserLoginHistoryCollection QueryCache_UserLoginHistoryCollectionByUserId(string userId, string userToken)
+        public UserLoginHistoryCollection QueryCache_UserLoginHistoryCollectionByUserId(string userId)
         {
             try
             {
@@ -676,7 +693,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 根据用户编号查询银行卡信息
         /// </summary>
-        public C_BankCard QueryBankCardByUserId(string userId, string userToken)
+        public C_BankCard QueryBankCardByUserId(string userId)
         {
             return new BankCardBusiness().BankCardById(userId);
         }
@@ -684,7 +701,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 获取口令
         /// todo:后台权限
         /// </summary>
-        public CommonActionResult GetUserTokenByKey(string userId, string userToken)
+        public CommonActionResult GetUserTokenByKey(string userId)
         {
             // 验证用户身份及权限
             //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
@@ -2483,6 +2500,92 @@ namespace KaSon.FrameWork.ORM.Helper
             new Sports_Business().LotteryIssusePrize(gameCode, string.Empty, issuse, "-");
             //new PrizeBusiness().IssusePrize(gameCode, issuse, string.Empty);
             return "奖期更新完成";
+        }
+
+
+        /// <summary>
+        /// 查询统计会员分布 前十名省会注册 实名 绑定卡的
+        /// </summary>
+        /// <returns></returns>
+        public MemberSpreadInfoCollection QueryMemberSpread()
+        {
+           
+            try
+            {
+                return new GameBusiness().QueryMemberSpread();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询统计会员分布出错 - " + ex.Message, ex);
+            }
+        }
+        /// <summary>
+        /// 查询统计充值提现信息（按月统计）
+        /// </summary>
+        /// <returns></returns>
+        public FillMoneyWithdrawInfoCollection FillMoneyWithdrawInfo()
+        {
+           
+            try
+            {
+                return new GameBusiness().FillMoneyWithdrawInfo();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询统计充值提现信息 - " + ex.Message, ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 查询总平台、pc、安卓、ios、wap当天的注册人数、实名人数、付费人数
+        /// </summary>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public MemberTotalCollection QueryMemberTotal()
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                return new GameBusiness().QueryMemberTotal();
+               
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询统计会员分布出错 - " + ex.Message, ex);
+            }
+        }
+
+        public bool CheckIsAuthenticationFunction(string functionId, string needRight, string userToken)
+        {
+            try
+            {
+                // 验证用户身份及权限
+                string userId;
+                GameBizAuthBusiness.ValidateAuthentication(userToken, needRight, functionId, out userId);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 查询站点描述信息
+        /// </summary>
+        public SiteSummaryInfo QuerySiteSummary()
+        {
+        
+            try
+            {
+                return new GameBusiness().QuerySiteSummary();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
     }
 }

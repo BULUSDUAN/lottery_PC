@@ -953,14 +953,12 @@ namespace KaSon.FrameWork.ORM.Helper
         public void EnableUser(string userId)
         {
             //开启事务
-            DB.Begin();
             var manager = new UserBalanceManager();
             var register = manager.LoadUserRegister(userId);
             if (register == null)
                 throw new Exception("用户不存在");
             register.IsEnable = true;
             manager.UpdateUserRegister(register);
-            DB.Commit();
         }
         public void BatchSetInnerUser(string userIds)
         {
@@ -969,13 +967,22 @@ namespace KaSon.FrameWork.ORM.Helper
             var arrUserIds = userIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             var manager = new UserBalanceManager();
             DB.Begin();
-            foreach (var item in arrUserIds)
+            try
             {
-                var entity = manager.LoadUserRegister(item);
-                entity.UserType = 1;
-                manager.UpdateUserRegister(entity);
+                foreach (var item in arrUserIds)
+                {
+                    var entity = manager.LoadUserRegister(item);
+                    entity.UserType = 1;
+                    manager.UpdateUserRegister(entity);
+                }
+                DB.Commit();
             }
-            DB.Commit();
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
         }
         public NotOnlineUserCollection QueryNotOnlineRecentlyList(int days, int pageIndex, int pageSize)
         {
@@ -1074,7 +1081,6 @@ namespace KaSon.FrameWork.ORM.Helper
         public void ResetUserPassword(string userId)
         {
             var newPassword = Encipherment.MD5(string.Format("{0}{1}", C_DefaultPassword, _gbKey)).ToUpper();
-            DB.Begin();
             var user = new LoginLocalManager().GetLoginByUserId(userId);
             if (user == null)
             {
@@ -1082,7 +1088,6 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             user.Password = newPassword;
             new LoginLocalManager().UpdateLogin(user);
-            DB.Commit();
         }
 
         public bool User_AfterLogin(string userId, string loginFrom, string loginIp, DateTime loginTime)

@@ -1301,7 +1301,17 @@ where f.status=3
         }
 
         #endregion
-
-
+        public List<LotteryGameInfo> QueryLotteryGameList()
+        {
+            var query = from g in DB.CreateQuery<C_Lottery_Game>()
+                        orderby g.GameCode
+                        select new LotteryGameInfo
+                        {
+                            DisplayName = g.DisplayName,
+                            EnableStatus = (EnableStatus)g.EnableStatus,
+                            GameCode = g.GameCode
+                        };
+            return query.ToList();
+        }
     }
 }
