@@ -16,10 +16,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public void BuildCoupons(string summary, decimal money, int count)
         {
-            DB.Begin();
-
             var activityManager = new A20131105Manager();
-
             for (int i = 0; i < count; i++)
             {
                 var md5 = Encipherment.MD5(Guid.NewGuid().ToString());
@@ -50,8 +47,6 @@ namespace KaSon.FrameWork.ORM.Helper
                     Number = code,
                 });
             }
-
-            DB.Commit();
         }
         /// <summary>
         /// 使用优惠券
@@ -59,28 +54,37 @@ namespace KaSon.FrameWork.ORM.Helper
         public void ExchangeCoupons(string userId, string couponsNumber)
         {
             DB.Begin();
+            try
+            {
+                var activityManager = new A20131105Manager();
+                var entity = activityManager.QueryA20131105_优惠券(couponsNumber);
+                if (entity == null)
+                    throw new Exception(string.Format("优惠券{0}不存在", couponsNumber));
 
-            var activityManager = new A20131105Manager();
-            var entity = activityManager.QueryA20131105_优惠券(couponsNumber);
-            if (entity == null)
-                throw new Exception(string.Format("优惠券{0}不存在", couponsNumber));
+                if (!entity.CanUsable)
+                    throw new Exception(string.Format("优惠券{0}已使用", couponsNumber));
 
-            if (!entity.CanUsable)
-                throw new Exception(string.Format("优惠券{0}已使用", couponsNumber));
+                var old = activityManager.QueryA20131105_优惠券(entity.Summary, userId);
+                if (old != null)
+                    throw new Exception("同一类型优惠券只能使用一张");
 
-            var old = activityManager.QueryA20131105_优惠券(entity.Summary, userId);
-            if (old != null)
-                throw new Exception("同一类型优惠券只能使用一张");
+                entity.CanUsable = false;
+                entity.BelongUserId = userId;
+                activityManager.UpdateA20131105_优惠券(entity);
 
-            entity.CanUsable = false;
-            entity.BelongUserId = userId;
-            activityManager.UpdateA20131105_优惠券(entity);
+                //BusinessHelper.Payin_2Balance(BusinessHelper.FundCategory_Activity, couponsNumber, couponsNumber, false, "", "", userId, AccountType.Common, entity.Money, string.Format("优惠券{0}兑换{1:N2}元", couponsNumber, entity.Money));
+                BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, userId, couponsNumber, entity.Money,
+                    string.Format("优惠券{0}兑换{1:N2}元", couponsNumber, entity.Money), RedBagCategory.Activity);
 
-            //BusinessHelper.Payin_2Balance(BusinessHelper.FundCategory_Activity, couponsNumber, couponsNumber, false, "", "", userId, AccountType.Common, entity.Money, string.Format("优惠券{0}兑换{1:N2}元", couponsNumber, entity.Money));
-            BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, userId, couponsNumber, entity.Money,
-                string.Format("优惠券{0}兑换{1:N2}元", couponsNumber, entity.Money), RedBagCategory.Activity);
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
 
-            DB.Commit();
         }
 
 

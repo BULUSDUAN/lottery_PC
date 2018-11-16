@@ -22,7 +22,6 @@ namespace KaSon.FrameWork.ORM.Helper
         public void LogOffUserAgent(string userId)
         {
             //开启事务
-           // DB.Begin();
             var manager = new UserBalanceManager();
             var reg = manager.GetUserRegister(userId);
             if (reg == null)
@@ -39,7 +38,6 @@ namespace KaSon.FrameWork.ORM.Helper
             var role = user.RoleList.FirstOrDefault(p => p.RoleId == "Agent");
             if (role != null)
                 user.RoleList.Remove(role);
-           // DB.Commit();
 
         }
 

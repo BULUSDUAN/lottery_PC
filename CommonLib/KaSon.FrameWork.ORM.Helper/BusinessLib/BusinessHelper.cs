@@ -2715,7 +2715,8 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
 
             SDB.Begin();
-
+            try
+            {
                 #region 处理订单
 
                 order.BonusStatus = (int)bonusStatus;
@@ -2941,10 +2942,18 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
                 }
 
-            #endregion
+                #endregion
 
-            SDB.Begin();
-        
+                SDB.Commit();
+            }
+            catch (Exception ex)
+            {
+                SDB.Rollback();
+                SDB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
+
+
 
             #region 发送站内消息：手机短信或站内信
 

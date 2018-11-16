@@ -91,7 +91,6 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         {
             if (issuseArray.Length <= 0) return;
             //开启事务
-                LottertDataDB.Begin();
                 var manager = new KJGameIssuseManager();
                 var count = 1;
                 if (issuseArray.Length >= 500)
@@ -105,7 +104,6 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
                     var array = issuseArray.Skip(500 * i).Take(500).ToArray();
                     manager.DeleteIssuseData(gameCode, array);
                 }
-                LottertDataDB.Commit();            
         }
     }
 }

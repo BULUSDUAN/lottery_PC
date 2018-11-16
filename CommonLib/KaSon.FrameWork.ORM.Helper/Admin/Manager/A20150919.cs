@@ -60,26 +60,35 @@ namespace KaSon.FrameWork.ORM.Helper
 
             //开启事务
             DB.Begin();
-            //分享推广送绑定了卡的送红包
-            //绑定卡了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
-            var entityBankCard = new BankCardManager().BankCardById(userId);
-            var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
-            if (entityBankCard != null && entityShareSpread != null && !entityShareSpread.isGiveRegisterRedBag)
+            try
             {
-                //该用户首次绑定卡 没有给分享者送活动红包 就执行送红包
-                var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstBindBankCardGiveRedBagTofxid"));
-                if (giveFillMoney > 0)
+                //分享推广送绑定了卡的送红包
+                //绑定卡了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
+                var entityBankCard = new BankCardManager().BankCardById(userId);
+                var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
+                if (entityBankCard != null && entityShareSpread != null && !entityShareSpread.isGiveRegisterRedBag)
                 {
-                    BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
-                                      , string.Format("{1}用户首次绑定银行卡赠送红包给分享推广用户{0}元", giveFillMoney, userId), RedBagCategory.FxidRegister);
+                    //该用户首次绑定卡 没有给分享者送活动红包 就执行送红包
+                    var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstBindBankCardGiveRedBagTofxid"));
+                    if (giveFillMoney > 0)
+                    {
+                        BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
+                                          , string.Format("{1}用户首次绑定银行卡赠送红包给分享推广用户{0}元", giveFillMoney, userId), RedBagCategory.FxidRegister);
 
-                    entityShareSpread.isGiveRegisterRedBag = true;
-                    entityShareSpread.UpdateTime = DateTime.Now;
-                    entityShareSpread.giveRedBagMoney = entityShareSpread.giveRedBagMoney + giveFillMoney;
-                    new BlogManager().UpdateBlog_UserShareSpread(entityShareSpread);
+                        entityShareSpread.isGiveRegisterRedBag = true;
+                        entityShareSpread.UpdateTime = DateTime.Now;
+                        entityShareSpread.giveRedBagMoney = entityShareSpread.giveRedBagMoney + giveFillMoney;
+                        new BlogManager().UpdateBlog_UserShareSpread(entityShareSpread);
+                    }
                 }
+                DB.Commit();
             }
-            DB.Commit();
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
         }
 
         /// <summary>
@@ -540,54 +549,62 @@ namespace KaSon.FrameWork.ORM.Helper
             #endregion
             //开启事务
             DB.Begin();
-            var givedMoney = manager.QueryTotalFillMoneyGiveRedBag(userId, DateTime.Now.ToString("yyyyMM"), 1);
-            var maxGiveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FillMoneyMaxGiveRedBagOneMonth"));
-            //本月赠送金额已达到最大
-            if (givedMoney >= maxGiveMoney)
-                throw new LogicException("用户本月已达到最大赠送红包数");
-            var configList = manager.QueryA20150919_充值送红包配置();
-            E_A20150919_充值送红包配置 rule = null;
-            foreach (var config in configList)
+            try
             {
-                if (fillMoney >= config.FillMoney)
+                var givedMoney = manager.QueryTotalFillMoneyGiveRedBag(userId, DateTime.Now.ToString("yyyyMM"), 1);
+                var maxGiveMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FillMoneyMaxGiveRedBagOneMonth"));
+                //本月赠送金额已达到最大
+                if (givedMoney >= maxGiveMoney)
+                    throw new LogicException("用户本月已达到最大赠送红包数");
+                var configList = manager.QueryA20150919_充值送红包配置();
+                E_A20150919_充值送红包配置 rule = null;
+                foreach (var config in configList)
                 {
-                    //找到了对应规则
-                    rule = config;
-                    break;
+                    if (fillMoney >= config.FillMoney)
+                    {
+                        //找到了对应规则
+                        rule = config;
+                        break;
+                    }
                 }
+                //未达到任何一条赠送规则
+                if (rule == null)
+                    throw new LogicException("充值金额未查找到赠送规则");
+                //赠送红包
+                var giveMoney = rule.GiveMoney;//要赠送的红包
+                                               //要赠送的红包+已经获取的红包>当月最大赠送红包
+                if ((giveMoney + givedMoney) > maxGiveMoney)
+                {
+                    giveMoney = maxGiveMoney - givedMoney;//当月最大赠送红包-已经获取的红包
+                }
+                if (giveMoney <= 0)
+                    throw new LogicException("用户本月已赠送红包 加 当前赠送红包 已达到最大配置");
+
+
+
+                //throw new LogicException("用户本月已赠送红包 加 当前赠送红包 已达到最大配置");
+                BusinessHelper.Payin_To_Balance(AccountType.RedBag,
+                    BusinessHelper.FundCategory_Activity, userId, orderId,
+                    giveMoney, string.Format("充值金额大于等于{0}元，赠送红包{1}元", rule.FillMoney, rule.GiveMoney.ToString("N2")), RedBagCategory.FillMoney);
+                //添加赠送记录
+                manager.AddA20150919_充值送红包记录(new E_A20150919_充值送红包记录
+                {
+                    CreateTime = DateTime.Now,
+                    UserId = userId,
+                    OrderId = orderId,
+                    FillMoney = fillMoney,
+                    GiveMoney = giveMoney,
+                    GiveMonth = DateTime.Now.ToString("yyyyMM"), //GiveMonth = DateTime.Now.Month.ToString(),
+                    PayType = 1
+                });
+                DB.Commit();
             }
-            //未达到任何一条赠送规则
-            if (rule == null)
-                throw new LogicException("充值金额未查找到赠送规则");
-            //赠送红包
-            var giveMoney = rule.GiveMoney;//要赠送的红包
-                                           //要赠送的红包+已经获取的红包>当月最大赠送红包
-            if ((giveMoney + givedMoney) > maxGiveMoney)
+            catch (Exception ex)
             {
-                giveMoney = maxGiveMoney - givedMoney;//当月最大赠送红包-已经获取的红包
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
             }
-            if (giveMoney <= 0)
-                throw new LogicException("用户本月已赠送红包 加 当前赠送红包 已达到最大配置");
-
-
-
-            //throw new LogicException("用户本月已赠送红包 加 当前赠送红包 已达到最大配置");
-            BusinessHelper.Payin_To_Balance(AccountType.RedBag,
-                BusinessHelper.FundCategory_Activity, userId, orderId,
-                giveMoney, string.Format("充值金额大于等于{0}元，赠送红包{1}元", rule.FillMoney, rule.GiveMoney.ToString("N2")), RedBagCategory.FillMoney);
-            //添加赠送记录
-            manager.AddA20150919_充值送红包记录(new E_A20150919_充值送红包记录
-            {
-                CreateTime = DateTime.Now,
-                UserId = userId,
-                OrderId = orderId,
-                FillMoney = fillMoney,
-                GiveMoney = giveMoney,
-                GiveMonth = DateTime.Now.ToString("yyyyMM"), //GiveMonth = DateTime.Now.Month.ToString(),
-                PayType = 1
-            });
-            DB.Commit();
-
             #region 给分享用户送红包逻辑
             FirstRechargeGiveRedBag(userId, fillMoney);
             #endregion
@@ -674,31 +691,40 @@ namespace KaSon.FrameWork.ORM.Helper
         public void FirstRechargeGiveRedBag(string userId, decimal totalMoney)
         {
             DB.Begin();
-            //分享推广 首充 送红包
-            //首充超过一定金额了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
-            var fundManager = new FundManager();
-            var count = fundManager.QueryFillMoneyCount(userId);
-            if (count == 1)
+            try
             {
-                var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
-                var satisfyFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.SatisfyRechargeGiveRedBagTofxid"));
-                if (entityShareSpread != null && !entityShareSpread.isGiveRechargeRedBag && totalMoney >= satisfyFillMoney)
+                //分享推广 首充 送红包
+                //首充超过一定金额了 且是通过分享注册的用户 没有送红包 就执行分享推广活动
+                var fundManager = new FundManager();
+                var count = fundManager.QueryFillMoneyCount(userId);
+                if (count == 1)
                 {
-                    //购彩了 没有给分享者送活动红包 就执行送红包 只送一次
-                    var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstRechargeGiveRedBagTofxid"));
-                    if (giveFillMoney > 0)
+                    var entityShareSpread = new BlogManager().QueryBlog_UserShareSpread(userId);
+                    var satisfyFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.SatisfyRechargeGiveRedBagTofxid"));
+                    if (entityShareSpread != null && !entityShareSpread.isGiveRechargeRedBag && totalMoney >= satisfyFillMoney)
                     {
-                        BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
-                                          , string.Format("{1}用户首次充值超过{2}元，赠送红包给分享推广用户{0}元", giveFillMoney, userId, satisfyFillMoney), RedBagCategory.FxidRegister);
+                        //购彩了 没有给分享者送活动红包 就执行送红包 只送一次
+                        var giveFillMoney = decimal.Parse(ActivityCache.QueryActivityConfig("ActivityConfig.FirstRechargeGiveRedBagTofxid"));
+                        if (giveFillMoney > 0)
+                        {
+                            BusinessHelper.Payin_To_Balance(AccountType.RedBag, BusinessHelper.FundCategory_Activity, entityShareSpread.AgentId, Guid.NewGuid().ToString("N"), giveFillMoney
+                                              , string.Format("{1}用户首次充值超过{2}元，赠送红包给分享推广用户{0}元", giveFillMoney, userId, satisfyFillMoney), RedBagCategory.FxidRegister);
 
-                        entityShareSpread.isGiveRechargeRedBag = true;
-                        entityShareSpread.UpdateTime = DateTime.Now;
-                        entityShareSpread.giveRedBagMoney = entityShareSpread.giveRedBagMoney + giveFillMoney;
-                        new BlogManager().UpdateBlog_UserShareSpread(entityShareSpread);
+                            entityShareSpread.isGiveRechargeRedBag = true;
+                            entityShareSpread.UpdateTime = DateTime.Now;
+                            entityShareSpread.giveRedBagMoney = entityShareSpread.giveRedBagMoney + giveFillMoney;
+                            new BlogManager().UpdateBlog_UserShareSpread(entityShareSpread);
+                        }
                     }
                 }
+                DB.Commit();
             }
-            DB.Commit();
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
         }
         #endregion
     }
@@ -723,6 +749,8 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             //开启事务
                 DB.Begin();
+            try
+            {
                 var manager = new Sports_Manager();
                 var order = manager.QuerySports_Order_Complate(schemeId);
                 if (order == null)
@@ -869,6 +897,13 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 DB.Commit();
             }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
+        }
 
         /// <summary>
         /// 递归查找用户的所有上级

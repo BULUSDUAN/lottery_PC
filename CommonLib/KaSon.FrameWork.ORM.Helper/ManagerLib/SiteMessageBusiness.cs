@@ -33,8 +33,6 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void UpdateArticleStaticPath(string articleId, string staticPath, string preId, string nextId)
         {
-
-            DB.Begin();
             var manager = new ArticleManager();
             var entity = manager.QueryArticle(articleId);
             if (entity == null)
@@ -61,8 +59,6 @@ namespace KaSon.FrameWork.ORM.Helper
                 next.PreTitle = entity.Title.Length > 50 ? entity.Title.Substring(0, 50) : entity.Title;
                 manager.UpdateArticle(next);
             }
-            DB.Commit();
-
         }
 
         public void AddSysOperationLog(string userId, string operUserId, string menuName, string desc)
