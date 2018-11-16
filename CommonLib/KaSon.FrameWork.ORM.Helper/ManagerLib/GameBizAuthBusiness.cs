@@ -714,32 +714,41 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public RoleInfo_QueryCollection GetSystemRoleCollection()
         {
-                var list = new RoleManager().QueryRoleList();
+            var list = new RoleManager().QueryRoleList();
 
-                var collection = new RoleInfo_QueryCollection();
-                ObjectConvert.ConvertEntityListToInfoList<IList<C_Auth_Roles>, C_Auth_Roles, RoleInfo_QueryCollection, RoleInfo_Query>(list, ref collection, () => new RoleInfo_Query());
-                return collection;
+            var collection = new RoleInfo_QueryCollection();
+            ObjectConvert.ConvertEntityListToInfoList<IList<C_Auth_Roles>, C_Auth_Roles, RoleInfo_QueryCollection, RoleInfo_Query>(list, ref collection, () => new RoleInfo_Query());
+            return collection;
         }
         public void AddUserRoles(string userId, string[] roleIds)
         {
-            DB.Begin();
             var userManager = new UserManager();
+            var roleList = userManager.GetRolesByIDs(roleIds);
             var user = userManager.LoadUser(userId);
             if (user == null)
             {
                 throw new ArgumentException("指定的用户不存在。");
             }
-            var roleList = userManager.GetRolesByIDs(roleIds);
-            List<C_Auth_UserRole> entitylist = new List<C_Auth_UserRole>();
-            foreach (var item in roleList)
+            DB.Begin();
+            try
             {
-                entitylist.Add(new C_Auth_UserRole() {
-                    UserId=user.UserId,
-                    RoleId=item.RoleId
-                });
+                List<C_Auth_UserRole> entitylist = new List<C_Auth_UserRole>();
+                foreach (var item in roleList)
+                {
+                    entitylist.Add(new C_Auth_UserRole()
+                    {
+                        UserId = user.UserId,
+                        RoleId = item.RoleId
+                    });
+                    userManager.AddUserRole(entitylist);
+                }
+                DB.Commit();
             }
-            userManager.AddUserRole(entitylist);
-            DB.Commit();
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                throw;
+            }
         }
 
         public List<C_Auth_Roles> GetSystemRole()

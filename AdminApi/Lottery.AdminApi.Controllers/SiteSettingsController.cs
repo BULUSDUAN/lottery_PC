@@ -282,7 +282,7 @@ namespace Lottery.AdminApi.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = AdminResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString()
+                    Message = ex.ToGetMessage()
                 });
             }
         }
@@ -408,13 +408,13 @@ namespace Lottery.AdminApi.Controllers
                     throw new Exception("对不起，您的权限不足！");
                 var p = JsonHelper.Decode(entity.Param);
                 string roles = p.roles;
-                string loginNameStr = p.loginName;
+                //string loginNameStr = p.loginName;
                 string userId = p.userId;
                 var roleResult = PreconditionAssert.IsNotEmptyString(roles, "用户角色不能为空");
                 var array = roleResult.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                 StringBuilder addRoleIdList = new StringBuilder();
                 StringBuilder removeRoleIdList = new StringBuilder();
-                var loginName = PreconditionAssert.IsNotEmptyString(loginNameStr, "登录名不能为空");
+                //var loginName = PreconditionAssert.IsNotEmptyString(loginNameStr, "登录名不能为空");
                 var service = new AdminService();
                 var RoleIds = service.QueryUserRoleIdsByUserId(userId);
                 if (!string.IsNullOrEmpty(RoleIds))
@@ -438,7 +438,7 @@ namespace Lottery.AdminApi.Controllers
                         addRoleIdList.Append(",");
                     }
                 }
-                var result = service.UpdateBackgroundUserInfo(userId, loginName, addRoleIdList.ToString(), removeRoleIdList.ToString());
+                var result = service.UpdateBackgroundUserInfo(userId, addRoleIdList.ToString(), removeRoleIdList.ToString());
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "修改完成" });
             }
             catch (Exception ex)
@@ -544,7 +544,7 @@ namespace Lottery.AdminApi.Controllers
                 plugin.ClassName = PreconditionAssert.IsNotEmptyString(className, "类名不能为空");
                 plugin.InterfaceName = PreconditionAssert.IsNotEmptyString(interfaceName, "接口名不能为空");
                 plugin.AssemblyFileName = PreconditionAssert.IsNotEmptyString(assemblyFileName, "组件文件名不能为空");
-                plugin.IsEnable = bool.Parse(isEnable.ToString());
+                plugin.IsEnable = bool.Parse(isEnable);
                 var orderIndex = PreconditionAssert.IsNotEmptyString(orderIndexstr, "排序索引不能为空");
                 plugin.OrderIndex = int.Parse(orderIndex);
                 var service = new AdminService();
@@ -623,7 +623,7 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                var key = p.configKey;
+                string key = p.configKey;
                 //bool gxpz = false;
                 //if (CheckRights("GXPZ100"))
                 //    gxpz = true;
