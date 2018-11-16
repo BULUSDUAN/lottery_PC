@@ -285,18 +285,21 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var service = new AdminService();
-                var str = "";
+               // var str = "";
+                Dictionary<string, int> dic = new Dictionary<string, int>();
                 //会员分布
                 MemberSpreadInfoCollection msic = service.QueryMemberSpread();
-                foreach (MemberSpreadInfo msi in msic.infoList)
-                {
-                    str += string.Format(" '" + msi.ProvinceName + "', " + msi.tcount + ",");
+                //foreach (MemberSpreadInfo msi in msic.infoList)
+                //{
+                //    // str += string.Format(" '" + msi.ProvinceName + "', " + msi.tcount + ",");
+                //    dic.Add(msi.ProvinceName, msi.tcount);
+                //}
 
-                }
+       
 
-                str = str.Trim(',');
+               // str = str.Trim(',');
                 //ViewBag.MemberSpread = str.ToString();
-                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = str.ToString() });
+                return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = msic.infoList });
               
             }
             catch (Exception ex)
