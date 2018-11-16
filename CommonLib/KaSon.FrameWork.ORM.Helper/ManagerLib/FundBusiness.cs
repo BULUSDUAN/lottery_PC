@@ -8,11 +8,129 @@ using EntityModel;
 using EntityModel.Enum;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Sport;
+using System.Threading;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
     public class FundBusiness : DBbase
     {
+        public string UserFillMoney(UserFillMoneyAddInfo info, string userId, string requestBy, string agentId)
+        {
+            var orderId = string.Empty;
+            //开启事务
+                //DB.Begin();
+
+                orderId = string.IsNullOrEmpty(info.CustomerOrderId) ? BusinessHelper.GetUserFillMoneyId() : info.CustomerOrderId;
+                var manager = new FundManager();
+                var exist = manager.QueryFillMoney(orderId);// manager.QueryFundDetailByOrderId(orderId);
+                if (exist != null)
+                    throw new Exception("订单号已存在");
+                //if (info.FillMoneyAgent == FillMoneyAgentType.ChinaPay && info.RequestMoney < 125M)
+                //    info.RequestMoney--;
+                manager.AddFillMoney(new C_FillMoney
+                {
+                    FillMoneyAgent = (int)info.FillMoneyAgent,
+                    GoodsDescription = info.GoodsDescription,
+                    GoodsName = info.GoodsName,
+                    GoodsType = info.GoodsType,
+                    IsNeedDelivery = info.IsNeedDelivery,
+                    NotifyUrl = info.NotifyUrl,
+                    OrderId = orderId,
+                    RequestBy = requestBy,
+                    RequestExtensionInfo = info.RequestExtensionInfo,
+                    RequestMoney = info.RequestMoney,
+                    RequestTime = DateTime.Now,
+                    ReturnUrl = info.ReturnUrl,
+                    ShowUrl = info.ShowUrl,
+                    Status = (int)FillMoneyStatus.Requesting,
+                    UserId = userId,
+                    PayMoney = info.PayMoney,
+                    SchemeSource = (int)info.SchemeSource,
+                    AgentId = agentId,
+                });
+
+            //    biz.CommitTran();
+            //}
+            return orderId;
+        }
+        Mutex m = new Mutex(false);
+        public bool CompleteFillMoneyOrderByCzzy(string orderId, FillMoneyStatus status, decimal money, string code, string msg, string UserId, out FillMoneyAgentType agentType,
+        out string userId, out int vipLevel, string type, string operatorId = "")
+        {
+            try
+            {
+                m.WaitOne();
+                //if (dict.ContainsKey(orderId))
+                //    throw new Exception("重复订单ID");
+                //dict.Add(orderId, money);
+                var fundManager = new FundManager();
+                var entity = fundManager.QueryFillMoney(orderId);
+                if (entity == null)
+                    throw new Exception("订单号错误");
+                agentType = (FillMoneyAgentType)entity.FillMoneyAgent;
+                userId = entity.UserId;
+
+                if (entity.Status != (int)FillMoneyStatus.Requesting)
+                    throw new Exception("订单状态不正确");
+                if (entity.Status == (int)status)
+                    throw new Exception("重复订单状态");
+                var balanceManager = new UserBalanceManager();
+                var userBalance = balanceManager.QueryUserBalance(userId);
+                if (userBalance == null)
+                    throw new Exception("用户帐户不存在 - " + userId);
+
+
+                //开启事务
+                //using (var biz = new GameBizBusinessManagement())
+                //{
+                    DB.Begin();
+
+                try
+                {
+                    vipLevel = 0;
+                    //return false;
+                    entity.Status = (int)status;
+                    entity.ResponseMoney = money;
+                    entity.ResponseTime = DateTime.Now;
+                    entity.ResponseMessage = msg;
+                    entity.ResponseCode = code;
+                    entity.OuterFlowId = UserId;
+                    fundManager.UpdateFillMoney(entity);
+
+                    if (status == FillMoneyStatus.Success)
+                    {
+                        var userManager = new UserBalanceManager();
+                        var user = userManager.GetUserRegister(entity.UserId);
+                        user.IsFillMoney = true;
+                        vipLevel = user.VipLevel;
+                        userManager.UpdateUserRegister(user);
+
+                        BusinessHelper.PayOut_To_BalanceByCzzy(type == "50" ? AccountType.FillMoney : AccountType.RedBag, BusinessHelper.FundCategory_UserFillMoneyByCzzy, UserId, orderId, money,
+                           string.Format("帮用户{1}充值{0:N2}元", money, user.UserId));
+                        BusinessHelper.Payin_To_Balance(type == "50" ? AccountType.FillMoney : AccountType.RedBag, BusinessHelper.FundCategory_UserFillMoneyByCzzy, user.UserId, orderId, money,
+                            string.Format("充值专员{1}充值{0:N2}元", money, UserId));
+                    }
+
+                    DB.Commit();
+                }
+                catch (Exception ex)
+                {
+                    DB.Rollback();
+                    m.ReleaseMutex();
+                    throw;
+                }
+                
+                //刷新余额
+                BusinessHelper.RefreshRedisUserBalance(userId);
+
+                return true;
+            }
+            finally
+            {
+                m.ReleaseMutex();
+            }
+        }
+
         public UserBalanceInfo QueryUserBalance(string userId)
         {
 

@@ -7,19 +7,20 @@ using EntityModel.CoreModel;
 using EntityModel.Redis;
 using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common;
+using static EntityModel.CoreModel.ReportInfo;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
     public class WebRedisHelper
     {
-        //        /// <summary>
-        //        /// 按官方结束时间查询未来期的奖期
-        //        /// </summary>
-        //        public static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByOfficialStopTime(string gameCode)
-        //        {
-        //            string key = string.Format("{0}_ByOfficialStopTime_{1}", RedisKeys.Key_NextIssuse_List, gameCode);
-        //            return QueryNextIssuseListByKey(key);
-        //        }
+        /// <summary>
+        /// 按官方结束时间查询未来期的奖期
+        /// </summary>
+        public static List<LotteryIssuse_QueryInfo> QueryNextIssuseListByOfficialStopTime(string gameCode)
+        {
+            string key = string.Format("{0}_ByOfficialStopTime_{1}", RedisKeys.Key_NextIssuse_List, gameCode);
+            return QueryNextIssuseListByKey(key);
+        }
 
         /// <summary>
         /// 按本地结束时间查询未来期的奖期
@@ -60,56 +61,56 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 从Redis查询出合买订单数据
         /// </summary>
-   //     public static Sports_TogetherSchemeQueryInfoCollection QuerySportsTogetherListFromRedis(string key, string issuseNumber, string gameCode, string gameType,
-   //TogetherSchemeSecurity? security, SchemeBettingCategory? betCategory, TogetherSchemeProgress? progressState,
-   //decimal minMoney, decimal maxMoney, decimal minProgress, decimal maxProgress, string orderBy, int pageIndex, int pageSize)
-   //     {
-   //         //var db = RedisHelperEx.DB_CoreCacheData;
-            //var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
-            ////生成列表
-            //var list = new List<Sports_TogetherSchemeQueryInfo>();
-            //var redisList = db.ListRangeAsync(redisKey_TogetherList).Result;
-            //foreach (var item in redisList)
-            //{
-            //    try
-            //    {
-            //        if (!item.HasValue) continue;
-            //        var t = JsonSerializer.Deserialize<Sports_TogetherSchemeQueryInfo>(item.ToString());
-            //        list.Add(t);
-            //    }
-            //    catch (Exception)
-            //    {
-            //    }
-            //}
+        //     public static Sports_TogetherSchemeQueryInfoCollection QuerySportsTogetherListFromRedis(string key, string issuseNumber, string gameCode, string gameType,
+        //TogetherSchemeSecurity? security, SchemeBettingCategory? betCategory, TogetherSchemeProgress? progressState,
+        //decimal minMoney, decimal maxMoney, decimal minProgress, decimal maxProgress, string orderBy, int pageIndex, int pageSize)
+        //     {
+        //         //var db = RedisHelperEx.DB_CoreCacheData;
+        //var redisKey_TogetherList = RedisKeys.Key_Core_Togegher_OrderList;
+        ////生成列表
+        //var list = new List<Sports_TogetherSchemeQueryInfo>();
+        //var redisList = db.ListRangeAsync(redisKey_TogetherList).Result;
+        //foreach (var item in redisList)
+        //{
+        //    try
+        //    {
+        //        if (!item.HasValue) continue;
+        //        var t = JsonSerializer.Deserialize<Sports_TogetherSchemeQueryInfo>(item.ToString());
+        //        list.Add(t);
+        //    }
+        //    catch (Exception)
+        //    {
+        //    }
+        //}
 
-            ////查询列表
-            //var seC = !security.HasValue ? -1 : (int)security.Value;
-            //var betC = !betCategory.HasValue ? -1 : (int)betCategory.Value;
-            //var strPro = !progressState.HasValue ? "10|20|30" : ((int)progressState.Value).ToString();
-            //var arrProg = strPro.Split('|');
-            //if (!string.IsNullOrEmpty(gameCode))
-            //    gameCode = gameCode.ToUpper();
-            //if (!string.IsNullOrEmpty(gameType))
-            //    gameType = gameType.ToUpper();
-           // var cache = new Sports_TogetherSchemeQueryInfoCollection();
-            //var query = from s in list
-            //            where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
-            //              && (betC == -1 || Convert.ToInt32(s.SchemeBettingCategory) == betC)
-            //              && (issuseNumber == string.Empty || s.IssuseNumber == issuseNumber)
-            //              && (s.StopTime >= DateTime.Now)
-            //              && (gameCode == string.Empty || s.GameCode == gameCode)
-            //              && (gameType == string.Empty || s.GameType == gameType)
-            //              && (minMoney == -1 || s.TotalMoney >= minMoney)
-            //              && (maxMoney == -1 || s.TotalMoney <= maxMoney)
-            //              && (minProgress == -1 || s.Progress >= minProgress)
-            //              && (maxProgress == -1 || s.Progress <= maxProgress)
-            //              && (seC == -1 || Convert.ToInt32(s.Security) == seC)
-            //              && (key == string.Empty || s.CreateUserId == key || s.SchemeId == key || s.CreaterDisplayName == key)
-            //            select s;
-            //cache.TotalCount = query.Count();
-            //cache.List = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
-           // return cache;
-       // }
+        ////查询列表
+        //var seC = !security.HasValue ? -1 : (int)security.Value;
+        //var betC = !betCategory.HasValue ? -1 : (int)betCategory.Value;
+        //var strPro = !progressState.HasValue ? "10|20|30" : ((int)progressState.Value).ToString();
+        //var arrProg = strPro.Split('|');
+        //if (!string.IsNullOrEmpty(gameCode))
+        //    gameCode = gameCode.ToUpper();
+        //if (!string.IsNullOrEmpty(gameType))
+        //    gameType = gameType.ToUpper();
+        // var cache = new Sports_TogetherSchemeQueryInfoCollection();
+        //var query = from s in list
+        //            where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
+        //              && (betC == -1 || Convert.ToInt32(s.SchemeBettingCategory) == betC)
+        //              && (issuseNumber == string.Empty || s.IssuseNumber == issuseNumber)
+        //              && (s.StopTime >= DateTime.Now)
+        //              && (gameCode == string.Empty || s.GameCode == gameCode)
+        //              && (gameType == string.Empty || s.GameType == gameType)
+        //              && (minMoney == -1 || s.TotalMoney >= minMoney)
+        //              && (maxMoney == -1 || s.TotalMoney <= maxMoney)
+        //              && (minProgress == -1 || s.Progress >= minProgress)
+        //              && (maxProgress == -1 || s.Progress <= maxProgress)
+        //              && (seC == -1 || Convert.ToInt32(s.Security) == seC)
+        //              && (key == string.Empty || s.CreateUserId == key || s.SchemeId == key || s.CreaterDisplayName == key)
+        //            select s;
+        //cache.TotalCount = query.Count();
+        //cache.List = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+        // return cache;
+        // }
 
 
 
@@ -360,5 +361,70 @@ namespace KaSon.FrameWork.ORM.Helper
         //        }
         //        #endregion
 
+
+        /// <summary>
+        /// 从Redis中查询出合买红人数据
+        /// </summary>
+        public static List<TogetherHotUserInfo> QueryHotTogetherUserListFromRedis()
+        {
+            var db = RedisHelperEx.DB_CoreCacheData;//.DB_CoreCacheData;
+            var redisKey = RedisKeys.Key_Core_Togegher_SupperUser;
+            //var result = new List<TogetherHotUserInfo>();
+            var list = db.GetRange<TogetherHotUserInfo>(redisKey);
+            //foreach (var item in list)
+            //{
+            //    try
+            //    {
+            //        if (!item.HasValue)
+            //            continue;
+            //        var t = JsonSerializer.Deserialize<TogetherHotUserInfo>(item.ToString());
+            //        result.Add(t);
+            //    }
+            //    catch (Exception)
+            //    {
+            //    }
+            //}
+            return list.OrderByDescending(p => p.WeeksWinMoney).ToList();
+        }
+
+        /// <summary>
+        /// 从Redis中查询过关统计数据
+        /// </summary>
+        public static SportsOrder_GuoGuanInfoCollection QueryReportInfoList_GuoGuan(bool isVirtualOrder, SchemeBettingCategory? category, string key
+            , string gameCode, string gameType, string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        {
+            var db = RedisHelperEx.DB_CoreCacheData;//.DB_CoreCacheData;
+            var redisKey = RedisKeys.Key_Core_GGTJ_List;
+            //var list = new List<SportsOrder_GuoGuanInfo>();
+            //生成列表
+            var list = db.GetRange<SportsOrder_GuoGuanInfo>(redisKey);
+            //foreach (var item in redisList)
+            //{
+            //    try
+            //    {
+            //        if (!item.HasValue)
+            //            continue;
+            //        var t = JsonSerializer.Deserialize<SportsOrder_GuoGuanInfo>(item.ToString());
+            //        list.Add(t);
+            //    }
+            //    catch (Exception)
+            //    {
+            //    }
+            //}
+            //查询列表
+            var cache = new SportsOrder_GuoGuanInfoCollection();
+            var query = from s in list
+                        where s.IsVirtualOrder == isVirtualOrder
+                        && (!category.HasValue || s.SchemeBettingCategory == category.Value)
+                        && (key == string.Empty || s.UserDisplayName == key)
+                        && s.GameCode == gameCode.ToUpper()
+                        && (gameType == string.Empty || s.GameType == gameType)
+                        && (issuseNumber == string.Empty || s.IssuseNumber == issuseNumber)
+                        && (s.BetTime >= startTime && s.BetTime < endTime)
+                        select s;
+            cache.TotalCount = query.Count();
+            cache.ReportItemList = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            return cache;
+        }
     }
 }

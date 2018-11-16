@@ -145,22 +145,22 @@ namespace EntityModel.CoreModel
     {
         void RequestFillMoney_BeforeTranBegin();
     }
-    //public interface IRequestFillMoney_AfterTranBegin : IPlugin
-    //{
-    //    void RequestFillMoney_AfterTranBegin(UserFillMoneyAddInfo fillMoneyInfo, string userId, string createBy);
-    //}
-    //public interface IRequestFillMoney_BeforeTranCommit : IPlugin
-    //{
-    //    void RequestFillMoney_BeforeTranCommit(UserFillMoneyAddInfo fillMoneyInfo, string userId, string createBy);
-    //}
-    //public interface IRequestFillMoney_AfterTranCommit : IPlugin
-    //{
-    //    void RequestFillMoney_AfterTranCommit(UserFillMoneyAddInfo fillMoneyInfo, string userId, string createBy);
-    //}
-    //public interface IRequestFillMoney_OnError : IPlugin
-    //{
-    //    void RequestFillMoney_OnError(UserFillMoneyAddInfo fillMoneyInfo, string userId, string createBy, Exception ex);
-    //}
+    public interface IRequestFillMoney_AfterTranBegin : IPlugin
+    {
+        void RequestFillMoney_AfterTranBegin(UserFillMoneyAddInfo fillMoneyInfo, string userId, string createBy);
+    }
+    public interface IRequestFillMoney_BeforeTranCommit : IPlugin
+    {
+        void RequestFillMoney_BeforeTranCommit(UserFillMoneyAddInfo fillMoneyInfo, string userId, string createBy);
+    }
+    public interface IRequestFillMoney_AfterTranCommit : IPlugin
+    {
+        void RequestFillMoney_AfterTranCommit(UserFillMoneyAddInfo fillMoneyInfo, string userId, string createBy);
+    }
+    public interface IRequestFillMoney_OnError : IPlugin
+    {
+        void RequestFillMoney_OnError(UserFillMoneyAddInfo fillMoneyInfo, string userId, string createBy, Exception ex);
+    }
 
     //#endregion
 

@@ -868,5 +868,15 @@ namespace Lottery.Service.IModuleServices
         Task<JXSSC_DXDS_InfoCollection> QueryCache_JXSSC_DXDS_Info(int index);
 
         #endregion
+
+        #region 快速购买
+        [Service(Date = "2018-11-16", Director = "lili", Name = "快速购买")]
+        Task<LotteryIssuse_QueryInfo> QueryCurrentIssuseByOfficialStopTime(string gameCode);
+        #endregion
+
+        #region 获取合买名人列表
+        [Service(Date = "2018-11-16", Director = "lili", Name = "获取合买名人列表")]
+        Task<List<TogetherHotUserInfo>> QueryHotTogetherUserListFromRedis(); 
+        #endregion
     }
 }

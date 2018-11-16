@@ -25,6 +25,7 @@ using KaSon.FrameWork.Common.ExceptionEx;
 using System.Diagnostics;
 using EntityModel.ExceptionExtend;
 using EntityModel;
+using static EntityModel.CoreModel.ReportInfo;
 
 namespace Lottery.Api.Controllers
 {
@@ -3187,5 +3188,336 @@ namespace Lottery.Api.Controllers
 
         #endregion
 
+
+        #region PC相关接口
+        /// <summary>
+        /// 保存方案列表
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QuerySaveOrderList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            //WCFClients.GameClient.QuerySaveOrder_Lottery(UserToken);
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                var param = new Dictionary<string, object>();
+                param.Add("userId", userId);
+                var list = await _serviceProxyProvider.Invoke<List<SaveOrder_LotteryBettingInfo>>(param, "api/Order/QueryMyOrderListInfo");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取保存方案列表成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        #region 过关统计
+        /// <summary>
+        /// 根据gamecode与gametype获取场次列表
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> GGTJissuseNumberList([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                gameCode = gameCode.ToLower();
+                gameType = gameType.ToLower();
+                var param = new Dictionary<string, object>();
+                var list = new List<string>();
+                //北单和传统足球则去数据库查数据
+                if (gameCode == "ctzq" || gameType == "bjdc")
+                {
+                    param.Add("gameCode", gameCode);
+                    param.Add("gameType", gameType);
+                    param.Add("length", 7);
+                    string prizedIssuse = await _serviceProxyProvider.Invoke<string>(param, "api/Order/QueryStopIssuseList");
+                    list = prizedIssuse.Split(',').ToList();
+                }
+                else//竞彩则直接用日期转换
+                {
+                    var now = DateTime.Now.Date;
+                    for (int i = 0; i < 7; i++)
+                    {
+                        list.Add(now.AddDays(-i).ToString("yyyy-MM-dd"));
+                    }
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取过关统计列表成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+
+        }
+
+
+        public async Task<IActionResult> Soccer([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                string isVirtualOrderStr = p.isVirtualOrder;
+                string issuseNumber = p.issuseNumber;
+                string key = p.key;
+                string schemeTypeStr = p.schemeType;
+                string pageIndexStr = p.pageIndex;
+                string pageSizeStr = p.pageSize;
+                string IsShowMineStr = p.IsShowMine;
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                //ViewBag.User = CurrentUser;
+
+                var GameCode = string.IsNullOrEmpty(gameCode) ? "JCZQ" : gameCode.ToLower();
+                var GameType = string.IsNullOrEmpty(gameType) ? "" : gameType.ToLower();
+
+                //虚拟订单-撤销订单传true。其余为false
+                var isVirtualOrder = string.IsNullOrEmpty(isVirtualOrderStr) ? false : Convert.ToBoolean(isVirtualOrderStr);
+                //期号-北京单场和传统足球传参，其余为""
+                var param = new Dictionary<string, object>();
+                if (GameCode == "ctzq" || GameCode == "bjdc")
+                {
+                    //string prizedIssuse = WCFClients.GameClient.QueryStopIssuseList(GameCode, GameType, 20);
+                    //string gameCode, string gameType, int length
+                    param.Add("gameCode", GameCode);
+                    param.Add("gameType", GameType);
+                    param.Add("length", 20);
+                    string prizedIssuse = await _serviceProxyProvider.Invoke<string>(param, "api/Order/QueryStopIssuseList");
+                    var prizedIssuseList = prizedIssuse.Split(',');
+                    issuseNumber = string.IsNullOrEmpty(issuseNumber) ? prizedIssuseList.FirstOrDefault() : issuseNumber;
+                }
+                else
+                    issuseNumber = string.IsNullOrEmpty(issuseNumber) ? "" : issuseNumber;
+
+                //搜索关键字
+                key = string.IsNullOrEmpty(key) ? "" : key;
+
+                //单式上传为1.复式为0，其余为null
+                SchemeBettingCategory? schemeType = null;
+                if (!string.IsNullOrEmpty(schemeTypeStr))
+                {
+                    schemeType = (SchemeBettingCategory)int.Parse(schemeTypeStr);
+                }
+                var PageIndex = string.IsNullOrEmpty(pageIndexStr) ? 0 : int.Parse(pageIndexStr);
+                var PageSize = string.IsNullOrEmpty(pageSizeStr) ? 20 : int.Parse(pageSizeStr);
+
+                //是否显示我的过关-true为显示-其余为false
+                var IsShowMine = string.IsNullOrEmpty(IsShowMineStr) ? false : Convert.ToBoolean(IsShowMineStr);
+                if (IsShowMine && !string.IsNullOrEmpty(userId))
+                {
+                    param.Clear();
+                    param.Add("userId", userId);
+                    var userInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/Order/GetLocalLoginByUserId");
+                    key = userInfo.DisplayName;
+                }
+                var startTime = DateTime.Now.AddDays(-1);//过关统计生成最近三天数据
+                var endTime = DateTime.Now;
+                //从sql查询
+                //var list = WCFClients.GameQueryClient.QueryReportInfoList_GuoGuan(ViewBag.isVirtualOrder, schemeType, ViewBag.Key, ViewBag.GameCode, ViewBag.GameType, ViewBag.IssuseNumber, startTime, endTime, ViewBag.PageIndex, ViewBag.PageSize);
+
+                //从文件查询
+                //var list = this.QueryReportInfoList_GuoGuan(ViewBag.isVirtualOrder, schemeType, ViewBag.Key, ViewBag.GameCode, ViewBag.GameType, ViewBag.IssuseNumber, startTime, endTime, ViewBag.PageIndex, ViewBag.PageSize);
+
+                //从Redis查询
+                //bool isVirtualOrder, SchemeBettingCategory? category, string key, string gameCode, string gameType, string issuseNumber, DateTime startTime, DateTime endTime, int pageIndex, int pageSize
+                param.Clear();
+                param.Add("isVirtualOrder", isVirtualOrder);
+                param.Add("category", schemeType);
+                param.Add("key", key);
+                param.Add("gameCode", GameCode);
+                param.Add("gameType", GameType);
+                param.Add("issuseNumber", issuseNumber);
+                param.Add("startTime", startTime);
+                param.Add("endTime", endTime);
+                param.Add("pageIndex", PageIndex);
+                param.Add("pageSize", PageSize);
+                var list = await _serviceProxyProvider.Invoke<SportsOrder_GuoGuanInfoCollection>(param, "api/Order/QueryReportInfoList_GuoGuan");
+                //var list = WebRedisHelper.QueryReportInfoList_GuoGuan(isVirtualOrder, schemeType, key, GameCode, GameType, IssuseNumber, startTime, endTime, PageIndex, PageSize);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取过关统计列表成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+        #endregion
+
+        #region 自动跟单
+        /// <summary>
+        /// 我的定制
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> AutoFollow([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                string pageIndexStr = p.pageIndex;
+                string pageSizeStr = p.pageSize;
+                gameCode = gameCode.ToLower();
+                gameType = gameType.ToLower();
+                var pageIndex = string.IsNullOrEmpty(pageIndexStr) ? 0 : Convert.ToInt32(pageIndexStr);
+                var pageSize = string.IsNullOrEmpty(pageSizeStr) ? 10 : Convert.ToInt32(pageSizeStr);
+                var param = new Dictionary<string, object>();
+                param.Add("gameCode", gameCode);
+                param.Add("gameType", gameType);
+                param.Add("pageIndex", pageIndex);
+                param.Add("pageSize", pageSize);
+                var model = await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowRule");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取我的定制列表成功",
+                    MsgId = entity.MsgId,
+                    Value = model,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        public async Task<IActionResult> FollowMe([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                string pageIndexStr = p.pageIndex;
+                string pageSizeStr = p.pageSize;
+                gameCode = gameCode.ToLower();
+                gameType = gameType.ToLower();
+                var pageIndex = string.IsNullOrEmpty(pageIndexStr) ? 0 : Convert.ToInt32(pageIndexStr);
+                var pageSize = string.IsNullOrEmpty(pageSizeStr) ? 10 : Convert.ToInt32(pageSizeStr);
+                var param = new Dictionary<string, object>();
+                param.Add("gameCode", gameCode);
+                param.Add("gameType", gameType);
+                param.Add("pageIndex", pageIndex);
+                param.Add("pageSize", pageSize);
+                var model = await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowMeRule");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取我的定制列表成功",
+                    MsgId = entity.MsgId,
+                    Value = model,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        /// <summary>
+        /// 成功定制记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> FollowRecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string gameCode = p.gameCode;
+                string pageIndexStr = p.pageIndex;
+                string pageSizeStr = p.pageSize;
+                string userToken = p.UserToken;
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                gameCode = gameCode.ToLower();
+                var pageIndex = string.IsNullOrEmpty(pageIndexStr) ? 0 : Convert.ToInt32(pageIndexStr);
+                var pageSize = string.IsNullOrEmpty(pageSizeStr) ? 10 : Convert.ToInt32(pageSizeStr);
+                //public Task<TogetherFollowRecordInfoCollection> QuerySucessFolloweRecord(string gameCode, long ruleId, int pageIndex, int pageSize, string UserId)
+                var param = new Dictionary<string, object>();
+                param.Add("gameCode", gameCode);
+                param.Add("ruleId", -1);
+                param.Add("pageIndex", pageIndex);
+                param.Add("pageSize", pageSize);
+                param.Add("UserId", userId);
+                var model = await _serviceProxyProvider.Invoke<TogetherFollowRecordInfoCollection>(param, "api/Order/QuerySucessFolloweRecord");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功定制列表成功",
+                    MsgId = entity.MsgId,
+                    Value = model,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+        #endregion
+        #endregion
     }
 }

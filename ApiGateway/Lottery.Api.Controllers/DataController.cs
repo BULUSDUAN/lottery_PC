@@ -3921,5 +3921,68 @@ namespace Lottery.Api.Controllers
         //    }
         //}        
         #endregion
+
+        #region 查询合买红人
+        public async Task<IActionResult> QueryHotTogetherUserListFromRedis([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                var param = new Dictionary<string, object>();
+                var result = await _serviceProxyProvider.Invoke<TogetherHotUserInfo>(param, "api/Data/QueryHotTogetherUserListFromRedis");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = "",
+                    Value = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+        #endregion
+
+        #region 推广链接
+        public IActionResult SpreadLinks(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                var Url_1 = ConfigHelper.AllConfigInfo["TGDomain_1"] + "?yqid=" + userId;
+                var Url_2 = ConfigHelper.AllConfigInfo["TGDomain_2"] + "?yqid=" + userId;
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = "",
+                    Value = new
+                    {
+                        Url_1,
+                        Url_2
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+        #endregion
     }
 }

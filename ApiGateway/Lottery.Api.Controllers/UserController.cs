@@ -2103,5 +2103,113 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
+
+        #region PC相关接口
+        public async Task<IActionResult> TransferFillMoneyPay([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                string userToken = p.token;
+                decimal money = p.payMoney;
+                string type = p.payType;
+                string userId = p.userId;
+                string nameType = p.nameType;
+
+                if (string.IsNullOrEmpty(nameType))
+                    throw new Exception("请选择用户名或者用户id");
+
+                if (string.IsNullOrEmpty(userId))
+                    throw new Exception("转移到某个用户id不能为空");
+                
+                if (string.IsNullOrEmpty(money.ToString()) || money <= 0)
+                    throw new Exception("转移金额不能为空且不能小于等于0");
+                
+                if (!new string[] { "50" }.Contains(type))
+                    throw new Exception("错误的充值类型");
+                //Thread.Sleep(10000);
+                string uId = string.Empty;//转移对象的id
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                //判断用户是否由此权限
+                string myId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                param["userId"] = userId;
+                var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
+                if(!loginInfo.IsUserType)
+                    throw new Exception("当前用户无此权限");
+                if (nameType == "uName")
+                {
+                    param.Clear();
+                    param["loginName"] = userId;
+                    uId = await _serviceProxyProvider.Invoke<string>(param, "api/user/GetUserIdByLoginName");
+                    if (string.IsNullOrEmpty(uId))
+                    {
+                        throw new Exception("用户名不存在");
+                    }
+                }
+                else
+                {
+                    uId = userId;
+                }
+                if (uId == myId)
+                {
+                    throw new Exception("禁止自己给自己转移");
+                    //return Json(new { IsSuccess = false, Message = "禁止自己给自己转移" }, JsonRequestBehavior.AllowGet);
+                }
+
+                UserFillMoneyAddInfo fillMoneyInfo = new UserFillMoneyAddInfo();
+                fillMoneyInfo.RequestMoney = money;
+                fillMoneyInfo.GoodsName = "彩金";
+                fillMoneyInfo.GoodsDescription = "充值专员充值";
+                fillMoneyInfo.GoodsType = "转移充值";
+                fillMoneyInfo.ShowUrl = string.Empty;
+                fillMoneyInfo.ReturnUrl = string.Empty;
+                fillMoneyInfo.IsNeedDelivery = "false";
+                fillMoneyInfo.NotifyUrl = string.Empty;
+                fillMoneyInfo.FillMoneyAgent = FillMoneyAgentType.czzy;
+                string agentid = string.Empty;
+                //var hc_bankAddOrderResult = WCFClients.GameFundClient.UserFillMoneyByUserId(fillMoneyInfo, uId, this.CurrentUser.LoginInfo.UserId);
+                param.Clear();
+                param.Add("info", fillMoneyInfo);
+                param.Add("userId", uId);
+                param.Add("agentId", myId);
+                var hc_bankAddOrderResult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/UserFillMoneyByUserId");
+                string orderId = string.Empty;//本地生成订单后的订单号
+                if (hc_bankAddOrderResult.ReturnValue.Contains('|'))
+                    orderId = hc_bankAddOrderResult.ReturnValue.Split('|')[0];
+                else
+                    orderId = hc_bankAddOrderResult.ReturnValue;
+
+                //CommonActionResult car = WCFClients.GameFundClient.CompleteFillMoneyOrderByCzzy(orderId, FillMoneyStatus.Success, money, "1", string.Empty, this.CurrentUser.LoginInfo.UserId, type);
+                param.Clear();
+                param.Add("orderId", orderId);
+                param.Add("status", FillMoneyStatus.Success);
+                param.Add("money", money);
+                param.Add("code", "1");
+                param.Add("msg", "");
+                param.Add("UserId", myId);
+                param.Add("type", orderId);
+                var car = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CompleteFillMoneyOrderByCzzy");
+                //return Json(new { IsSuccess = true, Message = car.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = car.Message,
+                    MsgId = entity.MsgId,
+                    Value = ""
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        #endregion
     }
 }

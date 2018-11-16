@@ -566,6 +566,7 @@ namespace UserLottery.Service.ModuleServices
                     AgentId = register.AgentId,
                     IsAgent = register.IsAgent,
                     HideDisplayNameCount = register.HideDisplayNameCount,
+                    IsUserType= register.UserType == 1 ? true : false
                 });
             }
             catch (Exception ex)
@@ -1476,12 +1477,12 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="pageSize"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string UserId)
+        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userId)
         {
 
             try
             {
-                return Task.FromResult(new FundBusiness().QueryWithdrawList(UserId, null, status, -1, -1, startTime, endTime, -1, pageIndex, pageSize));
+                return Task.FromResult(new FundBusiness().QueryWithdrawList(userId, null, status, -1, -1, 1, pageIndex, pageSize));
             }
             catch (Exception ex)
             {
@@ -1913,6 +1914,105 @@ namespace UserLottery.Service.ModuleServices
             var loginBiz = new LocalLoginBusiness();
             var count = loginBiz.GetTodayRegisterCount(date, localIP);
             return Task.FromResult(count);
+        }
+
+        public Task<bool> LoginGiveRedEnvelopes(string UserId, string IPAddress)
+        {
+            try
+            {
+                LocalLoginBusiness login = new LocalLoginBusiness();
+                var boolRedEnvelopes = login.User_AfterLogin(UserId, "LOCAL", IPAddress, DateTime.Now);
+                BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { UserId, "LOCAL", IPAddress, DateTime.Now });
+                //刷新用户在Redis中的余额
+                BusinessHelper.RefreshRedisUserBalance(UserId);
+                return Task.FromResult(boolRedEnvelopes);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public Task<CommonActionResult> UserFillMoneyByUserId(UserFillMoneyAddInfo info, string userId, string agentId)
+        {
+            try
+            {
+                //! 执行扩展功能代码 - 启动事务前
+                BusinessHelper.ExecPlugin<IRequestFillMoney_BeforeTranBegin>(new object[] { info, userId, userId });
+
+                var orderId = string.Empty;
+                //! 执行扩展功能代码 - 启动事务后
+                BusinessHelper.ExecPlugin<IRequestFillMoney_AfterTranBegin>(new object[] { info, userId, userId });
+
+                orderId = new FundBusiness().UserFillMoney(info, userId, userId, agentId);
+
+                //! 执行扩展功能代码 - 提交事务前
+                BusinessHelper.ExecPlugin<IRequestFillMoney_BeforeTranCommit>(new object[] { info, userId, userId });
+
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IRequestFillMoney_AfterTranCommit>(new object[] { info, userId, userId });
+
+                return Task.FromResult(new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "提交充值完成",
+                    ReturnValue = string.Format("{0}|{1}", orderId, info.PayMoney),
+                });
+            }
+            catch (Exception ex)
+            {
+                //! 执行扩展功能代码 - 发生异常
+                BusinessHelper.ExecPlugin<IRequestFillMoney_OnError>(new object[] { info, userId, ex });
+
+                throw new Exception("用户充值出现错误 - " + ex.Message, ex);
+            }
+        }
+
+
+        public CommonActionResult CompleteFillMoneyOrderByCzzy(string orderId, FillMoneyStatus status, decimal money, string code, string msg, string UserId, string type)
+        {
+            // 验证用户身份及权限
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                //! 执行扩展功能代码 - 启动事务前
+                //BusinessHelper.ExecPlugin<ICompleteFillMoney_BeforeTranBegin>(new object[] { orderId, status, money, myId });
+
+                //lock (UsefullHelper.moneyLocker)
+                //{
+                string userId;
+                bool needContinue = false;
+                FillMoneyAgentType agentType;
+                var vipLevel = 0;
+                //! 执行扩展功能代码 - 启动事务后
+                //BusinessHelper.ExecPlugin<ICompleteFillMoney_AfterTranBegin>(new object[] { orderId, status, money, myId });
+                needContinue = new FundBusiness().CompleteFillMoneyOrderByCzzy(orderId, status, money, code, msg, UserId, out agentType, out userId, out vipLevel, type);
+                if (needContinue)
+                {
+                    //! 执行扩展功能代码 - 提交事务前
+                    //BusinessHelper.ExecPlugin<ICompleteFillMoney_BeforeTranCommit>(new object[] { orderId, status, agentType, money, userId });
+                }
+                if (needContinue)
+                {
+                    //! 执行扩展功能代码 - 提交事务后
+                    BusinessHelper.ExecPlugin<ICompleteFillMoney_AfterTranCommit>(new object[] { orderId, status, agentType, money, userId, vipLevel });
+                }
+                //}
+                return new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "充值完成",
+                };
+            }
+            catch (Exception ex)
+            {
+                //! 执行扩展功能代码 - 发生异常
+                //BusinessHelper.ExecPlugin<ICompleteFillMoney_OnError>(new object[] { orderId, status, myId, ex });
+
+                throw new Exception("完成充值出现错误 - " + ex.Message, ex);
+            }
         }
     }
 }
