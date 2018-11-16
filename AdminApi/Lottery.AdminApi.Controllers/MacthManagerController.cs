@@ -274,7 +274,7 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
-        public IActionResult UpdateIndexMatch(LotteryServiceRequest entity, IFormFile loadfile)
+        public IActionResult UpdateIndexMatch(LotteryServiceRequest entity)
         {
             try
             {
@@ -284,13 +284,9 @@ namespace Lottery.AdminApi.Controllers
                 }
                 var p = JsonHelper.Decode(entity.Param);
                 var id = PreconditionAssert.IsNotEmptyString((string)p.Id, "编号不能为空");
-                var loadFile = loadfile;
                 var matchId = (string)p.MatchId;
-                var imgPath = string.Empty;
-                if (loadFile.Length <= 0)
-                    imgPath = (string)p.ImgPath;
-                else
-                    imgPath = LoadImageFile(loadFile, "/images/add/", matchId);
+                var imgPath = (string)p.ImgPath;
+                    //imgPath = LoadImageFile(loadFile, "/images/add/", matchId);
                 var result = _service.UpdateIndexMatch(Convert.ToInt32(id), imgPath);
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Message = result.Message });
             }
