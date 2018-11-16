@@ -285,14 +285,16 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var service = new AdminService();
-                var str = "[";
+                var str = "";
                 //会员分布
                 MemberSpreadInfoCollection msic = service.QueryMemberSpread();
                 foreach (MemberSpreadInfo msi in msic.infoList)
                 {
-                    str += string.Format(" ['" + msi.ProvinceName + "', " + msi.tcount + "],");
+                    str += string.Format(" '" + msi.ProvinceName + "', " + msi.tcount + ",");
+
                 }
-                str += "]";
+
+                str = str.Trim(',');
                 //ViewBag.MemberSpread = str.ToString();
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = str.ToString() });
               
@@ -311,8 +313,8 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var service = new AdminService();
-                var strFm = "[";
-                var strMonth = "[";
+                var strFm = "";
+                var strMonth = "";
                 //充值
                 FillMoneyWithdrawInfoCollection fm = service.FillMoneyWithdrawInfo();
                 foreach (FillMoneyWithdrawInfo fmi in fm.fillMoneyInfoList)
@@ -320,15 +322,15 @@ namespace Lottery.AdminApi.Controllers
                     strFm += string.Format(fmi.TotalMoney + ",");
                     strMonth += string.Format(fmi.Month.Replace("-", "") + ",");
                 }
-                strFm += "]";
-                strMonth += "]";
+                strFm = strFm.Trim(',');
+                strMonth = strMonth.Trim(',');
                 //提现
-                var strWd = "[";
+                var strWd = "";
                 foreach (FillMoneyWithdrawInfo wdi in fm.WithdrawInfoList)
                 {
                     strWd += string.Format(wdi.TotalMoney + ",");
                 }
-                strWd += "]";
+                strWd = strWd.Trim(',');
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = new {
                     MsgFm = strFm.ToString(),
                     MsgWd = strWd.ToString(),
@@ -361,17 +363,17 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 var service = new AdminService();
-                var Day = "[";
-                var TotalCount = "[";
-                var PcTotalCount = "[";
-                var TouchTotalCount = "[";
-                var AndroidTotalCount = "[";
-                var IosTotalCount = "[";
-                var NewTouchTotalCount = "[";
-                var FillMoneyTotalCount = "[";
-                var AuthTotalCount = "[";
-                var NewAndroidCount = "[";
-                var NewIOSCount = "[";
+                var Day = "";
+                var TotalCount = "";
+                var PcTotalCount = "";
+                var TouchTotalCount = "";
+                var AndroidTotalCount = "";
+                var IosTotalCount = "";
+                var NewTouchTotalCount = "";
+                var FillMoneyTotalCount = "";
+                var AuthTotalCount = "";
+                var NewAndroidCount = "";
+                var NewIOSCount = "";
                 MemberTotalCollection mtc = service.QueryMemberTotal();
                 foreach (MemberTotalInfo mti in mtc.list)
                 {
@@ -387,17 +389,17 @@ namespace Lottery.AdminApi.Controllers
                     NewAndroidCount += string.Format(mti.NewAndroidCount + ",");
                     NewIOSCount += string.Format(mti.NewIOSCount + ",");
                 }
-                Day += "]";
-                TotalCount += "]";
-                PcTotalCount += "]";
-                TouchTotalCount += "]";
-                AndroidTotalCount += "]";
-                IosTotalCount += "]";
-                NewTouchTotalCount += "]";
-                FillMoneyTotalCount += "]";
-                AuthTotalCount += "]";
-                NewAndroidCount += "]";
-                NewIOSCount += "]";
+                Day = Day.Trim(',');
+                TotalCount = TotalCount.Trim(',');
+                PcTotalCount = PcTotalCount.Trim(',');
+                TouchTotalCount = TouchTotalCount.Trim(',');
+                AndroidTotalCount = AndroidTotalCount.Trim(',');
+                IosTotalCount = IosTotalCount.Trim(',');
+                NewTouchTotalCount = NewTouchTotalCount.Trim(',');
+                FillMoneyTotalCount = FillMoneyTotalCount.Trim(',');
+                AuthTotalCount = AuthTotalCount.Trim(',');
+                NewAndroidCount = NewAndroidCount.Trim(',');
+                NewIOSCount = NewIOSCount.Trim(',');
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Message = "查询成功", Value = new
                 {
                     IsSuccess = true,
