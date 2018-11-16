@@ -17,22 +17,22 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var sTime = startTime.Date;
             var eTime = endTimen.AddDays(1).Date;
-            var query = from l in DB.CreateQuery<C_Sys_OperationLog>()
+            var query = (from l in DB.CreateQuery<C_Sys_OperationLog>()
                         join u in DB.CreateQuery<C_User_Register>() on l.OperUserId equals u.UserId
                         where (menuName == "" || l.MenuName == menuName)
                         && (userId == "" || l.UserId == userId)
                         && (operUserId == "" || l.OperUserId == operUserId)
                         && (l.CreateTime >= sTime && l.CreateTime < eTime)
-                        select new SysOperationLogInfo
+                        select new { l,u}).ToList().Select(p=> new SysOperationLogInfo
                         {
-                            Id = l.Id,
-                            OperUserId = l.OperUserId,
-                            OperUserName = u.DisplayName,
-                            UserId = l.UserId,
-                            MenuName = l.MenuName,
-                            Description = l.Description,
-                            CreateTime = l.CreateTime,
-                        };
+                            Id = p.l.Id,
+                            OperUserId = p.l.OperUserId,
+                            OperUserName = p.u.DisplayName,
+                            UserId = p.l.UserId,
+                            MenuName = p.l.MenuName,
+                            Description = p.l.Description,
+                            CreateTime = p.l.CreateTime,
+                        });
             totalCount = query.Count();
             return query.Skip(pageIndex * pageSize).Take(pageSize).ToList();
         }

@@ -15,6 +15,9 @@ using EntityModel.ExceptionExtend;
 using EntityModel.Communication;
 using KaSon.FrameWork.Common.Net;
 using EntityModel.CoreModel;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using static KaSon.FrameWork.Common.Utilities.ConvertHelper;
 
 namespace Lottery.AdminApi.Controllers
 {
@@ -832,7 +835,9 @@ namespace Lottery.AdminApi.Controllers
                     throw new Exception("对不起，您的权限不足！");
                 var scuccessCount = 0;
                 var p = JsonHelper.Decode(entity.Param);
-                List<dynamic> updateList = p.updateList;
+                var s = new List<trytemp>();
+                string updateListStr = p.updateList;
+                var updateList = JsonHelper.Deserialize<List<trytemp>>(updateListStr);
                 var service = new AdminService();
                 foreach (dynamic item in updateList)
                 {
@@ -856,7 +861,6 @@ namespace Lottery.AdminApi.Controllers
                 });
             }
         }
-
 
         //public IActionResult UpdatePayRedBagConfig(LotteryServiceRequest entity)
         //{
