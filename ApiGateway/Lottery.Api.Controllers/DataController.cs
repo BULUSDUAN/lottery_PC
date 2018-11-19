@@ -3034,7 +3034,7 @@ namespace Lottery.Api.Controllers
                     var now = DateTime.Now;
                     foreach (var item in oddlist_jczq)
                     {
-                        if (item.State_HHDG.Contains("2") && Convert.ToDateTime(item.FSStopBettingTime) > now && item.NoSaleState_BRQSPF == "0")
+                        if (!item.PrivilegesType.Contains("9")&&item.State_HHDG.Contains("2") && Convert.ToDateTime(item.FSStopBettingTime) > now && item.NoSaleState_BRQSPF == "0")
                         {
                             result_jczq.Add(item);
                         }
