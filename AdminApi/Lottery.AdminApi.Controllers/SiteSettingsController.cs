@@ -26,6 +26,7 @@ namespace Lottery.AdminApi.Controllers
     /// </summary>
     [Area("api")]
     //[ReusltFilter]
+    [CheckLogin]
     public class SiteSettingsController : BaseController
     {
         private readonly static AdminService _service = new AdminService();
