@@ -8,6 +8,7 @@ using EntityModel.Redis;
 using KaSon.FrameWork.Common.Redis;
 using KaSon.FrameWork.Common;
 using static EntityModel.CoreModel.ReportInfo;
+using EntityModel.Enum;
 
 namespace KaSon.FrameWork.ORM.Helper
 {

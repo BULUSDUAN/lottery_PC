@@ -3518,6 +3518,52 @@ namespace Lottery.Api.Controllers
             }
         }
         #endregion
+
+        #region 推广用户
+        public async Task<IActionResult> SporeadUsers([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                string beginTimeStr = p.beginTime;
+                string endTimeStr = p.endTime;
+                string pageIndexStr = p.pageIndex;
+                string pageSizeStr = p.pageSize;
+                var pageIndex = string.IsNullOrEmpty(pageIndexStr) ? 0 : Convert.ToInt32(pageIndexStr);
+                var pageSize = string.IsNullOrEmpty(pageSizeStr) ? 0 : Convert.ToInt32(pageSizeStr);
+                var beginTime = string.IsNullOrEmpty(beginTimeStr) ? DateTime.Today.AddMonths(-1) : DateTime.Parse(beginTimeStr);
+                var endTime = string.IsNullOrEmpty(endTimeStr) ? DateTime.Now.AddDays(1).Date : DateTime.Parse(endTimeStr);
+                var param = new Dictionary<string, object>();
+                param.Add("agentId", userId);
+                param.Add("startTime", beginTime);
+                param.Add("endTime", endTimeStr);
+                param.Add("pageIndex", pageIndex);
+                param.Add("pageSize", pageSize);
+                var list = await _serviceProxyProvider.Invoke<SporeadUsersCollection>(param, "api/Order/QuerySporeadUsers");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取推广用户列表成功",
+                    MsgId = entity.MsgId,
+                    Value = list,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+
+        #endregion
         #endregion
     }
 }
