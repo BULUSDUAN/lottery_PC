@@ -193,5 +193,7 @@ namespace UserLottery.Service.IModuleServices
 
         [Service(Date = "2018-11-15", Director = "lili", Name = "用户转帐给用户_完成")]
         CommonActionResult CompleteFillMoneyOrderByCzzy(string orderId, FillMoneyStatus status, decimal money, string code, string msg, string UserId, string type);
+        [Service(Date = "2018-11-19", Director = "renjun", Name = "历史战绩 从数据库中查询博客数据")]
+        Task<BlogEntity> QueryBlogEntityStandings(string userId, string gameCode, string gameType, int pageIndex, int pageSize);
     }
 }

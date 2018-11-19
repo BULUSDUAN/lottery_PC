@@ -2210,6 +2210,99 @@ namespace Lottery.Api.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 历史战绩
+        /// </summary>
+        public async Task<ActionResult> standings([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                //return Redirect("/upgrade/closeFunc.html");
+                var p = WebHelper.Decode(entity.Param);
+                string id = p.id;
+                var pageIndex = 0;
+                var pageSize = 30;
+                var gameCode = string.IsNullOrEmpty((string)p.gameCode) ? "SZC" : (string)p.gameCode.ToUpper();
+                var gameType = string.IsNullOrEmpty((string)p.gameType) ? "SSQ" : (string)p.gameType.ToUpper();
+                if (string.IsNullOrEmpty(gameType))
+                {
+                    switch (gameCode)
+                    {
+                        case "JCZQ":
+                            gameType = "BRQSPF";
+                            break;
+                        case "BJDC":
+                            gameType = "SPF";
+                            break;
+                        case "JCLQ":
+                            gameType = "SF";
+                            break;
+                        case "CTZQ":
+                            gameType = "T14C";
+                            break;
+                        case "SZC":
+                            gameType = "SSQ";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("userId", id);
+                param.Add("gameCode", gameCode);
+                param.Add("gameType", gameType);
+                param.Add("pageIndex", pageIndex);
+                param.Add("pageSize", pageSize);
+                //var blog = LoadBlogEntityStandings(id, gameCode, gameType, pageIndex, pageSize);
+                var blog = await _serviceProxyProvider.Invoke<BlogEntity>(param, "api/user/QueryBlogEntityStandings");
+
+                //new BlogEntity
+                //{
+                //    BonusOrderInfo = new BonusOrderInfoCollection(),
+                //    CreateTime = DateTime.Now,
+                //    FollowerCount = 0,
+                //    ProfileBonusLevel = new ProfileBonusLevelInfo(),
+                //    ProfileDataReport = new ProfileDataReport(),
+                //    ProfileLastBonus = new ProfileLastBonusCollection(),
+                //    ProfileUserInfo = new ProfileUserInfo(),
+                //    UserBeedingListInfo = new UserBeedingListInfoCollection(),
+                //    UserCurrentOrderInfo = new UserCurrentOrderInfoCollection(),
+                //};// QueryBlogEntityStandings(id, gameCode, gameType, pageIndex, pageSize);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = entity.MsgId,
+                    Value = new
+                    {
+                        UserInfo = blog.ProfileUserInfo,
+                        BonusLevel = blog.ProfileBonusLevel,
+                        BonusListZj = blog.ProfileLastBonus,
+                        DataReport = blog.ProfileDataReport,
+                        BonusList = blog.BonusOrderInfo,
+                        Count = blog.FollowerCount,
+                        CurrentOrder = blog.UserCurrentOrderInfo,
+                        GameCode = gameCode,
+                        GameType = gameType,
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
         #endregion
+
+
     }
 }
