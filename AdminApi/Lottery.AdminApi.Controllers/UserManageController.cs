@@ -485,7 +485,6 @@ namespace Lottery.AdminApi.Controllers
                     {
                         ViewModel.UserToken = "";
                     }
-
                     if (userResult != null)
                     {
                         if (userResult.FreezeBalance > 0M)
