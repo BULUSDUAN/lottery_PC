@@ -17,7 +17,8 @@ namespace Lottery.AdminApi.Controllers
 {
     [Area("api")]
     [ReusltFilter]
-   public class TicketGatewayManageController:BaseController
+    [CheckLogin]
+    public class TicketGatewayManageController:BaseController
     {
         private readonly static AdminService _service = new AdminService();
         #region 中民出票查询
