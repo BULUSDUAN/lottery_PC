@@ -76,7 +76,7 @@ namespace Lottery.Api.Controllers
                 //if (bankInfo == null) bankInfo = new C_BankCard();
                 //balanceParam.Clear();
                 var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
-                Task.Run(() => ToCreateGameAccount(loginInfo.UserId));
+                //Task.Run(() => ToCreateGameAccount(loginInfo.UserId));
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
