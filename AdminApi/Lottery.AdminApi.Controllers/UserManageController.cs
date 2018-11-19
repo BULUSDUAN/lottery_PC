@@ -1737,5 +1737,34 @@ namespace Lottery.AdminApi.Controllers
                 return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
             }
         }
+        /// <summary>
+        /// 经销商下线会员
+        /// </summary>
+        public ActionResult AgentSubUserList(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                DateTime StartTime = string.IsNullOrWhiteSpace((string)p.startTime) ? DateTime.Now.AddMonths(-1) : Convert.ToDateTime((string)p.startTime);
+                DateTime EndTime = DateTime.Now;
+                string KeyType = string.Empty;
+                string KeyValue = string.Empty;
+                bool? isEnable = null;
+                bool? isFillMoney = null;
+                bool? isAgent = null;
+
+                string AgentId = (string)p.agentId;
+                int SubPageIndex = string.IsNullOrWhiteSpace((string)p.subPageIndex) ? 0 : int.Parse((string)p.subPageIndex);
+                int SubPageSize = string.IsNullOrWhiteSpace((string)p.subPageSize) ? 10 : int.Parse((string)p.subPageSize);
+
+                var UsersSummary = _service.QueryUserList(StartTime,EndTime,KeyType,KeyValue, isEnable, isFillMoney, null, isAgent,
+                    "", "", "", "", "",AgentId,SubPageIndex,SubPageSize, CurrentUser.UserToken, string.Empty);
+                return Json(new LotteryServiceResponse() {Code=AdminResponseCode.失败,Value= UsersSummary });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
     }
 }
