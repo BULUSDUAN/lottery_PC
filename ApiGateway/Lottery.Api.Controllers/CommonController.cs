@@ -572,11 +572,16 @@ namespace Lottery.Api.Controllers
         }
 
 
-        public async Task<IActionResult> GetIndexGameShow([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        public async Task<IActionResult> GetIndexGameShow([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
+                var  SourceCode = entity.SourceCode;
                 var Key = "APP_IndexGameShow";
+                if (SourceCode == SchemeSource.Wap)
+                {
+                    Key = "APP_IndexGameShow_Wap";
+                }
                 var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, Key);
                 return Json(new LotteryServiceResponse
                 {
