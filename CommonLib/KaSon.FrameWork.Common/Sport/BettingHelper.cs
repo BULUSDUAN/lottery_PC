@@ -409,7 +409,7 @@ namespace KaSon.FrameWork.Common.Sport
                 if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
                 var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                 if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new Exception(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.Id, FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
+                    throw new LogicException(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.Id, FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
             }
         }
 

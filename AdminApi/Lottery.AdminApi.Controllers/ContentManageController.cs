@@ -17,7 +17,7 @@ namespace Lottery.AdminApi.Controllers
 {
     [Area("api")]
     [ReusltFilter]
-   // [CheckLogin]
+    [CheckLogin]
     public class ContentManageController : BaseController
     {
         #region 公告管理
