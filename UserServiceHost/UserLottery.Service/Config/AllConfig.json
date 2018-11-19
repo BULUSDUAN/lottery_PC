@@ -134,9 +134,10 @@
   "ConsulSettings": {
     "IpAddrs": "10.0.3.27:8501", //服务启动IP 10.0.3.27:8501
     "Token": "16c5413b-276c-45ab-9b0e-9664126f1163"
-  }
+  },
 
+  //博客json数据有效时间：分钟
+  "BlogValidMinute": 30
 
- 
 
 }
