@@ -11,7 +11,7 @@ namespace KaSon.FrameWork.ORM.Helper.BusinessLib.Hk6
     {
         private IDbProvider DB;
         public HK6BetingSevice(IDbProvider db) {
-            DB = db
+            DB = db;
         }
 
         /// <summary>
