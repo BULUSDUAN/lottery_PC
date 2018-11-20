@@ -387,6 +387,7 @@ namespace Lottery.Api.Controllers
                 //string cfrom = "";
                 string pid = p.pid;
                 string fxid = p.fxid;
+                string yqid = p.yqid;
                 string schemeId = p.schemeId;
                 SchemeSource schemeSource = entity.SourceCode;
                 //if (!string.IsNullOrEmpty(cfrom) && cfrom == "ios")
@@ -426,6 +427,7 @@ namespace Lottery.Api.Controllers
                     userInfo.AgentId = pid;
                 }
                 param["fxid"] = string.IsNullOrEmpty(fxid) ? "0" : fxid;
+                param["yqid"] = string.IsNullOrEmpty(yqid) ? "0" : yqid; 
                 var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/User/RegisterResponseMobile");
                 param.Clear();
                 if (result.Message.Contains("手机认证成功") || result.Message.Contains("恭喜您注册成功"))
@@ -2211,6 +2213,7 @@ namespace Lottery.Api.Controllers
         }
 
 
+        #region 历史战绩
         /// <summary>
         /// 历史战绩
         /// </summary>
@@ -2301,7 +2304,111 @@ namespace Lottery.Api.Controllers
             }
         }
 
+        //关注用户-关注和取消关注
+        public async Task<ActionResult> attentionExec([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                var id = p.id;
+                string userToken = p.userToken;
+                var attUser = PreconditionAssert.IsNotEmptyString((string)p.attentionUserId, "被关注用户编号错误");
+                var isAttention = string.IsNullOrEmpty(id) ? true : bool.Parse(id);
+                var usrList = attUser.Split('|');
+                var result = new CommonActionResult() { IsSuccess = false, Message = "未执行操作" };
+                string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                foreach (var item in usrList)
+                {
+                    param.Add("beAttentionUserId", item);
+                    param.Add("UserId", UserId);
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        if (isAttention)
+                        {
+                            result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/AttentionUser");
+                        }
+                        else
+                        {
+                            result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CancelAttentionUser");
+                        }
+                    }
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = result.Message,
+                });
+               
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        public async Task<ActionResult> AttentAndGd([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                var user = p.UserId;
+                string userToken = p.userToken;
+                string beAttentionUserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                var result = false;
+                if (beAttentionUserId != null)
+                {
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    param.Add("beAttentionUserId", beAttentionUserId);
+                    param.Add("currentUserId", user);
+                    result = await _serviceProxyProvider.Invoke<bool>(param, "api/user/QueryIsAttention");
+                    if (result)
+                    {
+                        return Json(new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.成功,
+                            Message = "关注成功",
+                        });
+                       
+                    }
+                    else
+                    {
+                        return Json(new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.失败,
+                            Message = "已关注",
+                        });
+                    }
+                }
+                else
+                {
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.失败,
+                        Message = "请登录",
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message =ex.Message,
+                });
+            }
+        }
         #endregion
+
+
+
+        #endregion
+
+
 
 
     }
