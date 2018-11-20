@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.BankCard,GameBiz.Business"  table="C_BankCard">
+    <id name="BId" type="Int64" unsaved-value="null">
+      <column name="BId" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="RealName" type="String">
+      <column name="RealName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="ProvinceName" type="String">
+      <column name="ProvinceName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="CityName" type="String">
+      <column name="CityName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="BankName" type="String">
+      <column name="BankName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="BankSubName" type="String">
+      <column name="BankSubName" length="50" sql-type="nvarchar(50)" not-null="true"></column>
+    </property>
+    <property name="BankCode" type="String">
+      <column name="BankCode" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="BankCardNumber" type="String">
+      <column name="BankCardNumber" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

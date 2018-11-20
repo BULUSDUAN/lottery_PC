@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Domain.Entities.Activity.ActivityList, External.Business"  table="E_ActivityList">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="ActivityIndex" type="Int32">
+      <column name="ActivityIndex" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="ActiveName" type="String">
+      <column name="ActiveName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Title" type="String">
+      <column name="Title" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Summary" type="String">
+      <column name="Summary" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="LinkUrl" type="String">
+      <column name="LinkUrl" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ImageUrl" type="String">
+      <column name="ImageUrl" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="IsShow" type="Boolean" >
+      <column name="IsShow" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="BeginTime" type="DateTime">
+      <column name="BeginTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="EndTime" type="DateTime">
+      <column name="EndTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

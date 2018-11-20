@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Domain.Entities.Authentication.UserRealName, External.Business"  table="E_Authentication_RealName">
+    <id name="UserId" type="String" unsaved-value="null">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+      <generator class="foreign">
+        <param name="property">User</param>
+      </generator>
+    </id>
+    <one-to-one class="GameBiz.Auth.Domain.Entities.SystemUser,GameBiz.Auth.Business" name="User" cascade="none" outer-join="auto" constrained="true"  >
+    </one-to-one>
+    <property name="IsSettedRealName" type="Boolean" >
+      <column name="IsSettedRealName" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="AuthFrom" type="String">
+      <column name="AuthFrom" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="RealName" type="String" >
+      <column name="RealName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CardType" type="String">
+      <column name="CardType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IdCardNumber" type="String">
+      <column name="IdCardNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CreateBy" type="String">
+      <column name="CreateBy" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="UpdateBy" type="String">
+      <column name="UpdateBy" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+  </class>
+  <sql-query name="P_UpdateAuthentication" read-only="true">
+    EXEC [P_User_UpdateAuthentication] :UserKeyIng, :UserKeyEd, :UpdateBy, :ByRealName, :ByMobile
+  </sql-query>
+</hibernate-mapping>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="External.Domain.Entities.Login.LoginAlipay, External.Business"  table="E_Login_Alipay">
+    <id name="UserId" type="String" unsaved-value="null">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+      <generator class="foreign">
+        <param name="property">User</param>
+      </generator>
+    </id>
+    <one-to-one class="GameBiz.Auth.Domain.Entities.SystemUser,GameBiz.Auth.Business" name="User" cascade="none" outer-join="auto" constrained="true"  >
+    </one-to-one>
+    <many-to-one name="Register" not-found="exception" class="GameBiz.Domain.Entities.UserRegister,GameBiz.Business" cascade="none">
+      <column name="RegisterId" sql-type="nvarchar(50)" length="50" not-null="false" />
+    </many-to-one>
+    <property name="LoginName" type="String" >
+      <column name="LoginName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OpenId" type="String" >
+      <column name="OpenId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+	</class>
+
+  <sql-query name="P_QueryAlipayLogin" read-only="true">
+    EXEC [P_QueryAlipayLogin] :StartTime, :EndTime, :TotalCount OUTPUT
+  </sql-query>
+  
+</hibernate-mapping>

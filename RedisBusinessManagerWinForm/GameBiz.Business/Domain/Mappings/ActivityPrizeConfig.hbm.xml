@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.ActivityPrizeConfig,GameBiz.Business"  table="C_Activity_PrizeConfig">
+    <id name="ActivityId" type="Int32" unsaved-value="null">
+      <column name="ActivityId" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="ActivityTitle" type="String">
+      <column name="ActivityTitle" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="ActivityContent" type="String">
+      <column name="ActivityContent" sql-type="nvarchar(Max)" not-null="false"></column>
+    </property>
+    <property name="IsEnabled" type="Boolean">
+      <column name="IsEnabled" length="1" sql-type="bit" not-null="false"></column>
+    </property>
+    <property name="CreatorId" type="String">
+      <column name="CreatorId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

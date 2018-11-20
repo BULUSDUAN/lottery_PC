@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="External.Domain.Entities.SMSLog.SMSSendLog, External.Business"  table="E_SMSSendLog_List">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="KeyLine" type="String">
+      <column name="KeyLine" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Mobile" type="String">
+      <column name="Mobile" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Content" type="String">
+      <column name="Content" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+	</class>
+  
+</hibernate-mapping>

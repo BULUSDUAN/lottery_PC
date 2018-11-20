@@ -1,0 +1,1 @@
+//copy "$(TargetPath)" "$(ProjectDir)..\..\00.ReferenceDlls\20.GameBiz.Service"

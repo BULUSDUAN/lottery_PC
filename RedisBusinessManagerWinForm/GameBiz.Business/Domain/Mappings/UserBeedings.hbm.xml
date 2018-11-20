@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.UserBeedings,GameBiz.Business"  table="C_User_Beedings">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+
+    <property name="GoldStarCount" type="Int32">
+      <column name="GoldStarCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GoldDiamondsCount" type="Int32">
+      <column name="GoldDiamondsCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GoldCupCount" type="Int32">
+      <column name="GoldCupCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GoldCrownCount" type="Int32">
+      <column name="GoldCrownCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SilverStarCount" type="Int32">
+      <column name="SilverStarCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SilverDiamondsCount" type="Int32">
+      <column name="SilverDiamondsCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SilverCupCount" type="Int32">
+      <column name="SilverCupCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SilverCrownCount" type="Int32">
+      <column name="SilverCrownCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+
+    <property name="BeFollowerUserCount" type="Int32">
+      <column name="BeFollowerUserCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BeFollowedTotalMoney" type="Decimal">
+      <column name="BeFollowedTotalMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalOrderCount" type="Int32">
+      <column name="TotalOrderCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalBetMoney" type="Decimal">
+      <column name="TotalBetMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalBonusTimes" type="Int32">
+      <column name="TotalBonusTimes" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalBonusMoney" type="Decimal">
+      <column name="TotalBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+
+    <property name="UpdateTime" type="DateTime" >
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.UserAttention,GameBiz.Business"  table="C_User_Attention">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="BeAttentionUserId" type="String">
+      <column name="BeAttentionUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="FollowerUserId" type="String">
+      <column name="FollowerUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime" >
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.UserAttentionSummary,GameBiz.Business"  table="C_User_Attention_Summary">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BeAttentionUserCount" type="Int32">
+      <column name="BeAttentionUserCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="FollowerUserCount" type="Int32">
+      <column name="FollowerUserCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="UpdateTime" type="DateTime" >
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.UserBonusPercent,GameBiz.Business"  table="C_User_BonusPercent">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TotalOrderCount" type="Int32">
+      <column name="TotalOrderCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BonusOrderCount" type="Int32">
+      <column name="BonusOrderCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BonusPercent" type="Decimal">
+      <column name="BonusPercent" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CurrentDate" type="String">
+      <column name="CurrentDate" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime" >
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+
+  <sql-query name="P_User_QueryUserBeedingList" read-only="true">
+    EXEC [P_User_QueryUserBeedingList] :gameCode,:gameType,:userDisplayName,:pageIndex, :pageSize,:orderByProperty, :orderByCategory, :totalCount OUTPUT
+  </sql-query>
+
+</hibernate-mapping>

@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.BJDC_Issuse,GameBiz.Business"  table="C_BJDC_Issuse">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="50" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="MinLocalStopTime" type="DateTime">
+      <column name="MinLocalStopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="MinMatchStartTime" type="DateTime">
+      <column name="MinMatchStartTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  
+  <class name="GameBiz.Domain.Entities.BJDC_Match,GameBiz.Business"  table="C_BJDC_Match">
+    <id name="Id" type="String" unsaved-value="null">
+      <column name="Id" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Mid" type="Int32">
+      <column name="Mid" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchId" type="Int32">
+      <column name="MatchId" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchOrderId" type="Int32">
+      <column name="MatchOrderId" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchName" type="String">
+      <column name="MatchName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchStartTime" type="DateTime">
+      <column name="MatchStartTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="LocalStopTime" type="DateTime">
+      <column name="LocalStopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="MatchState" type="Int32">
+      <column name="MatchState" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchColor" type="String">
+      <column name="MatchColor" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HomeTeamId" type="Int32">
+      <column name="HomeTeamId" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HomeTeamSort" type="String">
+      <column name="HomeTeamSort" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HomeTeamName" type="String">
+      <column name="HomeTeamName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GuestTeamId" type="Int32">
+      <column name="GuestTeamId" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GuestTeamName" type="String">
+      <column name="GuestTeamName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GuestTeamSort" type="String">
+      <column name="GuestTeamSort" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="LetBall" type="Int32">
+      <column name="LetBall" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="WinOdds" type="Decimal">
+      <column name="WinOdds" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="FlatOdds" type="Decimal">
+      <column name="FlatOdds" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="LoseOdds" type="Decimal">
+      <column name="LoseOdds" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="PrivilegesType" type="String">
+      <column name="PrivilegesType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+  </class>
+
+
+  <class name="GameBiz.Domain.Entities.BJDC_MatchResult,GameBiz.Business"  table="C_BJDC_MatchResult">
+    <id name="Id" type="String" unsaved-value="null">
+      <column name="Id" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchOrderId" type="Int32">
+      <column name="MatchOrderId" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HomeHalf_Result" type="String">
+      <column name="HomeHalf_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HomeFull_Result" type="String">
+      <column name="HomeFull_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GuestHalf_Result" type="String">
+      <column name="GuestHalf_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GuestFull_Result" type="String">
+      <column name="GuestFull_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SPF_Result" type="String">
+      <column name="SPF_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SPF_SP" type="Decimal">
+      <column name="SPF_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="ZJQ_Result" type="String">
+      <column name="ZJQ_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ZJQ_SP" type="Decimal">
+      <column name="ZJQ_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="SXDS_Result" type="String">
+      <column name="SXDS_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SXDS_SP" type="Decimal">
+      <column name="SXDS_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="BF_Result" type="String">
+      <column name="BF_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BF_SP" type="Decimal">
+      <column name="BF_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="BQC_Result" type="String">
+      <column name="BQC_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BQC_SP" type="Decimal">
+      <column name="BQC_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="MatchState" type="String">
+      <column name="MatchState" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.BJDC_MatchResult_Prize,GameBiz.Business"  table="C_BJDC_MatchResult_Prize">
+    <id name="Id" type="String" unsaved-value="null">
+      <column name="Id" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchOrderId" type="Int32">
+      <column name="MatchOrderId" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HomeHalf_Result" type="String">
+      <column name="HomeHalf_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HomeFull_Result" type="String">
+      <column name="HomeFull_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GuestHalf_Result" type="String">
+      <column name="GuestHalf_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GuestFull_Result" type="String">
+      <column name="GuestFull_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SPF_Result" type="String">
+      <column name="SPF_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SPF_SP" type="Decimal">
+      <column name="SPF_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="ZJQ_Result" type="String">
+      <column name="ZJQ_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ZJQ_SP" type="Decimal">
+      <column name="ZJQ_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="SXDS_Result" type="String">
+      <column name="SXDS_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SXDS_SP" type="Decimal">
+      <column name="SXDS_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="BF_Result" type="String">
+      <column name="BF_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BF_SP" type="Decimal">
+      <column name="BF_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="BQC_Result" type="String">
+      <column name="BQC_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BQC_SP" type="Decimal">
+      <column name="BQC_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="MatchState" type="String">
+      <column name="MatchState" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

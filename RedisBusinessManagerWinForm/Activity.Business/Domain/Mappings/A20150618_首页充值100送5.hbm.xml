@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Activity.Domain.Entities.A20150618_首页充值100送5, Activity.Business"  table="E_A20150618_首页充值100送5">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OrderId" type="String">
+      <column name="OrderId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="FillMoney" type="Decimal">
+      <column name="FillMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="GiveMoney" type="Decimal">
+      <column name="GiveMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="IdCardNumber" type="String">
+      <column name="IdCardNumber" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+  </class>
+
+</hibernate-mapping>

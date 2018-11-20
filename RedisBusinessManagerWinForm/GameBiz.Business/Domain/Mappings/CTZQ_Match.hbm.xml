@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.CTZQ_GameIssuse,GameBiz.Business"  table="C_CTZQ_GameIssuse">
+    <id name="Id" type="String" unsaved-value="null">
+      <column name="Id" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="StopBettingTime" type="DateTime">
+      <column name="StopBettingTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="WinNumber" type="String">
+      <column name="WinNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+
+  </class>
+
+  <class name="GameBiz.Domain.Entities.CTZQ_Match,GameBiz.Business"  table="C_CTZQ_Match">
+    <id name="Id" type="String" unsaved-value="null">
+      <column name="Id" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OrderNumber" type="Int32">
+      <column name="OrderNumber" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchStartTime" type="DateTime">
+      <column name="MatchStartTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="Color" type="String">
+      <column name="Color" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Mid" type="Int32">
+      <column name="Mid" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchId" type="Int32">
+      <column name="MatchId" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchName" type="String">
+      <column name="MatchName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HomeTeamId" type="String">
+      <column name="HomeTeamId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HomeTeamName" type="String">
+      <column name="HomeTeamName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GuestTeamId" type="String">
+      <column name="GuestTeamId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GuestTeamName" type="String">
+      <column name="GuestTeamName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchState" type="Int32">
+      <column name="MatchState" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HomeTeamStanding" type="String">
+      <column name="HomeTeamStanding" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GuestTeamStanding" type="String">
+      <column name="GuestTeamStanding" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HomeTeamHalfScore" type="Int32">
+      <column name="HomeTeamHalfScore" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HomeTeamScore" type="Int32">
+      <column name="HomeTeamScore" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GuestTeamHalfScore" type="Int32">
+      <column name="GuestTeamHalfScore" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GuestTeamScore" type="Int32">
+      <column name="GuestTeamScore" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchResult" type="String">
+      <column name="MatchResult" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.CTZQ_MatchPool,GameBiz.Business"  table="C_CTZQ_MatchPool">
+    <id name="Id" type="String" unsaved-value="null">
+      <column name="Id" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BonusLevel" type="Int32">
+      <column name="BonusLevel" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BonusCount" type="Int32">
+      <column name="BonusCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BonusLevelDisplayName" type="String">
+      <column name="BonusLevelDisplayName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BonusMoney" type="Decimal">
+      <column name="BonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="MatchResult" type="String">
+      <column name="MatchResult" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+</hibernate-mapping>

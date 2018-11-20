@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Business.Domain.Entities.Ticket.JCLQ_Odds_SF,GameBiz.Business"  table="T_JCLQ_Odds_SF">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="MatchId" type="String">
+      <column name="MatchId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="WinOdds" type="Decimal">
+      <column name="WinOdds" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="LoseOdds" type="Decimal">
+      <column name="LoseOdds" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Business.Domain.Entities.Ticket.JCLQ_Odds_RFSF,GameBiz.Business"  table="T_JCLQ_Odds_RFSF">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="MatchId" type="String">
+      <column name="MatchId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="WinOdds" type="Decimal">
+      <column name="WinOdds" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="LoseOdds" type="Decimal">
+      <column name="LoseOdds" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="RF" type="Decimal">
+      <column name="RF" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Business.Domain.Entities.Ticket.JCLQ_Odds_SFC,GameBiz.Business"  table="T_JCLQ_Odds_SFC">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="MatchId" type="String">
+      <column name="MatchId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="S_1_5" type="Decimal">
+      <column name="S_1_5" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="S_6_10" type="Decimal">
+      <column name="S_6_10" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="S_11_15" type="Decimal">
+      <column name="S_11_15" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="S_16_20" type="Decimal">
+      <column name="S_16_20" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="S_21_25" type="Decimal">
+      <column name="S_21_25" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="S_26" type="Decimal">
+      <column name="S_26" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="F_1_5" type="Decimal">
+      <column name="F_1_5" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="F_6_10" type="Decimal">
+      <column name="F_6_10" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="F_11_15" type="Decimal">
+      <column name="F_11_15" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="F_16_20" type="Decimal">
+      <column name="F_16_20" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="F_21_25" type="Decimal">
+      <column name="F_21_25" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="F_26" type="Decimal">
+      <column name="F_26" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Business.Domain.Entities.Ticket.JCLQ_Odds_DXF,GameBiz.Business"  table="T_JCLQ_Odds_DXF">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="MatchId" type="String">
+      <column name="MatchId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="DaOdds" type="Decimal">
+      <column name="DaOdds" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="XiaoOdds" type="Decimal">
+      <column name="XiaoOdds" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="YSZF" type="Decimal">
+      <column name="YSZF" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <sql-query name="P_JCLQ_GetLastOddsByMatchId" read-only="true">
+    EXEC [P_JCLQ_GetLastOddsByMatchId] @MatchId=:matchId,@OddsType=:oddsType,@IsDS=:isDS
+  </sql-query>
+
+  
+</hibernate-mapping>

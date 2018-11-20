@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.ReceiveNoticeLog,GameBiz.Business"  table="C_ReceiveNotice_Log">
+    <id name="ReceiveNoticeId" type="Int64" unsaved-value="null">
+      <column name="ReceiveNoticeId" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="true"/>
+    </property>
+    <property name="NoticeType" type="Int32">
+      <column name="NoticeType" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="ReceiveUrlRoot" type="String">
+      <column name="ReceiveUrlRoot" length="500" sql-type="nvarchar(500)" not-null="true"/>
+    </property>
+    <property name="ReceiveDataString" type="String">
+      <column name="ReceiveDataString" sql-type="nvarchar(max)" length="2147483647" not-null="true"/>
+    </property>
+    <property name="Sign" type="String">
+      <column name="Sign" length="50" sql-type="nvarchar(50)" not-null="true"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="true"/>
+    </property>
+    <property name="Remark" type="String">
+      <column name="Remark" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="SendTimes" type="Int32">
+      <column name="SendTimes" length="4" sql-type="int" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.ReceiveNoticeLog_Complate,GameBiz.Business"  table="C_ReceiveNotice_Log_Complate">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="ReceiveNoticeId" type="Int32">
+      <column name="ReceiveNoticeId" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="true"/>
+    </property>
+    <property name="NoticeType" type="Int32">
+      <column name="NoticeType" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="ReceiveUrlRoot" type="String">
+      <column name="ReceiveUrlRoot" length="500" sql-type="nvarchar(500)" not-null="true"/>
+    </property>
+    <property name="ReceiveDataString" type="String">
+      <column name="ReceiveDataString" sql-type="nvarchar(max)"  length="2147483647" not-null="true"/>
+    </property>
+    <property name="Sign" type="String">
+      <column name="Sign" length="50" sql-type="nvarchar(50)" not-null="true"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="true"/>
+    </property>
+    <property name="Remark" type="String">
+      <column name="Remark" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="SendTimes" type="Int32">
+      <column name="SendTimes" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="ComplateTime" type="DateTime">
+      <column name="ComplateTime" length="8" sql-type="datetime" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>

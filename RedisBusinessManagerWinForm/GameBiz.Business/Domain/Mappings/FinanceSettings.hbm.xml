@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.FinanceSettings,GameBiz.Business"  table="C_FinanceSettings">
+    <id name="FinanceId" type="Int32" unsaved-value="null">
+      <column name="FinanceId" length="8" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OperateRank" type="String">
+      <column name="OperateRank" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OperateType" type="String">
+      <column name="OperateType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MinMoney" type="Decimal">
+      <column name="MinMoney" length="8" sql-type="money" not-null="true"/>
+    </property>
+    <property name="MaxMoney" type="Decimal">
+      <column name="MaxMoney" length="8" sql-type="money" not-null="true"/>
+    </property>
+    <property name="OperatorId" type="String">
+      <column name="OperatorId" length="50" sql-type="nvarchar(50)" not-null="true"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

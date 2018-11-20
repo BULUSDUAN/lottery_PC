@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="GameBiz.Auth.Domain.Entities.SystemUser, GameBiz.Auth.Business"  table="C_Auth_Users">
+		<id name="UserId" type="String" unsaved-value="null">
+			<column name="UserId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+		</id>
+    <property name="RegFrom" type="String">
+      <column name="RegFrom" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <bag name="RoleList" table="C_Auth_UserRole" cascade="all" inverse="false">
+      <key column="UserId"/>
+      <many-to-many class="GameBiz.Auth.Domain.Entities.SystemRole, GameBiz.Auth.Business" column="RoleId" />
+    </bag>
+    <bag name="FunctionList" generic="true" inverse="true">
+      <key column="UserId"/>
+      <one-to-many class="GameBiz.Auth.Domain.Entities.UserFunction, GameBiz.Auth.Business" />
+    </bag>
+	</class>
+
+  <class name="GameBiz.Auth.Domain.Entities.UserKeyRule,GameBiz.Auth.Business"  table="C_Auth_KeyRule">
+    <id name="RuleKey" type="String" unsaved-value="null">
+      <column name="RuleKey" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="RuleValue" type="String">
+      <column name="RuleValue" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Auth.Domain.Entities.BeautyUserKey,GameBiz.Auth.Business"  table="C_Auth_BeautyKey">
+    <id name="BeautyKey" type="String" unsaved-value="null">
+      <column name="BeautyKey" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="PrevUserKey" type="String">
+      <column name="PrevUserKey" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="NextUserKey" type="String">
+      <column name="NextUserKey" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Status" type="String">
+      <column name="Status" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

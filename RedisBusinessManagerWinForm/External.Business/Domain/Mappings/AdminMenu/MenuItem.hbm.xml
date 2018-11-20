@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="External.Domain.Entities.AdminMenu.MenuItem, External.Business"  table="E_Menu_List">
+		<id name="MenuId" type="String" unsaved-value="null">
+			<column name="MenuId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+		</id>
+    <property name="DisplayName" type="String">
+      <column name="DisplayName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Description" type="String">
+      <column name="Description" length="200" sql-type="nvarchar(200)" not-null="false"/>
+    </property>
+    <many-to-one name="ParentMenu" not-found="exception" class="External.Domain.Entities.AdminMenu.MenuItem, External.Business">
+      <column name="ParentMenuId" sql-type="nvarchar(50)" length="50" not-null="false" />
+    </many-to-one>
+    <many-to-one name="ItsFunction" not-found="exception" class="GameBiz.Auth.Domain.Entities.Function, GameBiz.Auth.Business" cascade="none">
+      <column name="FunctionId" sql-type="nvarchar(50)" length="50" not-null="false" />
+    </many-to-one>
+    <property name="Url" type="String">
+      <column name="Url" length="200" sql-type="nvarchar(200)" not-null="false"/>
+    </property>
+    <property name="MenuType" type="Int32">
+      <column name="MenuType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IsEnable" type="Boolean">
+      <column name="IsEnable" length="1" sql-type="bit" not-null="false"></column>
+    </property>
+	</class>
+
+  <class name="External.Domain.Entities.AdminMenu.SysOperationLog,External.Business"  table="C_Sys_OperationLog">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="MenuName" type="String">
+      <column name="MenuName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Description" type="String">
+      <column name="Description" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OperUserId" type="String">
+      <column name="OperUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  
+</hibernate-mapping>

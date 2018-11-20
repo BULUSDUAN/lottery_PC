@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.Sports_Together,GameBiz.Business"  table="C_Sports_Together">
+    <id name="SchemeId" type="String" unsaved-value="null">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="Title" type="String">
+      <column name="Title" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+    <property name="Description" type="String">
+      <column name="Description" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="Security" type="Int32">
+      <column name="Security" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="JoinPwd" type="String">
+      <column name="JoinPwd" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TotalMoney" type="Decimal">
+      <column name="TotalMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalCount" type="Int32">
+      <column name="TotalCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Price" type="Decimal">
+      <column name="Price" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="SoldCount" type="Int32">
+      <column name="SoldCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="JoinUserCount" type="Int32">
+      <column name="JoinUserCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BonusDeduct" type="Int32">
+      <column name="BonusDeduct" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SchemeDeduct" type="Decimal">
+      <column name="SchemeDeduct" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="Subscription" type="Int32">
+      <column name="Subscription" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Guarantees" type="Int32">
+      <column name="Guarantees" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IsPayBackGuarantees" type="Boolean">
+      <column name="IsPayBackGuarantees" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="SystemGuarantees" type="Int32">
+      <column name="SystemGuarantees" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="ProgressStatus" type="Int32">
+      <column name="ProgressStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Progress" type="Decimal">
+      <column name="Progress" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="IsTop" type="Boolean">
+      <column name="IsTop" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsUploadAnteCode" type="Boolean">
+      <column name="IsUploadAnteCode" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="StopTime" type="DateTime">
+      <column name="StopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="TotalMatchCount" type="Int32">
+      <column name="TotalMatchCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateUserId" type="String">
+      <column name="CreateUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SchemeSource" type="Int32">
+      <column name="SchemeSource" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SchemeBettingCategory" type="Int32">
+      <column name="SchemeBettingCategory" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTimeOrIssuseNumber" type="String">
+      <column name="CreateTimeOrIssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime" >
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Sports_TogetherJoin,GameBiz.Business"  table="C_Sports_TogetherJoin">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="JoinUserId" type="String">
+      <column name="JoinUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BuyCount" type="Int32">
+      <column name="BuyCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="RealBuyCount" type="Int32">
+      <column name="RealBuyCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Price" type="Decimal">
+      <column name="Price" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalMoney" type="Decimal">
+      <column name="TotalMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="JoinType" type="Int32">
+      <column name="JoinType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="JoinSucess" type="Boolean">
+      <column name="JoinSucess" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="JoinLog" type="String">
+      <column name="JoinLog" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="PreTaxBonusMoney" type="Decimal">
+      <column name="PreTaxBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="AfterTaxBonusMoney" type="Decimal">
+      <column name="AfterTaxBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime" >
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Temp_Together,GameBiz.Business"  table="C_Temp_Together">
+    <id name="SchemeId" type="String" unsaved-value="null">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="StopTime" type="String">
+      <column name="StopTime" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime" >
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <sql-query name="P_Order_QueryTogetherList" read-only="true">
+    EXEC [P_Order_QueryTogetherList] @gameCode=:gameCode,@gameType=:gameType,@minMoney=:minMoney,@maxMoney=:maxMoney,@minProgress=:minProgress,@maxProgress=:maxProgress,@security=:security,@bettingCategory=:bettingCategory,@progressStatus=:progressStatus,@issuseNumber=:issuseNumber,@Key_UID_UName_SchemeId=:Key_UID_UName_SchemeId,@pageIndex=:pageIndex,@pageSize=:pageSize,@orderBy=:orderBy,@totalCount=:totalCount OUTPUT
+  </sql-query>
+
+</hibernate-mapping>

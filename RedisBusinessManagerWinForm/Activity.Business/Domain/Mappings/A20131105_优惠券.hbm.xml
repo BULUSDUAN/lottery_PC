@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Activity.Domain.Entities.A20131105_优惠券, Activity.Business"  table="E_A20131105_优惠券">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="Money" type="Decimal">
+      <column name="Money" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="Summary" type="String" >
+      <column name="Summary" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Number" type="String">
+      <column name="Number" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CanUsable" type="Boolean">
+      <column name="CanUsable" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="BelongUserId" type="String">
+      <column name="BelongUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+</hibernate-mapping>

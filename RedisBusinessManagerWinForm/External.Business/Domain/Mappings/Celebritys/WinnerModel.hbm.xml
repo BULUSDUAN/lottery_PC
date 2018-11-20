@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Domain.Entities.Celebritys.WinnerModel, External.Business"  table="C_Winner_Model">
+    <id name="ModelId" type="String" unsaved-value="null">
+      <column name="ModelId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+      <!--<generator class="native" />-->
+    </id>
+    <property name="ModelType" type="Int32" >
+      <column name="ModelType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="ModelName" type="String" >
+      <column name="ModelName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ModelDescription" type="String" >
+      <column name="ModelDescription"  sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="SchemeId" type="String" >
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String" >
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String" >
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String" >
+      <column name="PlayType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TotalBettingIssuseCount" type="Int32" >
+      <column name="TotalBettingIssuseCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalBonusIssuseCount" type="Int32" >
+      <column name="TotalBonusIssuseCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SchemeMoney" type="Decimal">
+      <column name="SchemeMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalBuyCount" type="Int32" >
+      <column name="TotalBuyCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalBonusMoney" type="Decimal">
+      <column name="TotalBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalProfitMoney" type="Decimal">
+      <column name="TotalProfitMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalSaleMoney" type="Decimal">
+      <column name="TotalSaleMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="ActulProfitRatio" type="Decimal">
+      <column name="ActulProfitRatio" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalReportRatio" type="Decimal">
+      <column name="TotalReportRatio" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="BonusFrequency" type="Decimal">
+      <column name="BonusFrequency" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="IsDelete" type="Boolean" >
+      <column name="IsDelete" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="DeleteTime" type="DateTime">
+      <column name="DeleteTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <!--<property name="IsExperter" type="Boolean" >
+      <column name="IsExperter" length="1" sql-type="bit" not-null="false"/>
+    </property>-->
+    <property name="IsShare" type="Boolean" >
+      <column name="IsShare" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="ModelSecurity" type="Int32" >
+      <column name="ModelSecurity" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IsFirstPayment" type="Boolean" >
+      <column name="IsFirstPayment" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="ProfitIssuseCount" type="Int32" >
+      <column name="ProfitIssuseCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="RiskType" type="Int32" >
+      <column name="RiskType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="LossRatio" type="Decimal">
+      <column name="LossRatio" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="CommissionRitio" type="Decimal">
+      <column name="CommissionRitio" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <!--<property name="IsProfit" type="Boolean" >
+      <column name="IsProfit" length="1" sql-type="bit" not-null="false"/>
+    </property>-->
+    <property name="TotalLoseMoney" type="Decimal">
+      <column name="TotalLoseMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalHaveMoney" type="Decimal">
+      <column name="TotalHaveMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalShareBonusMoney" type="Decimal">
+      <column name="TotalShareBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalCommissionMoney" type="Decimal">
+      <column name="TotalCommissionMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="UserDisplayName" type="String" >
+      <column name="UserDisplayName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsEnableFirstPayment" type="Boolean" >
+      <column name="IsEnableFirstPayment" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CurrSchemeStopTime" type="DateTime">
+      <column name="CurrSchemeStopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="TotalModelBonusMoney" type="Decimal">
+      <column name="TotalModelBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalModelBettingMoney" type="Decimal">
+      <column name="TotalModelBettingMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <!--<property name="TotalNotBonusIssuseCount" type="Int32" >
+      <column name="TotalNotBonusIssuseCount" length="4" sql-type="int" not-null="false"/>
+    </property>-->
+    <bag name="ModelCycleList" table="C_Winner_ModelCycle"  generic="true" inverse="true">
+      <key column="ModelId"/>
+      <one-to-many class="External.Domain.Entities.Celebritys.WinnerModelCycle, External.Business" />
+    </bag>
+    <property name="TotalModelCollection" type="Int32" >
+      <column name="TotalModelCollection" length="4" sql-type="int" not-null="false"/>
+    </property>
+  </class>
+
+
+  <!--名家个人中心相关统计 -->
+  <sql-query name="P_Winner_QueryCelebrityCenter" read-only="true">
+    EXEC [P_Winner_QueryCelebrityCenter] @ClickUserId=:ClickUserId,@TotalModelCount=:TotalModelCount OUTPUT,@TotalBuyCount=:TotalBuyCount OUTPUT,@TotalBonusMoney=:TotalBonusMoney OUTPUT,@CreateTime=:CreateTime OUTPUT,@ProfiteModelCount=:ProfiteModelCount OUTPUT,@TotalRateReturn=:TotalRateReturn OUTPUT,@TotalBonusFrequency=:TotalBonusFrequency OUTPUT
+  </sql-query>
+  <!--查询模型大厅-->
+  <sql-query name="P_Winner_QueryModelList" read-only="true">
+    EXEC [P_Winner_QueryModelList] @ModelName=:ModelName,@IsBuy=:IsBuy,@IsExperter=:IsExperter,@IsFirstPayment=:IsFirstPayment,@StrOrderBy=:StrOrderBy,@PageIndex=:PageIndex,@PageSize=:PageSize,@TotalCount=:TotalCount OUTPUT 
+  </sql-query>
+  <!--查询模型排行和名家排行 -->
+  <sql-query name="P_Winner_QueryModelRanlList" read-only="true">
+    EXEC [P_Winner_QueryModelRanlList] @StartTime=:StartTime,@EndTime=:EndTime,@IsExperter=:IsExperter,@PageIndex=:PageIndex,@PageSize=:PageSize,@TotalCount=:TotalCount OUTPUT
+  </sql-query>
+  <!--查询我的关注 -->
+  <sql-query name="P_Winner_QueryMyAttention" read-only="true">
+    EXEC [P_Winner_QueryMyAttention] @UserId=:UserId,@TotalCount=:TotalCount OUTPUT
+  </sql-query>
+</hibernate-mapping>

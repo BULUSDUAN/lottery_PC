@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Activity.Domain.Entities.A20140318_充值最高送1000, Activity.Business"  table="E_A20140318_充值最高送1000">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OrderId" type="String">
+      <column name="OrderId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="FillMoney" type="Decimal">
+      <column name="FillMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CurrentGiveMoney" type="Decimal">
+      <column name="CurrentGiveMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="NextMonth" type="Int32">
+      <column name="NextMonth" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="NextMonthGiveMoney" type="Decimal">
+      <column name="NextMonthGiveMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="IsGiveComplete" type="Boolean">
+      <column name="IsGiveComplete" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

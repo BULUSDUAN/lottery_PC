@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A1A397D4-6C38-4F41-97E3-915A0C8DA5D3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Common.Lottery</RootNamespace>
+    <AssemblyName>Common.Lottery</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Common.Lottery.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Common.Lottery.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\Assemblies\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AnalyzerFactory.cs" />
+    <Compile Include="Exceptions\AntecodeFormatException.cs" />
+    <Compile Include="Gateway\HuAi\GatewayHandler_HA.cs" />
+    <Compile Include="Gateway\HuAi\GatewayObjects.cs" />
+    <Compile Include="Gateway\HuAi\HuAi_ResponseInfo.cs" />
+    <Compile Include="Gateway\HuaYang\GatewayHandler.cs" />
+    <Compile Include="Gateway\HuaYang\GatewayObjects.cs" />
+    <Compile Include="Gateway\Liangcai\GatewayHandler.cs" />
+    <Compile Include="Gateway\Liangcai\GatewayObjects.cs" />
+    <Compile Include="Gateway\Liangcai\LC_ResposnseInfo.cs" />
+    <Compile Include="Gateway\Shop\GatewayObjects.cs" />
+    <Compile Include="Helpers\GameAnalyzer_好彩一.cs" />
+    <Compile Include="Helpers\GameAnalyzer_快乐扑克3.cs" />
+    <Compile Include="Helpers\GameAnalyzer_数字彩.cs" />
+    <Compile Include="Helpers\GameAnalyzer_时时彩.cs" />
+    <Compile Include="Helpers\GameAnalyzer_江苏快3.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_世界杯冠亚军.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_世界杯冠军.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_传统足球.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_单式.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_和值.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_五星通选.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_任选.cs" />
+    <Compile Include="Helpers\GameAnalyzer_十一选五.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_大小单双.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_快乐扑克3.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_欧洲杯冠亚军.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_欧洲杯冠军.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_江苏快3三同三连.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_江苏快3二同号单复.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_江苏快3和值.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_组三单式.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_组三复式.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_前N直选.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_前N组选.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_包胆.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_包点.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_组选六.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_二星组选复式.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_二星组选分位.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_三星直选组合.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_群英会任选.cs" />
+    <Compile Include="Helpers\GameAnalyzer_群英会.cs" />
+    <Compile Include="Helpers\GameAnalyzer_广东快乐十分.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_选一投.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_选N连直.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_选N连组.cs" />
+    <Compile Include="Helpers\GameAnalyzer_广西快乐十分.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_直选好运.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_通选好运.cs" />
+    <Compile Include="Helpers\GameAnalyzer_大盘数字彩.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_时时彩任选.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_分段单式.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_分段胆拖.cs" />
+    <Compile Include="Helpers\GameAnalyzer_十二选二.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_江苏快3三不同号.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_江苏快3二不同号.cs" />
+    <Compile Include="Helpers\GameAnalyzer_传统足球.cs" />
+    <Compile Include="Helpers\GameAnalyzer_过关足球.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_过关足球.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_竞彩世界杯冠军.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_竞彩世界杯冠亚军.cs" />
+    <Compile Include="Helpers\GameTypeAnalyzer_组选和值.cs" />
+    <Compile Include="IOrderAnalyzable.cs" />
+    <Compile Include="IAntecodeAnalyzable.cs" />
+    <Compile Include="Objects\AnteCode.cs" />
+    <Compile Include="Objects\Order.cs" />
+    <Compile Include="Objects\Ticket.cs" />
+    <Compile Include="OpenDataGetter.cs" />
+    <Compile Include="OpenDataGetters\OpenDataGetter_500wan.cs" />
+    <Compile Include="OpenDataGetters\OpenDataGetter_AiCai.cs" />
+    <Compile Include="OpenDataGetters\OpenDataGetter_Lehecai.cs" />
+    <Compile Include="OpenDataGetters\OpenDataGetter_CaiLeLe.cs" />
+    <Compile Include="TicketAnalyzer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TicketRuleGetter.cs" />
+    <Compile Include="IWinNumberAnalyzable.cs" />
+    <Compile Include="Exceptions\WinNumberFormatException.cs" />
+    <Compile Include="WinNumberGetter.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_500Wan.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_AiCaiPiao.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_CaiLeLe.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_GDlottery.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_Get_ShiShiCai.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_GFW.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_GXFC.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_KaiCaiWang.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_KaiJiangHao.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_KuaiCaiLe.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_Post_ShiShiCai.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_ShiShiCai.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_WoZhongLa.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_LeHeCai.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_JiangSuKuai3.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_AiCaiLe.cs" />
+    <Compile Include="IAntecodeAnalyzable_Sport.cs" />
+    <Compile Include="Gateway\ZhongMin\CommandDefinition.cs" />
+    <Compile Include="Gateway\ZhongMin\GatewayException.cs" />
+    <Compile Include="Gateway\ZhongMin\GatewayHandler.cs" />
+    <Compile Include="Gateway\ZhongMin\GatewayObjects.cs" />
+    <Compile Include="Gateway\ZhongMin\MessageHelper.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_ZhongMin.cs" />
+    <Compile Include="WinNumberGetters\WinNumberGetter_Liangcai.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{23F85AD0-56F2-48B3-BAB9-845019EB8EE1}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(ProjectDir)..\BuildDll"
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

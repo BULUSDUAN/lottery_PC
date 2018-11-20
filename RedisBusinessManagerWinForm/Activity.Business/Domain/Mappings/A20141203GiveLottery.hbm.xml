@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Activity.Domain.Entities.A20141203GiveLottery, Activity.Business"  table="E_A20141203_GiveLottery">
+    <id name="SchemeId" type="String" unsaved-value="null">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AnteCode" type="String" >
+      <column name="AnteCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ActivityType" type="Int32" >
+      <column name="ActivityType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="IdCardNumber" type="String" >
+      <column name="IdCardNumber" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>
+

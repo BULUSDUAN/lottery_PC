@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.FundDetail,GameBiz.Business"  table="C_Fund_Detail">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="KeyLine" type="String">
+      <column name="KeyLine" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OrderId" type="String">
+      <column name="OrderId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PayType" type="Int32">
+      <column name="PayType" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="AccountType" type="Int32">
+      <column name="AccountType" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="Category" type="String">
+      <column name="Category" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Summary" type="String">
+      <column name="Summary" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="PayMoney" type="Decimal">
+      <column name="PayMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="BeforeBalance" type="Decimal">
+      <column name="BeforeBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="AfterBalance" type="Decimal">
+      <column name="AfterBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="true"/>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OperatorId" type="String">
+      <column name="OperatorId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.OCDouDouDetail,GameBiz.Business"  table="C_Fund_OCDouDouDetail">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="OrderId" type="String">
+      <column name="OrderId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PayType" type="Int32">
+      <column name="PayType" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="Category" type="String">
+      <column name="Category" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Summary" type="String">
+      <column name="Summary" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="PayMoney" type="Int32">
+      <column name="PayMoney" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="BeforeBalance" type="Int32">
+      <column name="BeforeBalance" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="AfterBalance" type="Int32">
+      <column name="AfterBalance" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="true"/>
+    </property>
+  </class>
+  
+  <class name="GameBiz.Domain.Entities.UserGrowthDetail,GameBiz.Business"  table="C_Fund_UserGrowthDetail">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="OrderId" type="String">
+      <column name="OrderId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PayType" type="Int32">
+      <column name="PayType" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="Category" type="String">
+      <column name="Category" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Summary" type="String">
+      <column name="Summary" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="PayMoney" type="Int32">
+      <column name="PayMoney" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="BeforeBalance" type="Int32">
+      <column name="BeforeBalance" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="AfterBalance" type="Int32">
+      <column name="AfterBalance" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="true"/>
+    </property>
+  </class>
+
+
+  <sql-query name="P_Fund_QueryMyFundDetail" read-only="true">
+    EXEC [P_Fund_QueryMyFundDetail] @UserId=:UserId,@KeyLine=:KeyLine,@StartTime=:StartTime,@EndTime=:EndTime,@AccountList=:AccountList,@CategoryList=:CategoryList,@PageIndex=:PageIndex,@PageSize=:PageSize
+  </sql-query>
+
+  <sql-query name="P_Fund_QueryMyFundDetail_CPS" read-only="true">
+    EXEC [P_Fund_QueryMyFundDetail_CPS] @UserId=:UserId,@KeyLine=:KeyLine,@StartTime=:StartTime,@EndTime=:EndTime,@AccountList=:AccountList,@PageIndex=:PageIndex,@PageSize=:PageSize
+  </sql-query>
+
+ 
+</hibernate-mapping>

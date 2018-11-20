@@ -1,0 +1,331 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.Blog_Dynamic,GameBiz.Business"  table="E_Blog_Dynamic">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="UserDisplayName" type="String">
+      <column name="UserDisplayName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="UserId2" type="String">
+      <column name="UserId2" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="User2DisplayName" type="String">
+      <column name="User2DisplayName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="DynamicType" type="String">
+      <column name="DynamicType" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="TotalMonery" type="Decimal">
+      <column name="TotalMonery" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="Price" type="Decimal">
+      <column name="Price" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="Guarantees" type="Int32">
+      <column name="Guarantees" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Subscription" type="Int32">
+      <column name="Subscription" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Progress" type="Decimal">
+      <column name="Progress" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Blog_DataReport,GameBiz.Business"  table="E_Blog_DataReport">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="CreateSchemeCount" type="Int32">
+      <column name="CreateSchemeCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="JoinSchemeCount" type="Int32">
+      <column name="JoinSchemeCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalBonusCount" type="Int32">
+      <column name="TotalBonusCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalBonusMoney" type="Decimal">
+      <column name="TotalBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Blog_ProfileBonusLevel,GameBiz.Business"  table="E_Blog_ProfileBonusLevel">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="MaxLevelValue" type="Int32">
+      <column name="MaxLevelValue" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MaxLevelName" type="String">
+      <column name="MaxLevelName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="WinOneHundredCount" type="Int32">
+      <column name="WinOneHundredCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="WinOneThousandCount" type="Int32">
+      <column name="WinOneThousandCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="WinTenThousandCount" type="Int32">
+      <column name="WinTenThousandCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="WinOneHundredThousandCount" type="Int32">
+      <column name="WinOneHundredThousandCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="WinOneMillionCount" type="Int32">
+      <column name="WinOneMillionCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="WinTenMillionCount" type="Int32">
+      <column name="WinTenMillionCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="WinHundredMillionCount" type="Int32">
+      <column name="WinHundredMillionCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalBonusMoney" type="Decimal">
+      <column name="TotalBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Blog_NewProfileLastBonus,GameBiz.Business"  table="E_Blog_NewProfileLastBonus">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="BonusMoney" type="Decimal">
+      <column name="BonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="BonusTime" type="DateTime">
+      <column name="BonusTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Blog_UserLoginHistory,GameBiz.Business"  table="E_Blog_UserLoginHistory">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="LoginFrom" type="String">
+      <column name="LoginFrom" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="LoginIp" type="String">
+      <column name="LoginIp" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="IpDisplayName" type="String">
+      <column name="IpDisplayName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="LoginTime" type="DateTime">
+      <column name="LoginTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Blog_UserVisitHistory,GameBiz.Business"  table="E_Blog_UserVisitHistory">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="VisitUserId" type="String">
+      <column name="VisitUserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="VisitorUserDisplayName" type="String">
+      <column name="VisitorUserDisplayName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="VisitorHideNameCount" type="String">
+      <column name="VisitorHideNameCount" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="VisitorIp" type="String">
+      <column name="VisitorIp" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="IpDisplayName" type="String">
+      <column name="IpDisplayName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Blog_UserSpread,GameBiz.Business"  table="E_Blog_UserSpread">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="userName" type="String">
+      <column name="userName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="CrateTime" type="DateTime">
+      <column name="CrateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+
+    <property name="CTZQ" type="Decimal">
+      <column name="CTZQ" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="BJDC" type="Decimal">
+      <column name="BJDC" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="JCZQ" type="Decimal">
+      <column name="JCZQ" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="JCLQ" type="Decimal">
+      <column name="JCLQ" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="SZC" type="Decimal">
+      <column name="SZC" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="GPC" type="Decimal">
+      <column name="GPC" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  <class name="GameBiz.Domain.Entities.Blog_UserSpreadGiveRedBag,GameBiz.Business"  table="E_Blog_UserSpreadGiveRedBag">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="giveRedBagMoney" type="Decimal">
+      <column name="giveRedBagMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="GiveBonusMoney" type="Decimal">
+      <column name="GiveBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="userCount" type="Int32">
+      <column name="userCount" length="8" sql-type="int" not-null="false"></column>
+    </property>
+    <property name="redBagCount" type="Int32">
+      <column name="redBagCount" length="8" sql-type="int" not-null="false"></column>
+    </property>
+    <property name="userGiveCount" type="Int32">
+      <column name="userGiveCount" length="8" sql-type="int" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  <class name="GameBiz.Domain.Entities.Blog_UserShareSpread,GameBiz.Business"  table="E_Blog_UserShareSpread">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="isGiveRegisterRedBag" type="Boolean">
+      <column name="isGiveRegisterRedBag" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="isGiveLotteryRedBag" type="Boolean">
+      <column name="isGiveLotteryRedBag" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="giveRedBagMoney" type="Decimal">
+      <column name="giveRedBagMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="isGiveRechargeRedBag" type="Boolean">
+      <column name="isGiveRechargeRedBag" length="1" sql-type="bit" not-null="true"/>
+    </property>
+  </class>
+  <class name="GameBiz.Domain.Entities.BlogOrderShareRegisterRedBag,GameBiz.Business"  table="E_Blog_OrderShareRegisterRedBag">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="IsGiveRegisterRedBag" type="Boolean">
+      <column name="IsGiveRegisterRedBag" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="RegisterCount" type="Int32">
+      <column name="RegisterCount" length="8" sql-type="int" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"></column>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"></column>
+    </property>
+    <property name="RedBagPre" type="Decimal">
+      <column name="RedBagPre" length="8" sql-type="decimal" not-null="false"></column>
+    </property>
+    <property name="RedBagMoney" type="Decimal">
+      <column name="RedBagMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

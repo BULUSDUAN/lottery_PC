@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Activity.Domain.Entities.A20130226VipScoreSummary, Activity.Business"  table="E_A20130226_VipScoreSummary">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="VipLeavel" type="Int32">
+      <column name="VipLeavel" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalScore" type="Int32">
+      <column name="TotalScore" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="Activity.Domain.Entities.A20130226VipScoreDetail, Activity.Business"  table="E_A20130226_VipScoreDetail">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="FillMoney" type="Decimal" >
+      <column name="FillMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="Score" type="Int32">
+      <column name="Score" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="Activity.Domain.Entities.A20130226VipFillMoneyGiveRecord, Activity.Business"  table="E_A20130226_VipFillMoneyGiveRecord">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="VipLeavel" type="Int32">
+      <column name="VipLeavel" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GiveMoney" type="Decimal" >
+      <column name="GiveMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  
+</hibernate-mapping>

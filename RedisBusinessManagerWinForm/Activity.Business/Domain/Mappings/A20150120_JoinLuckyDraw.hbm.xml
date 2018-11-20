@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Activity.Domain.Entities.A20150120_JoinLuckyDraw, Activity.Business"  table="E_A20150120_JoinLuckyDraw">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PrizeMoney" type="Decimal" >
+      <column name="PrizeMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="OrderId" type="String" >
+      <column name="OrderId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AgentId" type="String" >
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PrizeType" type="String" >
+      <column name="PrizeType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsTestUser" type="Boolean">
+      <column name="IsTestUser" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="ClientType" type="Int32">
+      <column name="ClientType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Description" type="String">
+      <column name="Description" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="LotteryNumber" type="String" >
+      <column name="LotteryNumber" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="IdCardNumber" type="String" >
+      <column name="IdCardNumber" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

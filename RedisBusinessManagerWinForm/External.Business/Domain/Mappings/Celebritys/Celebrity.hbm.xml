@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Domain.Entities.Celebritys.Celebrity,External.Business"  table="E_Celebrity">
+    <id name="UserId" type="String" unsaved-value="null">
+      <column name="UserId" length="50" sql-type="nvarchar(50)"  not-null="true" unique="true"></column>
+    </id>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CelebrityType"  type="Int32">
+      <column name="CelebrityType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="DealWithType"  type="Int32">
+      <column name="DealWithType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IsEnable" type="Boolean">
+      <column name="IsEnable" length="1" sql-type="bit" not-null="false"></column>
+    </property>
+    <property name="Description" type="String">
+      <column name="Description" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="Picurl" type="String">
+      <column name="Picurl" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="WinnerUrl" type="String">
+      <column name="WinnerUrl" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+  </class>
+  
+  <class name="External.Domain.Entities.Celebritys.CelebrityRebate,External.Business"  table="E_Celebrity_Rebate">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Rebate" type="Decimal">
+      <column name="Rebate" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="External.Domain.Entities.Celebritys.CelebrityTsukkomi,External.Business"  table="E_Celebrity_Tsukkomi">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SendUserId" type="String">
+      <column name="SendUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Content" type="String">
+      <column name="Content" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="DealWithType"  type="Int32">
+      <column name="DealWithType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="DisposeOpinion" type="String">
+      <column name="DisposeOpinion" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+  </class>
+  
+</hibernate-mapping>

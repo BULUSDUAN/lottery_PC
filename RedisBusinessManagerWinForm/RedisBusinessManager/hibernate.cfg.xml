@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-configuration  xmlns="urn:nhibernate-configuration-2.2" >
+  <session-factory name="NHibernate.Test">
+    <property name="connection.driver_class">NHibernate.Driver.SqlClientDriver</property>
+    <property name="connection.connection_string">
+      Data Source=192.168.1.103;Initial Catalog=ECP_Core;UID=sa;PWD=123456;
+    </property>
+    <property name="adonet.batch_size">100</property>
+    <property name="show_sql">true</property>
+    <property name="dialect">NHibernate.Dialect.MsSql2008Dialect</property>
+    <property name="command_timeout">60</property>
+    <property name="query.substitutions">true 1, false 0, yes 'Y', no 'N'</property>
+    <!--以下三行开启二级缓存-->
+    <property name="cache.provider_class">NHibernate.Cache.HashtableCacheProvider,NHibernate</property>
+    <property name="cache.use_second_level_cache">true</property>
+    <property name="cache.use_query_cache">true</property>
+    <!--以上三行开启二级缓存-->
+
+    <mapping assembly="GameBiz.Domain"/>
+
+
+
+    <class-cache class="GameBiz.Domain.Entities.BettingSchemeMain,GameBiz.Domain" usage="read-write" />
+
+  </session-factory>
+</hibernate-configuration>
