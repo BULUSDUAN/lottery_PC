@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +10,11 @@ namespace EntityModel.CoreModel
     /// <summary>
     /// 传统足球比赛信息
     /// </summary>
+    [BsonIgnoreExtraElements]
     public class CTZQ_IssuseInfo
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         public string Id { get; set; }
         /// <summary>
         /// 彩种
@@ -43,6 +48,7 @@ namespace EntityModel.CoreModel
         /// 比赛投注开始时间
         /// </summary>
         public string StartTime { get; set; }
+
         public string WinNumber { get; set; }
     }
     /// <summary>

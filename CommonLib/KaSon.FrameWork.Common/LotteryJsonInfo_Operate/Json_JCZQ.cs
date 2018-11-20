@@ -5,9 +5,13 @@ using System.Web;
 using System.Text;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common;
-using EntityModel.LotteryJsonInfo;
+
 using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Common.Utilities;
+using MongoDB.Driver;
+using EntityModel;
+using EntityModel.Domain.Entities;
+using EntityModel.LotteryJsonInfo;
 
 namespace KaSon.FrameWork.Common
 {
@@ -36,6 +40,25 @@ namespace KaSon.FrameWork.Common
             }
         }
 
+        private static IList<JCZQ_MatchInfo> MatchFile_Mg(string newVerType = null, string matchDate = null)
+        {
+            if (!string.IsNullOrEmpty(newVerType) && newVerType == "1")
+            {
+             //   return "/MatchData/" + "jczq/Match_List_FB.json";
+                return MgHelper.MgDB.GetCollection<JCZQ_MatchInfo>("JCZQ_Match_List_FB").Find<JCZQ_MatchInfo>(Builders<JCZQ_MatchInfo>.Filter.Empty).ToList();
+            }
+            else if (string.IsNullOrEmpty(matchDate))
+            {
+                return MgHelper.MgDB.GetCollection<JCZQ_MatchInfo>("JCZQ_Match_List").Find<JCZQ_MatchInfo>(Builders<JCZQ_MatchInfo>.Filter.Empty).ToList();
+               // return "/MatchData/" + "jczq/Match_List.json";
+            }
+            else
+            {
+                return MgHelper.MgDB.GetCollection<JCZQ_MatchInfo>("JCZQ_Match_List").Find<JCZQ_MatchInfo>(Builders<JCZQ_MatchInfo>.Filter.Eq(b=>b.MatchData,matchDate)).ToList();
+
+            }
+        }
+
         /// <summary>
         /// 竞彩足球 - 根据奖期获取队伍结果信息文件地址
         /// </summary>
@@ -46,6 +69,7 @@ namespace KaSon.FrameWork.Common
             if (string.IsNullOrEmpty(matchDate))
             {
                 return "/MatchData/" + "jczq/Match_Result_List.json";
+                //C_JCZQ_MatchResult
             }
             else
             {
@@ -53,6 +77,21 @@ namespace KaSon.FrameWork.Common
             }
         }
 
+
+        private static IList<C_JCZQ_MatchResult> MatchResultFile_Mg(string matchDate = null)
+        {
+            if (string.IsNullOrEmpty(matchDate))
+            {
+                return MgHelper.MgDB.GetCollection<C_JCZQ_MatchResult>("JCZQ_Match_Result_List").Find<C_JCZQ_MatchResult>(Builders<C_JCZQ_MatchResult>.Filter.Empty).ToList();
+
+                //
+            }
+            else
+            {
+                return MgHelper.MgDB.GetCollection<C_JCZQ_MatchResult>("JCZQ_Match_Result_List").Find<C_JCZQ_MatchResult>(Builders<C_JCZQ_MatchResult>.Filter.Eq(b => b.MatchData, matchDate)).ToList();
+
+            }
+        }
         /// <summary>
         /// 竞彩足球 - SP文件地址
         /// </summary>
@@ -74,6 +113,81 @@ namespace KaSon.FrameWork.Common
                 return "/MatchData/" + "/jczq/" + matchdate + "/" + type + "_SP.json";
             }
         }
+
+        private static object SPFile_Mg(string type, string matchdate = null)
+        {
+            if (type.ToLower() == "hh")
+            {
+                var filter = Builders<JCZQ_SP>.Filter.Empty;
+                return MgHelper.MgDB.GetCollection<JCZQ_SP>("JCZQ_SP").Find<JCZQ_SP>(filter).ToList();
+            }
+            else if (string.IsNullOrEmpty(matchdate))
+            {
+                //return "/MatchData/" + "jclq/" + type + "_SP.json";
+
+                object obj = null;
+                switch (type.ToUpper())
+                {
+                    case "SPF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        obj = MgHelper.MgDB.GetCollection<C_JCZQ_SPF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<C_JCZQ_SPF_SP>(Builders<C_JCZQ_SPF_SP>.Filter.Empty).ToList();
+                        break;
+                    case "BRQSPF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        obj = MgHelper.MgDB.GetCollection<C_JCZQ_SPF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<C_JCZQ_SPF_SP>(Builders<C_JCZQ_SPF_SP>.Filter.Empty).ToList();
+                        break;
+                    case "BF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        obj = MgHelper.MgDB.GetCollection<C_JCZQ_BF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<C_JCZQ_BF_SP>(Builders<C_JCZQ_BF_SP>.Filter.Empty).ToList();
+                        break;
+                    case "ZJQ":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        obj = MgHelper.MgDB.GetCollection<C_JCZQ_ZJQ_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<C_JCZQ_ZJQ_SP>(Builders<C_JCZQ_ZJQ_SP>.Filter.Empty).ToList();
+                        break;
+
+                    default://DXF
+                        obj = MgHelper.MgDB.GetCollection<C_JCZQ_BQC_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<C_JCZQ_BQC_SP>(Builders<C_JCZQ_BQC_SP>.Filter.Empty).ToList();
+
+                        break;
+                }
+                return obj;
+            }
+            else
+            {
+
+                object obj = null;
+
+                switch (type.ToUpper())
+                {
+                    case "SPF":
+                         var filter_SPF = Builders<C_JCZQ_SPF_SP>.Filter.Eq(b=>b.MatchData, matchdate);
+                        obj = MgHelper.MgDB.GetCollection<C_JCZQ_SPF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<C_JCZQ_SPF_SP>(filter_SPF).ToList();
+                        break;
+                    case "BRQSPF":
+                        var filter_BRQSPF = Builders<C_JCZQ_SPF_SP>.Filter.Eq(b => b.MatchData, matchdate);
+                        obj = MgHelper.MgDB.GetCollection<C_JCZQ_SPF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<C_JCZQ_SPF_SP>(filter_BRQSPF).ToList();
+                        break;
+                    case "BF":
+                        var filter_BF = Builders<C_JCZQ_BF_SP>.Filter.Eq(b => b.MatchData, matchdate);
+                        obj = MgHelper.MgDB.GetCollection<C_JCZQ_BF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<C_JCZQ_BF_SP>(filter_BF).ToList();
+                        break;
+                    case "ZJQ":
+                        var filter_ZJQ = Builders<C_JCZQ_ZJQ_SP>.Filter.Eq(b => b.MatchData, matchdate);
+                        obj = MgHelper.MgDB.GetCollection<C_JCZQ_ZJQ_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<C_JCZQ_ZJQ_SP>(filter_ZJQ).ToList();
+                        break;
+
+                    default://DXF
+                        var filter_BQC = Builders<C_JCZQ_BQC_SP>.Filter.Eq(b => b.MatchData, matchdate);
+                        obj = MgHelper.MgDB.GetCollection<C_JCZQ_BQC_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<C_JCZQ_BQC_SP>(filter_BQC).ToList();
+
+                        break;
+                }
+                return obj;
+
+                // return "/MatchData/" + "/jclq/" + matchdate + "/" + type + "_SP.json";
+            }
+        }
+
         /// <summary>
         /// 根据文件名获取文件路径
         /// </summary>
@@ -83,7 +197,17 @@ namespace KaSon.FrameWork.Common
         {
             return "/MatchData/jczq/" + fileName + ".json";
         }
+        private static string Match_List_HH()
+        {
+            return "/MatchData/jczq/Match_List_HH.json";
+        }
 
+        private static IList<C_JCZQ_Match_HH> Match_List_HH_Mg()
+        {//JCZQ_Match_List_HH 
+            var filter_BQC = Builders<C_JCZQ_Match_HH>.Filter.Empty;
+            return MgHelper.MgDB.GetCollection<C_JCZQ_Match_HH>("JCZQ_Match_List_HH").Find<C_JCZQ_Match_HH>(filter_BQC).ToList();
+
+        }
         #endregion
 
         #region 竞彩足球数据读取
@@ -100,26 +224,74 @@ namespace KaSon.FrameWork.Common
         public static List<JCZQ_MatchInfo_WEB> MatchList_WEB(string gameType, string newVerType, string matchDate = null, bool isLeftJoin = true)
         {
             BettingHelper bizHelper = new BettingHelper();
-            var match = bizHelper.GetMatchInfoList<JCZQ_MatchInfo>(MatchFile(newVerType, matchDate));
+            IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo> sp_spf =new List<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(); //bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile_Mg(gameType, matchDate)); //让球胜平负sp数据
+            IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo> sp_brqspf = new List<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>();
+            IList<JCZQ_BF_SPInfo> sp_bf = new List<JCZQ_BF_SPInfo>();
+            IList<JCZQ_BQC_SPInfo> sp_bqc = new List<JCZQ_BQC_SPInfo>();
+            IList<JCZQ_ZJQ_SPInfo> sp_zjq = new List<JCZQ_ZJQ_SPInfo>();
 
+
+            //var sp_brqspf = SPFile_Mg(gameType, matchDate) as IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>;// bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //胜平负sp数据
+            //var sp_zjq = SPFile_Mg(gameType, matchDate) as IList<EntityModel.LotteryJsonInfo.JCZQ_ZJQ_SPInfo>;// bizHelper.GetMatchInfoList<JCZQ_ZJQ_SPInfo>(SPFile(gameType, matchDate)); //总进球sp数据
+            //var sp_bf = SPFile_Mg(gameType, matchDate) as IList<EntityModel.LotteryJsonInfo.JCZQ_BF_SPInfo>;// bizHelper.GetMatchInfoList<JCZQ_BF_SPInfo>(SPFile(gameType, matchDate)); //比分sp数据
+            //var sp_bqc = SPFile_Mg(gameType, matchDate) as IList<EntityModel.LotteryJsonInfo.JCZQ_BQC_SPInfo>;// bizHelper.GetMatchInfoList<JCZQ_BQC_SPInfo>(SPFile(gameType, matchDate)); //半全场sp数据
+
+
+
+#if MGDB
+               var match = MatchFile_Mg(newVerType, matchDate);
+            var matchresult = MatchResultFile_Mg(matchDate);
+              switch (gameType.ToUpper())
+            {
+                
+
+                case "SPF":
+                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                    sp_spf = SPFile_Mg(gameType, matchDate) as IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>;
+                    break;
+                case "BRQSPF":
+                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                    sp_brqspf = SPFile_Mg(gameType, matchDate) as IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>;
+                    break;
+                case "BF":
+                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                    sp_bf = SPFile_Mg(gameType, matchDate) as IList<JCZQ_BF_SPInfo>;
+                    break;
+                case "ZJQ":
+                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                    sp_bqc = SPFile_Mg(gameType, matchDate) as IList<JCZQ_BQC_SPInfo>;
+                    break;
+
+                default://DXF
+                    sp_zjq = SPFile_Mg(gameType, matchDate) as IList<JCZQ_ZJQ_SPInfo>;
+
+                    break;
+            }
+
+#else
+            var match = bizHelper.GetMatchInfoList<JCZQ_MatchInfo>(MatchFile(newVerType, matchDate));
             var matchresult = bizHelper.GetMatchInfoList<JCZQ_MatchResultInfo>(MatchResultFile(matchDate));
+             sp_spf = bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //让球胜平负sp数据
+             sp_brqspf = bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //胜平负sp数据
+             sp_zjq = bizHelper.GetMatchInfoList<JCZQ_ZJQ_SPInfo>(SPFile(gameType, matchDate)); //总进球sp数据
+             sp_bf = bizHelper.GetMatchInfoList<JCZQ_BF_SPInfo>(SPFile(gameType, matchDate)); //比分sp数据
+             sp_bqc = bizHelper.GetMatchInfoList<JCZQ_BQC_SPInfo>(SPFile(gameType, matchDate)); //半全场sp数据
+#endif
+
+
+
             //var sp_spf = bizHelper.GetMatchInfoList<JCZQ_SPF_SPInfo>(SPFile("SPF",matchDate)); //让球胜平负sp数据
             //var sp_brqspf = bizHelper.GetMatchInfoList<JCZQ_SPF_SPInfo>(SPFile("BRQSPF", matchDate)); //胜平负sp数据
             //var sp_zjq = bizHelper.GetMatchInfoList<JCZQ_ZJQ_SPInfo>(SPFile("ZJQ", matchDate)); //总进球sp数据
             //var sp_bf = bizHelper.GetMatchInfoList<JCZQ_BF_SPInfo>(SPFile("BF", matchDate)); //比分sp数据
             //var sp_bqc = bizHelper.GetMatchInfoList<JCZQ_BQC_SPInfo>(SPFile("BQC", matchDate)); //半全场sp数据
 
-            var sp_spf = bizHelper.GetMatchInfoList<JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //让球胜平负sp数据
-            var sp_brqspf = bizHelper.GetMatchInfoList<JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //胜平负sp数据
-            var sp_zjq = bizHelper.GetMatchInfoList<JCZQ_ZJQ_SPInfo>(SPFile(gameType, matchDate)); //总进球sp数据
-            var sp_bf = bizHelper.GetMatchInfoList<JCZQ_BF_SPInfo>(SPFile(gameType, matchDate)); //比分sp数据
-            var sp_bqc = bizHelper.GetMatchInfoList<JCZQ_BQC_SPInfo>(SPFile(gameType, matchDate)); //半全场sp数据
-
+           
             var list = new List<JCZQ_MatchInfo_WEB>();
             match = match.Where(t => long.Parse(Convert.ToDateTime(t.FSStopBettingTime).ToString("yyyyMMddHHmmss")) > long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")) && t.MatchStopDesc != "2").ToList();
             foreach (var item in match)
             {
-                #region 队伍基础信息
+#region 队伍基础信息
                 //var startTime=Convert.ToDateTime(item.StartDateTime);
                 //if (startTime.Date == DateTime.Now.AddDays(1).Date)
                 //    startTime = startTime.AddHours(-9);
@@ -156,9 +328,9 @@ namespace KaSon.FrameWork.Common
                     State = item.State,
                     PrivilegesType = item.PrivilegesType == null ? string.Empty : item.PrivilegesType,
                 };
-                #endregion
+#endregion
 
-                #region 附加队伍结果信息
+#region 附加队伍结果信息
                 var res = matchresult.FirstOrDefault(p => p.MatchId == item.MatchId);
                 if (res != null)
                 {
@@ -180,15 +352,15 @@ namespace KaSon.FrameWork.Common
                 {
                     continue;
                 }
-                #endregion
+#endregion
 
-                #region 附加让球胜平负sp数据
+#region 附加让球胜平负sp数据
                 var sp_spf_item = sp_spf.FirstOrDefault(p => p.MatchId == item.MatchId);
                 if (gameType.ToLower() == "hh")
                 {
                     if (sp_spf_item != null && sp_spf_item.SPF != null)
                     {
-                        var json = JsonHelper.Deserialize<JCZQ_SPF_SPInfo>(sp_spf_item.SPF);
+                        var json = JsonHelper.Deserialize<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(sp_spf_item.SPF);
                         info.SP_Win_Odds = json.WinOdds;
                         info.SP_Lose_Odds = json.LoseOdds;
                         info.SP_Flat_Odds = json.FlatOdds;
@@ -202,15 +374,15 @@ namespace KaSon.FrameWork.Common
                     info.SP_Flat_Odds = sp_spf_item.FlatOdds;
                     //info.PrivilegesType = sp_spf_item.PrivilegesType;
                 }
-                #endregion
+#endregion
 
-                #region 附加胜平负sp数据
+#region 附加胜平负sp数据
                 var sp_brqspf_item = sp_brqspf.FirstOrDefault(p => p.MatchId == item.MatchId);
                 if (gameType.ToLower() == "hh")
                 {
                     if (sp_brqspf_item != null && sp_brqspf_item.BRQSPF != null)
                     {
-                        var json = JsonHelper.Deserialize<JCZQ_SPF_SPInfo>(sp_brqspf_item.BRQSPF);
+                        var json = JsonHelper.Deserialize<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(sp_brqspf_item.BRQSPF);
                         info.SP_Win_Odds_BRQ = json.WinOdds;
                         info.SP_Lose_Odds_BRQ = json.LoseOdds;
                         info.SP_Flat_Odds_BRQ = json.FlatOdds;
@@ -224,9 +396,9 @@ namespace KaSon.FrameWork.Common
                     info.SP_Flat_Odds_BRQ = sp_brqspf_item.FlatOdds;
                     //info.PrivilegesType = sp_brqspf_item.PrivilegesType==null?string.Empty:sp_brqspf_item.PrivilegesType;
                 }
-                #endregion
+#endregion
 
-                #region 附加总进球sp数据
+#region 附加总进球sp数据
                 var sp_zjq_item = sp_zjq.FirstOrDefault(p => p.MatchId == item.MatchId);
                 if (gameType.ToLower() == "hh")
                 {
@@ -256,9 +428,9 @@ namespace KaSon.FrameWork.Common
                     info.JinQiu_7_Odds = sp_zjq_item.JinQiu_7_Odds;
                     //info.PrivilegesType = sp_zjq_item.PrivilegesType==null?string.Empty:sp_zjq_item.PrivilegesType;
                 }
-                #endregion
+#endregion
 
-                #region 附加比分sp数据
+#region 附加比分sp数据
                 var sp_bf_item = sp_bf.FirstOrDefault(p => p.MatchId == item.MatchId);
                 if (gameType.ToLower() == "hh")
                 {
@@ -334,9 +506,9 @@ namespace KaSon.FrameWork.Common
                     info.S_QT = sp_bf_item.S_QT;
                     //info.PrivilegesType = sp_bf_item.PrivilegesType==null?string.Empty:sp_bf_item.PrivilegesType;
                 }
-                #endregion
+#endregion
 
-                #region 附加半全场sp数据
+#region 附加半全场sp数据
                 var sp_bqc_item = sp_bqc.FirstOrDefault(p => p.MatchId == item.MatchId);
                 if (gameType.ToLower() == "hh")
                 {
@@ -368,7 +540,7 @@ namespace KaSon.FrameWork.Common
                     info.SH_SH_Odds = sp_bqc_item.SH_SH_Odds;
                     //info.PrivilegesType = sp_bqc_item.PrivilegesType==null?string.Empty:sp_bqc_item.PrivilegesType;
                 }
-                #endregion
+#endregion
 
                 list.Add(info);
             }
@@ -376,15 +548,25 @@ namespace KaSon.FrameWork.Common
             return list;
         }
 
-        #endregion
+#endregion
 
-        #region 竞彩足球混合单关数据读取
+#region 竞彩足球混合单关数据读取
 
         public static List<JCZQ_MatchInfo_WEB> GetJCZQHHDGList()
         {
             List<JCZQ_MatchInfo_WEB> jczqMatchList = new List<JCZQ_MatchInfo_WEB>();
             BettingHelper bizHelper = new BettingHelper();
-            var matchList = bizHelper.GetMatchInfoList<JCZQHHDGBase>(GetFilePath("Match_List_HH"));
+
+#if MGDB
+             var matchList = Match_List_HH_Mg();
+            
+#else
+            var matchList = bizHelper.GetMatchInfoList<C_JCZQ_Match_HH>(Match_List_HH());
+#endif
+
+
+
+
             matchList = matchList.Where(s => long.Parse(Convert.ToDateTime(s.FSStopBettingTime).ToString("yyyyMMddHHmmss")) > long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")) && s.MatchStopDesc != "2").ToList();
             if (matchList != null && matchList.Count > 0)
             {
@@ -419,10 +601,10 @@ namespace KaSon.FrameWork.Common
                     info.PrivilegesType = item.PrivilegesType == null ? string.Empty : item.PrivilegesType;
 
                     //info.State = item.State;
-                    #region 附加让球胜平负sp数据
+#region 附加让球胜平负sp数据
                     if (item.SPF != null)
                     {
-                        var json_spf = JsonHelper.Deserialize<JCZQ_SPF_SPInfo>(item.SPF);
+                        var json_spf = JsonHelper.Deserialize<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(item.SPF);
                         info.SP_Win_Odds = json_spf.WinOdds;
                         info.SP_Lose_Odds = json_spf.LoseOdds;
                         info.SP_Flat_Odds = json_spf.FlatOdds;
@@ -439,13 +621,13 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = string.Empty;
                     }
 
-                    #endregion
+#endregion
 
-                    #region 附加胜平负sp数据
+#region 附加胜平负sp数据
 
                     if (item.BRQSPF != null)
                     {
-                        var json_brqspf = JsonHelper.Deserialize<JCZQ_SPF_SPInfo>(item.BRQSPF);
+                        var json_brqspf = JsonHelper.Deserialize<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(item.BRQSPF);
                         info.SP_Win_Odds_BRQ = json_brqspf.WinOdds;
                         info.SP_Lose_Odds_BRQ = json_brqspf.LoseOdds;
                         info.SP_Flat_Odds_BRQ = json_brqspf.FlatOdds;
@@ -461,9 +643,9 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = string.Empty;
                     }
 
-                    #endregion
+#endregion
 
-                    #region 附加总进球sp数据
+#region 附加总进球sp数据
 
                     if (item.ZJQ != null)
                     {
@@ -493,9 +675,9 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = string.Empty;
                     }
 
-                    #endregion
+#endregion
 
-                    #region 附加比分sp数据
+#region 附加比分sp数据
 
                     if (item.BF != null)
                     {
@@ -571,9 +753,9 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = string.Empty;
                     }
 
-                    #endregion
+#endregion
 
-                    #region 附加半全场sp数据
+#region 附加半全场sp数据
 
                     if (item.BQC != null)
                     {
@@ -605,7 +787,7 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = string.Empty;
                     }
 
-                    #endregion
+#endregion
 
                     jczqMatchList.Add(info);
                 }
@@ -683,10 +865,10 @@ namespace KaSon.FrameWork.Common
             //json.Append("]");
             return data + "]";
         }
-        #endregion
+#endregion
 
 
-        #region sjb
+#region sjb
         /// <summary>
         /// 世界杯文件
         /// </summary>
@@ -763,6 +945,6 @@ namespace KaSon.FrameWork.Common
             }
             return currentsps.TrimEnd('/');
         }
-        #endregion
+#endregion
     }
 }

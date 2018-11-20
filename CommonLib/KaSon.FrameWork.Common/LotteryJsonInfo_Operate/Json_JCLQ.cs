@@ -8,6 +8,8 @@ using EntityModel.LotteryJsonInfo;
 using KaSon.FrameWork.Common.Sport;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common.Utilities;
+using EntityModel.Domain.Entities;
+using MongoDB.Driver;
 
 namespace KaSon.FrameWork.Common
 {
@@ -25,6 +27,7 @@ namespace KaSon.FrameWork.Common
         {
             if (string.IsNullOrEmpty(matchDate))
             {
+               
                 //return "/MatchData/" + "jclq/Match_" + (type.ToLower() == "sf" ? "sf" : "rfsf") + "_List.json";20150519 sf读取match_list文件
                 return "/MatchData/" + "jclq/Match_" + (type.ToLower() == "sf" ? "" : "rfsf_") + "List.json";
             }
@@ -33,6 +36,30 @@ namespace KaSon.FrameWork.Common
                 return "/MatchData/" + "/jclq/" + matchDate + "/Match_List.json";
             }
         }
+
+        private static object MatchFile_Mg(string type, string matchDate = null)
+        {
+            if (string.IsNullOrEmpty(matchDate))
+            {
+
+                if (type.ToLower() == "sf")
+                {
+                  //  var filter_ZJQ = Builders<JCLQ_Match_SF>.Filter.Eq(b => b.GameType, type) & Builders<JCLQ_Match_SF>.Filter.Eq(b => b.IssuseNumber, issuse);
+                    return MgHelper.MgDB.GetCollection<JCLQ_Match_SF>("JCLQ_Match_"+ type.ToUpper() + "_List").Find<JCLQ_Match_SF>(Builders<JCLQ_Match_SF>.Filter.Empty).ToList();
+
+                }
+                return MgHelper.MgDB.GetCollection<JCLQ_Match_RFSF>("JCLQ_Match_" + type.ToUpper() + "_List").Find<JCLQ_Match_RFSF>(Builders<JCLQ_Match_RFSF>.Filter.Empty).ToList();
+                //return "/MatchData/" + "jclq/Match_" + (type.ToLower() == "sf" ? "sf" : "rfsf") + "_List.json";20150519 sf读取match_list文件
+               // return "/MatchData/" + "jclq/Match_" + (type.ToLower() == "sf" ? "" : "rfsf_") + "List.json";
+            }
+            else
+            {
+                // return "/MatchData/" + "/jclq/" + matchDate + "/Match_List.json";
+                var filter = Builders<JCLQ_MatchInfo>.Filter.Eq(b => b.MatchData, matchDate);
+                return MgHelper.MgDB.GetCollection<JCLQ_MatchInfo>("JCLQ_Match_" + type.ToUpper() + "_List").Find<JCLQ_MatchInfo>(filter).ToList();
+            }
+        }
+
         /// <summary>
         /// 根据文件名获取文件路径
         /// </summary>
@@ -42,6 +69,16 @@ namespace KaSon.FrameWork.Common
         {
             return "/MatchData/jclq/" + fileName + ".json";
         }
+
+        private static string Match_HHDG_List()
+        {
+            return "/MatchData/jclq/Match_HHDG_List.json";
+        }
+        private static IList<JCLQ_Match_HHDG> Match_HHDG_List_Mg()
+        {
+            return MgHelper.MgDB.GetCollection<JCLQ_Match_HHDG>("JCLQ_Match_HHDG_List").Find<JCLQ_Match_HHDG>(Builders<JCLQ_Match_HHDG>.Filter.Empty).ToList();
+        }
+        //Match_HHDG_List
         /// <summary>
         /// 竞彩篮球 - 根据奖期获取队伍结果信息文件地址
         /// </summary>
@@ -58,7 +95,19 @@ namespace KaSon.FrameWork.Common
                 return "/MatchData/" + "/jclq/" + matchDate + "/Match_Result_List.json";
             }
         }
-
+        private static IList<JCLQ_MatchResult> MatchResultFile_Mg(string matchDate = null)
+        { 
+            if (string.IsNullOrEmpty(matchDate))
+            {
+                var filter = Builders<JCLQ_MatchResult>.Filter.Empty;
+                return MgHelper.MgDB.GetCollection<JCLQ_MatchResult>("JCLQ_Match_Result_List").Find<JCLQ_MatchResult>(filter).ToList();
+            }
+            else
+            {
+                var filter = Builders<JCLQ_MatchResult>.Filter.Eq(b => b.MatchData, matchDate);
+                return MgHelper.MgDB.GetCollection<JCLQ_MatchResult>("JCLQ_Match_Result_List").Find<JCLQ_MatchResult>(filter).ToList();
+            }
+        }
         /// <summary>
         /// 竞彩篮球 - SP文件地址
         /// </summary>
@@ -67,14 +116,6 @@ namespace KaSon.FrameWork.Common
         /// <returns>SP文件地址</returns>
         private static string SPFile(string type, string matchdate = null)
         {
-            //if (string.IsNullOrEmpty(matchdate))
-            //{
-            //    return "/MatchData/" + "jclq/" + type + "_SP.json";
-            //}
-            //else
-            //{
-            //    return "/MatchData/" + "/jclq/" + matchdate + "/" + type + "_SP.json";
-            //}
             if (type.ToLower() == "hh")
             {
                 return "/MatchData/" + "jclq/SP.json";
@@ -88,7 +129,73 @@ namespace KaSon.FrameWork.Common
                 return "/MatchData/" + "/jclq/" + matchdate + "/" + type + "_SP.json";
             }
         }
+        private static object SPFile_Mg(string type, string matchdate = null)
+        {
+            if (type.ToLower() == "hh")
+            {
+                var filter = Builders<JCLQ_SP>.Filter.Empty;
+                return MgHelper.MgDB.GetCollection<JCLQ_SP>("JCLQ_SP").Find<JCLQ_SP>(filter).ToList();
+            }
+            else if (string.IsNullOrEmpty(matchdate))
+            {
+                //return "/MatchData/" + "jclq/" + type + "_SP.json";
 
+                object obj = null;
+                switch (type.ToUpper())
+                {
+                    case "SF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        obj= MgHelper.MgDB.GetCollection<JCLQ_SF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<JCLQ_SF_SP>(Builders<JCLQ_SF_SP>.Filter.Empty).ToList();
+                        break;
+                    case "RFSF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        obj = MgHelper.MgDB.GetCollection<JCLQ_RFSF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<JCLQ_RFSF_SP>(Builders<JCLQ_RFSF_SP>.Filter.Empty).ToList();
+                        break;
+                    case "SFC":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        obj = MgHelper.MgDB.GetCollection<JCLQ_SFC_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<JCLQ_SFC_SP>(Builders<JCLQ_SFC_SP>.Filter.Empty).ToList();
+                        break;
+                 
+                    default://DXF
+                        obj = MgHelper.MgDB.GetCollection<JCLQ_DXF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<JCLQ_DXF_SP>(Builders<JCLQ_DXF_SP>.Filter.Empty).ToList();
+
+                        break;
+                }
+                return obj;
+            }
+            else
+            {
+
+                object obj = null;
+               
+                switch (type.ToUpper())
+                {
+                    case "SF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                       var filter_SF = Builders<JCLQ_SF_SP>.Filter.Eq(b => b.MatchData, matchdate);
+                        obj = MgHelper.MgDB.GetCollection<JCLQ_SF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<JCLQ_SF_SP>(filter_SF).ToList();
+                        break;
+                    case "RFSF":
+                        var filter_RFSF = Builders<JCLQ_RFSF_SP>.Filter.Eq(b => b.MatchData, matchdate);
+                        obj = MgHelper.MgDB.GetCollection<JCLQ_RFSF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<JCLQ_RFSF_SP>(filter_RFSF).ToList();
+                        break;
+                    case "SFC":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        var filter_SFC = Builders<JCLQ_SFC_SP>.Filter.Eq(b => b.MatchData, matchdate);
+                        obj = MgHelper.MgDB.GetCollection<JCLQ_SFC_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<JCLQ_SFC_SP>(filter_SFC).ToList();
+                        break;
+
+                    default://DXF
+                      var  filter = Builders<JCLQ_DXF_SP>.Filter.Eq(b => b.MatchData, matchdate);
+                        obj = MgHelper.MgDB.GetCollection<JCLQ_DXF_SP>("JCLQ_" + type.ToUpper() + "_SP").Find<JCLQ_DXF_SP>(filter).ToList();
+
+                        break;
+                }
+                return obj;
+
+               // return "/MatchData/" + "/jclq/" + matchdate + "/" + type + "_SP.json";
+            }
+        }
         #endregion
 
         /// <summary>
@@ -104,23 +211,65 @@ namespace KaSon.FrameWork.Common
         public static List<JCLQ_MatchInfo_WEB> MatchList_WEB(string gameType, string matchDate = null, bool isLeftJoin = true)
         {
             BettingHelper bizHelper = new BettingHelper();
+            IList<JCLQ_SF_SPInfo> sp_sf = new List<JCLQ_SF_SPInfo>();// bizHelper.GetMatchInfoList<JCLQ_SF_SPInfo>(SPFile_Mg(gameType, matchDate)); //胜负sp数据
+            IList<JCLQ_RFSF_SPInfo> sp_rfsf = new List<JCLQ_RFSF_SPInfo>();//  bizHelper.GetMatchInfoList<JCLQ_RFSF_SPInfo>(SPFile_Mg(gameType, matchDate)); //让分胜负sp数据
+            IList<JCLQ_SFC_SPInfo> sp_sfc = new List<JCLQ_SFC_SPInfo>();// bizHelper.GetMatchInfoList<JCLQ_SFC_SPInfo>(SPFile_Mg(gameType, matchDate)); //胜分差sp数据
+            IList<JCLQ_DXF_SPInfo> sp_dxf = new List<JCLQ_DXF_SPInfo>();// bizHelper.GetMatchInfoList<JCLQ_DXF_SPInfo>(SPFile_Mg(gameType, matchDate)); //大小分sp数据
+
+            // var a1 = (IList<object>)SPFile_Mg(gameType, matchDate);
+
+
+
+
+
+#if MGDB
+            var match = MatchFile_Mg(gameType, matchDate) as IList<JCLQ_MatchInfo>;
+            var matchresult = MatchResultFile_Mg(matchDate);
+              switch (gameType.ToUpper())
+            {
+                case "SF":
+                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                    sp_sf = SPFile_Mg(gameType, matchDate) as IList<JCLQ_SF_SPInfo>;
+                    break;
+                case "RFSF":
+                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                    sp_rfsf = SPFile_Mg(gameType, matchDate) as IList<JCLQ_RFSF_SPInfo>;
+                    break;
+                case "SFC":
+                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                    sp_sfc = SPFile_Mg(gameType, matchDate) as IList<JCLQ_SFC_SPInfo>;
+                    break;
+
+                default://DXF
+                    sp_dxf = SPFile_Mg(gameType, matchDate) as IList<JCLQ_DXF_SPInfo>;
+
+                    break;
+            }
+          
+#else
             var match = bizHelper.GetMatchInfoList<JCLQ_MatchInfo>(MatchFile(gameType, matchDate));
             var matchresult = bizHelper.GetMatchInfoList<JCLQ_MatchResultInfo>(MatchResultFile(matchDate));
+             sp_sf = bizHelper.GetMatchInfoList<JCLQ_SF_SPInfo>(SPFile(gameType, matchDate)); //胜负sp数据
+             sp_rfsf = bizHelper.GetMatchInfoList<JCLQ_RFSF_SPInfo>(SPFile(gameType, matchDate)); //让分胜负sp数据
+             sp_sfc = bizHelper.GetMatchInfoList<JCLQ_SFC_SPInfo>(SPFile(gameType, matchDate)); //胜分差sp数据
+             sp_dxf = bizHelper.GetMatchInfoList<JCLQ_DXF_SPInfo>(SPFile(gameType, matchDate)); //大小分sp数据
+#endif
+
             //var sp_sf =bizHelper.GetMatchInfoList<JCLQ_SF_SPInfo>(SPFile("SF", matchDate)); //胜负sp数据
             //var sp_rfsf = bizHelper.GetMatchInfoList<JCLQ_RFSF_SPInfo>(SPFile("RFSF", matchDate)); //让分胜负sp数据
             //var sp_sfc = bizHelper.GetMatchInfoList<JCLQ_SFC_SPInfo>(SPFile("SFC", matchDate)); //胜分差sp数据
             //var sp_dxf = bizHelper.GetMatchInfoList<JCLQ_DXF_SPInfo>(SPFile("DXF", matchDate)); //大小分sp数据
 
-            var sp_sf = bizHelper.GetMatchInfoList<JCLQ_SF_SPInfo>(SPFile(gameType, matchDate)); //胜负sp数据
-            var sp_rfsf = bizHelper.GetMatchInfoList<JCLQ_RFSF_SPInfo>(SPFile(gameType, matchDate)); //让分胜负sp数据
-            var sp_sfc = bizHelper.GetMatchInfoList<JCLQ_SFC_SPInfo>(SPFile(gameType, matchDate)); //胜分差sp数据
-            var sp_dxf = bizHelper.GetMatchInfoList<JCLQ_DXF_SPInfo>(SPFile(gameType, matchDate)); //大小分sp数据
+
+
+        
+
 
             var list = new List<JCLQ_MatchInfo_WEB>();
             match = match.Where(t => long.Parse(Convert.ToDateTime(t.FSStopBettingTime).ToString("yyyyMMddHHmmss")) > long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"))).ToList();
             foreach (var item in match)
             {
-                #region 队伍基础信息
+#region 队伍基础信息
 
                 var matchDataTime = ConvertHelper.ConvertStrToDateTime("20" + item.MatchData);
                 var info = new JCLQ_MatchInfo_WEB()
@@ -151,9 +300,9 @@ namespace KaSon.FrameWork.Common
                     PrivilegesType = item.PrivilegesType == null ? string.Empty : item.PrivilegesType,
                     State_HHDG = item.State
                 };
-                #endregion
+#endregion
 
-                #region 附加队伍结果信息
+#region 附加队伍结果信息
                 var res = matchresult.FirstOrDefault(p => p.MatchId == item.MatchId);
                 if (res != null)
                 {
@@ -175,9 +324,9 @@ namespace KaSon.FrameWork.Common
                 {
                     continue;
                 }
-                #endregion
+#endregion
 
-                #region 附加胜负sp数据
+#region 附加胜负sp数据
 
                 var sp_sf_item = sp_sf.FirstOrDefault(p => p.MatchId == item.MatchId);
                 if (gameType.ToLower() == "hh")
@@ -200,9 +349,9 @@ namespace KaSon.FrameWork.Common
                     }
                 }
 
-                #endregion
+#endregion
 
-                #region 附加让分胜负sp数据
+#region 附加让分胜负sp数据
                 var sp_rfsf_item = sp_rfsf.FirstOrDefault(p => p.MatchId == item.MatchId);
                 if (gameType.ToLower() == "hh")
                 {
@@ -225,9 +374,9 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = sp_rfsf_item.PrivilegesType == null ? string.Empty : sp_rfsf_item.PrivilegesType;
                     }
                 }
-                #endregion
+#endregion
 
-                #region 附加胜分差sp数据
+#region 附加胜分差sp数据
                 var sp_sfc_item = sp_sfc.FirstOrDefault(p => p.MatchId == item.MatchId);
 
                 if (gameType.ToLower() == "hh")
@@ -272,9 +421,9 @@ namespace KaSon.FrameWork.Common
                     }
                 }
 
-                #endregion
+#endregion
 
-                #region 附加大小分sp数据
+#region 附加大小分sp数据
 
                 var sp_dxf_item = sp_dxf.FirstOrDefault(p => p.MatchId == item.MatchId);
                 if (gameType.ToLower() == "hh")
@@ -299,7 +448,7 @@ namespace KaSon.FrameWork.Common
                     }
                 }
 
-                #endregion
+#endregion
 
                 list.Add(info);
             }
@@ -315,7 +464,18 @@ namespace KaSon.FrameWork.Common
         public static List<JCLQ_MatchInfo_WEB> GetJCLQHHDGList()
         {
             BettingHelper bizHelper = new BettingHelper();
-            var match = bizHelper.GetMatchInfoList<JCLQHHDGBase>(GetFilePath("New/Match_HHDG_List"));
+
+
+#if MGDB
+             var match = Match_HHDG_List_Mg();
+#else
+            var match = bizHelper.GetMatchInfoList<JCLQ_Match_HHDG>(Match_HHDG_List());
+#endif
+
+
+
+           
+
             var list = new List<JCLQ_MatchInfo_WEB>();
             match = match.Where(t => long.Parse(Convert.ToDateTime(t.FSStopBettingTime).ToString("yyyyMMddHHmmss")) > long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"))).ToList();
             if (match != null && match.Count > 0)
@@ -353,7 +513,7 @@ namespace KaSon.FrameWork.Common
                         PrivilegesType = item.PrivilegesType == null ? string.Empty : item.PrivilegesType,
                     };
 
-                    #region 附加胜负sp数据
+#region 附加胜负sp数据
 
                     if (item.SF != null)
                     {
@@ -364,10 +524,10 @@ namespace KaSon.FrameWork.Common
                             info.SF_LoseSP = sfcjson.LoseSP;
                         }
                     }
-                    #endregion
+#endregion
 
 
-                    #region 附加让分胜负sp数据
+#region 附加让分胜负sp数据
                     if (item.RFSF != null)
                     {
                         var json = JsonHelper.Deserialize<JCLQ_RFSF_SPInfo>(item.RFSF);
@@ -378,9 +538,9 @@ namespace KaSon.FrameWork.Common
                             info.RF_WinSP = json.WinSP;
                         }
                     }
-                    #endregion
+#endregion
 
-                    #region 附加胜分差sp数据
+#region 附加胜分差sp数据
 
                     if (item.SFC != null)
                     {
@@ -403,9 +563,9 @@ namespace KaSon.FrameWork.Common
                         }
                     }
 
-                    #endregion
+#endregion
 
-                    #region 附加大小分sp数据
+#region 附加大小分sp数据
 
                     if (item.DXF != null)
                     {
@@ -418,7 +578,7 @@ namespace KaSon.FrameWork.Common
                         }
                     }
 
-                    #endregion
+#endregion
 
                     list.Add(info);
                 }
