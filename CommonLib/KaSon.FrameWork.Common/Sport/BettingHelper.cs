@@ -13,6 +13,7 @@ using EntityModel.CoreModel;
 using KaSon.FrameWork.Common.Net;
 using System.Globalization;
 using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace KaSon.FrameWork.Common.Sport
 {
@@ -1351,18 +1352,21 @@ namespace KaSon.FrameWork.Common.Sport
         /// <param name="type"></param>
         /// <param name="issuseId"></param>
         /// <returns></returns>
-        public static List<Web_CTZQ_BonusPoolInfo> GetPoolInfo_CTZQ(string type, string issuseId)
-        {
-            var poolInfo = GetCTZQBonusPool(IssuseFile(type, issuseId));
-          //  var poolInfo = GetCTZQBonusPool(IssuseFile(type, issuseId));
+//        public static List<Web_CTZQ_BonusPoolInfo> GetPoolInfo_CTZQ(string GameType, string issuseId)
+//        {
+//            var poolInfo = GetCTZQBonusPool(IssuseFile(GameType, issuseId));
+//            //  var poolInfo = GetCTZQBonusPool(IssuseFile(type, issuseId));
 
-#if MGDB
+            
+//#if MGDB
 
-#else
-#endif
+//#else
 
-            return poolInfo;
-        }
+
+//#endif
+
+//            return poolInfo;
+//        }
 
         /// <summary>
         /// 传统足球奖期详情
@@ -1393,28 +1397,15 @@ namespace KaSon.FrameWork.Common.Sport
             return string.Format("/matchdata/{0}/{0}_{1}.json?_={2}", type, issuseId, DateTime.Now.ToString("yyyyMMddHHmmss"));
         }
 
-        private static IList<CTZQ_BonusLevelInfo> IssuseCTZQ_Mg(string type, string issuseId)
+        private static List<CTZQ_BonusLevelInfo> IssuseCTZQ_Mg(string type, string issuseId)
         {
-           
-            if (type.StartsWith("CTZQ"))
-            {
-                var strs = type.Split('_');
-                var gameCode = strs[0];
-
-                var filter_BQC = Builders<CTZQ_BonusLevelInfo>.Filter.Eq(b=>b.GameType, type) &
-                    Builders<CTZQ_BonusLevelInfo>.Filter.Eq(b => b.IssuseNumber, issuseId);
-                return MgHelper.MgDB.GetCollection<CTZQ_BonusLevelInfo>("CTZQ_BonusLevelInfo").Find<CTZQ_BonusLevelInfo>(filter_BQC).ToList();
-
-                //var gameType = strs[1];
-                //return string.Format("/matchdata/{0}/{1}/{2}_BonusLevel.json?_={3}", gameCode, issuseId, type, DateTime.Now.ToString("yyyyMMddHHmmss"));
-            }
-            return null;
-           // return string.Format("/matchdata/{0}/{0}_{1}.json?_={2}", type, issuseId, DateTime.Now.ToString("yyyyMMddHHmmss"));
+            return MgMatchDataHelper.CTZQ_BonusLevelInfo(type, issuseId);
+            // return string.Format("/matchdata/{0}/{0}_{1}.json?_={2}", type, issuseId, DateTime.Now.ToString("yyyyMMddHHmmss"));
         }
+     
+        #endregion
 
-#endregion
-
-#region 数字彩详情
+        #region 数字彩详情
         /// <summary>
         /// 数字彩详情
         /// </summary>
@@ -1423,8 +1414,32 @@ namespace KaSon.FrameWork.Common.Sport
         /// <returns></returns>
         public static Web_SZC_BonusPoolInfo GetPoolInfo(string type, string issuseId)
         {
-            var poolInfo = GetSZCBonusPool(IssuseFile(type, issuseId));
-            return poolInfo;
+
+            Web_SZC_BonusPoolInfo result = new Web_SZC_BonusPoolInfo();
+
+
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                try
+                {
+                    result = JsonHelper.Deserialize<Web_SZC_BonusPoolInfo>(MgMatchDataHelper.SZC_BonusLevelInfo(type, issuseId));
+                }
+                catch
+                {
+
+
+                }
+
+            }
+            else
+            {
+
+                result = GetSZCBonusPool(IssuseFile(type, issuseId));
+            }
+
+
+
+            return result;
         }
 
         public static Web_SZC_BonusPoolInfo GetSZCBonusPool(string filePath)

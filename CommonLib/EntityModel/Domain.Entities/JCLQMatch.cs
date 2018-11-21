@@ -154,6 +154,7 @@ namespace EntityModel.Domain.Entities
     [BsonIgnoreExtraElements]
     public class JCLQ_Match_HHDG : IBallBaseInfo
     {
+        [BsonId]
         public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001
@@ -1097,8 +1098,10 @@ namespace EntityModel.Domain.Entities
     /// 竞彩篮球 比赛结果
     /// </summary>
     [Entity("C_JCLQ_MatchResult", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class JCLQ_MatchResult : IBallBaseInfo
     {
+        [BsonId]
         public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛Id : 120813001

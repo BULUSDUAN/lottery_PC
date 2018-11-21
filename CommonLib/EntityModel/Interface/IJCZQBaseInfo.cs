@@ -11,6 +11,20 @@ namespace EntityModel.Interface
         string MatchData { get; }
         bool Equals(object obj);
     }
+    public interface IMatchData
+    {
+        //  string GameType { get; }
+      
+        string MatchData { get; }
+       
+    }
+    public interface IssuseNumber
+    {
+        //  string GameType { get; }
+
+        string IssuseNumber { get; }
+
+    }
     public interface IBJDCBallBaseInfo
     {
         //  string GameType { get; }

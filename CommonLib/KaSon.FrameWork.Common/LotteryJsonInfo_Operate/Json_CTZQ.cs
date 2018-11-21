@@ -22,11 +22,10 @@ namespace KaSon.FrameWork.Common
         {
             return "/MatchData/" + "ctzq/Match_" + type + "_Issuse_List.json";
         }
-        private static IList<CTZQ_IssuseInfo> IssuseFile_Mg(string type)
+        private static List<CTZQ_IssuseInfo> IssuseFile_Mg(string type)
         {
-          //  var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
-            var filter_ZJQ = Builders<CTZQ_IssuseInfo>.Filter.Eq(b => b.GameType, type);
-            return MgHelper.MgDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo").Find<CTZQ_IssuseInfo>(filter_ZJQ).ToList();
+            //  var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
+            return MgMatchDataHelper.CTZQ_Issuse(type);
         }
 
 
@@ -38,11 +37,10 @@ namespace KaSon.FrameWork.Common
         {
             return "/MatchData/" + "ctzq" + "/" + issuse + "/Match_" + type + "_List.json";
         }
-        private static IList<CTZQ_MatchInfo> MatchFile_Mg(string type, string issuse)
+        private static List<CTZQ_MatchInfo> MatchFile_Mg(string type, string issuse)
         {
             //  var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
-            var filter_ZJQ = Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.GameType, type) & Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-            return MgHelper.MgDB.GetCollection<CTZQ_MatchInfo>("CTZQ_MatchInfo").Find<CTZQ_MatchInfo>(filter_ZJQ).ToList();
+            return MgMatchDataHelper.CTZQ_Match_List( type,  issuse);
         }
         /// <summary>
         /// 传统足球 - 根据奖期获取队伍平均赔率数据
@@ -52,17 +50,10 @@ namespace KaSon.FrameWork.Common
         {
             return "/MatchData/" + "ctzq" + "/" + issuse + "/Match_" + type + "_Odds_List.json";
         }
-        private static string OddFiles_Mg(string type, string issuse)
+        private static List<CTZQ_OddInfo> OddFiles_Mg(string type, string issuse)
         {
             //  var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
-            var filter = Builders<BsonDocument>.Filter.Eq("GameType", type) & Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuse);
-            var document = MgHelper.MgDB.GetCollection<BsonDocument>("C_CTZQ_Odds").Find(filter).FirstOrDefault();
-            string text = "";
-            if (document != null)
-            {
-                 text = document["Content"].ToString().Trim();
-            }
-            return text;
+            return MgMatchDataHelper.CTZQ_Odd(type, issuse);
         }
         /// <summary>
         /// 传统足球 - 开奖结果文件
@@ -76,8 +67,7 @@ namespace KaSon.FrameWork.Common
         private static IList<CTZQ_BonusLevelInfo> BonusFile_Mg(string type, string issuse)
         {
             //  var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
-            var filter_ZJQ = Builders<CTZQ_BonusLevelInfo>.Filter.Eq(b => b.GameType, type) & Builders<CTZQ_BonusLevelInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-            return MgHelper.MgDB.GetCollection<CTZQ_BonusLevelInfo>("CTZQ_BonusLevelInfo").Find<CTZQ_BonusLevelInfo>(filter_ZJQ).ToList();
+            return MgMatchDataHelper.CTZQ_BonusLevelInfo( type,  issuse);
         }
         #endregion
 
@@ -85,14 +75,21 @@ namespace KaSon.FrameWork.Common
         {
             BettingHelper bizHelper = new BettingHelper();
 
+            var match = new List<CTZQ_MatchInfo>();
+            var odds = new List<CTZQ_OddInfo>();
+            if (ConfigHelper.CrawDataBaseIsMongo) {
+                match = MatchFile_Mg(gameType, issuse);
+                odds = OddFiles_Mg(gameType, issuse);
+            }
+            else
+            {
+                match = bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
+                odds = bizHelper.GetMatchInfoList<CTZQ_OddInfo>(OddFiles(gameType, issuse));
+            }
+                
 
-#if MGDB
-             var match = MatchFile_Mg(gameType, issuse);
-            var odds = bizHelper.GetMatchInfoList<CTZQ_OddInfo>(OddFiles_Mg(gameType, issuse));
-#else
-            var match = bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
-            var odds = bizHelper.GetMatchInfoList<CTZQ_OddInfo>(OddFiles(gameType, issuse));
-#endif
+            
+
 
            
 
@@ -162,15 +159,22 @@ namespace KaSon.FrameWork.Common
             List<CTZQ_MatchList_AnteCode> ctzqList = new List<CTZQ_MatchList_AnteCode>();
 
             BettingHelper bizHelper = new BettingHelper();
-          //  var match = MatchFile_Mg(gameType, issuse);// bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
+            //  var match = MatchFile_Mg(gameType, issuse);// bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
 
+            var match = new List<CTZQ_MatchInfo>();
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                match = MatchFile_Mg(gameType, issuse);
+            }
+            else
+            {
+                match = bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
+            }
 
+               
 
-#if MGDB
-          var match = MatchFile_Mg(gameType, issuse);
-#else
-            var match = bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
-#endif
+           
+
 
             if (match != null && match.Count > 0 && !string.IsNullOrEmpty(anteCode))
             {
@@ -229,16 +233,19 @@ namespace KaSon.FrameWork.Common
         public static CTZQ_MatchInfo_New MatchList_New(string issuse, string gameType)
         {
             BettingHelper bizHelper = new BettingHelper();
+           var  match = new List<CTZQ_MatchInfo>();
+            var odds = new List<CTZQ_OddInfo>();
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                 match = MatchFile_Mg(gameType, issuse);// bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
+                 odds = OddFiles_Mg(gameType, issuse);
+            }
+            else
+            {
+                 match = bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
+                 odds = bizHelper.GetMatchInfoList<CTZQ_OddInfo>(OddFiles(gameType, issuse));
+            }
 
-
-
-#if MGDB
-             var match = MatchFile_Mg(gameType, issuse);// bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
-            var odds = bizHelper.GetMatchInfoList<CTZQ_OddInfo>(OddFiles_Mg(gameType, issuse));
-#else
-            var match = bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
-            var odds = bizHelper.GetMatchInfoList<CTZQ_OddInfo>(OddFiles(gameType, issuse));
-#endif
 
 
 
@@ -310,37 +317,44 @@ namespace KaSon.FrameWork.Common
             try
             {
 
-#if MGDB
 
-
-                
-                var issues = IssuseFile_Mg(type);
-               
-                foreach (var item in issues)
+                if (ConfigHelper.CrawDataBaseIsMongo)
                 {
-                    CtzqIssuesWeb iweb = new CtzqIssuesWeb()
+
+
+
+                    var issues = IssuseFile_Mg(type);
+
+                    foreach (var item in issues)
                     {
-                        CreateTime = item.CreateTime,
-                        DSStopBettingTime = item.DSStopBettingTime,
-                        GameCode = item.GameCode,
-                        GameType = item.GameType,
-                        Id = item.Id,
-                        IssuseNumber = item.IssuseNumber,
-                        OfficialStopTime = item.OfficialStopTime,
-                        StartTime = item.StartTime,
-                        StopBettingTime = item.StopBettingTime,
-                        WinNumber = item.WinNumber
+                        CtzqIssuesWeb iweb = new CtzqIssuesWeb()
+                        {
+                            CreateTime = item.CreateTime,
+                            DSStopBettingTime = item.DSStopBettingTime,
+                            GameCode = item.GameCode,
+                            GameType = item.GameType,
+                            Id = item.Id,
+                            IssuseNumber = item.IssuseNumber,
+                            OfficialStopTime = item.OfficialStopTime,
+                            StartTime = item.StartTime,
+                            StopBettingTime = item.StopBettingTime,
+                            WinNumber = item.WinNumber
 
-                    };
-                    resultlist.Add(iweb);
+                        };
+                        resultlist.Add(iweb);
+                    }
+
+
                 }
+                else
+                {
+
+                    resultlist = bizHelper.GetMatchInfoList<CtzqIssuesWeb>(IssuseFile(type));
+                }
+                   
 
 
-#else
-                resultlist = bizHelper.GetMatchInfoList<CtzqIssuesWeb>(IssuseFile(type));
 
-
-#endif
 
 
 

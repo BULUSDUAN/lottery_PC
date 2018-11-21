@@ -1,6 +1,9 @@
-﻿using EntityModel.Ticket;
+﻿using EntityModel.Interface;
+using EntityModel.Ticket;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
@@ -12,43 +15,49 @@ namespace EntityModel
     // 
     ///</summary>
     [ProtoContract]
-    [Entity("T_JCLQ_Odds_SF",Type = EntityType.Table)]
-    public class T_JCLQ_Odds_SF: JingCai_Odds
-    { 
+    [Entity("T_JCLQ_Odds_SF", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
+    public class T_JCLQ_Odds_SF : JingCai_Odds, IMatchData
+    {
         public T_JCLQ_Odds_SF()
         {
-        
+
         }
-            /// <summary>
-            // 主键
-            ///</summary>
-            [ProtoMember(1)]
-            [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
-            public int Id{ get; set; }
-            /// <summary>
-            // 比赛Id
-            ///</summary>
-            [ProtoMember(2)]
-            [Field("MatchId")]
-            public string MatchId{ get; set; }
-            /// <summary>
-            // 胜 平均赔率
-            ///</summary>
-            [ProtoMember(3)]
-            [Field("WinOdds")]
-            public decimal WinOdds{ get; set; }
-            /// <summary>
-            // 负 平均赔率
-            ///</summary>
-            [ProtoMember(4)]
-            [Field("LoseOdds")]
-            public decimal LoseOdds{ get; set; }
-            /// <summary>
-            // 创建时间
-            ///</summary>
-            [ProtoMember(5)]
-            [Field("CreateTime")]
-            public DateTime CreateTime{ get; set; }
+        [BsonId]
+        public ObjectId _id { get; set; }
+        /// <summary>
+        // 主键
+        ///</summary>
+        [ProtoMember(1)]
+        [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
+        public int Id { get; set; }
+        /// <summary>
+        // 比赛Id
+        ///</summary>
+        [ProtoMember(2)]
+        [Field("MatchId")]
+        public string MatchId { get; set; }
+        /// <summary>
+        // 胜 平均赔率
+        ///</summary>
+        [ProtoMember(3)]
+        [Field("WinOdds")]
+        public decimal WinOdds { get; set; }
+        /// <summary>
+        // 负 平均赔率
+        ///</summary>
+        [ProtoMember(4)]
+        [Field("LoseOdds")]
+        public decimal LoseOdds { get; set; }
+        /// <summary>
+        // 创建时间
+        ///</summary>
+        [ProtoMember(5)]
+        [Field("CreateTime")]
+        public DateTime CreateTime { get; set; }
+
+        public string MatchData  {get;set;}
+
         public override decimal GetOdds(string result)
         {
             switch (result)

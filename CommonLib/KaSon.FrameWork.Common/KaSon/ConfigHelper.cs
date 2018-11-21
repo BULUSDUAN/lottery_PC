@@ -22,8 +22,17 @@ namespace KaSon.FrameWork.Common
             string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\AllConfig.json");
             string jsonText = FileHelper.txtReader(path);
             AllConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
+            if (AllConfigInfo["MongoSettings"] !=null)
+            {
+                MongoSettings = AllConfigInfo["MongoSettings"];
+                CrawDataBaseIsMongo = bool.Parse(MongoSettings["CrawDataBaseIsMongo"].ToString());
+            }
+          
         }
+        public static JToken MongoSettings { get; set; }
 
+
+        public static bool CrawDataBaseIsMongo { get; set; }
         /// <summary>
         /// 获取Json 配置
         /// </summary>
