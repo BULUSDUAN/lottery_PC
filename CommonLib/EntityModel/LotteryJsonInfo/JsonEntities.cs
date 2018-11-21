@@ -579,7 +579,7 @@ namespace EntityModel.LotteryJsonInfo
 
     }
     [BsonIgnoreExtraElements]
-    public class BJDC_BQC_SpInfo
+    public class BJDC_BQC_SpInfo: IBJDCBallBaseInfo
     {
         [BsonId]
         public ObjectId _id { get; set; }

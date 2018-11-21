@@ -119,11 +119,14 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             List<C_BJDC_Match> matchInfoList = new List<C_BJDC_Match>();
 
-#if MGDB
-              matchInfoList = LoadBJDCMatchList_Mg(issuseNumber);
-#else
-            matchInfoList = LoadBJDCMatchList(issuseNumber);
-#endif
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                matchInfoList = LoadBJDCMatchList_Mg(issuseNumber);
+            }
+            else
+            {
+                matchInfoList = LoadBJDCMatchList(issuseNumber);
+            }
            
 
             var matchIdArray = matchInfoList.Select(p => p.MatchOrderId.ToString()).ToArray();
@@ -315,16 +318,19 @@ namespace KaSon.FrameWork.ORM.Helper
         private List<C_BJDC_MatchResult> LoadBJDCMatchResultList(string issuseNumber)
         {
             List<C_BJDC_MatchResult> result = new List<C_BJDC_MatchResult>();
-#if MGDB
-           result = MgMatchDataHelper.BJDC_MatchResult_List_ByIssuse(issuseNumber);
-#else
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                result = MgMatchDataHelper.BJDC_MatchResult_List_ByIssuse(issuseNumber);
+            }
+            else
+            {
 
-            var fileName = string.Format(@"{2}\{0}\{1}\MatchResult_List.json", "BJDC", issuseNumber, _baseDir);
-            var json = ReadFileString(fileName);
-            if (string.IsNullOrEmpty(json))
-                return result;
-            result = JsonSerializer.Deserialize<List<C_BJDC_MatchResult>>(json);
-#endif
+                var fileName = string.Format(@"{2}\{0}\{1}\MatchResult_List.json", "BJDC", issuseNumber, _baseDir);
+                var json = ReadFileString(fileName);
+                if (string.IsNullOrEmpty(json))
+                    return result;
+                result = JsonSerializer.Deserialize<List<C_BJDC_MatchResult>>(json);
+            }
 
 
 
@@ -471,14 +477,18 @@ namespace KaSon.FrameWork.ORM.Helper
             List<JCZQ_MatchInfo> result = new List<JCZQ_MatchInfo>();
             var fileName = string.Format(@"{1}\{0}\Match_List_FB.json", "JCZQ", _baseDir);
 
-#if MGDB
-       result = MgMatchDataHelper.JCZQ_Match_List_FB();
-#else
-            var json = ReadFileString(fileName);
-            if (string.IsNullOrEmpty(json))
-                return result;
-            result = JsonSerializer.Deserialize<List<JCZQ_MatchInfo>>(json);
-#endif
+
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                result = MgMatchDataHelper.JCZQ_Match_List_FB();
+            }
+            else
+            {
+                var json = ReadFileString(fileName);
+                if (string.IsNullOrEmpty(json))
+                    return result;
+                result = JsonSerializer.Deserialize<List<JCZQ_MatchInfo>>(json);
+            }
 
 
 
@@ -598,18 +608,21 @@ namespace KaSon.FrameWork.ORM.Helper
             List<JCLQ_MatchInfo> result = new List<JCLQ_MatchInfo>();
             var fileName = string.Format(@"{1}\{0}\Match_List.json", "JCLQ", _baseDir);
 
-#if MGDB
-              result = MgMatchDataHelper.JCLQ_MatchList(type:"", matchDate: "");
-#else
-            var json = ReadFileString(fileName);
-            if (!string.IsNullOrEmpty(json))
-                result = JsonSerializer.Deserialize<List<JCLQ_MatchInfo>>(json);
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                result = MgMatchDataHelper.JCLQ_MatchList(type: "", matchDate: "");
+            }
+            else
+            {
+                var json = ReadFileString(fileName);
+                if (!string.IsNullOrEmpty(json))
+                    result = JsonSerializer.Deserialize<List<JCLQ_MatchInfo>>(json);
+           
+
+            }
+
+
             return result;
-
-#endif
-
-
-
 
         }
         private void UpdateJCLQMatch(string[] matchIdArray, List<JCLQ_MatchInfo> matchInfoList)
@@ -707,14 +720,17 @@ namespace KaSon.FrameWork.ORM.Helper
             List<CTZQ_MatchInfo> result = new List<CTZQ_MatchInfo>();
 
 
-#if MGDB
-               result = MgMatchDataHelper.CTZQ_Match_List(gameType, issuseNumber);
-#else
-            var fileName = string.Format(@"{3}\{0}\{1}\Match_{2}_List.json", "CTZQ", issuseNumber, gameType, _baseDir);
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                result = MgMatchDataHelper.CTZQ_Match_List(gameType, issuseNumber);
+            }
+            else
+            {
+                var fileName = string.Format(@"{3}\{0}\{1}\Match_{2}_List.json", "CTZQ", issuseNumber, gameType, _baseDir);
             var json = ReadFileString(fileName);
             if (!string.IsNullOrEmpty(json))
                 result = JsonSerializer.Deserialize<List<CTZQ_MatchInfo>>(json);
-#endif
+            }
 
 
             return result; ;

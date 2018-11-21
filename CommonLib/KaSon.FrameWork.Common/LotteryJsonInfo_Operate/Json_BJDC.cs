@@ -102,28 +102,41 @@ namespace KaSon.FrameWork.Common
         {
             BettingHelper bizHelper = new BettingHelper();
 
+            var match = new List<C_BJDC_Match>();
+            var matchresult = new List<C_BJDC_MatchResult>();
+            var sp_spf = new List<BJDC_SPF_SpInfo>();
+            var sp_zjq = new List<BJDC_ZJQ_SpInfo>();
+            var sp_sxds = new List<BJDC_SXDS_SpInfo>();
+            var sp_bf = new List<BJDC_BF_SpInfo>();
+            var sp_bqc = new List<BJDC_BQC_SpInfo>();
+
+
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                match = MgMatchDataHelper.BJDC_Match_List_ByIssuse(issuse);
+                matchresult = MgMatchDataHelper.BJDC_MatchResult_List_ByIssuse(issuse);
+                sp_spf = MgMatchDataHelper.BJDC_SP<BJDC_SPF_SpInfo>(gameType, issuse); //胜平负sp数据
+                sp_zjq = MgMatchDataHelper.BJDC_SP<BJDC_ZJQ_SpInfo>(gameType, issuse);  //总进球sp数据
+                sp_sxds = MgMatchDataHelper.BJDC_SP<BJDC_SXDS_SpInfo>(gameType, issuse); //上下单双sp数据
+                sp_bf = MgMatchDataHelper.BJDC_SP<BJDC_BF_SpInfo>(gameType, issuse);  //比分sp数据
+                sp_bqc = MgMatchDataHelper.BJDC_SP<BJDC_BQC_SpInfo>(gameType, issuse); //半全场sp数据
+
+            }
+            else {
+                match = bizHelper.GetMatchInfoList<C_BJDC_Match>(MatchFile(issuse)).Where(p => p.MatchState == (int)BJDCMatchState.Sales).ToList();
+                matchresult = bizHelper.GetMatchInfoList<C_BJDC_MatchResult>(MatchResultFile(issuse));
+                sp_spf = bizHelper.GetMatchInfoList<BJDC_SPF_SpInfo>(SPFile(gameType, issuse)); //胜平负sp数据
+                sp_zjq = bizHelper.GetMatchInfoList<BJDC_ZJQ_SpInfo>(SPFile(gameType, issuse)); //总进球sp数据
+                sp_sxds = bizHelper.GetMatchInfoList<BJDC_SXDS_SpInfo>(SPFile(gameType, issuse)); //上下单双sp数据
+                sp_bf = bizHelper.GetMatchInfoList<BJDC_BF_SpInfo>(SPFile(gameType, issuse)); //比分sp数据
+                sp_bqc = bizHelper.GetMatchInfoList<BJDC_BQC_SpInfo>(SPFile(gameType, issuse)); //半全场sp数据
+
+            }
 
 
 
-#if MGDB
-               var match = MgMatchDataHelper.BJDC_Match_List_ByIssuse(issuse);
-            var matchresult = MgMatchDataHelper.BJDC_MatchResult_List_ByIssuse(issuse);
-            var sp_spf = SPFile_Mg<BJDC_SPF_SpInfo>(gameType, issuse); //胜平负sp数据
-            var sp_zjq = SPFile_Mg<BJDC_ZJQ_SpInfo>(gameType, issuse);  //总进球sp数据
-            var sp_sxds = SPFile_Mg<BJDC_SXDS_SpInfo>(gameType, issuse); //上下单双sp数据
-            var sp_bf = SPFile_Mg<BJDC_BF_SpInfo>(gameType, issuse);  //比分sp数据
-            var sp_bqc = SPFile_Mg<BJDC_BQC_SpInfo>(gameType, issuse); //半全场sp数据
-#else
 
-            var match = bizHelper.GetMatchInfoList<BJDC_MatchInfo>(MatchFile(issuse)).Where(p => p.MatchState == BJDCMatchState.Sales).ToList();
-            var matchresult = bizHelper.GetMatchInfoList<BJDC_MatchResultInfo>(MatchResultFile(issuse));
-            var sp_spf = bizHelper.GetMatchInfoList<BJDC_SPF_SpInfo>(SPFile(gameType, issuse)); //胜平负sp数据
-            var sp_zjq = bizHelper.GetMatchInfoList<BJDC_ZJQ_SpInfo>(SPFile(gameType, issuse)); //总进球sp数据
-            var sp_sxds = bizHelper.GetMatchInfoList<BJDC_SXDS_SpInfo>(SPFile(gameType, issuse)); //上下单双sp数据
-            var sp_bf = bizHelper.GetMatchInfoList<BJDC_BF_SpInfo>(SPFile(gameType, issuse)); //比分sp数据
 
-            var sp_bqc = bizHelper.GetMatchInfoList<BJDC_BQC_SpInfo>(SPFile(gameType, issuse)); //半全场sp数据
-#endif
             //   var sp_bqc = bizHelper.GetMatchInfoList<BJDC_BQC_SpInfo>(SPFile(gameType, issuse)); //半全场sp数据
 
 

@@ -1418,21 +1418,24 @@ namespace KaSon.FrameWork.Common.Sport
             Web_SZC_BonusPoolInfo result = new Web_SZC_BonusPoolInfo();
 
 
-#if MGDB
-              try
+            if (ConfigHelper.CrawDataBaseIsMongo)
             {
-                result = JsonHelper.Deserialize<Web_SZC_BonusPoolInfo>(MgMatchDataHelper.SZC_BonusLevelInfo(type, issuseId));
+                try
+                {
+                    result = JsonHelper.Deserialize<Web_SZC_BonusPoolInfo>(MgMatchDataHelper.SZC_BonusLevelInfo(type, issuseId));
+                }
+                catch
+                {
+
+
+                }
+
             }
-            catch
+            else
             {
 
-
+                result = GetSZCBonusPool(IssuseFile(type, issuseId));
             }
-          
-#else
-
-            result = GetSZCBonusPool(IssuseFile(type, issuseId));
-#endif
 
 
 

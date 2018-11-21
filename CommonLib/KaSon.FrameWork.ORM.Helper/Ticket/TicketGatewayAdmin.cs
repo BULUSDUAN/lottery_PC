@@ -27,25 +27,28 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             List<T> result = new List<T>();
 
-#if MGDB
-             switch (gameCode.ToUpper())
+            if (ConfigHelper.CrawDataBaseIsMongo)
             {
-                case "JCZQ":
-                    result = MgMatchDataHelper.JCZQ_SP<T>(gameType, null);
+                switch (gameCode.ToUpper())
+                {
+                    case "JCZQ":
+                        result = MgMatchDataHelper.JCZQ_SP<T>(gameType, null);
 
-                    break;
-                case "JCLQ":
-                    result = MgMatchDataHelper.JCLQ_SP<T>(gameType, null);
+                        break;
+                    case "JCLQ":
+                        result = MgMatchDataHelper.JCLQ_SP<T>(gameType, null);
 
-                    break;
-                default:
-                    break;
+                        break;
+                    default:
+                        break;
+                }
             }
-#else
-            var fileName = string.Format(@"{3}/{0}/{1}_SP{2}.json", gameCode, gameType, flag, _baseDir);
-            var json = ReadFileString(fileName);
-            result = JsonSerializer.DeserializeOldDate<List<T>>(json);
-#endif
+            else
+            {
+                var fileName = string.Format(@"{3}/{0}/{1}_SP{2}.json", gameCode, gameType, flag, _baseDir);
+                var json = ReadFileString(fileName);
+                result = JsonSerializer.DeserializeOldDate<List<T>>(json);
+            }
 
 
 

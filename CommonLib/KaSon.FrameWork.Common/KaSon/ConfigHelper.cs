@@ -24,8 +24,12 @@ namespace KaSon.FrameWork.Common
             AllConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
 
             MongoSettings = AllConfigInfo["MongoSettings"];
+            CrawDataBaseIsMongo=bool.Parse( AllConfigInfo["CrawDataBaseIsMongo"].ToString());
         }
         public static JToken MongoSettings { get; set; }
+
+
+        public static bool CrawDataBaseIsMongo { get; set; }
         /// <summary>
         /// 获取Json 配置
         /// </summary>

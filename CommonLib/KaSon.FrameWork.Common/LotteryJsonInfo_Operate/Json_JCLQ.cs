@@ -128,39 +128,41 @@ namespace KaSon.FrameWork.Common
 
 
 
-#if MGDB
-             match = MgMatchDataHelper.JCLQ_MatchList(gameType, matchDate);
-             matchresult = MgMatchDataHelper.JCLQ_MatchResult(matchDate);
-            switch (gameType.ToUpper())
+            if (ConfigHelper.CrawDataBaseIsMongo)
             {
-                case "SF":
-                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
-                    sp_sf = MgMatchDataHelper.JCLQ_SP<JCLQ_SF_SPInfo>(gameType, matchDate);//as List<JCLQ_SF_SP>;
-                    break;
-                case "RFSF":
-                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
-                    sp_rfsf = MgMatchDataHelper.JCLQ_SP<JCLQ_RFSF_SPInfo>(gameType, matchDate);// as List<JCLQ_RFSF_SP>;
-                    break;
-                case "SFC":
-                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
-                    sp_sfc = MgMatchDataHelper.JCLQ_SP<JCLQ_SFC_SPInfo>(gameType, matchDate);//as List<JCLQ_SFC_SP>;
-                    break;
+                match = MgMatchDataHelper.JCLQ_MatchList(gameType, matchDate);
+                matchresult = MgMatchDataHelper.JCLQ_MatchResult(matchDate);
+                switch (gameType.ToUpper())
+                {
+                    case "SF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        sp_sf = MgMatchDataHelper.JCLQ_SP<JCLQ_SF_SPInfo>(gameType, matchDate);//as List<JCLQ_SF_SP>;
+                        break;
+                    case "RFSF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        sp_rfsf = MgMatchDataHelper.JCLQ_SP<JCLQ_RFSF_SPInfo>(gameType, matchDate);// as List<JCLQ_RFSF_SP>;
+                        break;
+                    case "SFC":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        sp_sfc = MgMatchDataHelper.JCLQ_SP<JCLQ_SFC_SPInfo>(gameType, matchDate);//as List<JCLQ_SFC_SP>;
+                        break;
 
-                default://DXF
-                    sp_dxf = MgMatchDataHelper.JCLQ_SP<JCLQ_DXF_SPInfo>(gameType, matchDate);//as List<JCLQ_DXF_SP>;
+                    default://DXF
+                        sp_dxf = MgMatchDataHelper.JCLQ_SP<JCLQ_DXF_SPInfo>(gameType, matchDate);//as List<JCLQ_DXF_SP>;
 
-                    break;
+                        break;
+                }
+
             }
-          
-#else
-            match = bizHelper.GetMatchInfoList<JCLQ_MatchInfo>(MatchFile(gameType, matchDate));
-             matchresult = bizHelper.GetMatchInfoList<JCLQ_MatchResult>(MatchResultFile(matchDate));
-             sp_sf = bizHelper.GetMatchInfoList<JCLQ_SF_SPInfo>(SPFile(gameType, matchDate)); //胜负sp数据
-             sp_rfsf = bizHelper.GetMatchInfoList<JCLQ_RFSF_SPInfo>(SPFile(gameType, matchDate)); //让分胜负sp数据
-             sp_sfc = bizHelper.GetMatchInfoList<JCLQ_SFC_SPInfo>(SPFile(gameType, matchDate)); //胜分差sp数据
-             sp_dxf = bizHelper.GetMatchInfoList<JCLQ_DXF_SPInfo>(SPFile(gameType, matchDate)); //大小分sp数据
-#endif
-
+            else
+            {
+                match = bizHelper.GetMatchInfoList<JCLQ_MatchInfo>(MatchFile(gameType, matchDate));
+                matchresult = bizHelper.GetMatchInfoList<JCLQ_MatchResult>(MatchResultFile(matchDate));
+                sp_sf = bizHelper.GetMatchInfoList<JCLQ_SF_SPInfo>(SPFile(gameType, matchDate)); //胜负sp数据
+                sp_rfsf = bizHelper.GetMatchInfoList<JCLQ_RFSF_SPInfo>(SPFile(gameType, matchDate)); //让分胜负sp数据
+                sp_sfc = bizHelper.GetMatchInfoList<JCLQ_SFC_SPInfo>(SPFile(gameType, matchDate)); //胜分差sp数据
+                sp_dxf = bizHelper.GetMatchInfoList<JCLQ_DXF_SPInfo>(SPFile(gameType, matchDate)); //大小分sp数据
+            }
             //var sp_sf =bizHelper.GetMatchInfoList<JCLQ_SF_SPInfo>(SPFile("SF", matchDate)); //胜负sp数据
             //var sp_rfsf = bizHelper.GetMatchInfoList<JCLQ_RFSF_SPInfo>(SPFile("RFSF", matchDate)); //让分胜负sp数据
             //var sp_sfc = bizHelper.GetMatchInfoList<JCLQ_SFC_SPInfo>(SPFile("SFC", matchDate)); //胜分差sp数据
@@ -371,12 +373,15 @@ namespace KaSon.FrameWork.Common
         {
             BettingHelper bizHelper = new BettingHelper();
 
-
-#if MGDB
-             var match =  MgMatchDataHelper.JCLQ_Match_HHDG_List();
-#else
-            var match = bizHelper.GetMatchInfoList<JCLQ_Match_HHDG>(Match_HHDG_List());
-#endif
+            var match = new List<JCLQ_Match_HHDG>();
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                 match = MgMatchDataHelper.JCLQ_Match_HHDG_List();
+            }
+            else
+            {
+                 match = bizHelper.GetMatchInfoList<JCLQ_Match_HHDG>(Match_HHDG_List());
+            }
 
 
 

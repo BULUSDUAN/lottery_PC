@@ -134,45 +134,48 @@ namespace KaSon.FrameWork.Common
 
 
 
-#if MGDB
-                 match = MgMatchDataHelper.JCZQ_Match_List(tableName, matchDate);
-             matchresult = MgMatchDataHelper.JCZQ_MatchResult(matchDate);
-            switch (gameType.ToUpper())
+            if (ConfigHelper.CrawDataBaseIsMongo)
             {
+                match = MgMatchDataHelper.JCZQ_Match_List(tableName, matchDate);
+                matchresult = MgMatchDataHelper.JCZQ_MatchResult(matchDate);
+                switch (gameType.ToUpper())
+                {
 
-               
-                case "SPF":
-                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
-                    sp_spf = MgMatchDataHelper.JCZQ_SP<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(gameType, matchDate);// as IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>;
-                    break;
-                case "BRQSPF":
-                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
-                    sp_brqspf = MgMatchDataHelper.JCZQ_SP<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(gameType, matchDate);//as IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>;
-                    break;
-                case "BF":
-                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
-                    sp_bf = MgMatchDataHelper.JCZQ_SP<JCZQ_BF_SPInfo>(gameType, matchDate);//as IList<JCZQ_BF_SPInfo>;
-                    break;
-                case "ZJQ":
-                    //   var filter = Builders<JCLQ_SP>.Filter.Empty;
-                    sp_bqc = MgMatchDataHelper.JCZQ_SP<JCZQ_BQC_SPInfo>(gameType, matchDate);// as IList<JCZQ_BQC_SPInfo>;
-                    break;
 
-                default://DXF
-                    sp_zjq = MgMatchDataHelper.JCZQ_SP<JCZQ_ZJQ_SPInfo>(gameType, matchDate); ;// as IList<JCZQ_ZJQ_SPInfo>;
+                    case "SPF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        sp_spf = MgMatchDataHelper.JCZQ_SP<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(gameType, matchDate);// as IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>;
+                        break;
+                    case "BRQSPF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        sp_brqspf = MgMatchDataHelper.JCZQ_SP<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(gameType, matchDate);//as IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>;
+                        break;
+                    case "BF":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        sp_bf = MgMatchDataHelper.JCZQ_SP<JCZQ_BF_SPInfo>(gameType, matchDate);//as IList<JCZQ_BF_SPInfo>;
+                        break;
+                    case "ZJQ":
+                        //   var filter = Builders<JCLQ_SP>.Filter.Empty;
+                        sp_bqc = MgMatchDataHelper.JCZQ_SP<JCZQ_BQC_SPInfo>(gameType, matchDate);// as IList<JCZQ_BQC_SPInfo>;
+                        break;
 
-                    break;
+                    default://DXF
+                        sp_zjq = MgMatchDataHelper.JCZQ_SP<JCZQ_ZJQ_SPInfo>(gameType, matchDate); ;// as IList<JCZQ_ZJQ_SPInfo>;
+
+                        break;
+                }
+
             }
-
-#else
-            match = bizHelper.GetMatchInfoList<JCZQ_MatchInfo>(MatchFile(newVerType, matchDate));
-             matchresult = bizHelper.GetMatchInfoList<C_JCZQ_MatchResult>(MatchResultFile(matchDate));
-             sp_spf = bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //让球胜平负sp数据
-             sp_brqspf = bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //胜平负sp数据
-             sp_zjq = bizHelper.GetMatchInfoList<JCZQ_ZJQ_SPInfo>(SPFile(gameType, matchDate)); //总进球sp数据
-             sp_bf = bizHelper.GetMatchInfoList<JCZQ_BF_SPInfo>(SPFile(gameType, matchDate)); //比分sp数据
-             sp_bqc = bizHelper.GetMatchInfoList<JCZQ_BQC_SPInfo>(SPFile(gameType, matchDate)); //半全场sp数据
-#endif
+            else
+            {
+                match = bizHelper.GetMatchInfoList<JCZQ_MatchInfo>(MatchFile(newVerType, matchDate));
+                matchresult = bizHelper.GetMatchInfoList<C_JCZQ_MatchResult>(MatchResultFile(matchDate));
+                sp_spf = bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //让球胜平负sp数据
+                sp_brqspf = bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //胜平负sp数据
+                sp_zjq = bizHelper.GetMatchInfoList<JCZQ_ZJQ_SPInfo>(SPFile(gameType, matchDate)); //总进球sp数据
+                sp_bf = bizHelper.GetMatchInfoList<JCZQ_BF_SPInfo>(SPFile(gameType, matchDate)); //比分sp数据
+                sp_bqc = bizHelper.GetMatchInfoList<JCZQ_BQC_SPInfo>(SPFile(gameType, matchDate)); //半全场sp数据
+            }
 
 
 
@@ -451,15 +454,18 @@ namespace KaSon.FrameWork.Common
         public static List<JCZQ_MatchInfo_WEB> GetJCZQHHDGList()
         {
             List<JCZQ_MatchInfo_WEB> jczqMatchList = new List<JCZQ_MatchInfo_WEB>();
+            List<C_JCZQ_Match_HH> matchList = new List<C_JCZQ_Match_HH>();
             BettingHelper bizHelper = new BettingHelper();
 
-#if MGDB
-             var matchList = MgMatchDataHelper.JCZQ_Match_HH_List();
-            
-#else
-            var matchList = bizHelper.GetMatchInfoList<C_JCZQ_Match_HH>(Match_List_HH());
-#endif
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                 matchList = MgMatchDataHelper.JCZQ_Match_HH_List();
 
+            }
+            else
+            {
+                 matchList = bizHelper.GetMatchInfoList<C_JCZQ_Match_HH>(Match_List_HH());
+            }
 
 
 
