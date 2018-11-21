@@ -99,11 +99,13 @@ namespace KaSon.FrameWork.Common
         /// <summary>
         /// 北京单场赔率
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T"> BJDC_ZJQ_SpInfo,BJDC_SXDS_SpInfo,BJDC_BF_SpInfo
+        /// BJDC_BQC_SpInfo,BJDC_BQC_SpInfo,BJDC_SPF_SpInfo
+        /// </typeparam>
         /// <param name="type"></param>
         /// <param name="issuse"></param>
         /// <returns></returns>
-        public static List<T> BJDC_SP<T>(string type, string issuse)
+        public static List<T> BJDC_SP<T>(string type, string issuse) where T: IBJDCBallBaseInfo
         {
 
             ///
@@ -113,40 +115,40 @@ namespace KaSon.FrameWork.Common
             ///BJDC_SP_BF  比分BF
             ///BJDC_SP_BQC  半全场BJBQC
             ///
-            object list = null;
+            List<T> list = new List<T>();
 
             switch (type)
             {
 
                 case "ZJQ":
-                    var filter_ZJQ = Builders<BJDC_ZJQ_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-                    list = MgHelper.MgDB.GetCollection<BJDC_ZJQ_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_ZJQ_SpInfo>(filter_ZJQ).ToList();
+                    var filter_ZJQ = Builders<T>.Filter.Eq(b => b.IssuseNumber, issuse);
+                    list = MgHelper.MgDB.GetCollection<T>("BJDC_SP_" + type.ToUpper()).Find<T>(filter_ZJQ).ToList();
 
                     break;
                 case "SXDS":
-                    var filter_SXDS = Builders<BJDC_SXDS_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-                    list = MgHelper.MgDB.GetCollection<BJDC_SXDS_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_SXDS_SpInfo>(filter_SXDS).ToList();
+                    var filter_SXDS = Builders<T>.Filter.Eq(b => b.IssuseNumber, issuse);
+                    list = MgHelper.MgDB.GetCollection<T>("BJDC_SP_" + type.ToUpper()).Find<T>(filter_SXDS).ToList();
 
                     break;
                 case "BF":
-                    var filter_BF = Builders<BJDC_BF_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-                    list = MgHelper.MgDB.GetCollection<BJDC_BF_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_BF_SpInfo>(filter_BF).ToList();
+                    var filter_BF = Builders<T>.Filter.Eq(b => b.IssuseNumber, issuse);
+                    list = MgHelper.MgDB.GetCollection<T>("BJDC_SP_" + type.ToUpper()).Find<T>(filter_BF).ToList();
 
                     break;
                 case "BQC":
-                    var filter_BQC = Builders<BJDC_BQC_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-                    list = MgHelper.MgDB.GetCollection<BJDC_BQC_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_BQC_SpInfo>(filter_BQC).ToList();
+                    var filter_BQC = Builders<T>.Filter.Eq(b => b.IssuseNumber, issuse);
+                    list = MgHelper.MgDB.GetCollection<T>("BJDC_SP_" + type.ToUpper()).Find<T>(filter_BQC).ToList();
 
                     break;
                 default://BJDC_SP_SPF
-                    var filter = Builders<BJDC_SPF_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-                    list = MgHelper.MgDB.GetCollection<BJDC_SPF_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_SPF_SpInfo>(filter).ToList();
+                    var filter = Builders<T>.Filter.Eq(b => b.IssuseNumber, issuse);
+                    list = MgHelper.MgDB.GetCollection<T>("BJDC_SP_" + type.ToUpper()).Find<T>(filter).ToList();
                     break;
 
             }
 
 
-            return (List<T>)list;
+            return list;
 
         }
 
@@ -159,7 +161,10 @@ namespace KaSon.FrameWork.Common
         /// <returns></returns>
 
         public static List<T> JCLQ_SP<T>(string type, string matchdate = null)where T: IMatchData
-        { 
+        {
+
+           // JCLQ_SP ///JCLQ_SF_SPInfo,JCLQ_RFSF_SPInfo,JCLQ_SFC_SPInfo,JCLQ_DXF_SPInfo
+
             if (type.ToLower() == "hh")
             {
                 //  

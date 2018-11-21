@@ -2,6 +2,8 @@
 using EntityModel.Ticket;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
@@ -14,12 +16,15 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("T_JCZQ_Odds_BF", Type = EntityType.Table)]
+    [BsonIgnoreExtraElements]
     public class T_JCZQ_Odds_BF : JingCai_Odds, IMatchData
     {
         public T_JCZQ_Odds_BF()
         {
 
         }
+        [BsonId]
+        public ObjectId _id { get; set; }
         /// <summary>
         // 主键
         ///</summary>

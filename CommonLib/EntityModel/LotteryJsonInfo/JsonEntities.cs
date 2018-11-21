@@ -220,8 +220,11 @@ namespace EntityModel.LotteryJsonInfo
         public string PrivilegesType { get; set; }
         public string State { get; set; }
     }
+    [BsonIgnoreExtraElements]
     public class JCLQBase: IMatchData
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛日期
         /// </summary>
@@ -549,9 +552,11 @@ namespace EntityModel.LotteryJsonInfo
         /// </summary>
         public decimal Probadbility { get; set; }
     }
-
+    [BsonIgnoreExtraElements]
     public class JCZQBase:IMatchData
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         /// <summary>
         /// 比赛日期
         /// </summary>
@@ -573,8 +578,11 @@ namespace EntityModel.LotteryJsonInfo
         //public string PrivilegesType { get; set; }
 
     }
+    [BsonIgnoreExtraElements]
     public class BJDC_BQC_SpInfo
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         public string CreateTime { get; set; }
         /// <summary>
         /// 负负sp
@@ -895,8 +903,11 @@ namespace EntityModel.LotteryJsonInfo
         public decimal WinOdds { get; set; }
 
     }
+    [BsonIgnoreExtraElements]
     public class CTZQ_OddInfo
     {
+        [BsonId]
+        public ObjectId _id { get; set; }
         public string AverageOdds { get; set; }
         public string FullAverageOdds { get; set; }
         public string HalfAverageOdds { get; set; }
