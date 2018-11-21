@@ -703,7 +703,7 @@ namespace Lottery.CrawGetters.MatchBizGetter
 
                 #region 采集其它赔率数据
 
-                GetNewJCZQList<JCZQ_SPF_OZ_SPInfo>(ozSPList, "JCZQ_oz_SP");
+                GetNewJCZQList<JCZQ_SPF_OZ_SPInfo>(ozSPList, "JCZQ_OZ_SP");
 
                 #endregion
 

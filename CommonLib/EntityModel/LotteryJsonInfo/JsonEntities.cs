@@ -153,6 +153,7 @@ namespace EntityModel.LotteryJsonInfo
     [BsonIgnoreExtraElements]
     public class JCLQ_SP_SFC : JCLQBase
     {
+        [BsonId]
         public ObjectId _id { get; set; }
         public string SFC { get; set; }
     }

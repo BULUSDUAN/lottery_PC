@@ -33,7 +33,7 @@ namespace Lottery.CrawGetters
         {
          string temp=   Lottery.CrawGetters.InitConfigInfo.MongoSettings["IsStartLog"].ToString();
             IsStartLog = bool.Parse(temp);
-            tableName = Catetory + "_LOG";
+            tableName = "LOG_"+ Catetory + "_LOG";
             mDB = _mDB;
         }
         public  void WriteLog( string log, Exception ex = null)
