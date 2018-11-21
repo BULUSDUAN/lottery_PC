@@ -67,15 +67,15 @@ namespace KaSon.FrameWork.Common
         /// <param name="type"></param>
         /// <param name="issuse"></param>
         /// <returns></returns>
-        private static IList<T>  SPFile_Mg<T>(string type, string issuse)
-        {
+        //private static IList<T>  SPFile_Mg<T>(string type, string issuse)
+        //{
 
 
-            return MgMatchDataHelper.BJDC_SP<T>(type, issuse);
+        //    return MgMatchDataHelper.BJDC_SP<T>(type, issuse);
 
-           // return (List<T>)list;
+        //   // return (List<T>)list;
 
-        }
+        //}
         /// <summary>
         /// 北单 - SP走势文件地址
         /// </summary>

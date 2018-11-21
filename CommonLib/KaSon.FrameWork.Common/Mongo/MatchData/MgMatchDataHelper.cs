@@ -339,7 +339,7 @@ namespace KaSon.FrameWork.Common
             //  var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
 
             var filter_BQC = Builders<BsonDocument>.Filter.Eq("GameCode", type) &
-                  Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuseId);
+                  Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuse);
             var doc = MgHelper.MgDB.GetCollection<BsonDocument>("SZCBonusPool").Find<BsonDocument>(filter_BQC).FirstOrDefault();
 
             if (doc != null)
