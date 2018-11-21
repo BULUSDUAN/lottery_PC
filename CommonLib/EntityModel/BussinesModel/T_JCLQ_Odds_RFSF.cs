@@ -1,4 +1,5 @@
-﻿using EntityModel.Ticket;
+﻿using EntityModel.Interface;
+using EntityModel.Ticket;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
 using ProtoBuf;
@@ -13,7 +14,7 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("T_JCLQ_Odds_RFSF",Type = EntityType.Table)]
-    public class T_JCLQ_Odds_RFSF: JingCai_Odds
+    public class T_JCLQ_Odds_RFSF: JingCai_Odds, IMatchData
     { 
         public T_JCLQ_Odds_RFSF()
         {
@@ -56,6 +57,7 @@ namespace EntityModel
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
 
+        public string MatchData { get; set; }
 
         public override decimal GetOdds(string result)
         {

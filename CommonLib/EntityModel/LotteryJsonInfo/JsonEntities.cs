@@ -220,7 +220,7 @@ namespace EntityModel.LotteryJsonInfo
         public string PrivilegesType { get; set; }
         public string State { get; set; }
     }
-    public class JCLQBase
+    public class JCLQBase: IMatchData
     {
         /// <summary>
         /// 比赛日期
@@ -550,7 +550,7 @@ namespace EntityModel.LotteryJsonInfo
         public decimal Probadbility { get; set; }
     }
 
-    public class JCZQBase
+    public class JCZQBase:IMatchData
     {
         /// <summary>
         /// 比赛日期

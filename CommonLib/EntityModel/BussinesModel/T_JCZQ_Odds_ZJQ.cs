@@ -13,7 +13,7 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("T_JCZQ_Odds_ZJQ",Type = EntityType.Table)]
-    public class T_JCZQ_Odds_ZJQ : JingCai_Odds
+    public class T_JCZQ_Odds_ZJQ : JingCai_Odds, IMatchData
     { 
         public T_JCZQ_Odds_ZJQ()
         {
@@ -85,6 +85,8 @@ namespace EntityModel
             [ProtoMember(11)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
+
+        public string MatchData { get; set; }
 
         public override decimal GetOdds(string result)
         {

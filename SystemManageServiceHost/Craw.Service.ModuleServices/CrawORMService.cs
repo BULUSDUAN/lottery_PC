@@ -109,7 +109,7 @@ namespace Craw.Service.ModuleServices
         public bool BonusPoolStart(string gameName, OpenDataInfo  info)
         {
             bool bol = true;
-            string tablename = Lottery.CrawGetters.InitConfigInfo.MongoSettings["BonusPoolTableName"].ToString();
+            string tablename = Lottery.CrawGetters.InitConfigInfo.MongoSettings["SZCBonusPoolTableName"].ToString();
             string content = KaSon.FrameWork.Common.JSON.JsonHelper.Serialize(info);
             BsonDocument bson = new BsonDocument();
             bson.Add("GameCode", info.GameCode);

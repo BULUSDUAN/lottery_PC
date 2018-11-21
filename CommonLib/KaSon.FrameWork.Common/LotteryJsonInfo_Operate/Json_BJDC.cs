@@ -9,7 +9,7 @@ using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Common.Utilities;
 using EntityModel;
 using MongoDB.Driver;
-using KaSon.FrameWork.Commom;
+
 using MongoDB.Bson;
 
 namespace KaSon.FrameWork.Common
@@ -70,47 +70,10 @@ namespace KaSon.FrameWork.Common
         private static IList<T>  SPFile_Mg<T>(string type, string issuse)
         {
 
-            ///
-            ///BJDC_SP_SPF  胜平负SPF
-            ///BJDC_SP_ZJQ  总进球ZJQ
-            ///BJDC_SP_SXDS  上下单双SXDS
-            ///BJDC_SP_BF  比分BF
-            ///BJDC_SP_BQC  半全场BJBQC
-            ///
-            object list = null;
-           
-            switch (type)
-            {
-                
-                case "ZJQ":
-                    var filter_ZJQ = Builders<BJDC_ZJQ_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-                    list = MgHelper.MgDB.GetCollection<BJDC_ZJQ_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_ZJQ_SpInfo>(filter_ZJQ).ToList();
 
-                    break;
-                case "SXDS":
-                    var filter_SXDS = Builders<BJDC_SXDS_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-                    list = MgHelper.MgDB.GetCollection<BJDC_SXDS_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_SXDS_SpInfo>(filter_SXDS).ToList();
+            return MgMatchDataHelper.BJDC_SP<T>(type, issuse);
 
-                    break;
-                case "BF":
-                    var filter_BF = Builders<BJDC_BF_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-                    list = MgHelper.MgDB.GetCollection<BJDC_BF_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_BF_SpInfo>(filter_BF).ToList();
-
-                    break;
-                case "BQC":
-                    var filter_BQC = Builders<BJDC_BQC_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
-                    list = MgHelper.MgDB.GetCollection<BJDC_BQC_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_BQC_SpInfo>(filter_BQC).ToList();
-
-                    break;
-                default://BJDC_SP_SPF
-                    var filter = Builders<BJDC_SPF_SpInfo>.Filter.Eq(b=>b.IssuseNumber, issuse);
-                    list = MgHelper.MgDB.GetCollection<BJDC_SPF_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_SPF_SpInfo>(filter).ToList();
-                    break;
-
-            }
-           
-
-            return (List<T>)list;
+           // return (List<T>)list;
 
         }
         /// <summary>
