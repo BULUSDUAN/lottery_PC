@@ -1304,118 +1304,118 @@ namespace Lottery.Api.Controllers
             return Json(result);
         }
         #endregion
-        #region 湖南快乐十分
-        /// <summary>
-        /// 湖南快乐十分
-        /// </summary>
-        public async Task<IActionResult> HNKLSF([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
-        {
-            var result = new LotteryServiceResponse() { Code = ResponseCode.成功 };
-            try
-            {
-                var param = new Dictionary<string, object>();
-                var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
-                var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
-                switch (id)
-                {
-                    case "elzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_2LZS_Info");
-                        break;
-                    case "slzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_3LZS_Info");
-                        break;
-                    case "dxzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_DXZS_Info");
-                        break;
-                    case "ghzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_GHZS_Info");
-                        break;
-                    case "jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_JBZS_Info");
-                        break;
-                    case "jozs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_JOZS_Info");
-                        break;
-                    case "q1zs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_Q1ZS_Info");
-                        break;
-                    case "q3zs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_Q3ZS_Info");
-                        break;
-                    case "qjzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_QJZS_Info");
-                        break;
-                    case "twzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_TWZS_Info");
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                result.Message = ex.Message;
-                result.Value = null;
-                result.Code = ResponseCode.失败;
-            }
-            return Json(result);
-        }
-        #endregion
-        #region 重庆快乐十分
-        /// <summary>
-        /// 重庆快乐十分
-        /// </summary>
-        public async Task<IActionResult> CQKLSF([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
-        {
-            var result = new LotteryServiceResponse() { Code = ResponseCode.成功 };
-            try
-            {
-                var param = new Dictionary<string, object>();
-                var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
-                var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
-                switch (id)
-                {
-                    case "elzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_2LZS_Info");
-                        break;
-                    case "slzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_3LZS_Info");
-                        break;
-                    case "dxzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_DXZS_Info");
-                        break;
-                    case "ghzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_GHZS_Info");
-                        break;
-                    case "jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_JBZS_Info");
-                        break;
-                    case "jozs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_JOZS_Info");
-                        break;
-                    case "q1zs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_Q1ZS_Info");
-                        break;
-                    case "q3zs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_Q3ZS_Info");
-                        break;
-                    case "qjzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_QJZS_Info");
-                        break;
-                    case "twzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_TWZS_Info");
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                result.Message = ex.Message;
-                result.Value = null;
-                result.Code = ResponseCode.失败;
-            }
-            return Json(result);
-        }
-        #endregion
+        //#region 湖南快乐十分
+        ///// <summary>
+        ///// 湖南快乐十分
+        ///// </summary>
+        //public async Task<IActionResult> HNKLSF([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        //{
+        //    var result = new LotteryServiceResponse() { Code = ResponseCode.成功 };
+        //    try
+        //    {
+        //        var param = new Dictionary<string, object>();
+        //        var p = JsonHelper.Decode(entity.Param);
+        //        param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+        //        var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
+        //        switch (id)
+        //        {
+        //            case "elzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_2LZS_Info");
+        //                break;
+        //            case "slzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_3LZS_Info");
+        //                break;
+        //            case "dxzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_DXZS_Info");
+        //                break;
+        //            case "ghzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_GHZS_Info");
+        //                break;
+        //            case "jbzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_JBZS_Info");
+        //                break;
+        //            case "jozs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_JOZS_Info");
+        //                break;
+        //            case "q1zs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_Q1ZS_Info");
+        //                break;
+        //            case "q3zs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_Q3ZS_Info");
+        //                break;
+        //            case "qjzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_QJZS_Info");
+        //                break;
+        //            case "twzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_HNKLSF_TWZS_Info");
+        //                break;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result.Message = ex.Message;
+        //        result.Value = null;
+        //        result.Code = ResponseCode.失败;
+        //    }
+        //    return Json(result);
+        //}
+        //#endregion
+        //#region 重庆快乐十分
+        ///// <summary>
+        ///// 重庆快乐十分
+        ///// </summary>
+        //public async Task<IActionResult> CQKLSF([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        //{
+        //    var result = new LotteryServiceResponse() { Code = ResponseCode.成功 };
+        //    try
+        //    {
+        //        var param = new Dictionary<string, object>();
+        //        var p = JsonHelper.Decode(entity.Param);
+        //        param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+        //        var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
+        //        switch (id)
+        //        {
+        //            case "elzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_2LZS_Info");
+        //                break;
+        //            case "slzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_3LZS_Info");
+        //                break;
+        //            case "dxzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_DXZS_Info");
+        //                break;
+        //            case "ghzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_GHZS_Info");
+        //                break;
+        //            case "jbzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_JBZS_Info");
+        //                break;
+        //            case "jozs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_JOZS_Info");
+        //                break;
+        //            case "q1zs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_Q1ZS_Info");
+        //                break;
+        //            case "q3zs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_Q3ZS_Info");
+        //                break;
+        //            case "qjzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_QJZS_Info");
+        //                break;
+        //            case "twzs":
+        //                result.Value = await _serviceProxyProvider.Invoke<Task<>>(param, "api/Data/QueryCache_CQKLSF_TWZS_Info");
+        //                break;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result.Message = ex.Message;
+        //        result.Value = null;
+        //        result.Code = ResponseCode.失败;
+        //    }
+        //    return Json(result);
+        //}
+        //#endregion
 
     }
 }
