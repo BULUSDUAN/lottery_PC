@@ -1,6 +1,10 @@
-﻿using EntityModel.LotteryJsonInfo;
+﻿using EntityModel.CoreModel;
+using EntityModel.LotteryJsonInfo;
+using EntityModel.MatchModel;
 using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Common.Utilities;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +22,13 @@ namespace KaSon.FrameWork.Common
         {
             return "/MatchData/" + "ctzq/Match_" + type + "_Issuse_List.json";
         }
+        private static IList<CTZQ_IssuseInfo> IssuseFile_Mg(string type)
+        {
+          //  var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
+            var filter_ZJQ = Builders<CTZQ_IssuseInfo>.Filter.Eq(b => b.GameType, type);
+            return MgHelper.MgDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo").Find<CTZQ_IssuseInfo>(filter_ZJQ).ToList();
+        }
+
 
         /// <summary>
         /// 传统足球 - 根据奖期获取队伍信息文件地址
@@ -27,7 +38,12 @@ namespace KaSon.FrameWork.Common
         {
             return "/MatchData/" + "ctzq" + "/" + issuse + "/Match_" + type + "_List.json";
         }
-
+        private static IList<CTZQ_MatchInfo> MatchFile_Mg(string type, string issuse)
+        {
+            //  var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
+            var filter_ZJQ = Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.GameType, type) & Builders<CTZQ_MatchInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
+            return MgHelper.MgDB.GetCollection<CTZQ_MatchInfo>("CTZQ_MatchInfo").Find<CTZQ_MatchInfo>(filter_ZJQ).ToList();
+        }
         /// <summary>
         /// 传统足球 - 根据奖期获取队伍平均赔率数据
         /// </summary>
@@ -36,7 +52,18 @@ namespace KaSon.FrameWork.Common
         {
             return "/MatchData/" + "ctzq" + "/" + issuse + "/Match_" + type + "_Odds_List.json";
         }
-
+        private static string OddFiles_Mg(string type, string issuse)
+        {
+            //  var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
+            var filter = Builders<BsonDocument>.Filter.Eq("GameType", type) & Builders<BsonDocument>.Filter.Eq("IssuseNumber", issuse);
+            var document = MgHelper.MgDB.GetCollection<BsonDocument>("C_CTZQ_Odds").Find(filter).FirstOrDefault();
+            string text = "";
+            if (document != null)
+            {
+                 text = document["Content"].ToString().Trim();
+            }
+            return text;
+        }
         /// <summary>
         /// 传统足球 - 开奖结果文件
         /// </summary>
@@ -46,20 +73,35 @@ namespace KaSon.FrameWork.Common
             return "/MatchData/" + "ctzq" + "/" + issuse + "/CTZQ_" + type + "_BonusLevel.json";
         }
 
+        private static IList<CTZQ_BonusLevelInfo> BonusFile_Mg(string type, string issuse)
+        {
+            //  var coll = mDB.GetCollection<CTZQ_IssuseInfo>("CTZQ_IssuseInfo");
+            var filter_ZJQ = Builders<CTZQ_BonusLevelInfo>.Filter.Eq(b => b.GameType, type) & Builders<CTZQ_BonusLevelInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
+            return MgHelper.MgDB.GetCollection<CTZQ_BonusLevelInfo>("CTZQ_BonusLevelInfo").Find<CTZQ_BonusLevelInfo>(filter_ZJQ).ToList();
+        }
         #endregion
 
         public static List<CTZQ_MatchInfo_WEB> MatchList_WEB(string issuse, string gameType)
         {
             BettingHelper bizHelper = new BettingHelper();
+
+
+#if MGDB
+             var match = MatchFile_Mg(gameType, issuse);
+            var odds = bizHelper.GetMatchInfoList<CTZQ_OddInfo>(OddFiles_Mg(gameType, issuse));
+#else
             var match = bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
             var odds = bizHelper.GetMatchInfoList<CTZQ_OddInfo>(OddFiles(gameType, issuse));
+#endif
+
+           
 
             var list = new List<CTZQ_MatchInfo_WEB>();
             foreach (var item in match)
             {
                 var res = odds.FirstOrDefault(p => p.Id == item.Id);
 
-                #region 队伍基础信息
+#region 队伍基础信息
                 var info = new CTZQ_MatchInfo_WEB()
                 {
                     GameCode = item.GameCode,
@@ -88,9 +130,9 @@ namespace KaSon.FrameWork.Common
                     //Mid = item.Mid,
                     FXId = item.FXId,
                 };
-                #endregion
+#endregion
 
-                #region 附加平均赔率数据
+#region 附加平均赔率数据
 
                 if (res != null)
                 {
@@ -108,7 +150,7 @@ namespace KaSon.FrameWork.Common
                     //info.YPSW = res.YPSW;
                 }
 
-                #endregion
+#endregion
 
                 list.Add(info);
             }
@@ -120,7 +162,16 @@ namespace KaSon.FrameWork.Common
             List<CTZQ_MatchList_AnteCode> ctzqList = new List<CTZQ_MatchList_AnteCode>();
 
             BettingHelper bizHelper = new BettingHelper();
+          //  var match = MatchFile_Mg(gameType, issuse);// bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
+
+
+
+#if MGDB
+          var match = MatchFile_Mg(gameType, issuse);
+#else
             var match = bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
+#endif
+
             if (match != null && match.Count > 0 && !string.IsNullOrEmpty(anteCode))
             {
                 var arr = anteCode.Split('|');
@@ -178,8 +229,18 @@ namespace KaSon.FrameWork.Common
         public static CTZQ_MatchInfo_New MatchList_New(string issuse, string gameType)
         {
             BettingHelper bizHelper = new BettingHelper();
+
+
+
+#if MGDB
+             var match = MatchFile_Mg(gameType, issuse);// bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
+            var odds = bizHelper.GetMatchInfoList<CTZQ_OddInfo>(OddFiles_Mg(gameType, issuse));
+#else
             var match = bizHelper.GetMatchInfoList<CTZQ_MatchInfo>(MatchFile(gameType, issuse));
             var odds = bizHelper.GetMatchInfoList<CTZQ_OddInfo>(OddFiles(gameType, issuse));
+#endif
+
+
 
             CTZQ_MatchInfo_New matchinfo = new CTZQ_MatchInfo_New();
             matchinfo.stop_sale_time = "";
@@ -189,7 +250,7 @@ namespace KaSon.FrameWork.Common
             {
                 var res = odds.FirstOrDefault(p => p.Id == item.Id);
 
-                #region 队伍基础信息
+#region 队伍基础信息
                 var info = new Match()
                 {
                     match_name = item.MatchName,
@@ -200,9 +261,9 @@ namespace KaSon.FrameWork.Common
                     url = "",
                     color = item.Color
                 };
-                #endregion
+#endregion
 
-                #region 附加平均赔率数据
+#region 附加平均赔率数据
 
                 if (res != null)//"全:2.23|3.22|3.02"
                 {
@@ -229,7 +290,7 @@ namespace KaSon.FrameWork.Common
                    
                 }
 
-                #endregion
+#endregion
 
                 matchinfo.match.Add(info);
             }
@@ -245,15 +306,50 @@ namespace KaSon.FrameWork.Common
         public static List<CtzqIssuesWeb> IssuseList(string type)
         {
             var bizHelper = new BettingHelper();
+            List<CtzqIssuesWeb> resultlist = new List<CtzqIssuesWeb>();
             try
             {
-                var issues = bizHelper.GetMatchInfoList<CtzqIssuesWeb>(IssuseFile(type));
-                return issues;
+
+#if MGDB
+
+
+                
+                var issues = IssuseFile_Mg(type);
+               
+                foreach (var item in issues)
+                {
+                    CtzqIssuesWeb iweb = new CtzqIssuesWeb()
+                    {
+                        CreateTime = item.CreateTime,
+                        DSStopBettingTime = item.DSStopBettingTime,
+                        GameCode = item.GameCode,
+                        GameType = item.GameType,
+                        Id = item.Id,
+                        IssuseNumber = item.IssuseNumber,
+                        OfficialStopTime = item.OfficialStopTime,
+                        StartTime = item.StartTime,
+                        StopBettingTime = item.StopBettingTime,
+                        WinNumber = item.WinNumber
+
+                    };
+                    resultlist.Add(iweb);
+                }
+
+
+#else
+                resultlist = bizHelper.GetMatchInfoList<CtzqIssuesWeb>(IssuseFile(type));
+
+
+#endif
+
+
+
             }
             catch (Exception ex)
             {
-                return new List<CtzqIssuesWeb>();
+              
             }
+            return resultlist;
         }
     }
 }

@@ -7,6 +7,10 @@ using EntityModel.Enum;
 using EntityModel.LotteryJsonInfo;
 using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Common.Utilities;
+using EntityModel;
+using MongoDB.Driver;
+using KaSon.FrameWork.Commom;
+using MongoDB.Bson;
 
 namespace KaSon.FrameWork.Common
 {
@@ -22,8 +26,17 @@ namespace KaSon.FrameWork.Common
         /// <returns>队伍信息文件地址</returns>
         private static string MatchFile(string issuse)
         {
-            return "/MatchData/" + "bjdc" + "/" + issuse + "/Match_List.json";
+            return   "/MatchData/" + "bjdc" + "/" + issuse + "/Match_List.json";
         }
+
+
+        //private static string MatchFile_Mg(string issuse)
+        //{
+
+        //    // .
+
+        //    return "/MatchData/" + "bjdc" + "/" + issuse + "/Match_List.json";
+        //}
 
         /// <summary>
         /// 北单 - 根据奖期获取队伍结果信息文件地址
@@ -47,7 +60,59 @@ namespace KaSon.FrameWork.Common
             return "/MatchData/" + "bjdc" + "/" + issuse + "/SP_" + type + ".json";
 
         }
+        /// <summary>
+        /// 改为Mg 读取
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="type"></param>
+        /// <param name="issuse"></param>
+        /// <returns></returns>
+        private static IList<T>  SPFile_Mg<T>(string type, string issuse)
+        {
 
+            ///
+            ///BJDC_SP_SPF  胜平负SPF
+            ///BJDC_SP_ZJQ  总进球ZJQ
+            ///BJDC_SP_SXDS  上下单双SXDS
+            ///BJDC_SP_BF  比分BF
+            ///BJDC_SP_BQC  半全场BJBQC
+            ///
+            object list = null;
+           
+            switch (type)
+            {
+                
+                case "ZJQ":
+                    var filter_ZJQ = Builders<BJDC_ZJQ_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
+                    list = MgHelper.MgDB.GetCollection<BJDC_ZJQ_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_ZJQ_SpInfo>(filter_ZJQ).ToList();
+
+                    break;
+                case "SXDS":
+                    var filter_SXDS = Builders<BJDC_SXDS_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
+                    list = MgHelper.MgDB.GetCollection<BJDC_SXDS_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_SXDS_SpInfo>(filter_SXDS).ToList();
+
+                    break;
+                case "BF":
+                    var filter_BF = Builders<BJDC_BF_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
+                    list = MgHelper.MgDB.GetCollection<BJDC_BF_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_BF_SpInfo>(filter_BF).ToList();
+
+                    break;
+                case "BQC":
+                    var filter_BQC = Builders<BJDC_BQC_SpInfo>.Filter.Eq(b => b.IssuseNumber, issuse);
+                    list = MgHelper.MgDB.GetCollection<BJDC_BQC_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_BQC_SpInfo>(filter_BQC).ToList();
+
+                    break;
+                default://BJDC_SP_SPF
+                    var filter = Builders<BJDC_SPF_SpInfo>.Filter.Eq(b=>b.IssuseNumber, issuse);
+                    list = MgHelper.MgDB.GetCollection<BJDC_SPF_SpInfo>("BJDC_SP_" + type.ToUpper()).Find<BJDC_SPF_SpInfo>(filter).ToList();
+                    break;
+
+            }
+           
+
+            return (List<T>)list;
+
+        }
         /// <summary>
         /// 北单 - SP走势文件地址
         /// </summary>
@@ -73,13 +138,40 @@ namespace KaSon.FrameWork.Common
         public static List<BJDC_MatchInfo_WEB> MatchList_WEB(string issuse, string gameType, bool isLeftJoin = true)
         {
             BettingHelper bizHelper = new BettingHelper();
+
+
+
+
+#if MGDB
+               var match = MgMatchDataHelper.BJDC_Match_List_ByIssuse(issuse);
+            var matchresult = MgMatchDataHelper.BJDC_MatchResult_List_ByIssuse(issuse);
+            var sp_spf = SPFile_Mg<BJDC_SPF_SpInfo>(gameType, issuse); //胜平负sp数据
+            var sp_zjq = SPFile_Mg<BJDC_ZJQ_SpInfo>(gameType, issuse);  //总进球sp数据
+            var sp_sxds = SPFile_Mg<BJDC_SXDS_SpInfo>(gameType, issuse); //上下单双sp数据
+            var sp_bf = SPFile_Mg<BJDC_BF_SpInfo>(gameType, issuse);  //比分sp数据
+            var sp_bqc = SPFile_Mg<BJDC_BQC_SpInfo>(gameType, issuse); //半全场sp数据
+#else
+
             var match = bizHelper.GetMatchInfoList<BJDC_MatchInfo>(MatchFile(issuse)).Where(p => p.MatchState == BJDCMatchState.Sales).ToList();
             var matchresult = bizHelper.GetMatchInfoList<BJDC_MatchResultInfo>(MatchResultFile(issuse));
             var sp_spf = bizHelper.GetMatchInfoList<BJDC_SPF_SpInfo>(SPFile(gameType, issuse)); //胜平负sp数据
             var sp_zjq = bizHelper.GetMatchInfoList<BJDC_ZJQ_SpInfo>(SPFile(gameType, issuse)); //总进球sp数据
             var sp_sxds = bizHelper.GetMatchInfoList<BJDC_SXDS_SpInfo>(SPFile(gameType, issuse)); //上下单双sp数据
             var sp_bf = bizHelper.GetMatchInfoList<BJDC_BF_SpInfo>(SPFile(gameType, issuse)); //比分sp数据
+
             var sp_bqc = bizHelper.GetMatchInfoList<BJDC_BQC_SpInfo>(SPFile(gameType, issuse)); //半全场sp数据
+#endif
+            //   var sp_bqc = bizHelper.GetMatchInfoList<BJDC_BQC_SpInfo>(SPFile(gameType, issuse)); //半全场sp数据
+
+
+
+
+
+
+
+
+
+
 
             match = match.Where(s => long.Parse(Convert.ToDateTime(s.LocalStopTime).ToString("yyyyMMddHHmmss")) > long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"))).ToList();
             var list = new List<BJDC_MatchInfo_WEB>();
@@ -87,7 +179,7 @@ namespace KaSon.FrameWork.Common
             {
                 var res = matchresult.FirstOrDefault(p => p.Id == item.Id);
 
-                #region 队伍基础信息
+#region 队伍基础信息
                 var info = new BJDC_MatchInfo_WEB()
                 {
                     //CreateTime = item.CreateTime.ToString("yyyyMMddHHmmss"),
@@ -115,9 +207,9 @@ namespace KaSon.FrameWork.Common
                     //Mid = item.Mid,
                     FXId = item.FXId,
                 };
-                #endregion
+#endregion
 
-                #region 附加队伍结果信息
+#region 附加队伍结果信息
                 if (res != null)
                 {
                     //info.ZJQ_Result = res.ZJQ_Result;
@@ -141,9 +233,9 @@ namespace KaSon.FrameWork.Common
                 {
                     continue;
                 }
-                #endregion
+#endregion
 
-                #region 附加胜平负sp数据
+#region 附加胜平负sp数据
                 var sp_spf_item = sp_spf.FirstOrDefault(p => p.MatchOrderId == item.MatchOrderId);
                 if (sp_spf_item != null)
                 {
@@ -151,9 +243,9 @@ namespace KaSon.FrameWork.Common
                     info.SP_Lose_Odds = sp_spf_item.Lose_Odds;
                     info.SP_Flat_Odds = sp_spf_item.Flat_Odds;
                 }
-                #endregion
+#endregion
 
-                #region 附加总进球sp数据
+#region 附加总进球sp数据
                 var sp_zjq_item = sp_zjq.FirstOrDefault(p => p.MatchOrderId == item.MatchOrderId);
                 if (sp_zjq_item != null)
                 {
@@ -166,9 +258,9 @@ namespace KaSon.FrameWork.Common
                     info.JinQiu_6_Odds = sp_zjq_item.JinQiu_6_Odds;
                     info.JinQiu_7_Odds = sp_zjq_item.JinQiu_7_Odds;
                 }
-                #endregion
+#endregion
 
-                #region 附加上下单双sp数据
+#region 附加上下单双sp数据
                 var sp_sxds_item = sp_sxds.FirstOrDefault(p => p.MatchOrderId == item.MatchOrderId);
                 if (sp_sxds_item != null)
                 {
@@ -177,9 +269,9 @@ namespace KaSon.FrameWork.Common
                     info.X_D_Odds = sp_sxds_item.X_D_Odds;
                     info.X_S_Odds = sp_sxds_item.X_S_Odds;
                 }
-                #endregion
+#endregion
 
-                #region 附加比分sp数据
+#region 附加比分sp数据
                 var sp_bf_item = sp_bf.FirstOrDefault(p => p.MatchOrderId == item.MatchOrderId);
                 if (sp_bf_item != null)
                 {
@@ -209,9 +301,9 @@ namespace KaSon.FrameWork.Common
                     info.S_42 = sp_bf_item.S_42;
                     info.S_QT = sp_bf_item.S_QT;
                 }
-                #endregion
+#endregion
 
-                #region 附加半全场sp数据
+#region 附加半全场sp数据
                 var sp_bqc_item = sp_bqc.FirstOrDefault(p => p.MatchOrderId == item.MatchOrderId);
                 if (sp_bqc_item != null)
                 {
@@ -225,7 +317,7 @@ namespace KaSon.FrameWork.Common
                     info.SH_P_Odds = sp_bqc_item.SH_P_Odds;
                     info.SH_SH_Odds = sp_bqc_item.SH_SH_Odds;
                 }
-                #endregion
+#endregion
 
                 list.Add(info);
             }

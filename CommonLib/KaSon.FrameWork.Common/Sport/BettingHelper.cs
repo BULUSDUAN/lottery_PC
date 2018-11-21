@@ -12,6 +12,7 @@ using System.Text;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common.Net;
 using System.Globalization;
+using MongoDB.Driver;
 
 namespace KaSon.FrameWork.Common.Sport
 {
@@ -1353,6 +1354,13 @@ namespace KaSon.FrameWork.Common.Sport
         public static List<Web_CTZQ_BonusPoolInfo> GetPoolInfo_CTZQ(string type, string issuseId)
         {
             var poolInfo = GetCTZQBonusPool(IssuseFile(type, issuseId));
+          //  var poolInfo = GetCTZQBonusPool(IssuseFile(type, issuseId));
+
+#if MGDB
+
+#else
+#endif
+
             return poolInfo;
         }
 
@@ -1369,7 +1377,7 @@ namespace KaSon.FrameWork.Common.Sport
             return JsonHelper.Deserialize<List<Web_CTZQ_BonusPoolInfo>>(result);
         }
 
-        #region 文件路径
+#region 文件路径
         /// <summary>
         /// 奖期数据文件
         /// </summary>
@@ -1384,9 +1392,29 @@ namespace KaSon.FrameWork.Common.Sport
             }
             return string.Format("/matchdata/{0}/{0}_{1}.json?_={2}", type, issuseId, DateTime.Now.ToString("yyyyMMddHHmmss"));
         }
-        #endregion
 
-        #region 数字彩详情
+        private static IList<CTZQ_BonusLevelInfo> IssuseCTZQ_Mg(string type, string issuseId)
+        {
+           
+            if (type.StartsWith("CTZQ"))
+            {
+                var strs = type.Split('_');
+                var gameCode = strs[0];
+
+                var filter_BQC = Builders<CTZQ_BonusLevelInfo>.Filter.Eq(b=>b.GameType, type) &
+                    Builders<CTZQ_BonusLevelInfo>.Filter.Eq(b => b.IssuseNumber, issuseId);
+                return MgHelper.MgDB.GetCollection<CTZQ_BonusLevelInfo>("CTZQ_BonusLevelInfo").Find<CTZQ_BonusLevelInfo>(filter_BQC).ToList();
+
+                //var gameType = strs[1];
+                //return string.Format("/matchdata/{0}/{1}/{2}_BonusLevel.json?_={3}", gameCode, issuseId, type, DateTime.Now.ToString("yyyyMMddHHmmss"));
+            }
+            return null;
+           // return string.Format("/matchdata/{0}/{0}_{1}.json?_={2}", type, issuseId, DateTime.Now.ToString("yyyyMMddHHmmss"));
+        }
+
+#endregion
+
+#region 数字彩详情
         /// <summary>
         /// 数字彩详情
         /// </summary>
@@ -1406,7 +1434,7 @@ namespace KaSon.FrameWork.Common.Sport
                 return new Web_SZC_BonusPoolInfo();
             return JsonHelper.Deserialize<Web_SZC_BonusPoolInfo>(result);
         }
-        #endregion
+#endregion
 
         public static string GetResult(int homeTeamScore, int guestTeamScore)
         {
@@ -1969,7 +1997,7 @@ namespace KaSon.FrameWork.Common.Sport
         {
             var charList = new List<string>();
 
-            #region 特殊字符
+#region 特殊字符
 
             charList.Add("'");
             charList.Add("\"");
@@ -2011,7 +2039,7 @@ namespace KaSon.FrameWork.Common.Sport
             charList.Add("*/");
             charList.Add("\r\n");
 
-            #endregion
+#endregion
 
             if (charList.Contains(sqlCondition))
                 return true;
