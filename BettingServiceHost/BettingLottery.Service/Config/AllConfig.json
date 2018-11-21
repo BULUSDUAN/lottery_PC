@@ -30,7 +30,23 @@
   "FC3D_StopTicketing": "19:40-21:00",
   "PL3_StopTicketing": "19:40-21:00",
   "JCGJ_StopTicketing": "19:40-21:00",
+  //Mongo 数据库配置
+  "MongoSettings": {
+    "connectionString": "mongodb://10.0.3.6:27017",
+    "IpAddr": "10.0.3.6",
+    "Post": "27017",
+    "SingleInstance": false,
+    "IsStartLog": true, //是否启动记录日志
+    "DBName": "CrawDB",
+    "MaxConnectionPoolSize": 6000,
+    "MinConnectionPoolSize": 2000,
+    //mogodb 采集表命名
+    "TableNamesSettings": {
+      "CreawPool": "NumLottery", //数字彩表名
+      "CTZQMatch": "CTZQMatch" //传统足球表名
+    }
 
+  },
   //必须配置 服务发现配置
   "ConsulSettings": {
     "IpAddrs": "10.0.3.27:8501",

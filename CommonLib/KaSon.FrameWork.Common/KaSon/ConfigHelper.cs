@@ -22,8 +22,10 @@ namespace KaSon.FrameWork.Common
             string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\AllConfig.json");
             string jsonText = FileHelper.txtReader(path);
             AllConfigInfo = (JObject)JsonConvert.DeserializeObject(jsonText);
-        }
 
+            MongoSettings = AllConfigInfo["MongoSettings"];
+        }
+        public static JToken MongoSettings { get; set; }
         /// <summary>
         /// 获取Json 配置
         /// </summary>
