@@ -475,29 +475,29 @@ namespace KaSon.FrameWork.ORM.Helper
 
         #region 中奖查询
 
-        public IList<BonusOrderInfo> QueryBonusInfoList(string userId, string gameCode, string gameType, string issuseNumber, string completeData, string key, int pageIndex, int pageSize, out int totalCount)
-        {
+        //public IList<BonusOrderInfo> QueryBonusInfoList(string userId, string gameCode, string gameType, string issuseNumber, string completeData, string key, int pageIndex, int pageSize, out int totalCount)
+        //{
            
-            pageIndex = pageIndex < 0 ? 0 : pageIndex;
-            pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
-            // 通过数据库存储过程进行查询
-            Dictionary<string, object> outputs;
-            var query = CreateOutputQuery(Session.GetNamedQuery("P_Order_QueryBonusOrderList"))
-                .AddInParameter("userId", userId)
-                .AddInParameter("gameCode", gameCode)
-                .AddInParameter("gameType", gameType)
-                .AddInParameter("issuseNumber", issuseNumber)
-                .AddInParameter("completeData", completeData)
-                .AddInParameter("key", key)
-                .AddInParameter("pageIndex", pageIndex)
-                .AddInParameter("pageSize", pageSize)
-                .AddOutParameter("totalCount", "Int32");
-            var dt = query.GetDataTable(out outputs);
+        //    pageIndex = pageIndex < 0 ? 0 : pageIndex;
+        //    pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
+        //    // 通过数据库存储过程进行查询
+        //    Dictionary<string, object> outputs;
+        //    var query = CreateOutputQuery(Session.GetNamedQuery("P_Order_QueryBonusOrderList"))
+        //        .AddInParameter("userId", userId)
+        //        .AddInParameter("gameCode", gameCode)
+        //        .AddInParameter("gameType", gameType)
+        //        .AddInParameter("issuseNumber", issuseNumber)
+        //        .AddInParameter("completeData", completeData)
+        //        .AddInParameter("key", key)
+        //        .AddInParameter("pageIndex", pageIndex)
+        //        .AddInParameter("pageSize", pageSize)
+        //        .AddOutParameter("totalCount", "Int32");
+        //    var dt = query.GetDataTable(out outputs);
 
-            totalCount = (int)outputs["totalCount"];
+        //    totalCount = (int)outputs["totalCount"];
 
-            return ORMHelper.DataTableToList<BonusOrderInfo>(dt);
-        }
+        //    return ORMHelper.DataTableToList<BonusOrderInfo>(dt);
+        //}
 
         #endregion
     }
