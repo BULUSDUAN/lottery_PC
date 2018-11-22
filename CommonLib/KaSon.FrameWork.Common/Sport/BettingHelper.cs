@@ -1352,21 +1352,21 @@ namespace KaSon.FrameWork.Common.Sport
         /// <param name="type"></param>
         /// <param name="issuseId"></param>
         /// <returns></returns>
-//        public static List<Web_CTZQ_BonusPoolInfo> GetPoolInfo_CTZQ(string GameType, string issuseId)
-//        {
-//            var poolInfo = GetCTZQBonusPool(IssuseFile(GameType, issuseId));
-//            //  var poolInfo = GetCTZQBonusPool(IssuseFile(type, issuseId));
-
-            
-//#if MGDB
-
-//#else
+        public static List<Web_CTZQ_BonusPoolInfo> GetPoolInfo_CTZQ(string GameType, string issuseId)
+        {
+            var poolInfo = GetCTZQBonusPool(IssuseFile(GameType, issuseId));
+            //  var poolInfo = GetCTZQBonusPool(IssuseFile(type, issuseId));
 
 
-//#endif
+#if MGDB
 
-//            return poolInfo;
-//        }
+#else
+
+
+#endif
+
+            return poolInfo;
+        }
 
         /// <summary>
         /// 传统足球奖期详情
