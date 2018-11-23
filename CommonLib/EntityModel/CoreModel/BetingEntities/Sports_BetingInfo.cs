@@ -61,6 +61,17 @@ namespace EntityModel.CoreModel
 
     public class HK6Sports_BetingInfo
     {
+        public string UserToken { get; set; }
+
+       
+        /// <summary>
+        /// 使用红包
+        /// </summary>
+        public decimal redBagMoney { get; set; }
+
+        public decimal TotalMoney { get; set; }
+
+        public int userId { get; set; }
         /// <summary>
         /// 期号
         /// </summary>
@@ -77,7 +88,7 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 追期赢停止追期
         /// </summary>
-        public int winStop { get; set; } = 0;
+        public bool winStop { get; set; } = true;
 
         public DateTime CurrentBetTime { get; set; }
     }

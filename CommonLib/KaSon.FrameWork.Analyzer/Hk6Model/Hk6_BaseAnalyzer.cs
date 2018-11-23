@@ -27,12 +27,12 @@ namespace KaSon.FrameWork.Analyzer.Hk6Model
                 {
                     //每一种玩法检查最小金额
                     //每一注最小金额是否合法
-                    if (item.unitPrice < played.minCharge)
-                    {
-                        result.Message = "每一注最小金额错误";
-                        result.IsSuccess = false;
-                        return result;
-                    }
+                    //if (item.unitPrice < played.minCharge)
+                    //{
+                    //    result.Message = "每一注最小金额错误";
+                    //    result.IsSuccess = false;
+                    //    return result;
+                    //}
                     //每一种玩法 号码检查是否合法
                     var tempbol = false;
                     switch (played.Tag)

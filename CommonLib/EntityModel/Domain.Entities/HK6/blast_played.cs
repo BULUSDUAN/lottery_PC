@@ -13,15 +13,18 @@ namespace EntityModel
     [ProtoContract]
     [Entity("blast_played",Type = EntityType.Table)]
     public class blast_played
-    { 
+    {
         public blast_played()
         {
-        
+
         }
-            /// <summary>
-            // 
-            ///</summary>
-            [ProtoMember(1)]
+        [Field("Odds")]
+        public decimal Odds { get; set; }
+
+        /// <summary>
+        // 
+        ///</summary>
+        [ProtoMember(1)]
             [Field("id", IsIdenty = true, IsPrimaryKey = true)]
             public int id{ get; set; }
             /// <summary>
