@@ -70,7 +70,7 @@ namespace Lottery.Api.Controllers
             var param = new Dictionary<string, object>();
             param.Add("info", p);
 
-            var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "HK6Betting/Betting/Betting"):
+            var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "HK6Betting/Betting/Betting");
 
             return Json(result);
         }
