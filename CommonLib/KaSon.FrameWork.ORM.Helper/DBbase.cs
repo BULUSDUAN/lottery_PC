@@ -83,6 +83,8 @@ namespace KaSon.FrameWork.ORM.Helper
             }
 
         }
+
+      
         /// <summary>
         /// 静态DB
         /// </summary>

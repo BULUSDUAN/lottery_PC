@@ -11,6 +11,8 @@ using EntityModel.BonusPool;
 using MongoDB.Driver;
 using KaSon.FrameWork.Common.JSON;
 using MongoDB.Bson;
+using KaSon.FrameWork.ORM.Provider;
+using EntityModel;
 
 namespace Craw.Service.ModuleServices
 {
@@ -176,6 +178,75 @@ namespace Craw.Service.ModuleServices
             }
             return string.Join(Environment.NewLine, result.ToArray());
         }
+        public bool HK6IssuseStart(List<string> list)
+        {
+           var db = new DbProvider();
+            //// db.Init("Default");
+            try
+            {
+                db.Init("MySql.Default", true);
+                list = (from items in list orderby items select items).ToList();
+                DateTime oneDate = DateTime.Parse(list[0]);
+                string Year = oneDate.Year+ "";
+                string atcNo = "";
+                int index = 1;
+                foreach (var item in list)
+                {
+                 
+                    if (DateTime.Parse(item).Year> oneDate.Year)
+                    {
+                        index = 1;
+                        Year = DateTime.Parse(item).Year+"";
+                    }
+                    if (index <10)
+                    {
+                        atcNo = Year + "00" + index;
+                    }
+                    if (index>=10 && index < 100)
+                    {
+                        atcNo = Year + "0"+index;
+                    }
+                    if (index > 100)
+                    {
+                        atcNo = Year + "" + index;
+                    }
+                    var one = db.CreateQuery<blast_data_time>().Where(b => b.actionDate == item).FirstOrDefault();
+                    if (one == null)
+                    {
+                        blast_data_time b = new blast_data_time()
+                        {
+                            actionDate = item,
+                            actionNo = int.Parse(atcNo),
+                            actionTime = DateTime.Parse(item),
 
+
+                        };
+                        db.GetDal<blast_data_time>().Add(b);
+                    }
+                    else {
+                        //db.GetDal<blast_data_time>().Update(b=>new blast_data_time {
+                        //     actionNo
+                        //},b=>b.actionDate==item);
+                    }
+
+                    index++;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally {
+                db.Dispose();
+            }
+           
+
+
+
+
+
+            return true;
+        }
     }
 }

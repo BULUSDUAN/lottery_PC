@@ -33,6 +33,7 @@ namespace Craw.Service.ModuleServices
         //}
         ILogger<NumCrawService> _Log;
         private static IList<Service_AutoCollectWinNumber> aotoCollectList = new List<Service_AutoCollectWinNumber>();
+        private static IList<Service_AutoCollectIssuse> aotoIssuseCollectList = new List<Service_AutoCollectIssuse>();
         private static IList<Service_AutoCollectBonusPool> aotoPoolCollectList = new List<Service_AutoCollectBonusPool>();
         private readonly CrawRepository rep;
         public NumCrawService( ILogger<NumCrawService> log, CrawRepository _rep)
@@ -206,6 +207,35 @@ namespace Craw.Service.ModuleServices
 
 
             return Task.FromResult("成功停止服务"+ gameName);
+        }
+
+        public Task<string> NumLettory_HK6Issuse()
+        {
+            string gameName = "HK6";
+            lock (aotoPoolCollectList)
+            {
+                switch (gameName)
+                {
+                    case "HK6":
+
+                        var p = aotoIssuseCollectList.Where(b => b.Key == gameName).FirstOrDefault();
+                        if (p == null)
+                        {
+                            Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+                            //执行任务
+                            //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
+                            auto.Key = gameName;
+                            auto.Start( new CrawORMService(rep.MDB).HK6IssuseStart);
+                            aotoIssuseCollectList.Add(auto);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+
+            return Task.FromResult("成功停止服务" + gameName);
         }
 
         //WinNumber

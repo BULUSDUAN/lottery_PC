@@ -319,8 +319,9 @@
   "MongoSettings": {
     "connectionString": "mongodb://10.0.3.6:27017",
     "SingleInstance": false,
-    "IsStartLog": true,//是否启动记录日志
+    "IsStartLog": true, //是否启动记录日志
     "dbName": "CrawDB",
+    "BonusPoolTableName": "SZCBonusPool",//奖池表
     //mogodb 采集表命名
     "TableNamesSettings": {
       "CreawPool": "NumLottery", //数字彩表名
@@ -330,7 +331,7 @@
   },
   //必须配置 服务发现配置
   "ConsulSettings": {
-    "IpAddrs": "127.0.0.1:8500" //服务启动IP
+    "IpAddrs": "10.0.3.27:8500" //服务启动IP
   }
 
 

@@ -79,7 +79,7 @@ namespace SystemManage.Host
                     builder.AddMicroService(option =>
                     {
                         option.AddServiceRuntime()
-                       .UseMongo(mongoConfig)
+                      // .UseMongo(mongoConfig)
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
@@ -132,12 +132,14 @@ namespace SystemManage.Host
                 //build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                   .Configure(build =>
                 build.AddCPlatformJSON(HostSettings))
-                .UseProxy()
+               // .UseProxy()
                 .UseStartup<Startup>()
                 .Build();
 
+            //string url = "https://1680660.com/smallSix/queryLotteryDate.do?ym=2019-04";
+            var list= Lottery.CrawGetters.WinNumberGetter_1680660.GetIssuseNum();
 
-          
+            Console.WriteLine(string.Join(Environment.NewLine, list));
             //var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
             //DbProvider.InitConfigJson(list);
 
@@ -155,14 +157,16 @@ namespace SystemManage.Host
             // LotteryGameManager lotGm = new LotteryGameManager();
             // lotGm.StartInitData();
             //new Sports_Business().Test();
-           
-          
+
+
+        
+
             Task.Factory.StartNew(async delegate
             {
                 var obj = await Start_ConfigGameType(Auto_CollectSettings);
             });
             //  RedisMatchBusiness.ReloadCurrentBJDCMatch();
-            Clear();
+           // Clear();
 
 
 
