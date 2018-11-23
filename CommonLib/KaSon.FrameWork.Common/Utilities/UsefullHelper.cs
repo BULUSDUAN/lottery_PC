@@ -165,6 +165,17 @@ namespace KaSon.FrameWork.Common.Utilities
             }
             return source;
         }
+        /// <summary>
+        /// 将c# DateTime时间格式转换为Unix时间戳格式  
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static long ConvertDateTimeToInt(System.DateTime time)
+        {
+            System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1, 0, 0, 0, 0));
+            long t = (time.Ticks - startTime.Ticks) / 10000;   //除10000调整为13位      
+            return t;
+        }
         public static string UUID(int length = 10)
         {
             return DateTime.Now.ToString("MMddHHmmssmmm") + GetUUID(length);

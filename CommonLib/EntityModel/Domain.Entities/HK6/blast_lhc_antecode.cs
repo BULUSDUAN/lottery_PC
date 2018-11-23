@@ -8,13 +8,13 @@ using System.Text;
 namespace EntityModel
 {
     /// <summary>
-    // 
+    // ºÅÂë±í
     ///</summary>
     [ProtoContract]
-    [Entity("blast_lhc_ratio",Type = EntityType.Table)]
-    public class blast_lhc_ratio
+    [Entity("blast_lhc_antecode", Type = EntityType.Table)]
+    public class blast_lhc_antecode
     { 
-        public blast_lhc_ratio()
+        public blast_lhc_antecode()
         {
         
         }
@@ -29,25 +29,27 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(2)]
             [Field("odds")]
-            public float odds{ get; set; }
+            public decimal odds{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(3)]
-            [Field("flag")]
-            public string flag{ get; set; }
+            [Field("displayName")]
+            public string displayName { get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(4)]
-            [Field("rName")]
-            public string rName{ get; set; }
+            [Field("AnteCode")]
+            public string AnteCode { get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(5)]
             [Field("playid")]
             public int playid{ get; set; }
+        [Field("sort")]
+        public int sort { get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -59,6 +61,6 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(7)]
             [Field("enable")]
-            public sbyte enable{ get; set; }
+            public int enable{ get; set; }
     }
 }
