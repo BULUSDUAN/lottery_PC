@@ -103,7 +103,7 @@ namespace UserLottery.Service.Host
                 //build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                   .Configure(build =>
                 build.AddCPlatformJSON(HostSettings))
-                //.UseProxy()
+               // .UseProxy()
                 .UseStartup<Startup>()
                 .Build();
 

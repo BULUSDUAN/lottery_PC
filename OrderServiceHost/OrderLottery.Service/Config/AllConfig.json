@@ -43,7 +43,7 @@
   "HostSettings": {
     "Ip": "127.0.0.1", //服务启动IP
     "WatchInterval": 30,
-    "Port": 10100, //服务启动端口
+    "Port": 10134, //服务启动端口
     "Token": "true",
     "RequestCacheEnabled": false
   },
