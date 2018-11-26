@@ -2636,6 +2636,77 @@ namespace Lottery.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// 在线客服链接
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <returns></returns>
+        private async Task<ActionResult> kefuUrl([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("key", "Site.Service.KeFuUrl");
+                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = "",
+                    Value = config.ConfigValue
+                });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        //用户名是否存在
+        private async Task<ActionResult> GetUserIdIsExsite([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                var p = WebHelper.Decode(entity.Param);               
+                string userName = PreconditionAssert.IsNotEmptyString((string)p.uid, "用户名不能为空。");
+                param.Add("loginName", userName);
+                var loginName = await _serviceProxyProvider.Invoke<string>(param, "api/user/GetLoginNameIsExsite");
+                if (string.IsNullOrEmpty(loginName))
+                {
+                
+                    return JsonEx(new LotteryServiceResponse
+                    { 
+                        Code = ResponseCode.失败,
+                        Message = "用户名不存在",
+                    });
+                }
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                   
+                    Value = loginName
+                });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
         #endregion
 
 

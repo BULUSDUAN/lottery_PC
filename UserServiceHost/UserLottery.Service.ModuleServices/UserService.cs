@@ -2104,5 +2104,17 @@ namespace UserLottery.Service.ModuleServices
                 throw new Exception(ex.Message, ex);
             }
         }
+
+        /// <summary>
+        /// 检查登录名是否存在
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <returns></returns>
+        public string GetLoginNameIsExsite(string loginName)
+        {
+            var loginBiz = new LocalLoginBusiness();
+            return loginBiz.GetLoginNameIsExsite(loginName);
+
+        }
     }
 }
