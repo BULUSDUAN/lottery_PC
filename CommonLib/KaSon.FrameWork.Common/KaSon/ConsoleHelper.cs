@@ -17,7 +17,7 @@ namespace KaSon.FrameWork.Common.KaSon
             {
                 while (true)
                 {
-                    Thread.Sleep(1000 * 20);
+                    Thread.Sleep(1000 * 2);
                     //Task.Delay(1000 * 20);
                     Console.Clear();
                     //Console.WriteLine("1231");
