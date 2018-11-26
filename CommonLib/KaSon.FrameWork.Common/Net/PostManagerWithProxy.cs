@@ -36,7 +36,18 @@ namespace KaSon.FrameWork.Common.Net
             }
             return content;
         }
-
+        public static string Post_Head(string url, string requestString, Encoding encoding, 
+            string contentType = "application/x-www-form-urlencoded", string refer = "", WebHeaderCollection Head = null)
+        {
+            var content = PostManager.Post_Head(buildProxyUrl(url), requestString, encoding, 0,null, contentType, refer, Head);
+            if (string.IsNullOrEmpty(content))
+            {
+                logger.LogError("下载失败:" + url);
+                return string.Empty;
+            }
+            return content;
+        }
+        
 
         public static string Get(string url, Encoding encoding, int timeout = 0,
             Action<HttpWebRequest> requestHandle = null)

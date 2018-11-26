@@ -111,7 +111,7 @@
   "Auto_CollectSettings": [
     {
       "Key": "SSQ_Pool",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "双色球 奖池",
       "Param": "gameName|SSQ",
       "Path": "creawser/numcraw/NumLettory_BonusPool_Start"
@@ -119,91 +119,91 @@
     },
     {
       "Key": "DLT_Pool",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "大乐透 奖池",
       "Param": "gameName|DLT",
       "Path": "creawSer/numcraw/NumLettory_BonusPool_Start"
     },
     {
       "Key": "HK6",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "6合彩 开奖号",
       "Param": "gameName|HK6",
       "Path": "creawser/numcraw/numlettory_winnumber_start"
     },
     {
       "Key": "CQSSC",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "重庆时时彩 开奖号",
       "Param": "gameName|CQSSC",
       "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "JX11X5",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "江西11选5 开奖号",
       "Param": "gameName|JX11X5",
       "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "SD11X5",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "11选5 开奖号",
       "Param": "gameName|SD11X5",
       "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "GD11X5",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "GD11选5 开奖号",
       "Param": "gameName|GD11X5",
       "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "GDKLSF",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "GDKLSF 开奖号",
       "Param": "gameName|GDKLSF",
       "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "JSKS",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "JSKS 开奖号",
       "Param": "gameName|JSKS",
       "Path": "creawSer/numcreaw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "SDKLPK3",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "SDKLPK3 开奖号",
       "Param": "gameName|SDKLPK3",
       "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "FC3D",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "FC3D 开奖号",
       "Param": "gameName|FC3D",
       "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "PL3",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "PL3 开奖号",
       "Param": "gameName|PL3",
       "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "SSQ",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "SSQ 开奖号",
       "Param": "gameName|SSQ",
       "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
     },
     {
       "Key": "DLT",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "DLT 开奖号",
       "Param": "gameName|DLT",
       "Path": "creawSer/numcraw/NumLettory_WinNumber_Start"
@@ -211,21 +211,21 @@
 
     {
       "Key": "T14CMatch",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "14场胜负 赛事",
       "Param": "gameName|T14C,Type|Match",
       "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
     },
     {
       "Key": "TR9Match",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "胜负任9 赛事",
       "Param": "gameName|TR9,Type|Match",
       "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
     },
     {
       "Key": "T6BQCMatch",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "6场半全 赛事",
       "Param": "gameName|T6BQC,Type|Match",
       "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
@@ -240,28 +240,28 @@
 
     {
       "Key": "T14CPool",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "14场胜负 奖池",
       "Param": "gameName|T14C,Type|Pool",
       "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
     },
     {
       "Key": "TR9Pool",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "胜负任9 奖池",
       "Param": "gameName|TR9,Type|Pool",
       "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
     },
     {
       "Key": "T6BQCPool",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "6场半全 奖池",
       "Param": "gameName|T6BQC,Type|Pool",
       "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
     },
     {
       "Key": "T4CJQPool",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "4场进球 奖池",
       "Param": "gameName|T4CJQ,Type|Pool",
       "Path": "creawball/ballcraw/CTZQMatchAndPool_Start"
@@ -269,7 +269,7 @@
 
     {
       "Key": "JCZQMatch",
-      "IsStart": true,
+      "IsStart": false,
 
       "Desc": "竞彩足球 赛事",
       "Param": "Type|JCZQMatch",
@@ -277,7 +277,7 @@
     },
     {
       "Key": "JCZQResult",
-      "IsStart": true,
+      "IsStart": false,
 
       "Desc": "竞彩足球 赛果",
       "Param": "Type|JCZQResult",
@@ -294,7 +294,7 @@
 
     {
       "Key": "JCLQ",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "竞彩篮球 赔率",
       "Param": "",
       "Path": "creawball/ballcraw/JCLQMatch_Start"
@@ -302,17 +302,31 @@
 
     {
       "Key": "BJDCMatchResult",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "北京单场 赛事 赛果",
       "Param": "Type|BJDCMatchResult",
       "Path": "creawball/ballcraw/BJDCMatch_OZSP_Start"
     },
     {
       "Key": "BJDCOZSP",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "北京单场 赔率",
       "Param": "Type|BJDCOZSP",
       "Path": "creawball/ballcraw/BJDCMatch_OZSP_Start"
+    },
+    {
+      "Key": "HK6Issuse",
+      "IsStart": false,
+      "Desc": "六合彩期号采集",
+      "Param": "gameName|HK6",
+      "Path": "creawSer/numcraw/NumLettory_HK6Issuse"
+    },
+    {
+      "Key": "HostoryHK6",
+      "IsStart": true,
+      "Desc": "六合彩 奖号采集",
+      "Param": "gameName|HostoryHK6",
+      "Path": "creawSer/numcraw/NumLettory_HK6Issuse"
     }
   ],
   //Mongo 数据库配置

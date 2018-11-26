@@ -79,7 +79,7 @@ namespace SystemManage.Host
                     builder.AddMicroService(option =>
                     {
                         option.AddServiceRuntime()
-                      // .UseMongo(mongoConfig)
+                       .UseMongo(mongoConfig)
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
@@ -137,23 +137,23 @@ namespace SystemManage.Host
                 .Build();
 
             //string url = "https://1680660.com/smallSix/queryLotteryDate.do?ym=2019-04";
-            var list= Lottery.CrawGetters.WinNumberGetter_1680660.GetIssuseNum();
+            //var list= Lottery.CrawGetters.WinNumberGetter_1680660.GetIssuseNum();
 
-            Console.WriteLine(string.Join(Environment.NewLine, list));
+            //Console.WriteLine(string.Join(Environment.NewLine, list));
             //var list = JsonHelper.Deserialize<List<KaSon.FrameWork.ORM.OrmConfigInfo>>(ORMSettings.ToString());
             //DbProvider.InitConfigJson(list);
+
+            //WinNumberGetter_1680660.winNum();
 
             using (host.Run())
             {
                 Console.WriteLine($"管理、采集，开奖服务端启动成功，{DateTime.Now}。");
-
-             
                 Lottery.CrawGetters.InitConfigInfo.Init(CrawSettings);
                 Lottery.CrawGetters.InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
                 KaSon.FrameWork.Common.InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
-                // AutoTaskServices.AutoCaheData(int.Parse(Sports_SchemeJobSeconds));
+                //AutoTaskServices.AutoCaheData(int.Parse(Sports_SchemeJobSeconds));
             }
-            //初始化内存期号 k_todo，可用彩种类型,执行一次
+            // 初始化内存期号 k_todo，可用彩种类型,执行一次
             // LotteryGameManager lotGm = new LotteryGameManager();
             // lotGm.StartInitData();
             //new Sports_Business().Test();
@@ -165,8 +165,8 @@ namespace SystemManage.Host
             {
                 var obj = await Start_ConfigGameType(Auto_CollectSettings);
             });
-            //  RedisMatchBusiness.ReloadCurrentBJDCMatch();
-           // Clear();
+            //RedisMatchBusiness.ReloadCurrentBJDCMatch();
+            Clear();
 
 
 

@@ -209,9 +209,9 @@ namespace Craw.Service.ModuleServices
             return Task.FromResult("成功停止服务"+ gameName);
         }
 
-        public Task<string> NumLettory_HK6Issuse()
+        public Task<string> NumLettory_HK6Issuse(string gameName= "HK6")
         {
-            string gameName = "HK6";
+           // string gameName = "HK6";
             lock (aotoPoolCollectList)
             {
                 switch (gameName)
@@ -226,6 +226,19 @@ namespace Craw.Service.ModuleServices
                             //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
                             auto.Key = gameName;
                             auto.Start( new CrawORMService(rep.MDB).HK6IssuseStart);
+                            aotoIssuseCollectList.Add(auto);
+                        }
+                        break;
+                    case "HostoryHK6":
+
+                        var p1 = aotoIssuseCollectList.Where(b => b.Key == gameName).FirstOrDefault();
+                        if (p1 == null)
+                        {
+                            Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+                            //执行任务
+                            //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
+                            auto.Key = gameName;
+                            auto.StartHostory(new CrawORMService(rep.MDB).HK6winNum);
                             aotoIssuseCollectList.Add(auto);
                         }
                         break;

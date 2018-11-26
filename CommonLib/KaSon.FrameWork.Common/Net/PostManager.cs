@@ -107,7 +107,47 @@ namespace KaSon.FrameWork.Common.Net
                 throw ex;
             }
         }
+        public static string Post_Head(string url, string requestString, Encoding encoding, int timeoutSeconds = 0, WebProxy proxy = null, string contentType = "application/x-www-form-urlencoded",string refer="", WebHeaderCollection Head=null)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
+                byte[] bytes = System.Text.Encoding.UTF8.GetBytes(requestString);
+
+                request.Method = "POST";
+                request.Accept = "*/*";
+                request.Referer = refer;
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.UserAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)";
+               //request.Host = "6hch.com";
+                request.ContentLength = bytes.Length;
+                System.Net.ServicePointManager.Expect100Continue = false;
+
+                //request.Headers.Add("Accept-Language", "zh-cn");
+                //request.Headers.Add("Accept-Encoding", "gzip, deflate");
+                //request.Headers.Add("Pragma", "no-cache");
+
+                using (Stream requestStream = request.GetRequestStream())
+                {
+                    requestStream.Write(bytes, 0, bytes.Length);
+                    requestStream.Close();
+                }
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader reader = new StreamReader(response.GetResponseStream(), encoding);
+
+                return reader.ReadToEnd();
+            }
+            catch (System.Net.WebException ex)
+            {
+                return "404";
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+        }
         /// <summary>
         /// post请求到指定地址并获取返回的信息内容
         /// </summary>
@@ -153,6 +193,7 @@ namespace KaSon.FrameWork.Common.Net
                 request.AllowAutoRedirect = true;
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ServicePoint.Expect100Continue = false;
+               
                 if (requestHandler != null) requestHandler(request);
 
                 requestString = System.Net.WebUtility.HtmlDecode(requestString);

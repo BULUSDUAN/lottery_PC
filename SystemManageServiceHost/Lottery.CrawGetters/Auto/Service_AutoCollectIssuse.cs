@@ -8,6 +8,7 @@ using EntityModel.ExceptionExtend;
 using System.Threading.Tasks;
 using System.Threading;
 using MongoDB.Driver;
+using EntityModel;
 
 namespace Lottery.CrawGetters.Auto
 {
@@ -161,10 +162,13 @@ namespace Lottery.CrawGetters.Auto
                     {
                         //每周天执行一次
                         System.DayOfWeek w = DateTime.Now.DayOfWeek;
-                        if (System.DayOfWeek.Sunday==w && DateTime.Now.Hour==10 && DateTime.Now.Minute==30)
-                        {
+                        //if (System.DayOfWeek.Sunday==w && DateTime.Now.Hour==10 && DateTime.Now.Minute==30)
+                        //{
                             dic = Process();
-                            var Nfn = Fn as Func<List<string>, bool>;
+
+                        WriteLog("采集到数据");
+                        WriteLog(string.Join(Environment.NewLine,dic));
+                        var Nfn = Fn as Func<List<string>, bool>;
 
                             var bol = Nfn(dic);
                             if (bol)
@@ -182,7 +186,7 @@ namespace Lottery.CrawGetters.Auto
                             }
                             Thread.Sleep(1000 * 61);
 
-                        }
+                      //  }
                        
                         
                        // return false;
@@ -199,6 +203,75 @@ namespace Lottery.CrawGetters.Auto
                 }
             },fn);
           //  thread.Start();
+
+
+        }
+        /// <summary>
+        /// 开奖记录 
+        /// </summary>
+        /// <param name="fn"></param>
+        public void StartHostory(Func<List<blast_data>, bool> fn)
+        {
+            if (thread != null)
+            {
+                throw new LogicException("已经运行");
+            }
+            gameName = gameName.ToUpper();
+            BeStop = 0;
+            // fn("",null);
+            thread = Task.Factory.StartNew((Fn) =>
+            {
+                List<blast_data> all = new List<blast_data>();
+                List<blast_data> dic = null;
+                while (Interlocked.Read(ref BeStop) == 0)
+                {
+                    ////TODO：销售期间，暂停采集
+                    WriteLogAll();
+                    try
+                    {
+                        //每周天执行一次
+                        System.DayOfWeek w = DateTime.Now.DayOfWeek;
+                        //if (System.DayOfWeek.Sunday==w && DateTime.Now.Hour==10 && DateTime.Now.Minute==30)
+                        //{
+                        dic = WinNumberGetter_1680660.winNum();
+
+                        WriteLog("采集到数据");
+                        WriteLog(string.Join(Environment.NewLine, dic));
+                        var Nfn = Fn as Func<List<blast_data>, bool>;
+
+                        var bol = Nfn(dic);
+                        if (bol)
+                        {
+                            foreach (var item in dic)
+                            {
+                                var one = all.Where(b => b == item).FirstOrDefault();
+                                if (one == null)
+                                {
+                                    all.Add(item);
+                                }
+                            }
+
+                            WriteLog("成功同步到数据库");
+                        }
+                        Thread.Sleep(1000 * 61);
+
+                        //  }
+
+
+                        // return false;
+                        // WriteLog(gameName,)
+                    }
+                    catch (Exception ex)
+                    {
+                        WriteError("处理:" + ex.Message);
+                    }
+                    finally
+                    {
+                        Thread.Sleep(sleep);
+                    }
+                }
+            }, fn);
+            //  thread.Start();
 
 
         }

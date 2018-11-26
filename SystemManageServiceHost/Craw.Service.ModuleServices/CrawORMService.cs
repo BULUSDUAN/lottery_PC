@@ -248,5 +248,53 @@ namespace Craw.Service.ModuleServices
 
             return true;
         }
+
+
+        public bool HK6winNum(List<blast_data> list)
+        {
+            var db = new DbProvider();
+            //// db.Init("Default");
+            try
+            {
+                db.Init("MySql.Default", true);
+                var datalist = db.CreateQuery<blast_data>().ToList();
+                foreach (var item in list)
+                {
+
+                    var one = datalist.Where(b => b.kjtime == item.kjtime).FirstOrDefault();
+
+
+                    if (one == null)
+                    {
+                       
+                        db.GetDal<blast_data>().Add(item);
+                    }
+                    else
+                    {
+                        //db.GetDal<blast_data_time>().Update(b=>new blast_data_time {
+                        //     actionNo
+                        //},b=>b.actionDate==item);
+                    }
+
+                   // index++;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                db.Dispose();
+            }
+
+
+
+
+
+
+            return true;
+        }
     }
 }

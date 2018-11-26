@@ -39,6 +39,6 @@ namespace Craw.Service.IModuleServices
 
         Task<string> NumLettory_WinNumber_Stop(string gameName);
         [Service(Date = "2018-9-17", Director = "kason", Name = "采集，开奖服务")]
-         Task<string> NumLettory_HK6Issuse();
+         Task<string> NumLettory_HK6Issuse(string gameName);
     }
 }

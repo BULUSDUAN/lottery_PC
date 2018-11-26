@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading;
 using System.Xml;
 using System.Linq;
+using System.Net;
+using EntityModel;
+
 namespace Lottery.CrawGetters
 {
     public class WinNumberGetter_1680660 : WinNumberGetter
@@ -13,6 +16,7 @@ namespace Lottery.CrawGetters
         private static readonly Dictionary<string, string> UrlMapping;
 
         public static readonly string Url = "https://1680660.com/smallSix/queryLotteryDate.do?ym={0}";
+        public static readonly string HostoryUrl = "https://1680660.com/smallSix/findSmallSixHistory.do";
         static WinNumberGetter_1680660()
         {
             //http://kaijiang.500.com/ssq.shtml
@@ -123,8 +127,83 @@ namespace Lottery.CrawGetters
             return list;
         }
 
-    
-    
+        public static List<blast_data> winNum()
+        {
+           string jsonstr = GetHostoryNum();
+            List<blast_data> list = new List<blast_data>();
+            try
+            {
+
+              
+
+                var djson = JsonHelper.Decode(jsonstr);
+                foreach (var item in djson)
+                {
+
+                    try
+                    {
+                        if (item.Name == "result")
+                        {
+                            Console.WriteLine("");
+                            var data = item.Value.data.bodyList;
+                            foreach (var item1 in data)
+                            {
+
+                                blast_data bdata = new blast_data() {
+                                    createTime = DateTime.Now,
+                                    updateTime = DateTime.Now,
+                                    issueNo = (int)item1.issue.Value,
+                                      kjtime = (item1.preDrawDate.Value + "").Replace("-","/"),
+                                     kjdata = item1.preDrawCode.Value
+
+
+                                };
+                                list.Add(bdata);
+
+
+                                //"[\r\n  0,\r\n  0\r\n]"
+                                //                                issue: 134
+                                //nanairo: 0
+                                //preDrawCode: "25,34,3,30,13,8,32"
+                                //preDrawDate: "2018-11-24"
+                                //seventhBigSmall: 0
+                                //seventhCompositeBig: 1
+                                //seventhCompositeDouble: 0
+                                //seventhMantissaBig: 1
+                                //seventhSingleDouble: 1
+                                //sumTotal: 145
+                                //totalBigSmall: 1
+                                //totalSingleDouble: 0
+
+
+
+                                Console.WriteLine("");
+                            }
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+
+                        continue;
+                    }
+
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+            Console.WriteLine(string.Join(Environment.NewLine, list));
+
+
+            return list;
+        }
+
         public static List<string> GetIssuseNum() {
             List<string> ListDate = new List<string>();
             var list = GetRequestDate();
@@ -148,7 +227,7 @@ namespace Lottery.CrawGetters
                 }
                 ListDate= ListDate.Concat(mouthList).ToList();
 
-
+               // WriteLog("成功同步到数据库");
             }
 
             foreach (var item in ListDate)
@@ -159,6 +238,27 @@ namespace Lottery.CrawGetters
 
             return ListDate;
         }
+
+        private static string GetHostoryNum()
+        {
+            //
+         //   string nurl = string.Format(Url, date);
+            WebHeaderCollection Head = new WebHeaderCollection();
+            //System.Text.Encoding.GetEncoding("GB2312")
+
+            int year = DateTime.Now.Year;
+
+            Head["Origin"] = "https://6hch.com";
+            var json = PostManagerWithProxy.Post_Head(HostoryUrl, "year="+ year + "&type=1", System.Text.Encoding.UTF8,
+                "application/x-www-form-urlencoded", "https://6hch.com/html/kaihistory.html", Head);
+
+
+
+
+            return json;
+        }
+
+       
 
         /// <summary>
         ///     500万采集号码
