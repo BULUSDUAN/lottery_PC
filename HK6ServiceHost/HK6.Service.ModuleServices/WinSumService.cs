@@ -74,59 +74,67 @@ namespace HK6.ModuleBaseServices
                     switch (playIdStr)
                     {
                         case "TM"://特码
-
                             string tm = winNum.Split('|')[1];
                             if (tm.Trim()==item.AnteCodes.Trim())
                             {
-                                //故中奖
-                                //计算中奖号码
-                                decimal Odds = decimal.Parse(item.OddsArr);
-
-                                decimal winMoney = item.unitPrice * Odds;
-
-                                int orderDetailId = item.id;
-
-                                DB.GetDal<blast_bet_orderdetail>().Update(b=>new blast_bet_orderdetail {
-                                     winNumber=winNum,
-                                     BonusAwardsMoney=winMoney,
-                                     updateTime=DateTime.Now,
-                                    
-
-                                },b=>b.id== orderDetailId);
-
-                                DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
-                                {
-                                    winNumber = winNum,
-                                    BonusAwardsMoney = winMoney,
-                                    updateTime = DateTime.Now,
-                                    BonusStatus=2  //为中奖状态
-
-                                }, b => b.id == orderDetailId);
-
-                                //添加用户金币 加钱  blast_lhc_member
-
-                                DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
-                                {
-                                  gameMoney=b.gameMoney+ winMoney
-
-
-                                }, b => b.id == item.userId);
-
+                                 // 故中奖
+                                     goto LabelWin;
                             }
-
-
-
                             break;
                         case "ZM"://正码
-
-
-
+                            string zm = winNum.Split('|')[0];
+                            if (zm.Trim().Contains( item.AnteCodes.Trim()))
+                            {
+                                // 故中奖
+                                goto LabelWin;
+                            }
                             break;
-
+                        case "LM"://两面
+                            string lm = winNum.Split('|')[0];
+                            if (lm.Trim().Contains(item.AnteCodes.Trim()))
+                            {
+                                // 故中奖
+                                goto LabelWin;
+                            }
+                            break;
                         default:
                             break;
                     }
 
+                     LabelWin: {
+                        //故中奖
+                        //计算中奖号码
+                        decimal Odds = decimal.Parse(item.OddsArr);
+
+                        decimal winMoney = item.unitPrice * Odds;
+
+                        int orderDetailId = item.id;
+
+                        DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+                        {
+                            winNumber = winNum,
+                            BonusAwardsMoney = winMoney,
+                            updateTime = DateTime.Now,
+
+
+                        }, b => b.id == orderDetailId);
+
+                        DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+                        {
+                            winNumber = winNum,
+                            BonusAwardsMoney = winMoney,
+                            updateTime = DateTime.Now,
+                            BonusStatus = 2  //为中奖状态
+
+                        }, b => b.id == orderDetailId);
+
+                        //添加用户金币 加钱  blast_lhc_member
+
+                        DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
+                        {
+                            gameMoney = b.gameMoney + winMoney
+                        }, b => b.userId == item.userId);
+                    }
 
 
 

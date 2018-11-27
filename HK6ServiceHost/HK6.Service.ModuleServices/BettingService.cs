@@ -203,6 +203,8 @@ namespace HK6.ModuleBaseServices
 
                 #region 是否执行插件
 
+                //不需要执行插件
+
                 #endregion
                 //返回
                 cresult.IsSuccess = true;
