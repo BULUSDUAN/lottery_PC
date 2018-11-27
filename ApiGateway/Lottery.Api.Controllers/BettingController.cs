@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using KaSon.FrameWork.Common.ExceptionEx;
 using System.Diagnostics;
 using KaSon.FrameWork.Common.Utilities;
+using KaSon.FrameWork.Analyzer.AnalyzerFactory;
 
 namespace Lottery.Api.Controllers
 {
@@ -1499,6 +1500,173 @@ namespace Lottery.Api.Controllers
                     Value = "获取失败",
                 });
             }
+        }
+
+        /// <summary>
+        /// 单式上传
+        /// </summary>
+        /// <returns></returns>
+        public async Task<JsonResult> sing_sports([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string userToken = p.userToken;
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                var gameCode = PreconditionAssert.IsNotEmptyString((string)p.gameCode, "彩种编码不能为空");
+                var gameType = PreconditionAssert.IsNotEmptyString((string)p.gameType, "玩法不能为空");
+                var playType = PreconditionAssert.IsNotEmptyString((string)p.playType, "过关方式不能为空");//过关方式
+                var issuseNumber = string.IsNullOrEmpty((string)p.issuseNumber) ? "" : (string)p.issuseNumber;//期号
+                var containsMatchId = string.IsNullOrEmpty((string)p.upFlag) ? false : bool.Parse((string)p.upFlag);
+                string selectMatchId = !containsMatchId
+                    ? PreconditionAssert.IsNotEmptyString((string)p.selectMatchId, "选择的比赛id不能为空")
+                    : "";
+                var allowCodes = PreconditionAssert.IsNotEmptyString((string)p.allowCodes, "允许投注的号码不能为空");
+                var balancepwd = string.IsNullOrEmpty((string)p.balancepwd) ? "" : (string)p.balancepwd;//资金密码
+
+                var ser = (TogetherSchemeSecurity)(string.IsNullOrEmpty((string)p.sercurity) ? 4 : int.Parse((string)p.sercurity)); //方案保密性;//方案保密性
+                var antecode = "";//投注号码
+                var amount = PreconditionAssert.IsNotEmptyString((string)p.amount, "投注倍数不能为空");
+                var totalMoney = PreconditionAssert.IsNotEmptyString((string)p.totalMoney, "投注金额不能为空");
+                var fileBuffer = Encoding.UTF8.GetBytes((string)p.fileStream.ToString());
+                var activityType = (ActivityType)(string.IsNullOrEmpty((string)p.activityType) ? 2 : int.Parse((string)p.activityType));
+                var isHemai = string.IsNullOrEmpty((string)p.isHemai) ? false : bool.Parse((string)p.isHemai);
+                List<string> matchIdList = new List<string>();
+                var checkresult = AnalyzerFactory.CheckSingleSchemeAnteCode((string)p.fileStream.ToString(), playType, containsMatchId, selectMatchId.Split(','), allowCodes.Split(','), out matchIdList);
+                var codeArray = checkresult;
+                //投注号码对象
+                var anteCodeList = new Sports_AnteCodeInfoCollection();
+                foreach (var item in codeArray)
+                {
+                    var cods = item.Split('#');
+
+                    foreach (var c in cods)
+                    {
+                        var cod = c.Split('|');
+                        var code = new Sports_AnteCodeInfo()
+                        {
+                            IsDan = false,
+                            MatchId = cod[0],
+                            AnteCode = CheckanteCode(cod[1], gameType),
+                            PlayType = cod[2]
+                        };
+
+                        code.GameType = gameType;
+                        anteCodeList.Add(code);
+                    }
+                }
+                SingleSchemeInfo info = new SingleSchemeInfo
+                {
+                    GameCode = gameCode,
+                    GameType = gameType,
+                    PlayType = playType,
+                    IssuseNumber = issuseNumber,
+                    SelectMatchId = selectMatchId,
+                    AllowCodes = allowCodes,
+                    ContainsMatchId = containsMatchId,
+                    SchemeSource = SchemeSource.Web,
+                    Security = ser,
+                    BettingCategory = SchemeBettingCategory.SingleBetting,
+                    AnteCodeList = anteCodeList,
+                    Amount = int.Parse(amount),
+                    TotalMoney = decimal.Parse(totalMoney),
+                    FileBuffer = fileBuffer,
+                    ActivityType = activityType,
+
+                };
+
+                var param = new Dictionary<string, object>();
+               
+                #region 合买
+                if (isHemai)
+                {
+                    //合买属性
+                    var title = (string)p.title;
+                    var desc = string.IsNullOrEmpty((string)p.description) ? amount + "倍，共" + totalMoney + "元" : (string)p.description;
+                    var totalCount = string.IsNullOrEmpty((string)p.totalCount) ? Convert.ToInt32(totalMoney) : int.Parse((string)p.totalCount); // 默认份数为方案金额
+                    var price = string.IsNullOrEmpty((string)p.price) ? 1 : int.Parse((string)p.price); // 默认每份单价为1元
+                    var guarantees = string.IsNullOrEmpty((string)p.guarantees) ? 0 : int.Parse((string)p.guarantees); //我要保底份数
+                    var joinpwd = string.IsNullOrEmpty((string)p.joinpwd) ? "" : (string)p.joinpwd; //认购密码
+                    var subscription = string.IsNullOrEmpty((string)p.subscription) ? 0 : int.Parse((string)p.subscription); //我要认购份数
+                    var bonusdeduct = string.IsNullOrEmpty((string)p.bonusdeduct) ? 0 : int.Parse((string)p.bonusdeduct); //提成比例
+                    //合买
+                    SingleScheme_TogetherSchemeInfo togetherinfo = new SingleScheme_TogetherSchemeInfo
+                    {
+                        BettingInfo = info,
+                        Title = title,
+                        Description = desc,
+                        TotalCount = totalCount,
+                        TotalMoney = decimal.Parse(totalMoney),
+                        Price = price,
+                        Guarantees = guarantees,
+                        BonusDeduct = bonusdeduct,
+                        JoinPwd = joinpwd,
+                        Subscription = subscription
+                    };
+                    param.Add("info", info);
+                    param.Add("balancePassword", balancepwd);
+                    param.Add("userId", userId);
+                    var hmresult = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/CreateSingleSchemeTogether");
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Message = hmresult.Message,
+                    });
+                }
+                #endregion
+
+                #region 普通投注
+                param.Add("info", info);
+                param.Add("password", balancepwd);
+                param.Add("redBagMoney", 0M);
+                param.Add("userId", userId);
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/Betting/SingleSchemeBettingAndChase");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = result.Message,
+                });
+                #endregion
+
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        public static string CheckanteCode(string code, string type)
+        {
+            var str = code;
+            if (type.ToLower() == "sxds")
+            {
+                switch (code)
+                {
+                    case "3":
+                        str = "sd";
+                        break;
+                    case "2":
+                        str = "ss";
+                        break;
+                    case "1":
+                        str = "xd";
+                        break;
+                    case "0":
+                        str = "xs";
+                        break;
+                    default:
+                        return code;
+
+                }
+            }
+            return str;
+
         }
         #endregion
     }

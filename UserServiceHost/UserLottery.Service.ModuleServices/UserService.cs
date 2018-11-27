@@ -482,11 +482,11 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         public Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string UserId)
         {
-          
-                var siteBiz = new SiteMessageControllBusiness();
-                var info = siteBiz.ReadInnerMail(innerMailId,UserId);
-                return Task.FromResult(info);
-            
+
+            var siteBiz = new SiteMessageControllBusiness();
+            var info = siteBiz.ReadInnerMail(innerMailId, UserId);
+            return Task.FromResult(info);
+
         }
 
 
@@ -566,7 +566,7 @@ namespace UserLottery.Service.ModuleServices
                     AgentId = register.AgentId,
                     IsAgent = register.IsAgent,
                     HideDisplayNameCount = register.HideDisplayNameCount,
-                    IsUserType= register.UserType == 1 ? true : false
+                    IsUserType = register.UserType == 1 ? true : false
                 });
             }
             catch (Exception ex)
@@ -1731,7 +1731,7 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<UserIdeaInfo_QueryCollection> QueryMyUserIdeaList(int pageIndex, int pageSize, string UserId)
         {
-          
+
             try
             {
                 var biz = new SiteMessageBusiness();
@@ -1850,7 +1850,7 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         public Task<UserBeedingListInfoCollection> QueryUserBeedingList(string gameCode, string gameType, string userId, string userDisplayName, int pageIndex, int pageSize, QueryUserBeedingListOrderByProperty property, OrderByCategory category)
         {
-           
+
             try
             {
                 return Task.FromResult(new Sports_Business().QueryUserBeedingList(gameCode, gameType, userId, userDisplayName, pageIndex, pageSize, property, category));
@@ -2038,4 +2038,83 @@ namespace UserLottery.Service.ModuleServices
                 return Task.FromResult(new BlogEntity());
             }
         }
+
+        /// <summary>
+        /// 退订跟单
+        /// </summary>
+        public Task<CommonActionResult> ExistTogetherFollower(long followerId, string UserId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                var rule = new Sports_Business().ExistTogetherFollower(followerId, UserId);
+
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IExistTogetherFollow_AfterTranCommit>(new object[] { rule.CreaterUserId, rule.FollowerUserId, rule.GameCode, rule.GameType });
+                return Task.FromResult(new CommonActionResult(true, "退订跟单成功"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 编辑合买跟单
+        /// </summary>
+        public Task<CommonActionResult> EditTogetherFollower(TogetherFollowerRuleInfo info, long ruleId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new Sports_Business().EditTogetherFollower(info, ruleId);
+                return Task.FromResult(new CommonActionResult(true, "编辑跟单成功"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 定制合买跟单
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> CustomTogetherFollower(TogetherFollowerRuleInfo info)
+        {
+           
+            try
+            {
+                new Sports_Business().CustomTogetherFollower(info);
+
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<ITogetherFollow_AfterTranCommit>(new object[] { info });
+                return Task.FromResult(new CommonActionResult(true, "订制合买跟单成功"));
+            }
+            catch (LogicException ex)
+            {
+                return Task.FromResult(new CommonActionResult(false, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 检查登录名是否存在
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <returns></returns>
+        public string GetLoginNameIsExsite(string loginName)
+        {
+            var loginBiz = new LocalLoginBusiness();
+            return loginBiz.GetLoginNameIsExsite(loginName);
+
+        }
+    }
 }

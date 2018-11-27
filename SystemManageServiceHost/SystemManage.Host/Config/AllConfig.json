@@ -318,8 +318,9 @@
   //Mongo 数据库配置
   "MongoSettings": {
     "connectionString": "mongodb://10.0.3.6:27017",
+    "SZCBonusPoolTableName": "SZCBonusPool",
     "SingleInstance": false,
-    "IsStartLog": true,//是否启动记录日志
+    "IsStartLog": true, //是否启动记录日志
     "dbName": "CrawDB",
     //mogodb 采集表命名
     "TableNamesSettings": {

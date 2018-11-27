@@ -195,5 +195,12 @@ namespace UserLottery.Service.IModuleServices
         CommonActionResult CompleteFillMoneyOrderByCzzy(string orderId, FillMoneyStatus status, decimal money, string code, string msg, string UserId, string type);
         [Service(Date = "2018-11-19", Director = "renjun", Name = "历史战绩 从数据库中查询博客数据")]
         Task<BlogEntity> QueryBlogEntityStandings(string userId, string gameCode, string gameType, int pageIndex, int pageSize);
+
+        [Service(Date = "2018-11-21", Director = "renjun", Name = "退订跟单")]
+        Task<CommonActionResult> ExistTogetherFollower(long followerId, string UserId);
+        [Service(Date = "2018-11-21", Director = "renjun", Name = "编辑合买订单")]
+        Task<CommonActionResult> EditTogetherFollower(TogetherFollowerRuleInfo info, long ruleId);
+        [Service(Date = "2018-11-21", Director = "renjun", Name = "定制合买跟单")]
+        Task<CommonActionResult> CustomTogetherFollower(TogetherFollowerRuleInfo info);
     }
 }

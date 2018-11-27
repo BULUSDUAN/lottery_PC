@@ -1,6 +1,9 @@
-﻿using EntityModel.Ticket;
+﻿using EntityModel.Interface;
+using EntityModel.Ticket;
 using KaSon.FrameWork.Services.Attribute;
 using KaSon.FrameWork.Services.Enum;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
@@ -13,16 +16,20 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("T_JCZQ_Odds_BQC",Type = EntityType.Table)]
-    public class T_JCZQ_Odds_BQC:JingCai_Odds
+    [BsonIgnoreExtraElements]
+    public class T_JCZQ_Odds_BQC:JingCai_Odds, IMatchData
+    
     { 
         public T_JCZQ_Odds_BQC()
         {
         
         }
-            /// <summary>
-            // 主键
-            ///</summary>
-            [ProtoMember(1)]
+        [BsonId]
+        public ObjectId _id { get; set; }
+        /// <summary>
+        // 主键
+        ///</summary>
+        [ProtoMember(1)]
             [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
             public int Id{ get; set; }
             /// <summary>
@@ -91,6 +98,8 @@ namespace EntityModel
             [ProtoMember(12)]
             [Field("CreateTime")]
             public DateTime CreateTime{ get; set; }
+
+        public string MatchData { get; set; }
 
         public override decimal GetOdds(string result)
         {

@@ -401,6 +401,51 @@ namespace Lottery.Api.Controllers
                 userInfo.LoginName = mobile;
                 userInfo.Password = password;
                 userInfo.Mobile = mobile;
+                #region ip判断
+                if (schemeSource == SchemeSource.NewWeb)
+                {
+                    param["key"] = "BanRegistrFrequencyIPCount";
+                    //限制IP注册次数时间分
+                    var brfipCount = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");
+                    param.Clear();
+                    param["key"] = "BanRegistrFrequencyIPTime";
+                    //限制分钟数
+                    var brfipTime = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");
+                    param.Clear();
+                    param["key"] = "BanRegistrIP";
+                    //限制分钟数
+                    var banRegistrIP = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");
+
+                    param.Clear();
+                    if (banRegistrIP.ConfigValue.Contains(userInfo.RegisterIp))
+                    {
+                        return JsonEx(new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.失败,
+                            Message = "因检测到该IP地址异常，无法注册用户，请联系在线客服。",
+                            Value = false,
+                        });
+                    }
+                    if (Convert.ToInt32(brfipCount.ConfigValue) > 0 && Convert.ToInt32(brfipTime.ConfigValue) > 0)
+                    {
+                        DateTime dt = DateTime.Now.AddMinutes(-Convert.ToInt32(brfipTime.ConfigValue));
+                        param["date"] = dt;
+                        param["localIP"] = userInfo.RegisterIp;
+
+                        var count = await _serviceProxyProvider.Invoke<int>(param, "api/user/GetTodayRegisterCount");
+                        if (count > Convert.ToInt32(brfipCount.ConfigValue))
+                        {
+                            return JsonEx(new LotteryServiceResponse
+                            {
+                                Code = ResponseCode.失败,
+                                Message = string.Format("同一IP，在{0}分钟内只能注册{1}个账号", brfipTime, brfipCount),
+                                Value = false,
+                            });
+                        }
+                    }
+
+                }
+                #endregion
                 switch (schemeSource)
                 {
                     case SchemeSource.NewAndroid:
@@ -416,6 +461,7 @@ namespace Lottery.Api.Controllers
                         userInfo.ComeFrom = "NewWeb";
                         break;
                 }
+                param.Clear();
                 param["validateCode"] = validateCode;
                 param["mobile"] = mobile;
                 param["source"] = (int)schemeSource;
@@ -2404,7 +2450,262 @@ namespace Lottery.Api.Controllers
         }
         #endregion
 
+        #region 登录历史记录
+        public async Task<ActionResult> Loginhistory([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string userToken = p.userToken;
+                string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("UserId", UserId);
+                object obj = await _serviceProxyProvider.Invoke<UserLoginHistoryCollection>(param, "api/user/QueryCache_UserLoginHistoryCollection");
 
+                var LoginHistory = (UserLoginHistoryCollection)obj;
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    Value = LoginHistory,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                });
+            }
+        }
+        #endregion
+
+        #region 删除站内信
+        /// <summary>
+        /// 删除站内信
+        /// </summary>
+        /// <param name="postForm"></param>
+        /// <returns></returns>
+       
+        public async Task<ActionResult> Deleteinnermail([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+              
+                var p = WebHelper.Decode(entity.Param);
+                var userToken = p.userToken;
+                string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                string mailid = PreconditionAssert.IsNotEmptyString((string)p.MailId, "站内消息ID不能为空。");
+                var mailid_ = mailid.Split(',');
+                for (int i = 0; i < mailid_.Length; i++)
+                {
+                    Dictionary<string, object> param = new Dictionary<string, object>();
+                    param.Add("innerMailId", mailid_[i]);
+                    param.Add("UserId", UserId);
+                    await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/DeleteInnerMail");
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "删除站内信完成",
+                 
+                });
+              
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        #endregion
+
+        //撤销定制跟单
+
+        public async Task<ActionResult> doc_cancel([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                var id = p.id;
+                var userToken = p.userToken;
+                var followId = long.Parse(PreconditionAssert.IsNotEmptyString(id, "定制跟单编号不能为空"));
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                param.Add("followerId", followId);
+                param.Add("UserId", UserId);
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/ExistTogetherFollower");
+
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Value = result,
+
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+
+        //定制跟单
+        [HttpPost]
+        public async Task<ActionResult> doc_setup([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = WebHelper.Decode(entity.Param);
+                var isEdite = string.IsNullOrEmpty((string)p.isEdite) ? false : bool.Parse((string)p.isEdite);
+                var userId = PreconditionAssert.IsNotEmptyString((string)p.userId, "被跟单对象错误");
+                var gameCode = PreconditionAssert.IsNotEmptyString((string)p.gameCode, "被跟单彩种不能为空");
+                var gameType = string.IsNullOrEmpty((string)p.gameType) ? "" : (string)p.gameType;
+                var docType = string.IsNullOrEmpty((string)p.docType) ? 0 : int.Parse((string)p.docType);
+                var buyCount = string.IsNullOrEmpty((string)p.buyCount) ? 1 : int.Parse((string)p.buyCount);
+                var allBuy = string.IsNullOrEmpty((string)p.allBuy) ? "不限" : (string)p.allBuy;
+                var maxMoney = string.IsNullOrEmpty((string)p.maxMoney) ? "不限" : (string)p.maxMoney;
+                var minMoney = string.IsNullOrEmpty((string)p.minMoney) ? "不限" : (string)p.minMoney;
+                var minBalance = string.IsNullOrEmpty((string)p.minBalance) ? "不限" : (string)p.minBalance;
+                var isBuySchemeMoneyNot = string.IsNullOrEmpty((string)p.isBuySchemeMoneyNot) ? false : bool.Parse((string)p.isBuySchemeMoneyNot);
+                var isUsed = string.IsNullOrEmpty((string)p.isUsed) ? true : bool.Parse((string)p.isUsed);
+                var isAutoStop = string.IsNullOrEmpty((string)p.isAutoStop) ? false : bool.Parse((string)p.isAutoStop);
+                var autoStopCount = string.IsNullOrEmpty((string)p.autoStopCount) ? 10 : int.Parse((string)p.autoStopCount);
+                var userToken = p.userToken;
+                string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                TogetherFollowerRuleInfo info = new TogetherFollowerRuleInfo()
+                {
+                    CreaterUserId = userId,
+                    FollowerUserId = UserId,
+                    GameCode = gameCode,
+                    GameType = gameType,
+                    MaxSchemeMoney = maxMoney == "不限" ? -1 : int.Parse(maxMoney),
+                    MinSchemeMoney = minMoney == "不限" ? -1 : int.Parse(minMoney),
+                    SchemeCount = allBuy == "不限" ? -1 : int.Parse(allBuy),
+                    StopFollowerMinBalance = minBalance == "不限" ? -1 : int.Parse(minBalance),
+                    FollowerCount = docType == 0 ? buyCount : -1,
+                    FollowerPercent = docType == 1 ? buyCount : -1,
+                    CancelNoBonusSchemeCount = isAutoStop ? autoStopCount : -1,
+                    CancelWhenSurplusNotMatch = isBuySchemeMoneyNot,
+                    IsEnable = isUsed
+                };
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                if (isEdite)
+                {
+                    var followId = long.Parse(PreconditionAssert.IsNotEmptyString((string)p.ruleId, "定制跟单编号不能为空"));
+                  
+                    param.Add("info", info);
+                    param.Add("ruleId", followId);
+                    var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/EditTogetherFollower");
+
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Value = result,
+
+                    });
+                }
+                else
+                {
+                    param.Add("info", info);
+                    var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/user/CustomTogetherFollower");
+                    return Json(new LotteryServiceResponse
+                    {
+                        Code = ResponseCode.成功,
+                        Value = result,
+
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        /// <summary>
+        /// 在线客服链接
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <returns></returns>
+        private async Task<ActionResult> kefuUrl([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("key", "Site.Service.KeFuUrl");
+                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = "",
+                    Value = config.ConfigValue
+                });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        //用户名是否存在
+        private async Task<ActionResult> GetUserIdIsExsite([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                var p = WebHelper.Decode(entity.Param);               
+                string userName = PreconditionAssert.IsNotEmptyString((string)p.uid, "用户名不能为空。");
+                param.Add("loginName", userName);
+                var loginName = await _serviceProxyProvider.Invoke<string>(param, "api/user/GetLoginNameIsExsite");
+                if (string.IsNullOrEmpty(loginName))
+                {
+                
+                    return JsonEx(new LotteryServiceResponse
+                    { 
+                        Code = ResponseCode.失败,
+                        Message = "用户名不存在",
+                    });
+                }
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                   
+                    Value = loginName
+                });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
 
         #endregion
 

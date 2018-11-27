@@ -8,6 +8,8 @@ using EntityModel.LotteryJsonInfo;
 using KaSon.FrameWork.Common.JSON;
 using KaSon.FrameWork.Common.Net;
 using EntityModel.Enum;
+using KaSon.FrameWork.Common;
+using MongoDB.Driver;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -115,7 +117,18 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void ManualUpdate_BJDC_MatchList(string issuseNumber)
         {
-            var matchInfoList = LoadBJDCMatchList(issuseNumber);
+            List<C_BJDC_Match> matchInfoList = new List<C_BJDC_Match>();
+
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                matchInfoList = LoadBJDCMatchList_Mg(issuseNumber);
+            }
+            else
+            {
+                matchInfoList = LoadBJDCMatchList(issuseNumber);
+            }
+           
+
             var matchIdArray = matchInfoList.Select(p => p.MatchOrderId.ToString()).ToArray();
             UpdateBJDCMatch(issuseNumber, matchIdArray, matchInfoList);
             //重新加载比赛到缓存
@@ -158,16 +171,21 @@ namespace KaSon.FrameWork.ORM.Helper
                 UpdateCTZQMatchList(matchIdArray, list);
             }
         }
-        #region 私有方法
-        private List<BJDC_MatchInfo> LoadBJDCMatchList(string issuseNumber)
+#region 私有方法
+        private List<C_BJDC_Match> LoadBJDCMatchList(string issuseNumber)
         {
             var fileName = string.Format(@"{2}\{0}\{1}\Match_List.json", "BJDC", issuseNumber, _baseDir);
             var json = ReadFileString(fileName);
             if (string.IsNullOrEmpty(json))
-                return new List<BJDC_MatchInfo>();
-            return JsonSerializer.Deserialize<List<BJDC_MatchInfo>>(json);
+                return new List<C_BJDC_Match>();
+            return JsonSerializer.Deserialize<List<C_BJDC_Match>>(json);
         }
-        private void UpdateBJDCMatch(string issuseNumber, string[] matchIdList, List<BJDC_MatchInfo> matchInfoList)
+        private List<C_BJDC_Match> LoadBJDCMatchList_Mg(string issuseNumber)
+        {
+          return  MgMatchDataHelper.BJDC_Match_List_ByIssuseSales(issuseNumber);
+        }
+
+        private void UpdateBJDCMatch(string issuseNumber, string[] matchIdList, List<C_BJDC_Match> matchInfoList)
         {
             //开启事务
                 DB.Begin();
@@ -189,7 +207,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         manager.AddBJDC_Match(new C_BJDC_Match
                         {
-                            CreateTime = DateTime.Parse(current.CreateTime),
+                            CreateTime = current.CreateTime,
                             FlatOdds = current.FlatOdds,
                             GuestTeamName = current.GuestTeamName,
                             GuestTeamSort = current.GuestTeamSort,
@@ -198,12 +216,12 @@ namespace KaSon.FrameWork.ORM.Helper
                             Id = current.Id,
                             IssuseNumber = current.IssuseNumber,
                             LetBall = current.LetBall,
-                            LocalStopTime = DateTime.Parse(current.LocalStopTime),
+                            LocalStopTime =current.LocalStopTime,
                             LoseOdds = current.LoseOdds,
                             MatchColor = current.MatchColor,
                             MatchName = current.MatchName,
                             MatchOrderId = current.MatchOrderId,
-                            MatchStartTime = DateTime.Parse(current.MatchStartTime),
+                            MatchStartTime =current.MatchStartTime,
                             MatchState = (int)current.MatchState,
                             WinOdds = current.WinOdds,
                             MatchId = current.MatchId,
@@ -221,11 +239,11 @@ namespace KaSon.FrameWork.ORM.Helper
                         old.HomeTeamName = current.HomeTeamName;
                         old.HomeTeamSort = current.HomeTeamSort;
                         old.LetBall = current.LetBall;
-                        old.LocalStopTime = DateTime.Parse(current.LocalStopTime);
+                        old.LocalStopTime = (current.LocalStopTime);
                         old.LoseOdds = current.LoseOdds;
                         old.MatchColor = current.MatchColor;
                         old.MatchName = current.MatchName;
-                        old.MatchStartTime = DateTime.Parse(current.MatchStartTime);
+                        old.MatchStartTime = (current.MatchStartTime);
                         old.MatchState = (int)current.MatchState;
                         old.WinOdds = current.WinOdds;
                         manager.UpdateBJDC_Match(old);
@@ -235,7 +253,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         manager.AddBJDC_MatchResult_Prize(new C_BJDC_MatchResult_Prize
                         {
-                            CreateTime = DateTime.Parse(current.CreateTime),
+                            CreateTime = (current.CreateTime),
                             Id = current.Id,
                             IssuseNumber = current.IssuseNumber,
                             MatchState = "0",
@@ -297,14 +315,31 @@ namespace KaSon.FrameWork.ORM.Helper
             return string.Empty;
         }
 
-        private List<BJDC_MatchResultInfo> LoadBJDCMatchResultList(string issuseNumber)
+        private List<C_BJDC_MatchResult> LoadBJDCMatchResultList(string issuseNumber)
         {
-            var fileName = string.Format(@"{2}\{0}\{1}\MatchResult_List.json", "BJDC", issuseNumber, _baseDir);
-            var json = ReadFileString(fileName);
-            if (string.IsNullOrEmpty(json))
-                return new List<BJDC_MatchResultInfo>();
-            return JsonSerializer.Deserialize<List<BJDC_MatchResultInfo>>(json);
+            List<C_BJDC_MatchResult> result = new List<C_BJDC_MatchResult>();
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                result = MgMatchDataHelper.BJDC_MatchResult_List_ByIssuse(issuseNumber);
+            }
+            else
+            {
+
+                var fileName = string.Format(@"{2}\{0}\{1}\MatchResult_List.json", "BJDC", issuseNumber, _baseDir);
+                var json = ReadFileString(fileName);
+                if (string.IsNullOrEmpty(json))
+                    return result;
+                result = JsonSerializer.Deserialize<List<C_BJDC_MatchResult>>(json);
+            }
+
+
+
+
+
+
+            return result;
         }
+     
         private void Update_BJDC_MatchResultList(string issuseNumber, string[] matchResultIdArray)
         {
             var matchResultList = LoadBJDCMatchResultList(issuseNumber);
@@ -332,7 +367,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         manager.AddBJDC_MatchResult(new C_BJDC_MatchResult
                         {
-                            CreateTime = DateTime.Parse(current.CreateTime),
+                            CreateTime =(current.CreateTime),
                             Id = current.Id,
                             IssuseNumber = current.IssuseNumber,
                             BF_Result = current.BF_Result,
@@ -382,7 +417,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         manager.AddBJDC_MatchResult_Prize(new C_BJDC_MatchResult_Prize
                         {
-                            CreateTime = DateTime.Parse(current.CreateTime),
+                            CreateTime = (current.CreateTime),
                             Id = current.Id,
                             IssuseNumber = current.IssuseNumber,
                             BF_Result = current.BF_Result,
@@ -439,11 +474,29 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         private List<JCZQ_MatchInfo> LoadJCZQMatchList()
         {
+            List<JCZQ_MatchInfo> result = new List<JCZQ_MatchInfo>();
             var fileName = string.Format(@"{1}\{0}\Match_List_FB.json", "JCZQ", _baseDir);
-            var json = ReadFileString(fileName);
-            if (string.IsNullOrEmpty(json))
-                return new List<JCZQ_MatchInfo>();
-            return JsonSerializer.Deserialize<List<JCZQ_MatchInfo>>(json);
+
+
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                result = MgMatchDataHelper.JCZQ_Match_List_FB();
+            }
+            else
+            {
+                var json = ReadFileString(fileName);
+                if (string.IsNullOrEmpty(json))
+                    return result;
+                result = JsonSerializer.Deserialize<List<JCZQ_MatchInfo>>(json);
+            }
+
+
+
+
+
+
+
+            return result;
         }
         private void UpdateJCZQMatch(string[] matchIdArray, List<JCZQ_MatchInfo> matchInfoList)
         {
@@ -551,11 +604,26 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         private List<JCLQ_MatchInfo> LoadJCLQMatchList()
         {
+
+            List<JCLQ_MatchInfo> result = new List<JCLQ_MatchInfo>();
             var fileName = string.Format(@"{1}\{0}\Match_List.json", "JCLQ", _baseDir);
-            var json = ReadFileString(fileName);
-            if (string.IsNullOrEmpty(json))
-                return new List<JCLQ_MatchInfo>();
-            return JsonSerializer.Deserialize<List<JCLQ_MatchInfo>>(json);
+
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                result = MgMatchDataHelper.JCLQ_MatchList(type: "", matchDate: "");
+            }
+            else
+            {
+                var json = ReadFileString(fileName);
+                if (!string.IsNullOrEmpty(json))
+                    result = JsonSerializer.Deserialize<List<JCLQ_MatchInfo>>(json);
+           
+
+            }
+
+
+            return result;
+
         }
         private void UpdateJCLQMatch(string[] matchIdArray, List<JCLQ_MatchInfo> matchInfoList)
         {
@@ -649,11 +717,23 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         private List<CTZQ_MatchInfo> LoadCTZQMatchList(string issuseNumber, string gameType)
         {
-            var fileName = string.Format(@"{3}\{0}\{1}\Match_{2}_List.json", "CTZQ", issuseNumber, gameType, _baseDir);
+            List<CTZQ_MatchInfo> result = new List<CTZQ_MatchInfo>();
+
+
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                result = MgMatchDataHelper.CTZQ_Match_List(gameType, issuseNumber);
+            }
+            else
+            {
+                var fileName = string.Format(@"{3}\{0}\{1}\Match_{2}_List.json", "CTZQ", issuseNumber, gameType, _baseDir);
             var json = ReadFileString(fileName);
-            if (string.IsNullOrEmpty(json))
-                return new List<CTZQ_MatchInfo>();
-            return JsonSerializer.Deserialize<List<CTZQ_MatchInfo>>(json);
+            if (!string.IsNullOrEmpty(json))
+                result = JsonSerializer.Deserialize<List<CTZQ_MatchInfo>>(json);
+            }
+
+
+            return result; ;
         }
         private void UpdateCTZQMatchList(string[] array, List<CTZQ_MatchInfo> list)
         {
@@ -727,7 +807,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new Exception("操作失败" + "●" + ex.Message, ex);
             }
         }
-        #endregion
+#endregion
         public CoreJCZQMatchInfoCollection QueryCurrentJCZQMatchInfo()
         {
             var collection = new CoreJCZQMatchInfoCollection();
