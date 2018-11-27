@@ -177,7 +177,7 @@ namespace HK6.ModuleBaseServices
                         issueNo = info.issueNo.ToString(),
                         OddsArr = AnteCodes,
                         ProgressStatus =0,
-
+                        unitPrice=item.unitPrice,
                         CreateTime = DateTime.Now
 
                     };

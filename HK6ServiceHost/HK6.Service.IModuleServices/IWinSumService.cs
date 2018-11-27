@@ -25,12 +25,16 @@ namespace HK6.ModuleBaseServices
     /// <summary>
     /// 管理系统服务
     /// </summary>
-    [ServiceBundle("HK6Betting/{Service}")]
-    public interface IBettingService : IServiceKey
+    [ServiceBundle("HK6WinSum/{Service}")]
+    public interface IWinSumService : IServiceKey
     {
+        /// <summary>
+        /// 结算
+        /// </summary>
+        /// <param name="winNum"></param>
+        /// <returns></returns>
         [Service(Date = "2018-9-3", Director = "kason", Name = "管理登陆")]
-        //
-        Task<CommonActionResult> Betting(HK6Sports_BetingInfo info, string password, decimal redBagMoney, string userid);
+        Task<CommonActionResult> Sum(string winDate, string winNum);
 
 
     }
