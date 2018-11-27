@@ -401,6 +401,51 @@ namespace Lottery.Api.Controllers
                 userInfo.LoginName = mobile;
                 userInfo.Password = password;
                 userInfo.Mobile = mobile;
+                #region ip判断
+                if (schemeSource == SchemeSource.NewWeb)
+                {
+                    param["key"] = "BanRegistrFrequencyIPCount";
+                    //限制IP注册次数时间分
+                    var brfipCount = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");
+                    param.Clear();
+                    param["key"] = "BanRegistrFrequencyIPTime";
+                    //限制分钟数
+                    var brfipTime = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");
+                    param.Clear();
+                    param["key"] = "BanRegistrIP";
+                    //限制分钟数
+                    var banRegistrIP = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/user/QueryCoreConfigByKey");
+
+                    param.Clear();
+                    if (banRegistrIP.ConfigValue.Contains(userInfo.RegisterIp))
+                    {
+                        return JsonEx(new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.失败,
+                            Message = "因检测到该IP地址异常，无法注册用户，请联系在线客服。",
+                            Value = false,
+                        });
+                    }
+                    if (Convert.ToInt32(brfipCount.ConfigValue) > 0 && Convert.ToInt32(brfipTime.ConfigValue) > 0)
+                    {
+                        DateTime dt = DateTime.Now.AddMinutes(-Convert.ToInt32(brfipTime.ConfigValue));
+                        param["date"] = dt;
+                        param["localIP"] = userInfo.RegisterIp;
+
+                        var count = await _serviceProxyProvider.Invoke<int>(param, "api/user/GetTodayRegisterCount");
+                        if (count > Convert.ToInt32(brfipCount.ConfigValue))
+                        {
+                            return JsonEx(new LotteryServiceResponse
+                            {
+                                Code = ResponseCode.失败,
+                                Message = string.Format("同一IP，在{0}分钟内只能注册{1}个账号", brfipTime, brfipCount),
+                                Value = false,
+                            });
+                        }
+                    }
+
+                }
+                #endregion
                 switch (schemeSource)
                 {
                     case SchemeSource.NewAndroid:
@@ -416,6 +461,7 @@ namespace Lottery.Api.Controllers
                         userInfo.ComeFrom = "NewWeb";
                         break;
                 }
+                param.Clear();
                 param["validateCode"] = validateCode;
                 param["mobile"] = mobile;
                 param["source"] = (int)schemeSource;
@@ -2409,12 +2455,14 @@ namespace Lottery.Api.Controllers
         {
             try
             {
-                var p = WebHelper.Decode(entity.Param);
-                var userToken = p.userToken;
+                var p = JsonHelper.Decode(entity.Param);
+                string userToken = p.userToken;
                 string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 param.Add("UserId", UserId);
-                var LoginHistory = await _serviceProxyProvider.Invoke<UserLoginHistoryCollection>(param, "api/user/QueryCache_UserLoginHistoryCollection");
+                object obj = await _serviceProxyProvider.Invoke<UserLoginHistoryCollection>(param, "api/user/QueryCache_UserLoginHistoryCollection");
+
+                var LoginHistory = (UserLoginHistoryCollection)obj;
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -2584,6 +2632,77 @@ namespace Lottery.Api.Controllers
                 {
                     Code = ResponseCode.失败,
                     Message = ex.Message,
+                });
+            }
+        }
+
+        /// <summary>
+        /// 在线客服链接
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <returns></returns>
+        private async Task<ActionResult> kefuUrl([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                param.Add("key", "Site.Service.KeFuUrl");
+                var config = await _serviceProxyProvider.Invoke<C_Core_Config>(param, "api/Data/QueryCoreConfigByKey");
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = "",
+                    Value = config.ConfigValue
+                });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        //用户名是否存在
+        private async Task<ActionResult> GetUserIdIsExsite([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                var p = WebHelper.Decode(entity.Param);               
+                string userName = PreconditionAssert.IsNotEmptyString((string)p.uid, "用户名不能为空。");
+                param.Add("loginName", userName);
+                var loginName = await _serviceProxyProvider.Invoke<string>(param, "api/user/GetLoginNameIsExsite");
+                if (string.IsNullOrEmpty(loginName))
+                {
+                
+                    return JsonEx(new LotteryServiceResponse
+                    { 
+                        Code = ResponseCode.失败,
+                        Message = "用户名不存在",
+                    });
+                }
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                   
+                    Value = loginName
+                });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
                 });
             }
         }
