@@ -76,7 +76,7 @@ namespace Lottery.Api.Controllers
                 //if (bankInfo == null) bankInfo = new C_BankCard();
                 //balanceParam.Clear();
                 var unReadCount = await _serviceProxyProvider.Invoke<int>(balanceParam, "api/user/GetMyUnreadInnerMailCount");
-                Task.Run(() => ToCreateGameAccount(loginInfo.UserId));
+                //Task.Run(() => ToCreateGameAccount(loginInfo.UserId));
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -1614,9 +1614,9 @@ namespace Lottery.Api.Controllers
                         BankName = info.BankName,
                         BankCardNumber = info.BankCardNumber,
                         TotalCashMoney = cashMoney.GetTotalCashMoney(),
-                        Money = decimal.Parse(money).ToString("N2"),
-                        ResponseMoney = RequestWithdraw_1.ResponseMoney.ToString("N2"),
-                        Commission = Convert.ToInt32(RequestWithdraw_1.RequestMoney.ToString("N2")) - Convert.ToInt32(RequestWithdraw_1.ResponseMoney.ToString("N2")),
+                        Money = money,
+                        ResponseMoney = decimal.Round(RequestWithdraw_1.ResponseMoney, 2),
+                        Commission = decimal.Round(RequestWithdraw_1.RequestMoney - RequestWithdraw_1.ResponseMoney, 2),
                         IsNeedPwd = cashMoney.CheckIsNeedPassword("Withdraw")
                     }
                 });
@@ -1840,21 +1840,22 @@ namespace Lottery.Api.Controllers
 
             List<WebPayItem> list = new List<WebPayItem>();
             var baselist = loadPayConfig();
-            foreach (WebPayItem item in baselist)
+            foreach (var item in gateWayArray)
             {
-                foreach (var getway in gateWayArray)
-                {
-                    if (getway.Split('=')[0] == item.gateway)
-                    {
-                        list.Add(buildPayUrl(item, os));
-                    }
-                }
-                //if (!gateWayArray.Contains(item.gateway.ToLower()))
-                //{
-                //    continue;
-                //}
-                //list.Add(buildPayUrl(item, os));
+                var obj = baselist.Find(a => a.gateway == item.Split('=')[0]);
+                if (obj != null)
+                    list.Add(buildPayUrl(obj, os));
             }
+            //foreach (WebPayItem item in baselist)
+            //{
+            //    foreach (var getway in gateWayArray)
+            //    {
+            //        if (getway.Split('=')[0] == item.gateway)
+            //        {
+            //            list.Add(buildPayUrl(item, os));
+            //        }
+            //    }
+            //}
             return new { pay = list };
         }
         private static List<WebPayItem> loadPayConfig()

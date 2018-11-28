@@ -243,6 +243,7 @@ namespace Lottery.Api.Controllers
                 var APP_ExternalLinks_Key = "APP_ExternalLinks";
                 var APP_RechargeActivityUrl_Key = "APP_RechargeActivityUrl_Key";
                 var APP_NormalShareable_Key = "APP_NormalShareable";
+                var APP_ThirdPartyGameUseable_Key = "ThirdPartyGameUseable";
                 var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Common_Key);
                 var APP_UserCenter_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_UserCenter_Key);
                 var APP_Index_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Index_Key);
@@ -251,6 +252,7 @@ namespace Lottery.Api.Controllers
                 var APP_ExternalLinks_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ExternalLinks_Key);
                 var APP_RechargeActivityUrl_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_RechargeActivityUrl_Key);
                 var APP_NormalShareable_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_NormalShareable_Key);
+                var APP_ThirdPartyGameUseable_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_ThirdPartyGameUseable_Key);
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -265,7 +267,8 @@ namespace Lottery.Api.Controllers
                         APP_ScoreURL = APP_ScoreURL_Value,
                         APP_ExternalLinks = JsonHelper.Deserialize<object>(APP_ExternalLinks_Value),
                         APP_RechargeActivityUrl = APP_RechargeActivityUrl_Value,
-                        APP_NormalShareable = APP_NormalShareable_Value
+                        APP_NormalShareable = APP_NormalShareable_Value,
+                        APP_ThirdPartyGameUseable = JsonHelper.Deserialize<object>(APP_ThirdPartyGameUseable_Value)
                     },
                 });
             }
@@ -572,11 +575,16 @@ namespace Lottery.Api.Controllers
         }
 
 
-        public async Task<IActionResult> GetIndexGameShow([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        public async Task<IActionResult> GetIndexGameShow([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
+                var  SourceCode = entity.SourceCode;
                 var Key = "APP_IndexGameShow";
+                if (SourceCode == SchemeSource.Wap)
+                {
+                    Key = "APP_IndexGameShow_Wap";
+                }
                 var APP_Common_Value = await GetAppConfigByKey(_serviceProxyProvider, Key);
                 return Json(new LotteryServiceResponse
                 {

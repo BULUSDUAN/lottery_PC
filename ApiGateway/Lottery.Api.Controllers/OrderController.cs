@@ -716,8 +716,8 @@ namespace Lottery.Api.Controllers
                 string userId = p.UserId;
                 int state = p.bonusStatus;
                 //int schemeType = p.SchemeType;
-                int days = p.ViewDay;
-                DateTime startTime = Convert.ToDateTime("2015-01-01 00:00:00");
+                //int days = 30;
+                DateTime startTime = DateTime.Now.AddDays(-30).Date;
                 DateTime endTime = DateTime.Now.AddDays(1).Date;
                 int pageIndex = p.PageIndex;
                 int pageSize = p.PageSize;

@@ -2378,6 +2378,16 @@ namespace Lottery.Api.Controllers
                             {
                                 oddlist_ctzq = Json_CTZQ.MatchList_WEB(issuseNumber, gameType); ;
                             }
+                            if (gameType.ToUpper()== "TR9"|| gameType.ToUpper() == "T14C" || oddlist_ctzq != null && oddlist_ctzq.Count > 0)
+                            {
+                                foreach (var item in oddlist_ctzq)
+                                {
+                                    if (string.IsNullOrEmpty(item.AverageOdds))
+                                    {
+                                        item.AverageOdds = "0|0|0";
+                                    }
+                                }
+                            }
                             matchDataList.AddRange(oddlist_ctzq);
                         }
                         break;
@@ -3024,7 +3034,7 @@ namespace Lottery.Api.Controllers
                     var now = DateTime.Now;
                     foreach (var item in oddlist_jczq)
                     {
-                        if (item.State_HHDG.Contains("2") && Convert.ToDateTime(item.FSStopBettingTime) > now && item.NoSaleState_BRQSPF == "0")
+                        if (!item.PrivilegesType.Contains("9")&&item.State_HHDG.Contains("2") && Convert.ToDateTime(item.FSStopBettingTime) > now && item.NoSaleState_BRQSPF == "0")
                         {
                             result_jczq.Add(item);
                         }
@@ -3425,7 +3435,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString()+"|"+ gameresult,
+                    Message = "查询失败" + "●" + ex.ToString()+"|"+ gameresult,
                     MsgId = "",
                     Value = ex.ToGetMessage(),
                 });
