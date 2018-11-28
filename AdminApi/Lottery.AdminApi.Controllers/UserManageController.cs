@@ -23,7 +23,6 @@ namespace Lottery.AdminApi.Controllers
     /// 会员管理
     /// </summary>
     [Area("api")]
-    //[ReusltFilter]
     [CheckLogin]
     public class UserManageController :BaseController
     {
@@ -210,7 +209,9 @@ namespace Lottery.AdminApi.Controllers
                 int Days = string.IsNullOrWhiteSpace((string)p.days) ? 14 : int.Parse((string)p.days);
                 int PageIndex = string.IsNullOrWhiteSpace((string)p.pageIndex) ? base.PageIndex : int.Parse((string)p.pageIndex);
                 int PageSize = string.IsNullOrWhiteSpace((string)p.pageSize) ? base.PageSize : int.Parse((string)p.pageSize);
-                var NotOnlineRecentlyList =_service.QueryNotOnlineRecentlyList(Days,PageIndex,PageSize);
+                int Earnings = string.IsNullOrWhiteSpace((string)p.earnings) ? 0 : int.Parse((string)p.earnings);
+                string theEarnings = EarningsList[Earnings];
+                var NotOnlineRecentlyList =_service.QueryNotOnlineRecentlyList(Days,PageIndex,PageSize,theEarnings);
                 return Json(new LotteryServiceResponse { Code = AdminResponseCode.成功, Value = NotOnlineRecentlyList });
             }
             catch (Exception ex)
@@ -440,7 +441,7 @@ namespace Lottery.AdminApi.Controllers
             try
             {
                 //if (!CheckRights("U102"))
-                if (CheckRights("HYGLCKYHXQ110"))//查看会员详情
+                if (!CheckRights("HYGLCKYHXQ110"))//查看会员详情
                     throw new Exception("对不起，您的权限不足！");
                 var p = JsonHelper.Decode(entity.Param);
                 UserViewEntity ViewModel = new UserViewEntity();
@@ -464,11 +465,11 @@ namespace Lottery.AdminApi.Controllers
                     UserQueryInfo userResult = _service.QueryUserByKey(userId);
                     ViewModel.UserResult = userResult;
                     ViewModel.HistoryLogin = _service.QueryCache_UserLoginHistoryCollectionByUserId(
-                        userId, CurrentUser.UserToken);
+                        userId);
 
                     try
                     {
-                        ViewModel.Bank = _service.QueryBankCardByUserId(userId, CurrentUser.UserToken);
+                        ViewModel.Bank = _service.QueryBankCardByUserId(userId);
                     }
                     catch (Exception)
                     {
@@ -476,7 +477,7 @@ namespace Lottery.AdminApi.Controllers
                     }
 
 
-                    var result = _service.GetUserTokenByKey(userId, CurrentUser.UserToken);
+                    var result = _service.GetUserTokenByKey(userId);
                     if (result.IsSuccess)
                     {
                         ViewModel.UserToken = result.ReturnValue;
@@ -485,7 +486,6 @@ namespace Lottery.AdminApi.Controllers
                     {
                         ViewModel.UserToken = "";
                     }
-
                     if (userResult != null)
                     {
                         if (userResult.FreezeBalance > 0M)
@@ -1732,6 +1732,35 @@ namespace Lottery.AdminApi.Controllers
                 var IsFillMoney = isFillMoney;
                 var AgentDetailList = _service.QueryAgentDetail(AgentId, GameCode, StartTime, EndTime, PageIndex, PageSize, (isFillMoney!=null&&isFillMoney.HasValue ? isFillMoney.Value : false));
                 return Json(new LotteryServiceResponse() { Code = AdminResponseCode.成功, Value = AgentDetailList });
+            }
+            catch (Exception ex)
+            {
+                return JsonEx(new LotteryServiceResponse() { Code = AdminResponseCode.失败, Message = ex.Message });
+            }
+        }
+        /// <summary>
+        /// 经销商下线会员
+        /// </summary>
+        public ActionResult AgentSubUserList(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                DateTime StartTime = string.IsNullOrWhiteSpace((string)p.startTime) ? DateTime.Now.AddMonths(-1) : Convert.ToDateTime((string)p.startTime);
+                DateTime EndTime = DateTime.Now;
+                string KeyType = string.Empty;
+                string KeyValue = string.Empty;
+                bool? isEnable = null;
+                bool? isFillMoney = null;
+                bool? isAgent = null;
+
+                string AgentId = (string)p.agentId;
+                int SubPageIndex = string.IsNullOrWhiteSpace((string)p.subPageIndex) ? 0 : int.Parse((string)p.subPageIndex);
+                int SubPageSize = string.IsNullOrWhiteSpace((string)p.subPageSize) ? 10 : int.Parse((string)p.subPageSize);
+
+                var UsersSummary = _service.QueryUserList(StartTime,EndTime,KeyType,KeyValue, isEnable, isFillMoney, null, isAgent,
+                    "", "", "", "", "",AgentId,SubPageIndex,SubPageSize, CurrentUser.UserToken, string.Empty);
+                return Json(new LotteryServiceResponse() {Code=AdminResponseCode.失败,Value= UsersSummary });
             }
             catch (Exception ex)
             {

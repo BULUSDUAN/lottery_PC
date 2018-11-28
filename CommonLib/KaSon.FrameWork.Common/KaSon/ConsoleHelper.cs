@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace KaSon.FrameWork.Common.KaSon
@@ -16,7 +17,7 @@ namespace KaSon.FrameWork.Common.KaSon
             {
                 while (true)
                 {
-                    Task.Delay(1000 * 20);
+                    Thread.Sleep(1000 * 2);
                     Console.Clear();
                     //Console.WriteLine("1231");
                 }

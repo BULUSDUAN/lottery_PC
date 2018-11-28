@@ -33,8 +33,6 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void UpdateArticleStaticPath(string articleId, string staticPath, string preId, string nextId)
         {
-
-            DB.Begin();
             var manager = new ArticleManager();
             var entity = manager.QueryArticle(articleId);
             if (entity == null)
@@ -61,8 +59,6 @@ namespace KaSon.FrameWork.ORM.Helper
                 next.PreTitle = entity.Title.Length > 50 ? entity.Title.Substring(0, 50) : entity.Title;
                 manager.UpdateArticle(next);
             }
-            DB.Commit();
-
         }
 
         public void AddSysOperationLog(string userId, string operUserId, string menuName, string desc)
@@ -133,11 +129,11 @@ namespace KaSon.FrameWork.ORM.Helper
         public void UpdateBulletin(E_SiteMessage_Bulletin_List bulletin, string updateBy)
         {
             var bulletinManager = new BulletinManager();
-            {
-                var entity = bulletinManager.GetBulletinById(bulletin.Id);
-                entity.UpdateBy = updateBy;
-                bulletinManager.UpdateBulletin(entity);
-            }
+            var entity = bulletinManager.GetBulletinById(bulletin.Id);
+                bulletin.CreateTime = entity.CreateTime;
+                bulletin.CreateBy = entity.CreateBy;
+                bulletin.UpdateBy = updateBy;
+                bulletinManager.UpdateBulletin(bulletin);
         }
 
         #region 文章相关
@@ -164,7 +160,7 @@ namespace KaSon.FrameWork.ORM.Helper
             manager.DeleteArticle(entity);
         }
 
-        public ArticleInfo_Query QueryArticleInfoById(string articleId, bool isAddReadCount)
+        public E_SiteMessage_Article_List QueryArticleInfoById(string articleId, bool isAddReadCount)
         {
             var manager = new ArticleManager();
             var entity = manager.GetArticleById(articleId);
@@ -177,8 +173,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 entity.ReadCount++;
                 manager.UpdateArticle(entity);
             }
-            var info = new ArticleInfo_Query();
-            return info;
+            return entity;
         }
         public string SubmitArticle(E_SiteMessage_Article_List article)
         {
@@ -231,6 +226,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //    StaticPath = "",
             //};
             article.Id = id;
+            article.GameCode = article.GameCode;
             article.ShowIndex = 0;
             article.ReadCount = 0;
             article.PreId = lastId;
@@ -240,6 +236,9 @@ namespace KaSon.FrameWork.ORM.Helper
             article.Description = content;
             article.CreateTime = DateTime.Now;
             article.UpdateTime = DateTime.Now;
+            article.UpdateUserKey = article.CreateUserKey;
+            article.UpdateUserDisplayName = article.CreateUserDisplayName;
+          
             manager.AddArticle(article);
             return id;
         }
@@ -296,6 +295,10 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var manager = new BulletinManager();
             var entity = manager.QueryBannerManager(bannerId);
+            if (entity == null)
+            {
+                throw new ArgumentException("指定编号的文章不存在");
+            }
             manager.DeleteBanner(entity);
         }
 

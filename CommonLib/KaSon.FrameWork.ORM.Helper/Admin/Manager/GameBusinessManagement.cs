@@ -61,13 +61,13 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public CommonActionResult UpdateBackgroundUserInfo(string userId, string displayName, string addRoleIdList, string removeRoleIdList)
+        public CommonActionResult UpdateBackgroundUserInfo(string userId, string addRoleIdList, string removeRoleIdList)
         {
-            DB.Begin();
-            try
-            {
+            //DB.Begin();
+            //try
+            //{
                 var userBiz = new RegisterBusiness();
-                userBiz.UpdateDisplayName(userId, displayName);
+                //userBiz.UpdateDisplayName(userId, displayName);
 
                 var authBiz = new GameBizAuthBusiness();
                 if (!string.IsNullOrEmpty(addRoleIdList))
@@ -78,12 +78,12 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     authBiz.RemoveUserRoles(userId, removeRoleIdList.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries));
                 }
-            }
-            catch (Exception ex)
-            {
-                DB.Rollback();
-                throw;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    DB.Rollback();
+            //    throw;
+            //}
             return new CommonActionResult(true, "修改后台管理人员信息成功");
         }
     }

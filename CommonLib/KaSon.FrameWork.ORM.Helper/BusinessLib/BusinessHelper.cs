@@ -2715,7 +2715,8 @@ namespace KaSon.FrameWork.ORM.Helper
             //开启事务
 
             SDB.Begin();
-
+            try
+            {
                 #region 处理订单
 
                 order.BonusStatus = (int)bonusStatus;
@@ -2941,10 +2942,18 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
                 }
 
-            #endregion
+                #endregion
 
-            SDB.Begin();
-        
+                SDB.Commit();
+            }
+            catch (Exception ex)
+            {
+                SDB.Rollback();
+                SDB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
+
+
 
             #region 发送站内消息：手机短信或站内信
 
@@ -3156,6 +3165,114 @@ namespace KaSon.FrameWork.ORM.Helper
                 //sqlList.Add("COMMIT TRANSACTION--事务提交语句");
                 manager.ExecSql(string.Join(Environment.NewLine, sqlList.ToArray()));
             }
+        }
+
+        /// <summary>
+        /// 充值编号
+        /// </summary>
+        public static string GetUserFillMoneyId()
+        {
+            string prefix = "UFM";
+            return prefix + UsefullHelper.UUID();
+        }
+
+        public static void PayOut_To_BalanceByCzzy(AccountType accountType, string category, string userId, string orderId, decimal payMoney, string summary, RedBagCategory redBag = RedBagCategory.FillMoney, string operatorId = "")
+        {
+            //if (accountType == AccountType.Freeze)
+            //    throw new Exception("退款账户不能为冻结账户");
+
+            if (payMoney <= 0M)
+                return;
+            //throw new Exception("转入金额不能小于0.");
+            //查询帐户余额
+            var balanceManager = new UserBalanceManager();
+            var fundManager = new FundManager();
+            //资金密码判断
+            var userBalance = balanceManager.QueryUserBalance(userId);
+            if (userBalance == null) { throw new Exception("用户帐户不存在 - " + userId); }
+
+
+            var payDetailList = new List<PayDetail>();
+            payDetailList.Add(new PayDetail
+            {
+                AccountType = accountType,
+                PayMoney = payMoney,
+                PayType = PayType.Payout,
+            });
+            var before = 0M;
+            var after = 0M;
+            switch (accountType)
+            {
+                case AccountType.Bonus:
+                    before = userBalance.BonusBalance;
+                    after = userBalance.BonusBalance - payMoney;
+                    if (userBalance.BonusBalance < payMoney)
+                    { throw new Exception("奖金帐户余额不足"); }
+                    //userBalance.BonusBalance = after;
+                    break;
+                case AccountType.Commission:
+                    before = userBalance.CommissionBalance;
+                    after = userBalance.CommissionBalance - payMoney;
+                    //userBalance.CommissionBalance = after;
+                    break;
+                case AccountType.FillMoney:
+                    before = userBalance.FillMoneyBalance;
+                    after = userBalance.FillMoneyBalance - payMoney;
+                    if (userBalance.FillMoneyBalance < payMoney)
+                    { throw new Exception("充值账户余额不足"); }
+                    //userBalance.FillMoneyBalance = after;
+                    break;
+                case AccountType.Experts:
+                    before = userBalance.ExpertsBalance;
+                    after = userBalance.ExpertsBalance - payMoney;
+                    //userBalance.ExpertsBalance = after;
+                    break;
+                case AccountType.RedBag:
+                    before = userBalance.RedBagBalance;
+                    after = userBalance.RedBagBalance - payMoney;
+                    if (userBalance.RedBagBalance < payMoney)
+                    { throw new Exception("红包帐户余额不足"); }
+                    //userBalance.RedBagBalance = after;
+                    fundManager.AddRedBagDetail(new C_Fund_RedBagDetail
+                    {
+                        CreateTime = DateTime.Now,
+                        OrderId = orderId,
+                        RedBagCategory = (int)redBag,
+                        RedBagMoney = payMoney,
+                        UserId = userId,
+                    });
+                    break;
+                case AccountType.Freeze:
+                    before = userBalance.FreezeBalance;
+                    after = userBalance.FreezeBalance - payMoney;
+                    //userBalance.FreezeBalance = after;
+                    break;
+                case AccountType.CPS:
+                    before = userBalance.CPSBalance;
+                    after = userBalance.CPSBalance - payMoney;
+                    //userBalance.CPSBalance = after;
+                    break;
+                default:
+                    throw new ArgumentException("不支持的账户类型 - " + accountType);
+            }
+            fundManager.AddFundDetail(new C_Fund_Detail
+            {
+                Category = category,
+                CreateTime = DateTime.Now,
+                KeyLine = orderId,
+                OrderId = orderId,
+                AccountType = (int)accountType,
+                PayMoney = payMoney,
+                PayType = (int)PayType.Payout,
+                Summary = summary,
+                UserId = userId,
+                BeforeBalance = before,
+                AfterBalance = after,
+                OperatorId = string.IsNullOrEmpty(operatorId) ? userId : operatorId,
+            });
+
+            //balanceManager.UpdateUserBalance(userBalance);
+            balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
         }
     }
 }

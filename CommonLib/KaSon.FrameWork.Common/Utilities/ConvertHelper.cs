@@ -1236,5 +1236,11 @@ namespace KaSon.FrameWork.Common.Utilities {
         {
             return Regex.IsMatch(value, @"^[0-9]*$");
         }
+
+        public class trytemp
+        {
+            public string key { get; set; }
+            public string value { get; set; }
+        }
     }
 }

@@ -14,10 +14,12 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public void CompleteWithdraw(string orderId, string responseMsg, string opUserId)
         {
-                DB.Begin();
+            DB.Begin();
+            try
+            {
                 var fundManager = new FundManager();
                 var entity = fundManager.QueryWithdraw(orderId);
-                if (entity.Status !=(int)WithdrawStatus.Requesting)
+                if (entity.Status != (int)WithdrawStatus.Requesting)
                 {
                     throw new Exception("该条信息提取状态不能进行完成操作 - " + entity.Status);
                 }
@@ -29,9 +31,16 @@ namespace KaSon.FrameWork.ORM.Helper
                 entity.ResponseUserId = opUserId;
                 fundManager.UpdateWithdraw(entity);
                 //清理冻结
-                 BusinessHelper.Payout_Frozen_To_End(BusinessHelper.FundCategory_IntegralCompleteWithdraw, entity.UserId, orderId
-                    , string.Format("完成积分提取，积分{0:N2}：{1}", entity.RequestMoney, responseMsg), entity.RequestMoney);
+                BusinessHelper.Payout_Frozen_To_End(BusinessHelper.FundCategory_IntegralCompleteWithdraw, entity.UserId, orderId
+                   , string.Format("完成积分提取，积分{0:N2}：{1}", entity.RequestMoney, responseMsg), entity.RequestMoney);
                 DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
         }
 
         /// <summary>

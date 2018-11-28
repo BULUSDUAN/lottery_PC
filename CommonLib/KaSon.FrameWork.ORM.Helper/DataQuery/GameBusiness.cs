@@ -20,15 +20,15 @@ namespace KaSon.FrameWork.ORM.Helper
             var _gameList = new GameBusiness().QueryGameInfoCollection();
             return _gameList;
         }
-        ///// <summary>
-        ///// 所有彩种状态
-        ///// </summary>
-        //public LotteryGameInfoCollection LotteryGame()
-        //{
-        //    var result = new LotteryGameInfoCollection();
-        //    result.AddRange(new DataQuery().QueryLotteryGameList());
-        //    return result;
-        //}
+        /// <summary>
+        /// 所有彩种状态
+        /// </summary>
+        public LotteryGameInfoCollection LotteryGame()
+        {
+            var result = new LotteryGameInfoCollection();
+            result.AddRange(new DataQuery().QueryLotteryGameList());
+            return result;
+        }
         ///// <summary>
         ///// 更新彩种状态
         ///// </summary>
@@ -204,6 +204,46 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new Exception("没有查到该彩种！");
             entity.EnableStatus = enableStatus;
             manager.UpdateLotteryGame(entity);
+        }
+
+        /// <summary>
+        /// 查询统计会员分布 前十名省会注册 实名 绑定卡的
+        /// </summary>
+        /// <returns></returns>
+        public MemberSpreadInfoCollection QueryMemberSpread()
+        {
+            return new UserBalanceManager().QueryMemberSpread();
+        }
+        /// <summary>
+        /// 查询统计充值提现信息（按月统计）
+        /// </summary>
+        /// <returns></returns>
+        public FillMoneyWithdrawInfoCollection FillMoneyWithdrawInfo()
+        {
+            return new UserBalanceManager().FillMoneyWithdrawInfo();
+        }
+        /// <summary>
+        /// 查询总平台、pc、安卓、ios、wap当天的注册人数、实名人数、付费人数
+        /// </summary>
+        /// <returns></returns>
+        public MemberTotalCollection QueryMemberTotal()
+        {
+            return new UserBalanceManager().QueryMemberTotal();
+        }
+
+        public SiteSummaryInfo QuerySiteSummary()
+        {
+            var balanceManager = new UserBalanceManager();
+            var fundManager = new FundManager();
+            var m = balanceManager.QueryCommonAndBonusMoney();
+            return new SiteSummaryInfo
+            {
+                TodayRegisterUserCount = balanceManager.QueryRegisterUserCount(),
+                MonthTotalFillMoney = fundManager.QueryMonthFillMoney(),
+                MonthTotalWithdraw = fundManager.QueryMonthWithdraw(),
+                TotalCommonMoney = m.TotalCommonMoney,
+                TotalBonusMoney = m.TotalBonusMoney,
+            };
         }
     }
 }

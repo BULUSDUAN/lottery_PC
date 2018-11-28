@@ -31,13 +31,13 @@ namespace EntityModel
             [Field("typeid")]
             public sbyte typeid{ get; set; }
             /// <summary>
-            // 
+            //  开奖期号
             ///</summary>
             [ProtoMember(3)]
             [Field("actionNo")]
             public uint actionNo{ get; set; }
             /// <summary>
-            // 
+            //  开奖时间
             ///</summary>
             [ProtoMember(4)]
             [Field("actionTime")]

@@ -254,7 +254,6 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var newPwd = string.Empty;
             //开启事务
-            DB.Begin();
             var manager = new UserMobileManager();
             var balanceManager = new UserBalanceManager();
             var balance = balanceManager.QueryUserBalance(userId);
@@ -262,7 +261,6 @@ namespace KaSon.FrameWork.ORM.Helper
                 throw new ArgumentException("用户资金信息查询出错");
             balance.Password = Encipherment.MD5(string.Format("{0}{1}", C_DefaultPassword, _gbKey)).ToUpper();
             balanceManager.UpdateUserBalance(balance);
-            DB.Commit();
             return newPwd;
         }
         /// <summary>
@@ -270,8 +268,6 @@ namespace KaSon.FrameWork.ORM.Helper
         /// </summary>
         public void UpdateMobileAuthen(string userId, string mobile, string updateBy)
         {
-            //开启事务
-            DB.Begin();
             var manager = new UserMobileManager();
             var mobileInfo = manager.GetMobileInfoByMobile(mobile);
             var entity = manager.GetUserMobile(userId);
@@ -287,21 +283,17 @@ namespace KaSon.FrameWork.ORM.Helper
             entity.UpdateBy = updateBy;
             entity.UpdateTime = DateTime.Now;
             manager.UpdateUserMobile(entity);
-            DB.Commit();
         }
         /// <summary>
         /// 注销手机认证
         /// </summary>
         public void LogOffMobileAuthen(string userId)
         {
-            //开启事务
-                DB.Begin();
                 var manager = new UserMobileManager();
                 var entity = manager.GetUserMobile(userId);
                 if (entity == null)
                     throw new ArgumentException("此用户从未进行过手机认证");
                 manager.DeleteUserMobile(entity);
-            DB.Commit();
         }
         public void AddAuthenticationMobile(string authFrom, string userId, string mobile, string createBy)
         {

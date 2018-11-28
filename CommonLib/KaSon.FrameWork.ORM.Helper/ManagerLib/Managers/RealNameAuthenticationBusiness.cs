@@ -120,8 +120,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var other = new UserRealNameManager().QueryUserRealName(idCard);
             if (other != null)
                 throw new ArgumentException(string.Format("此证件号【{0}】已被其他用户认证。", idCard));
-            //开启事务
-            DB.Begin();
+
             var manager = new UserRealNameManager();
             var entity = manager.GetUserRealName(userId);
             var realNameInfo = manager.GetRealNameInfoByName(realName, idCard);
@@ -133,7 +132,6 @@ namespace KaSon.FrameWork.ORM.Helper
             entity.UpdateBy = updateBy;
             entity.UpdateTime = DateTime.Now;
             manager.UpdateUserRealName(entity);
-            DB.Commit();
         }
         /// <summary>
         /// 注销实名认证
@@ -141,13 +139,11 @@ namespace KaSon.FrameWork.ORM.Helper
         public void LogOffRealNameAuthen(string userId)
         {
             //开启事务
-            DB.Begin();
             var manager = new UserRealNameManager();
             var entity = manager.GetUserRealName(userId);
             if (entity == null)
                 throw new ArgumentException("此用户从未进行过实名认证");
             manager.DeleteUserRealName(entity);
-            DB.Commit();
         }
     }
 }

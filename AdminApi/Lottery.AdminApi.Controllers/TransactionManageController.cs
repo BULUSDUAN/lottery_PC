@@ -17,6 +17,7 @@ namespace Lottery.AdminApi.Controllers
 {
     [Area("api")]
     [ReusltFilter]
+    [CheckLogin]
     public class TransactionManageController:BaseController
     {
         private readonly static AdminService _service = new AdminService();

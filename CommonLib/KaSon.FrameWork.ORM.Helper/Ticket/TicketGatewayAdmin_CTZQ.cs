@@ -525,7 +525,8 @@ namespace KaSon.FrameWork.ORM.Helper
         public void PrizeBJDCTicket_OrderId(string orderId)
         {
 
-
+            try
+            {
                 DB.Begin();
 
                 var manager = new Sports_Manager();
@@ -711,8 +712,14 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 manager.ExecSql(ticketStrSql);
 
-            DB.Commit();
-            
+                DB.Commit();
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
         }
 
         private Dictionary<string, decimal> GetSPs(string gameCode, string gameType, string issuseNumber, string[] matchIdList)
@@ -773,8 +780,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void PrizeJCZQTicket_OrderId(string orderId)
         {
-
-               DB.Begin();
+            try
+            {
+                DB.Begin();
 
                 var manager = new Sports_Manager();
                 var collection = manager.QueryPrizeTicket_OrderIdList("JCZQ", orderId);
@@ -795,7 +803,13 @@ namespace KaSon.FrameWork.ORM.Helper
                 manager.ExecSql(ticketStrSql);
 
                 DB.Commit();
-            
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
         }
 
         private void ComputeJCZQTicketBonus(string orderId, string gameCode, string gameType, string betType, string locBetContent, string locOdds, int betAmount, IList<EntityModel.CoreModel.MatchInfo> matchResultList, decimal betMoney,
@@ -1008,8 +1022,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public void PrizeJCLQTicket_OrderId(string orderId)
         {
-
-            DB.Begin();
+            try
+            {
+                DB.Begin();
 
                 var manager = new Sports_Manager();
                 var collection = manager.QueryPrizeTicket_OrderIdList("JCLQ", orderId);
@@ -1029,8 +1044,15 @@ namespace KaSon.FrameWork.ORM.Helper
                 }
                 manager.ExecSql(ticketStrSql);
 
-            DB.Commit();
-            
+                DB.Commit();
+
+            }
+            catch (Exception ex)
+            {
+                DB.Rollback();
+                DB.Dispose();
+                throw new Exception("操作失败" + "●" + ex.Message, ex);
+            }
         }
 
         private void ComputeJCLQTicketBonus(string orderId, string gameCode, string gameType, string betType, string locBetCount, string locOdds, int betAmount, IList<EntityModel.CoreModel.MatchInfo> matchResultList, decimal betMoney,

@@ -4698,6 +4698,43 @@ namespace Lottery.Service.ModuleServices
             }
         }
         #endregion
+
+        #region 快速购买数字彩
+        public Task<LotteryIssuse_QueryInfo> QueryCurrentIssuseByOfficialStopTime(string gameCode)
+        {
+            try
+            {
+                var list = WebRedisHelper.QueryNextIssuseListByOfficialStopTime(gameCode);
+                if (list == null || list.Count <= 0)
+                    return null;
+                return Task.FromResult(list.Where(p => p.OfficialStopTime > DateTime.Now).OrderBy(p => p.OfficialStopTime).FirstOrDefault());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询快速购买失败- " + ex.Message, ex);
+            }
+        }
+
+        #endregion
+
+        #region 合买大厅合买名人
+        /// <summary>
+        /// 从Redis中查询出合买红人数据
+        /// </summary>
+        public Task<List<TogetherHotUserInfo>> QueryHotTogetherUserListFromRedis()
+        {
+            try
+            {
+                var list = WebRedisHelper.QueryHotTogetherUserListFromRedis();
+                return Task.FromResult(list);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("查询合买红人失败- " + ex.Message, ex);
+            }
+        }
+
+        #endregion
     }
 
 

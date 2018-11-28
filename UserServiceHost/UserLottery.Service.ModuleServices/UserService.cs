@@ -482,11 +482,11 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         public Task<InnerMailInfo_Query> ReadInnerMail(string innerMailId, string UserId)
         {
-          
-                var siteBiz = new SiteMessageControllBusiness();
-                var info = siteBiz.ReadInnerMail(innerMailId,UserId);
-                return Task.FromResult(info);
-            
+
+            var siteBiz = new SiteMessageControllBusiness();
+            var info = siteBiz.ReadInnerMail(innerMailId, UserId);
+            return Task.FromResult(info);
+
         }
 
 
@@ -566,6 +566,7 @@ namespace UserLottery.Service.ModuleServices
                     AgentId = register.AgentId,
                     IsAgent = register.IsAgent,
                     HideDisplayNameCount = register.HideDisplayNameCount,
+                    IsUserType = register.UserType == 1 ? true : false
                 });
             }
             catch (Exception ex)
@@ -1476,12 +1477,12 @@ namespace UserLottery.Service.ModuleServices
         /// <param name="pageSize"></param>
         /// <param name="UserId"></param>
         /// <returns></returns>
-        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string UserId)
+        public Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userId)
         {
 
             try
             {
-                return Task.FromResult(new FundBusiness().QueryWithdrawList(UserId, null, status, -1, -1, startTime, endTime, -1, pageIndex, pageSize));
+                return Task.FromResult(new FundBusiness().QueryWithdrawList(userId, null, status, -1, -1, 1, pageIndex, pageSize));
             }
             catch (Exception ex)
             {
@@ -1730,7 +1731,7 @@ namespace UserLottery.Service.ModuleServices
         /// <returns></returns>
         public Task<UserIdeaInfo_QueryCollection> QueryMyUserIdeaList(int pageIndex, int pageSize, string UserId)
         {
-          
+
             try
             {
                 var biz = new SiteMessageBusiness();
@@ -1849,7 +1850,7 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         public Task<UserBeedingListInfoCollection> QueryUserBeedingList(string gameCode, string gameType, string userId, string userDisplayName, int pageIndex, int pageSize, QueryUserBeedingListOrderByProperty property, OrderByCategory category)
         {
-           
+
             try
             {
                 return Task.FromResult(new Sports_Business().QueryUserBeedingList(gameCode, gameType, userId, userDisplayName, pageIndex, pageSize, property, category));
@@ -1913,6 +1914,207 @@ namespace UserLottery.Service.ModuleServices
             var loginBiz = new LocalLoginBusiness();
             var count = loginBiz.GetTodayRegisterCount(date, localIP);
             return Task.FromResult(count);
+        }
+
+        public Task<bool> LoginGiveRedEnvelopes(string UserId, string IPAddress)
+        {
+            try
+            {
+                LocalLoginBusiness login = new LocalLoginBusiness();
+                var boolRedEnvelopes = login.User_AfterLogin(UserId, "LOCAL", IPAddress, DateTime.Now);
+                BusinessHelper.ExecPlugin<IUser_AfterLogin>(new object[] { UserId, "LOCAL", IPAddress, DateTime.Now });
+                //刷新用户在Redis中的余额
+                BusinessHelper.RefreshRedisUserBalance(UserId);
+                return Task.FromResult(boolRedEnvelopes);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public Task<CommonActionResult> UserFillMoneyByUserId(UserFillMoneyAddInfo info, string userId, string agentId)
+        {
+            try
+            {
+                //! 执行扩展功能代码 - 启动事务前
+                BusinessHelper.ExecPlugin<IRequestFillMoney_BeforeTranBegin>(new object[] { info, userId, userId });
+
+                var orderId = string.Empty;
+                //! 执行扩展功能代码 - 启动事务后
+                BusinessHelper.ExecPlugin<IRequestFillMoney_AfterTranBegin>(new object[] { info, userId, userId });
+
+                orderId = new FundBusiness().UserFillMoney(info, userId, userId, agentId);
+
+                //! 执行扩展功能代码 - 提交事务前
+                BusinessHelper.ExecPlugin<IRequestFillMoney_BeforeTranCommit>(new object[] { info, userId, userId });
+
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IRequestFillMoney_AfterTranCommit>(new object[] { info, userId, userId });
+
+                return Task.FromResult(new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "提交充值完成",
+                    ReturnValue = string.Format("{0}|{1}", orderId, info.PayMoney),
+                });
+            }
+            catch (Exception ex)
+            {
+                //! 执行扩展功能代码 - 发生异常
+                BusinessHelper.ExecPlugin<IRequestFillMoney_OnError>(new object[] { info, userId, ex });
+
+                throw new Exception("用户充值出现错误 - " + ex.Message, ex);
+            }
+        }
+
+
+        public CommonActionResult CompleteFillMoneyOrderByCzzy(string orderId, FillMoneyStatus status, decimal money, string code, string msg, string UserId, string type)
+        {
+            // 验证用户身份及权限
+            //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+
+            try
+            {
+                //! 执行扩展功能代码 - 启动事务前
+                //BusinessHelper.ExecPlugin<ICompleteFillMoney_BeforeTranBegin>(new object[] { orderId, status, money, myId });
+
+                //lock (UsefullHelper.moneyLocker)
+                //{
+                string userId;
+                bool needContinue = false;
+                FillMoneyAgentType agentType;
+                var vipLevel = 0;
+                //! 执行扩展功能代码 - 启动事务后
+                //BusinessHelper.ExecPlugin<ICompleteFillMoney_AfterTranBegin>(new object[] { orderId, status, money, myId });
+                needContinue = new FundBusiness().CompleteFillMoneyOrderByCzzy(orderId, status, money, code, msg, UserId, out agentType, out userId, out vipLevel, type);
+                if (needContinue)
+                {
+                    //! 执行扩展功能代码 - 提交事务前
+                    //BusinessHelper.ExecPlugin<ICompleteFillMoney_BeforeTranCommit>(new object[] { orderId, status, agentType, money, userId });
+                }
+                if (needContinue)
+                {
+                    //! 执行扩展功能代码 - 提交事务后
+                    BusinessHelper.ExecPlugin<ICompleteFillMoney_AfterTranCommit>(new object[] { orderId, status, agentType, money, userId, vipLevel });
+                }
+                //}
+                return new CommonActionResult
+                {
+                    IsSuccess = true,
+                    Message = "充值完成",
+                };
+            }
+            catch (Exception ex)
+            {
+                //! 执行扩展功能代码 - 发生异常
+                //BusinessHelper.ExecPlugin<ICompleteFillMoney_OnError>(new object[] { orderId, status, myId, ex });
+
+                throw new Exception("完成充值出现错误 - " + ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 历史战绩 从数据库中查询博客数据
+        /// </summary>
+        public Task<BlogEntity> QueryBlogEntityStandings(string userId, string gameCode, string gameType, int pageIndex, int pageSize)
+        {
+            try
+            {
+                var blog = new BlogEntity();
+                blog.ProfileUserInfo = WebRedisHelper.QueryProfileUserInfo(userId); // WCFClients.GameClient.QueryProfileUserInfo(userId);
+                blog.ProfileBonusLevel = WebRedisHelper.QueryProfileBonusLevelInfo(userId); // WCFClients.GameClient.QueryProfileBonusLevelInfo(userId);
+                blog.ProfileLastBonus = WebRedisHelper.QueryProfileLastBonusCollection(userId);// WCFClients.GameClient.QueryProfileLastBonusCollection(userId);
+                blog.ProfileDataReport = WebRedisHelper.QueryProfileDataReport(userId);// WCFClients.GameClient.QueryProfileDataReport(userId);
+                blog.FollowerCount = WebRedisHelper.QueryTogetherFollowerCount(userId);// WCFClients.GameQueryClient.QueryTogetherFollowerCount(userId);
+                blog.UserCurrentOrderInfo = WebRedisHelper.QueryUserCurrentOrderInfoCollection(userId, (gameCode == "SZC" ? gameType : gameCode));// WCFClients.GameClient.QueryUserCurrentOrderList(userId, (gameCode == "SZC" ? gameType : gameCode), UserToken, pageIndex, pageSize);
+                blog.BonusOrderInfo = WebRedisHelper.QueryBonusOrderInfoCollection(userId, gameCode, gameType);// WCFClients.GameQueryClient.QueryBonusInfoList(userId, (gameCode == "SZC" ? gameType : gameCode), (gameCode == "SZC" ? "" : gameType), "", "", "", pageIndex, pageSize, UserToken);
+                blog.CreateTime = DateTime.Now;
+                return Task.FromResult(blog);
+            }
+            catch (Exception)
+            {
+                return Task.FromResult(new BlogEntity());
+            }
+        }
+
+        /// <summary>
+        /// 退订跟单
+        /// </summary>
+        public Task<CommonActionResult> ExistTogetherFollower(long followerId, string UserId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                var rule = new Sports_Business().ExistTogetherFollower(followerId, UserId);
+
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<IExistTogetherFollow_AfterTranCommit>(new object[] { rule.CreaterUserId, rule.FollowerUserId, rule.GameCode, rule.GameType });
+                return Task.FromResult(new CommonActionResult(true, "退订跟单成功"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 编辑合买跟单
+        /// </summary>
+        public Task<CommonActionResult> EditTogetherFollower(TogetherFollowerRuleInfo info, long ruleId)
+        {
+            // 验证用户身份及权限
+            //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
+            try
+            {
+                new Sports_Business().EditTogetherFollower(info, ruleId);
+                return Task.FromResult(new CommonActionResult(true, "编辑跟单成功"));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 定制合买跟单
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="userToken"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> CustomTogetherFollower(TogetherFollowerRuleInfo info)
+        {
+           
+            try
+            {
+                new Sports_Business().CustomTogetherFollower(info);
+
+                //! 执行扩展功能代码 - 提交事务后
+                BusinessHelper.ExecPlugin<ITogetherFollow_AfterTranCommit>(new object[] { info });
+                return Task.FromResult(new CommonActionResult(true, "订制合买跟单成功"));
+            }
+            catch (LogicException ex)
+            {
+                return Task.FromResult(new CommonActionResult(false, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        /// <summary>
+        /// 检查登录名是否存在
+        /// </summary>
+        /// <param name="loginName"></param>
+        /// <returns></returns>
+        public string GetLoginNameIsExsite(string loginName)
+        {
+            var loginBiz = new LocalLoginBusiness();
+            return loginBiz.GetLoginNameIsExsite(loginName);
+
         }
     }
 }

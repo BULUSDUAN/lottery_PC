@@ -375,5 +375,16 @@ namespace KaSon.FrameWork.ORM.Helper
             result.AnteCodeList = new SqlQueryManager().QueryAnteCodeListBySchemeId(schemeId);
             return result;
         }
+
+        #region 中奖查询
+
+        public BonusOrderInfoCollection QueryBonusInfoList(string userId, string gameCode, string gameType, string issuseNumber, string completeData, string key, int pageIndex, int pageSize)
+        {
+            var result = new BonusOrderInfoCollection();       
+            result=new DataQuery().QueryBonusInfoList(userId, gameCode, gameType, issuseNumber, completeData, key, pageIndex, pageSize);
+            return result;
+        }
+
+        #endregion
     }
 }

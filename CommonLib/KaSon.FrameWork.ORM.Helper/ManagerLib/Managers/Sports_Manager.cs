@@ -999,13 +999,15 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<SaveOrder_LotteryBettingInfo> QuerySaveOrderLottery(string userId)
         {
 
+            DateTime beginTime = DateTime.Today.AddDays(-30);
+            DateTime endTime = DateTime.Today.AddDays(1);
             var query = from g in DB.CreateQuery<C_UserSaveOrder>()
                         join i in DB.CreateQuery<C_User_Register>() on g.UserId equals i.UserId
                         orderby g.CreateTime descending
                         where g.UserId == userId
-                        && (g.CreateTime > DateTime.Today.AddDays(-30) && g.CreateTime <= DateTime.Today.AddDays(1))
-                        select new {g,i};
-            return query.ToList().Select(p=>new SaveOrder_LotteryBettingInfo
+                        && (g.CreateTime > beginTime && g.CreateTime <= endTime)
+                        select new { g, i };
+            return query.ToList().Select(p => new SaveOrder_LotteryBettingInfo
             {
                 SchemeId = p.g.SchemeId,
                 DisplayName = p.i.DisplayName,

@@ -183,10 +183,24 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-10-19", Director = "renjun", Name = "同一IP，一定时间内的注册次数")]
         Task<int> GetTodayRegisterCount(DateTime date, string localIP);
         [Service(Date = "2018-10-24", Director = "renjun", Name = "PC端账户提款")]
-        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string UserId);
+        Task<Withdraw_QueryInfoCollection> QueryMyWithdrawList(int status, DateTime startTime, DateTime endTime, int pageIndex, int pageSize, string userId);
 
         [Service(Date = "2018-10-24", Director = "renjun", Name = "每天登录送红包")]
         Task<bool> LoginGiveRedEnvelopes(string UserId, string IPAddress);
 
+        [Service(Date = "2018-11-15", Director = "lili", Name = "用户转帐给用户")]
+        Task<CommonActionResult> UserFillMoneyByUserId(UserFillMoneyAddInfo info, string userId, string agentId);
+
+        [Service(Date = "2018-11-15", Director = "lili", Name = "用户转帐给用户_完成")]
+        CommonActionResult CompleteFillMoneyOrderByCzzy(string orderId, FillMoneyStatus status, decimal money, string code, string msg, string UserId, string type);
+        [Service(Date = "2018-11-19", Director = "renjun", Name = "历史战绩 从数据库中查询博客数据")]
+        Task<BlogEntity> QueryBlogEntityStandings(string userId, string gameCode, string gameType, int pageIndex, int pageSize);
+
+        [Service(Date = "2018-11-21", Director = "renjun", Name = "退订跟单")]
+        Task<CommonActionResult> ExistTogetherFollower(long followerId, string UserId);
+        [Service(Date = "2018-11-21", Director = "renjun", Name = "编辑合买订单")]
+        Task<CommonActionResult> EditTogetherFollower(TogetherFollowerRuleInfo info, long ruleId);
+        [Service(Date = "2018-11-21", Director = "renjun", Name = "定制合买跟单")]
+        Task<CommonActionResult> CustomTogetherFollower(TogetherFollowerRuleInfo info);
     }
 }

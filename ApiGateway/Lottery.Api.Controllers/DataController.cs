@@ -26,6 +26,7 @@ using KaSon.FrameWork.Common.Net;
 using System.Globalization;
 using KaSon.FrameWork.Common.Sport;
 using KaSon.FrameWork.Common.Expansion;
+using KaSon.FrameWork.Common.Xml;
 
 namespace Lottery.Api.Controllers
 {
@@ -2378,6 +2379,16 @@ namespace Lottery.Api.Controllers
                             {
                                 oddlist_ctzq = Json_CTZQ.MatchList_WEB(issuseNumber, gameType); ;
                             }
+                            if (gameType.ToUpper() == "TR9" || gameType.ToUpper() == "T14C" || oddlist_ctzq != null && oddlist_ctzq.Count > 0)
+                            {
+                                foreach (var item in oddlist_ctzq)
+                                {
+                                    if (string.IsNullOrEmpty(item.AverageOdds))
+                                    {
+                                        item.AverageOdds = "0|0|0";
+                                    }
+                                }
+                            }
                             matchDataList.AddRange(oddlist_ctzq);
                         }
                         break;
@@ -3024,7 +3035,7 @@ namespace Lottery.Api.Controllers
                     var now = DateTime.Now;
                     foreach (var item in oddlist_jczq)
                     {
-                        if (item.State_HHDG.Contains("2") && Convert.ToDateTime(item.FSStopBettingTime) > now && item.NoSaleState_BRQSPF == "0")
+                        if (!item.PrivilegesType.Contains("9")&&item.State_HHDG.Contains("2") && Convert.ToDateTime(item.FSStopBettingTime) > now && item.NoSaleState_BRQSPF == "0")
                         {
                             result_jczq.Add(item);
                         }
@@ -3425,7 +3436,7 @@ namespace Lottery.Api.Controllers
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString() + "|" + gameresult,
+                    Message = "查询失败" + "●" + ex.ToString() + "|" + gameresult,
                     MsgId = "",
                     Value = ex.ToGetMessage(),
                 });
@@ -3910,6 +3921,542 @@ namespace Lottery.Api.Controllers
         //        });
         //    }
         //}        
+        #endregion
+
+        #region 查询合买红人
+        public async Task<IActionResult> QueryHotTogetherUserListFromRedis([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        {
+            try
+            {
+                var param = new Dictionary<string, object>();
+                var result = await _serviceProxyProvider.Invoke<TogetherHotUserInfo>(param, "api/Data/QueryHotTogetherUserListFromRedis");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "获取成功",
+                    MsgId = "",
+                    Value = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+        #endregion
+
+        #region 推广链接
+        public IActionResult SpreadLinks(LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string userToken = p.UserToken;
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                var Url_1 = ConfigHelper.AllConfigInfo["TGDomain_1"] + "?yqid=" + userId;
+                var Url_2 = ConfigHelper.AllConfigInfo["TGDomain_2"] + "?yqid=" + userId;
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = "",
+                    Value = new
+                    {
+                        Url_1,
+                        Url_2
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+        #endregion
+
+        #region 投诉
+
+        /// <summary>
+        /// 我的投诉建议
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Mysuggestions([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                int pageIndex = p.PageIndex;
+                int pageSize = p.PageSize;
+                string userToken = p.UserToken;
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                var param = new Dictionary<string, object>();
+                param.Add("pageIndex", pageIndex);
+                param.Add("pageSize", pageSize);
+                param.Add("UserId", userId);
+                var userIdeaList = await _serviceProxyProvider.Invoke<UserIdeaInfo_QueryCollection>(param, "api/user/QueryMyUserIdeaList");
+
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询投诉建议列表成功",
+                    MsgId = entity.MsgId,
+                    Value = userIdeaList,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+
+        }
+
+        /// <summary>
+        /// 提交建议
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Submitsuggestion([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                int pageOpenSpeed = p.pageOpenSpeed;
+                int interfaceBeautiful = p.interfaceBeautiful;
+                int composingReasonable = p.composingReasonable;
+                int operationReasonable = p.operationReasonable;
+                int contentConveyDistinct = p.contentConveyDistinct;
+                string mobile = p.mobile;
+                string category = p.category;
+                string suggestion = p.suggestion;
+                string userToken = p.UserToken;
+                string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                var param = new Dictionary<string, object>();
+                param["userId"] = userId;
+                var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/GetLocalLoginByUserId");
+                //var PageOpenSpeed = string.IsNullOrEmpty(Request["PageOpenSpeed"]) ? "1" : Request["PageOpenSpeed"];//页面打开速度
+                //var InterfaceBeautiful = string.IsNullOrEmpty(Request["InterfaceBeautiful"]) ? "1" : Request["InterfaceBeautiful"];//界面设计美观
+                //var ComposingReasonable = string.IsNullOrEmpty(Request["ComposingReasonable"]) ? "1" : Request["ComposingReasonable"];//排版展示合理
+                //var OperationReasonable = string.IsNullOrEmpty(Request["OperationReasonable"]) ? "1" : Request["OperationReasonable"];//操作过程合理
+                //var ContentConveyDistinct = string.IsNullOrEmpty(Request["ContentConveyDistinct"]) ? "1" : Request["ContentConveyDistinct"];//内容传达清晰
+                mobile = PreconditionAssert.IsNotEmptyString(mobile, "请输入您的手机号码，以便我们更好的为您服务。");
+                category = PreconditionAssert.IsNotEmptyString(category, "请选择问题分类，以便我们更好的处理问题。");
+                suggestion = PreconditionAssert.IsNotEmptyString(suggestion, "请输入您的投诉内容。");
+                PreconditionAssert.IsFalse(SensitiveAnalyzer.IsHaveSensitive(suggestion), "投诉内容不允许包含敏感词，如有疑问请联系客服。");
+                UserIdeaInfo_Add ideaInfo = new UserIdeaInfo_Add()
+                {
+                    Description = suggestion,
+                    Category = category,
+                    IsAnonymous = false,
+                    CreateUserId = userId,
+                    CreateUserDisplayName = loginInfo.DisplayName,
+                    CreateUserMoibile = mobile,
+                    PageOpenSpeed = pageOpenSpeed,
+                    InterfaceBeautiful = interfaceBeautiful,
+                    ComposingReasonable = composingReasonable,
+                    OperationReasonable = operationReasonable,
+                    ContentConveyDistinct = contentConveyDistinct,
+                };
+                param.Clear();
+                param.Add("userIdea", ideaInfo);
+                var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "api/data/SubmitUserIdea");
+                //var result = WCFClients.ExternalClient.SubmitUserIdea(ideaInfo);
+                return Json(new LotteryServiceResponse
+                {
+                    Code = result.IsSuccess?ResponseCode.成功: ResponseCode.失败,
+                    Message = "提交成功",
+                    MsgId = entity.MsgId,
+                    Value = "",
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+
+        }
+        #endregion
+
+        #region 中奖排行榜相关
+        /// <summary>
+        /// 大奖排行
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryRankReportBigBonusSport([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            //beginTime, endTime, _gameCode, gameType, pageIndex, pageSize
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                int days = p.days;
+                int pageIndex = p.pageIndex;
+                int pageSize = p.pageSize;
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                //string beginTimeStr = p.beginTime;
+                //string endTimeStr = p.endTime;
+                var beginTime = DateTime.Now.Date.AddDays(-days);
+                var endTime = DateTime.Now.Date.AddDays(1).Date;
+                var paramModel = new QueryBonusBase();
+                paramModel.fromDate = beginTime;
+                paramModel.gameCode = gameCode;
+                paramModel.toDate = endTime;
+                paramModel.pageSize = pageSize;
+                paramModel.pageIndex = pageIndex;
+                paramModel.gameType = gameType;
+                var param = new Dictionary<string, object>();
+                param.Add("QueryBase", paramModel);
+                var result = await _serviceProxyProvider.Invoke<RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BigBonus_Sport");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = entity.MsgId,
+                    Value = result,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        /// <summary>
+        /// 发单盈利
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryRankReportBettingProfitSport([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            //beginTime, endTime, _gameCode, gameType, pageIndex, pageSize
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                int days = p.days;
+                int pageIndex = p.pageIndex;
+                int pageSize = p.pageSize;
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                //string beginTimeStr = p.beginTime;
+                //string endTimeStr = p.endTime;
+                var beginTime = DateTime.Now.Date.AddDays(-days);
+                var endTime = DateTime.Now.Date.AddDays(1).Date;
+                var paramModel = new QueryBonusBase();
+                paramModel.fromDate = beginTime;
+                paramModel.gameCode = gameCode;
+                paramModel.toDate = endTime;
+                paramModel.pageSize = pageSize;
+                paramModel.pageIndex = pageIndex;
+                paramModel.gameType = gameType;
+                var param = new Dictionary<string, object>();
+                param.Add("QueryBase", paramModel);
+                var result = await _serviceProxyProvider.Invoke<RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_BettingProfit_Sport");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = entity.MsgId,
+                    Value = result,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        /// <summary>
+        /// 跟单盈利
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryRankReportJoinProfitSport([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            //beginTime, endTime, _gameCode, gameType, pageIndex, pageSize
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                int days = p.days;
+                int pageIndex = p.pageIndex;
+                int pageSize = p.pageSize;
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                //string beginTimeStr = p.beginTime;
+                //string endTimeStr = p.endTime;
+                var beginTime = DateTime.Now.Date.AddDays(-days);
+                var endTime = DateTime.Now.Date.AddDays(1).Date;
+                var paramModel = new QueryBonusBase();
+                paramModel.fromDate = beginTime;
+                paramModel.gameCode = gameCode;
+                paramModel.toDate = endTime;
+                paramModel.pageSize = pageSize;
+                paramModel.pageIndex = pageIndex;
+                paramModel.gameType = gameType;
+                var param = new Dictionary<string, object>();
+                param.Add("QueryBase", paramModel);
+                var result = await _serviceProxyProvider.Invoke<RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankReport_JoinProfit_Sport");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = entity.MsgId,
+                    Value = result,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+
+        /// <summary>
+        /// 合买人气
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryRankInfoListHotTogether([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            //beginTime, endTime, _gameCode, gameType, pageIndex, pageSize
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                int days = p.days;
+                int pageIndex = p.pageIndex;
+                int pageSize = p.pageSize;
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                //string beginTimeStr = p.beginTime;
+                //string endTimeStr = p.endTime;
+                var beginTime = DateTime.Now.Date.AddDays(-days);
+                var endTime = DateTime.Now.Date.AddDays(1).Date;
+                var paramModel = new QueryBonusBase();
+                paramModel.fromDate = beginTime;
+                paramModel.gameCode = gameCode;
+                paramModel.toDate = endTime;
+                paramModel.pageSize = pageSize;
+                paramModel.pageIndex = pageIndex;
+                paramModel.gameType = gameType;
+                var param = new Dictionary<string, object>();
+                param.Add("QueryBase", paramModel);
+                var result = await _serviceProxyProvider.Invoke<RankReportCollection_RankInfo_HotTogether>(param, "api/data/QueryRankInfoList_HotTogether");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = entity.MsgId,
+                    Value = result,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        /// <summary>
+        /// 成功战绩
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryRankInfoListSuccessOrderSport([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            //beginTime, endTime, _gameCode, gameType, pageIndex, pageSize
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                int days = p.days;
+                int pageIndex = p.pageIndex;
+                int pageSize = p.pageSize;
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                //string beginTimeStr = p.beginTime;
+                //string endTimeStr = p.endTime;
+                var beginTime = DateTime.Now.Date.AddDays(-days);
+                var endTime = DateTime.Now.Date.AddDays(1).Date;
+                var paramModel = new QueryBonusBase();
+                paramModel.fromDate = beginTime;
+                paramModel.gameCode = gameCode;
+                paramModel.toDate = endTime;
+                paramModel.pageSize = pageSize;
+                paramModel.pageIndex = pageIndex;
+                paramModel.gameType = gameType;
+                var param = new Dictionary<string, object>();
+                param.Add("QueryBase", paramModel);
+                var result = await _serviceProxyProvider.Invoke<RankReportCollection_BettingProfit_Sport>(param, "api/data/QueryRankInfoList_SuccessOrder_Sport");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = entity.MsgId,
+                    Value = result,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+        /// <summary>
+        /// 自动跟单
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryRankInfoListBeFollowerCount([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            //beginTime, endTime, _gameCode, gameType, pageIndex, pageSize
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                int days = p.days;
+                int pageIndex = p.pageIndex;
+                int pageSize = p.pageSize;
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                //string beginTimeStr = p.beginTime;
+                //string endTimeStr = p.endTime;
+                var beginTime = DateTime.Now.Date.AddDays(-days);
+                var endTime = DateTime.Now.Date.AddDays(1).Date;
+                var paramModel = new QueryBonusBase();
+                paramModel.fromDate = beginTime;
+                paramModel.gameCode = gameCode;
+                paramModel.toDate = endTime;
+                paramModel.pageSize = pageSize;
+                paramModel.pageIndex = pageIndex;
+                paramModel.gameType = gameType;
+                var param = new Dictionary<string, object>();
+                param.Add("QueryBase", paramModel);
+                var result = await _serviceProxyProvider.Invoke<RankReportCollection_RankInfo_BeFollower>(param, "api/data/QueryRankInfoList_BeFollowerCount");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = entity.MsgId,
+                    Value = result,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        /// <summary>
+        /// 累计中奖
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> QueryRankReportTotalBonusSport([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            //beginTime, endTime, _gameCode, gameType, pageIndex, pageSize
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                int days = p.days;
+                int pageIndex = p.pageIndex;
+                int pageSize = p.pageSize;
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                //string beginTimeStr = p.beginTime;
+                //string endTimeStr = p.endTime;
+                var beginTime = DateTime.Now.Date.AddDays(-days);
+                var endTime = DateTime.Now.Date.AddDays(1).Date;
+                var paramModel = new QueryBonusBase();
+                paramModel.fromDate = beginTime;
+                paramModel.gameCode = gameCode;
+                paramModel.toDate = endTime;
+                paramModel.pageSize = pageSize;
+                paramModel.pageIndex = pageIndex;
+                paramModel.gameType = gameType;
+                var param = new Dictionary<string, object>();
+                param.Add("QueryBase", paramModel);
+                var result = await _serviceProxyProvider.Invoke<RankReportCollection_TotalBonus_Sport>(param, "api/data/QueryRankReport_TotalBonus_Sport");
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查找成功",
+                    MsgId = entity.MsgId,
+                    Value = result,
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = entity.MsgId,
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+        
         #endregion
     }
 }

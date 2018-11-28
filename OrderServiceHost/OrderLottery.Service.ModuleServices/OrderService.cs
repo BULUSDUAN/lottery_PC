@@ -621,7 +621,9 @@ namespace OrderLottery.Service.ModuleServices
         {
             try
             {
-                return Task.FromResult(new SqlQueryBusiness().QueryReportInfoList_GuoGuan(isVirtualOrder, category, key, gameCode, gameType, issuseNumber, startTime, endTime, pageIndex, pageSize));
+                var list = WebRedisHelper.QueryReportInfoList_GuoGuan(isVirtualOrder, category, key, gameCode, gameType, issuseNumber, startTime, endTime, pageIndex, pageSize);
+                return Task.FromResult(list);
+                //return Task.FromResult(new SqlQueryBusiness().QueryReportInfoList_GuoGuan(isVirtualOrder, category, key, gameCode, gameType, issuseNumber, startTime, endTime, pageIndex, pageSize));
             }
             catch (Exception ex)
             {
@@ -688,6 +690,5 @@ namespace OrderLottery.Service.ModuleServices
         //        throw new Exception(ex.Message, ex);
         //    }
         //}
-
     }
 }

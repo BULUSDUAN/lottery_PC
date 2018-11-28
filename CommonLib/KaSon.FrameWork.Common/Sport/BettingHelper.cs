@@ -12,6 +12,8 @@ using System.Text;
 using EntityModel.CoreModel;
 using KaSon.FrameWork.Common.Net;
 using System.Globalization;
+using MongoDB.Driver;
+using MongoDB.Bson;
 
 namespace KaSon.FrameWork.Common.Sport
 {
@@ -409,7 +411,7 @@ namespace KaSon.FrameWork.Common.Sport
                 if (temp == null || string.IsNullOrEmpty(temp.PrivilegesType)) continue;
                 var privileArray = temp.PrivilegesType.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                 if (!string.IsNullOrEmpty(privileType) && privileArray.Contains(privileType))
-                    throw new Exception(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.Id, FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
+                    throw new LogicException(string.Format("{0} {1}玩法 暂不支持{2}投注", temp.Id, FormatGameType(gameCode, gameType), playType == "1_1" ? "单关" : "过关"));
             }
         }
 
@@ -1350,9 +1352,19 @@ namespace KaSon.FrameWork.Common.Sport
         /// <param name="type"></param>
         /// <param name="issuseId"></param>
         /// <returns></returns>
-        public static List<Web_CTZQ_BonusPoolInfo> GetPoolInfo_CTZQ(string type, string issuseId)
+        public static List<Web_CTZQ_BonusPoolInfo> GetPoolInfo_CTZQ(string GameType, string issuseId)
         {
-            var poolInfo = GetCTZQBonusPool(IssuseFile(type, issuseId));
+            var poolInfo = GetCTZQBonusPool(IssuseFile(GameType, issuseId));
+            //  var poolInfo = GetCTZQBonusPool(IssuseFile(type, issuseId));
+
+
+#if MGDB
+
+#else
+
+
+#endif
+
             return poolInfo;
         }
 
@@ -1369,7 +1381,7 @@ namespace KaSon.FrameWork.Common.Sport
             return JsonHelper.Deserialize<List<Web_CTZQ_BonusPoolInfo>>(result);
         }
 
-        #region 文件路径
+#region 文件路径
         /// <summary>
         /// 奖期数据文件
         /// </summary>
@@ -1384,6 +1396,13 @@ namespace KaSon.FrameWork.Common.Sport
             }
             return string.Format("/matchdata/{0}/{0}_{1}.json?_={2}", type, issuseId, DateTime.Now.ToString("yyyyMMddHHmmss"));
         }
+
+        private static List<CTZQ_BonusLevelInfo> IssuseCTZQ_Mg(string type, string issuseId)
+        {
+            return MgMatchDataHelper.CTZQ_BonusLevelInfo(type, issuseId);
+            // return string.Format("/matchdata/{0}/{0}_{1}.json?_={2}", type, issuseId, DateTime.Now.ToString("yyyyMMddHHmmss"));
+        }
+     
         #endregion
 
         #region 数字彩详情
@@ -1395,8 +1414,32 @@ namespace KaSon.FrameWork.Common.Sport
         /// <returns></returns>
         public static Web_SZC_BonusPoolInfo GetPoolInfo(string type, string issuseId)
         {
-            var poolInfo = GetSZCBonusPool(IssuseFile(type, issuseId));
-            return poolInfo;
+
+            Web_SZC_BonusPoolInfo result = new Web_SZC_BonusPoolInfo();
+
+
+            if (ConfigHelper.CrawDataBaseIsMongo)
+            {
+                try
+                {
+                    result = JsonHelper.Deserialize<Web_SZC_BonusPoolInfo>(MgMatchDataHelper.SZC_BonusLevelInfo(type, issuseId));
+                }
+                catch
+                {
+
+
+                }
+
+            }
+            else
+            {
+
+                result = GetSZCBonusPool(IssuseFile(type, issuseId));
+            }
+
+
+
+            return result;
         }
 
         public static Web_SZC_BonusPoolInfo GetSZCBonusPool(string filePath)
@@ -1406,7 +1449,7 @@ namespace KaSon.FrameWork.Common.Sport
                 return new Web_SZC_BonusPoolInfo();
             return JsonHelper.Deserialize<Web_SZC_BonusPoolInfo>(result);
         }
-        #endregion
+#endregion
 
         public static string GetResult(int homeTeamScore, int guestTeamScore)
         {
@@ -1969,7 +2012,7 @@ namespace KaSon.FrameWork.Common.Sport
         {
             var charList = new List<string>();
 
-            #region 特殊字符
+#region 特殊字符
 
             charList.Add("'");
             charList.Add("\"");
@@ -2011,7 +2054,7 @@ namespace KaSon.FrameWork.Common.Sport
             charList.Add("*/");
             charList.Add("\r\n");
 
-            #endregion
+#endregion
 
             if (charList.Contains(sqlCondition))
                 return true;

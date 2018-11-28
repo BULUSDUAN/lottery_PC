@@ -311,13 +311,13 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 修改后台用户信息
         /// todo:后台权限
         /// </summary>
-        public CommonActionResult UpdateBackgroundUserInfo(string userId, string displayName, string addRoleIdList, string removeRoleIdList)
+        public CommonActionResult UpdateBackgroundUserInfo(string userId, string addRoleIdList, string removeRoleIdList)
         {
             //// 验证用户身份及权限
             //var myId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);
 
             var business = new GameBusinessManagement();
-            business.UpdateBackgroundUserInfo(userId, displayName, addRoleIdList, removeRoleIdList);
+            business.UpdateBackgroundUserInfo(userId, addRoleIdList, removeRoleIdList);
             return new CommonActionResult(true, "修改后台管理人员信息成功");
         }
         #endregion
@@ -606,7 +606,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// 根据编号查询文章信息_后台
         /// todo:后台权限
         /// </summary>
-        public ArticleInfo_Query QueryArticleById_Admin(string articleId)
+        public E_SiteMessage_Article_List QueryArticleById_Admin(string articleId)
         {
             //// 验证用户身份及权限
             //var userId = GameBizAuthBusiness.ValidateUserAuthentication(userToken);

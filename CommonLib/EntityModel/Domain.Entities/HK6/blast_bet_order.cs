@@ -11,99 +11,138 @@ namespace EntityModel
     // 
     ///</summary>
     [ProtoContract]
-    [Entity("blast_bets", Type = EntityType.Table)]
+    [Entity("blast_bet_order", Type = EntityType.Table)]
     public class blast_bet_order
-    {
+    { 
         public blast_bet_order()
         {
-
+        
         }
+            /// <summary>
+            // 
+            ///</summary>
+            [ProtoMember(1)]
+            [Field("id", IsIdenty = true, IsPrimaryKey = true)]
+            public int id{ get; set; }
+            /// <summary>
+            // 
+            ///</summary>
+            [ProtoMember(2)]
+            [Field("userid")]
+            public int userId { get; set; }
+       
+          
+            /// <summary>
+            // 
+            ///</summary>
+            [ProtoMember(4)]
+            [Field("username")]
+            public string username{ get; set; }
         /// <summary>
-        // 
+        // 期号
         ///</summary>
-        [ProtoMember(1)]
-        [Field("Id", IsIdenty = true, IsPrimaryKey = true)]
-        public int Id { get; set; }
-
-        [Field("SchemeId")]
-        public string SchemeId { get; set; }
-
-
-        [Field("userid")]
-        public int userid { get; set; }
-
-        [Field("username")]
-        public string username { get; set; }
+        [ProtoMember(5)]
+            [Field("issueNo")]
+            public string issueNo { get; set; }
         /// <summary>
-        /// 投注时间
-        /// </summary>
-        [Field("BetTime")]
-        public DateTime BetTime { get; set; }
+        // 投注时间
+        ///</summary>
+        [ProtoMember(6)]
+            [Field("betTime")]
+            public DateTime betTime { get; set; }
 
         /// <summary>
-        /// 投注注数
-        /// </summary>
-        [Field("BetNum")]
-        public int BetNum { get; set; }
+        // 投注注数
+        ///</summary>
+        [ProtoMember(7)]
+            [Field("betNum")]
+            public int betNum { get; set; }
         /// <summary>
-        /// 停止时间
-        /// </summary>
-        [Field("BetStopTime")]
-        public DateTime BetStopTime { get; set; }
+        // 停止时间
+        ///</summary>
+        [ProtoMember(8)]
+            [Field("betStopTime")]
+            public DateTime betStopTime { get; set; }
+        /// <summary>
+        // 开奖时间
+        ///</summary>
+        [ProtoMember(9)]
+            [Field("winTime")]
+            public DateTime winTime { get; set; }
+       
+            /// <summary>
+            // 
+            ///</summary>
+            [ProtoMember(11)]
+            [Field("totalMoney")]
+            public decimal totalMoney { get; set; }
+        /// <summary>
+        // 合买
+        ///</summary>
+        [ProtoMember(12)]
+            [Field("hmEnable")]
+            public int hmEnable { get; set; }
 
-
-        [Field("winTime")]
-        public DateTime winTime { get; set; }
-
-
-        [Field("beiShu")]
-        public int beiShu { get; set; }
-
-
-        [Field("totalMoney")]
-        public decimal totalMoney { get; set; }
-
-
-        [Field("hmEnable")]
-        public bool hmEnable { get; set; }
-
-        [Field("winAnteCodeStop")]
-        public bool winAnteCodeStop { get; set; }
-
-
-        [Field("AnteCodeNum")]
-        public int AnteCodeNum { get; set; }
-
-
-
-
-        [Field("RedBagMoney")]
-        public decimal RedBagMoney { get; set; }
-
-        [Field("SchemeDeduct")]
-        public decimal SchemeDeduct { get; set; }
-
-
-        [Field("IsPayRebate")]
-        public bool IsPayRebate { get; set; }
-
-
-        [Field("AgentId")]
-        public int AgentId { get; set; }
-
-
-        [Field("SuccessMoney")]
-        public decimal SuccessMoney { get; set; }
-
-        [Field("RealPayRebateMoney")]
-        public decimal RealPayRebateMoney { get; set; }
-
-        [Field("TotalPayRebateMoney")]
-        public decimal TotalPayRebateMoney { get; set; }
-
-
-        [Field("CreateTime")]
-        public DateTime CreateTime { get; set; }
-
+        /// <summary>
+        // 中奖停止追号
+        ///</summary>
+        [ProtoMember(14)]
+            [Field("winAnteCodeStop")]
+            public int winAnteCodeStop { get; set; }
+        /// <summary>
+        // 红包金额
+        ///</summary>
+        [ProtoMember(15)]
+            [Field("redBagMoney")]
+            public decimal redBagMoney { get; set; }
+        /// <summary>
+        // 方案返利金额
+        ///</summary>
+        [ProtoMember(16)]
+            [Field("schemeDeduct")]
+            public decimal schemeDeduct { get; set; }
+        /// <summary>
+        // 是否已返点
+        ///</summary>
+        [ProtoMember(17)]
+            [Field("isPayRebate")]
+            public int isPayRebate { get; set; }
+        /// <summary>
+        // 代理商编号
+        ///</summary>
+        [ProtoMember(18)]
+            [Field("agentId")]
+            public int agentId { get; set; }
+        /// <summary>
+        // 实际计算返点的金额
+        ///</summary>
+        [ProtoMember(19)]
+            [Field("realPayRebateMoney")]
+            public decimal realPayRebateMoney { get; set; }
+        /// <summary>
+        // 总返点金额
+        ///</summary>
+        [ProtoMember(20)]
+            [Field("TotalPayRebateMoney")]
+            public decimal TotalPayRebateMoney { get; set; }
+            /// <summary>
+            // 
+            ///</summary>
+            [ProtoMember(21)]
+            [Field("CreateTime")]
+            public DateTime CreateTime { get; set; }
+        /// <summary>
+        // 追期期数
+        ///</summary>
+        [ProtoMember(22)]
+            [Field("anteCodeNum")]
+            public int anteCodeNum { get; set; }
+        /// <summary>
+        // 订单号
+        ///</summary>
+        [ProtoMember(23)]
+            [Field("SchemeId")]
+            public string SchemeId { get; set; }
+          
     }
 }
