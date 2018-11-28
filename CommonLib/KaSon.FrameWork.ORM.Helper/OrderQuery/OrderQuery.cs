@@ -168,7 +168,7 @@ namespace KaSon.FrameWork.ORM.Helper
                                         //文件内容不为空
                                         var currentList = JsonHelper.Deserialize<List<C_Fund_Detail>>(content);
                                         var querylist = from l in currentList
-                                                        where (Model.keyLine == string.Empty || l.KeyLine == Model.keyLine)
+                                                        where (Model.keyLine == "" || l.KeyLine == Model.keyLine)
                                                         && (accountArray.Length == 0 || accountArray.Contains(l.AccountType))
                                                         //&& (categoryArray.Length == 0 || categoryArray.Contains(l.Category))
                                                         select l;
@@ -1445,9 +1445,9 @@ namespace KaSon.FrameWork.ORM.Helper
             #region
             //var query = Model.byFollower ? (from f in DB.CreateQuery<C_Together_FollowerRule>()
             //                                join u in DB.CreateQuery<UserRegister>() on f.CreaterUserId equals u.UserId
-            //                                where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
-            //                                && (Model.gameType == string.Empty || f.GameType == Model.gameType)
-            //                                && (Model.userId == string.Empty || f.FollowerUserId == Model.userId)
+            //                                where (Model.gameCode == "" || f.GameCode == Model.gameCode)
+            //                                && (Model.gameType == "" || f.GameType == Model.gameType)
+            //                                && (Model.userId == "" || f.FollowerUserId == Model.userId)
             //                                select new TogetherFollowerRuleQueryInfo
             //                                {
             //                                    RuleId = f.Id,
@@ -1474,9 +1474,9 @@ namespace KaSon.FrameWork.ORM.Helper
             //                                }) :
             //                        (from f in DB.CreateQuery<C_Together_FollowerRule>()
             //                         join u in DB.CreateQuery<UserRegister>() on f.FollowerUserId equals u.UserId
-            //                         where (Model.gameCode == string.Empty || f.GameCode == Model.gameCode)
-            //                         && (Model.gameType == string.Empty || f.GameType == Model.gameType)
-            //                         && (Model.userId == string.Empty || f.CreaterUserId == Model.userId)
+            //                         where (Model.gameCode == "" || f.GameCode == Model.gameCode)
+            //                         && (Model.gameType == "" || f.GameType == Model.gameType)
+            //                         && (Model.userId == "" || f.CreaterUserId == Model.userId)
             //                         orderby f.FollowerIndex ascending
             //                         select new TogetherFollowerRuleQueryInfo
             //                         {
@@ -2289,7 +2289,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var collection = new MyOrderListInfoCollection();
             var query = from d in DB.CreateQuery<C_OrderDetail>()
                         where d.UserId == Model.userId
-                        && (Model.gameCode == string.Empty || d.GameCode == Model.gameCode)
+                        && (Model.gameCode == "" || d.GameCode == Model.gameCode)
                         && (Model.bonusStatus == null || d.BonusStatus == (int)Model.bonusStatus)
                         && (Model.schemeType == null || d.SchemeType == (int)Model.schemeType)
                         && (d.CreateTime >= Model.startTime && d.CreateTime < Model.endTime)

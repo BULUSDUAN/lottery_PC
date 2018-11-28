@@ -90,9 +90,9 @@ namespace KaSon.FrameWork.ORM.Helper
             int? Agent = (int?)agent;
             var query = (from r in DB.CreateQuery<C_Withdraw>()
                          join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
-                         where (userId == string.Empty || r.UserId == userId)                  
+                         where (userId == "" || r.UserId == userId)                  
                          && (status == -1 || r.Status == status)
-                         && (orderId == string.Empty || r.OrderId == orderId)
+                         && (orderId == "" || r.OrderId == orderId)
                          && (agent == null || r.WithdrawAgent == Agent)
                          && (minMoney == -1 || r.RequestMoney >= minMoney)
                          && (maxMoney == -1 || r.RequestMoney <= maxMoney)select new {r,u })
@@ -147,10 +147,10 @@ namespace KaSon.FrameWork.ORM.Helper
             int? Agent = (int?)agent;
             var query = (from r in DB.CreateQuery<C_Withdraw>()
                          join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
-                         where (userId == string.Empty || r.UserId == userId)
+                         where (userId == "" || r.UserId == userId)
                         && r.RequestTime >= startTime && r.RequestTime < endTime
                         && (status == -1 || r.Status == status)
-                        && (orderId == string.Empty || r.BankCode == orderId)
+                        && (orderId == "" || r.BankCode == orderId)
                         && (agent == null || r.WithdrawAgent == Agent)
                         && (minMoney == -1 || r.RequestMoney >= minMoney)
                         && (maxMoney == -1 || r.RequestMoney <= maxMoney)
@@ -262,11 +262,11 @@ namespace KaSon.FrameWork.ORM.Helper
             //            join u in this.Session.Query<UserRegister>() on c.UserId equals u.UserId
             //            join b in this.Session.Query<UserBeedings>() on new { GameCode = c.GameCode, GameType = c.GameType, UserId = c.UserId } equals new { GameCode = b.GameCode, GameType = b.GameType, UserId = b.UserId }
             //            where c.IsVirtualOrder == isVirtualOrder
-            //            && (key == string.Empty || (c.SchemeId == key || u.DisplayName == key))
+            //            && (key == "" || (c.SchemeId == key || u.DisplayName == key))
             //            && (c.GameCode == gameCode)
-            //            && (gameType == string.Empty || c.GameType == gameType)
-            //            && (issuseNumber == string.Empty || c.IssuseNumber == issuseNumber)
-            //            && (complateDate == string.Empty || c.ComplateDate == complateDate)
+            //            && (gameType == "" || c.GameType == gameType)
+            //            && (issuseNumber == "" || c.IssuseNumber == issuseNumber)
+            //            && (complateDate == "" || c.ComplateDate == complateDate)
             //            && (category == null || c.SchemeBettingCategory == category)
             //            orderby c.AfterTaxBonusMoney, c.TotalMoney descending
             //            select new SportsOrder_GuoGuanInfo

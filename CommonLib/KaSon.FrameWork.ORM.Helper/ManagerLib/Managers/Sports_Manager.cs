@@ -725,9 +725,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
             var query = byFollower ? (from f in DB.CreateQuery<C_Together_FollowerRule>()
                                       join u in DB.CreateQuery<C_User_Register>() on f.CreaterUserId equals u.UserId
-                                      where (gameCode == string.Empty || f.GameCode == gameCode)
-                                      && (gameType == string.Empty || f.GameType == gameType)
-                                      && (userId == string.Empty || f.FollowerUserId == userId)
+                                      where (gameCode == "" || f.GameCode == gameCode)
+                                      && (gameType == "" || f.GameType == gameType)
+                                      && (userId == "" || f.FollowerUserId == userId)
                                       select new { f,u}).ToList().Select(b=> new TogetherFollowerRuleQueryInfo
                                       {
                                           RuleId = b.f.Id,
@@ -754,9 +754,9 @@ namespace KaSon.FrameWork.ORM.Helper
                                       }) :
                                     (from f in DB.CreateQuery<C_Together_FollowerRule>()
                                      join u in DB.CreateQuery<C_User_Register>() on f.FollowerUserId equals u.UserId
-                                     where (gameCode == string.Empty || f.GameCode == gameCode)
-                                     && (gameType == string.Empty || f.GameType == gameType)
-                                     && (userId == string.Empty || f.CreaterUserId == userId)
+                                     where (gameCode == "" || f.GameCode == gameCode)
+                                     && (gameType == "" || f.GameType == gameType)
+                                     && (userId == "" || f.CreaterUserId == userId)
                                      orderby f.FollowerIndex ascending
                                      select new { f, u }).ToList().Select(b => new TogetherFollowerRuleQueryInfo
                                      {
@@ -796,7 +796,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         join u in DB.CreateQuery<C_User_Register>() on r.CreaterUserId equals u.UserId
                         join o in DB.CreateQuery<C_OrderDetail>() on r.SchemeId equals o.SchemeId
                         where r.FollowerUserId == userId && (ruleId < 1 || r.RuleId == ruleId)
-                        && (gameCode == string.Empty || r.GameCode == gameCode)
+                        && (gameCode == "" || r.GameCode == gameCode)
                         orderby r.CreateTime descending
                         select new {r,u,o }).ToList().Select(p=> new TogetherFollowRecordInfo
                         {
@@ -1267,7 +1267,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = (from r in DB.CreateQuery<C_Sports_Order_Complate>()
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         where (r.ComplateDateTime >= startTime && r.ComplateDateTime < endTime)
-                        && (gameCode == string.Empty || r.GameCode == gameCode)
+                        && (gameCode == "" || r.GameCode == gameCode)
                         && (r.AfterTaxBonusMoney + r.AddMoney) > 0M
                         //&& r.BonusStatus == BonusStatus.Win
                         && r.IsPrizeMoney == false
@@ -1324,7 +1324,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public List<C_User_Beedings> QueryUserBeedingsList(string gameCode, string gameType)
         {
           
-            return DB.CreateQuery<C_User_Beedings>().Where(p => p.GameCode == gameCode && (gameType == string.Empty || p.GameType == gameType)).ToList();
+            return DB.CreateQuery<C_User_Beedings>().Where(p => p.GameCode == gameCode && (gameType == "" || p.GameType == gameType)).ToList();
         }
 
         public List<C_Sports_Order_Complate> QuerySports_Order_ComplateByComplateTime(string userId, string gameCode, string gameType, DateTime startTime, DateTime endTime)
@@ -1333,7 +1333,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = from c in DB.CreateQuery<C_Sports_Order_Complate>()
                         where c.ComplateDateTime >= startTime && c.ComplateDateTime < endTime
                         && c.IsVirtualOrder == false
-                        && c.UserId == userId && (gameCode == string.Empty || c.GameCode == gameCode) && (gameType == string.Empty || c.GameType == gameType)
+                        && c.UserId == userId && (gameCode == "" || c.GameCode == gameCode) && (gameType == "" || c.GameType == gameType)
                         orderby c.ComplateDateTime descending
                         select c;
             return query.ToList();

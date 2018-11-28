@@ -65,7 +65,7 @@ namespace KaSon.FrameWork.ORM.Helper
             DateTime sTime = Convert.ToDateTime(startTime.ToShortDateString());
             DateTime eTime = Convert.ToDateTime(endTime.ToShortDateString());
             var query = from a in DB.CreateQuery<C_Activity_PrizeConfig>()
-                        where (title == string.Empty || a.ActivityTitle.Contains(title)) && (a.CreateTime >= sTime && a.CreateTime < eTime.AddDays(1))
+                        where (title == "" || a.ActivityTitle.Contains(title)) && (a.CreateTime >= sTime && a.CreateTime < eTime.AddDays(1))
                         select new ActivityPrizeConfigInfo
                             {
                                 ActivityId = a.ActivityId,
