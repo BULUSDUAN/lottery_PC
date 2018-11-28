@@ -1,0 +1,764 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.Sports_Order_Running,GameBiz.Business"  table="C_Sports_Order_Running">
+    <id name="SchemeId" type="String" unsaved-value="null">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="SchemeType" type="Int32">
+      <column name="SchemeType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Security" type="Int32">
+      <column name="Security" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SchemeBettingCategory" type="Int32">
+      <column name="SchemeBettingCategory" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SchemeSource" type="Int32">
+      <column name="SchemeSource" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Amount" type="Int32">
+      <column name="Amount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BetCount" type="Int32">
+      <column name="BetCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalMatchCount" type="Int32">
+      <column name="TotalMatchCount" length="4" sql-type="int" not-null="false"></column>
+    </property>
+    <property name="TotalMoney" type="Decimal">
+      <column name="TotalMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="SuccessMoney" type="Decimal">
+      <column name="SuccessMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="StopTime" type="DateTime">
+      <column name="StopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="TicketStatus" type="Int32">
+      <column name="TicketStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TicketGateway" type="String">
+      <column name="TicketGateway" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TicketProgress" type="Decimal">
+      <column name="TicketProgress" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TicketId" type="String">
+      <column name="TicketId" length="2000" sql-type="nvarchar(2000)" not-null="false"/>
+    </property>
+    <property name="TicketLog" type="String">
+      <column name="TicketLog" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="ProgressStatus" type="Int32">
+      <column name="ProgressStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BonusStatus" type="Int32">
+      <column name="BonusStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BonusCount" type="Int32">
+      <column name="BonusCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HitMatchCount" type="Int32">
+      <column name="HitMatchCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="RightCount" type="Int32">
+      <column name="RightCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Error1Count" type="Int32">
+      <column name="Error1Count" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Error2Count" type="Int32">
+      <column name="Error2Count" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MinBonusMoney" type="Decimal">
+      <column name="MinBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="MaxBonusMoney" type="Decimal">
+      <column name="MaxBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="PreTaxBonusMoney" type="Decimal">
+      <column name="PreTaxBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="AfterTaxBonusMoney" type="Decimal">
+      <column name="AfterTaxBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CanChase" type="Boolean">
+      <column name="CanChase" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsVirtualOrder" type="Boolean">
+      <column name="IsVirtualOrder" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsPayRebate" type="Boolean">
+      <column name="IsPayRebate" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="RealPayRebateMoney" type="Decimal">
+      <column name="RealPayRebateMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalPayRebateMoney" type="Decimal">
+      <column name="TotalPayRebateMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="BetTime" type="DateTime">
+      <column name="BetTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ExtensionOne" type="String">
+      <column name="ExtensionOne" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Attach" type="String">
+      <column name="Attach" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="QueryTicketStopTime" type="String">
+      <column name="QueryTicketStopTime" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsAppend" type="Boolean">
+      <column name="IsAppend" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="TicketTime" type="DateTime">
+      <column name="TicketTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="RedBagMoney" type="Decimal">
+      <column name="RedBagMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="IsSplitTickets" type="Boolean">
+      <column name="IsSplitTickets" length="1" sql-type="bit" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.UserSaveOrder,GameBiz.Business"  table="C_UserSaveOrder">
+    <id name="SchemeId" type="String" unsaved-value="null">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="StrStopTime" type="String">
+      <column name="StrStopTime" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="SchemeType" type="Int32">
+      <column name="SchemeType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SchemeSource" type="Int32">
+      <column name="SchemeSource" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SchemeBettingCategory" type="Int32">
+      <column name="SchemeBettingCategory" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="ProgressStatus" type="Int32">
+      <column name="ProgressStatus" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Amount" type="Int32">
+      <column name="Amount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BetCount" type="Int32">
+      <column name="BetCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalMoney" type="Decimal">
+      <column name="TotalMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="StopTime" type="DateTime">
+      <column name="StopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="SingleTreasureDeclaration" type="String">
+      <column name="SingleTreasureDeclaration" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="BDFXCommission" type="Decimal">
+      <column name="BDFXCommission" length="8" sql-type="money" not-null="false"></column>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Sports_Order_Complate,GameBiz.Business"  table="C_Sports_Order_Complate">
+    <id name="SchemeId" type="String" unsaved-value="null">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="SchemeType" type="Int32">
+      <column name="SchemeType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Security" type="Int32">
+      <column name="Security" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SchemeBettingCategory" type="Int32">
+      <column name="SchemeBettingCategory" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SchemeSource" type="Int32">
+      <column name="SchemeSource" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Amount" type="Int32">
+      <column name="Amount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BetCount" type="Int32">
+      <column name="BetCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalMatchCount" type="Int32">
+      <column name="TotalMatchCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalMoney" type="Decimal">
+      <column name="TotalMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="SuccessMoney" type="Decimal">
+      <column name="SuccessMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="StopTime" type="DateTime">
+      <column name="StopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="TicketStatus" type="Int32">
+      <column name="TicketStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TicketGateway" type="String">
+      <column name="TicketGateway" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TicketProgress" type="Decimal">
+      <column name="TicketProgress" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TicketId" type="String">
+      <column name="TicketId" length="2000" sql-type="nvarchar(2000)" not-null="false"/>
+    </property>
+    <property name="TicketLog" type="String">
+      <column name="TicketLog" sql-type="nvarchar(max)"  length="2147483647" not-null="false"/>
+    </property>
+    <property name="ProgressStatus" type="Int32">
+      <column name="ProgressStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BonusStatus" type="Int32">
+      <column name="BonusStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HitMatchCount" type="Int32">
+      <column name="HitMatchCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="RightCount" type="Int32">
+      <column name="RightCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Error1Count" type="Int32">
+      <column name="Error1Count" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Error2Count" type="Int32">
+      <column name="Error2Count" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MinBonusMoney" type="Decimal">
+      <column name="MinBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="MaxBonusMoney" type="Decimal">
+      <column name="MaxBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="PreTaxBonusMoney" type="Decimal">
+      <column name="PreTaxBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="AfterTaxBonusMoney" type="Decimal">
+      <column name="AfterTaxBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CanChase" type="Boolean">
+      <column name="CanChase" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsVirtualOrder" type="Boolean">
+      <column name="IsVirtualOrder" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsPayRebate" type="Boolean">
+      <column name="IsPayRebate" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="BetTime" type="DateTime">
+      <column name="BetTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="BonusCount" type="Int32">
+      <column name="BonusCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BonusCountDescription" type="String">
+      <column name="BonusCountDescription" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="BonusCountDisplayName" type="String">
+      <column name="BonusCountDisplayName" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="ComplateDateTime" type="DateTime">
+      <column name="ComplateDateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="ComplateDate" type="String">
+      <column name="ComplateDate" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsPrizeMoney" type="Boolean">
+      <column name="IsPrizeMoney" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="AddMoney" type="Decimal">
+      <column name="AddMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="DistributionWay" type="Int32">
+      <column name="DistributionWay" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="AddMoneyDescription" type="String">
+      <column name="AddMoneyDescription" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ExtensionOne" type="String">
+      <column name="ExtensionOne" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Attach" type="String">
+      <column name="Attach" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="IsAppend" type="Boolean">
+      <column name="IsAppend" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="RealPayRebateMoney" type="Decimal">
+      <column name="RealPayRebateMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalPayRebateMoney" type="Decimal">
+      <column name="TotalPayRebateMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TicketTime" type="DateTime">
+      <column name="TicketTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="RedBagMoney" type="Decimal">
+      <column name="RedBagMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="IsSplitTickets" type="Boolean">
+      <column name="IsSplitTickets" length="1" sql-type="bit" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Sports_AnteCode,GameBiz.Business"  table="C_Sports_AnteCode">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchId" type="String">
+      <column name="MatchId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AnteCode" type="String">
+      <column name="AnteCode" sql-type="nvarchar(max)"  length="2147483647" not-null="false"/>
+    </property>
+    <property name="IsDan" type="Boolean">
+      <column name="IsDan" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="Odds" type="String">
+      <column name="Odds" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="BonusStatus" type="Int32">
+      <column name="BonusStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  
+  <class name="GameBiz.Domain.Entities.Sports_AnteCode_History,GameBiz.Business"  table="C_Sports_AnteCode_History">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchId" type="String">
+      <column name="MatchId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AnteCode" type="String">
+      <column name="AnteCode" sql-type="nvarchar(max)"  length="2147483647" not-null="false"/>
+    </property>
+    <property name="IsDan" type="Boolean">
+      <column name="IsDan" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="Odds" type="String">
+      <column name="Odds" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="BonusStatus" type="Int32">
+      <column name="BonusStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  
+  <class name="GameBiz.Domain.Entities.LotteryScheme,GameBiz.Business"  table="C_Lottery_Scheme">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="KeyLine" type="String">
+      <column name="KeyLine" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OrderIndex" type="Int32">
+      <column name="OrderIndex" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IsComplate" type="Boolean">
+      <column name="IsComplate" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.SingleScheme_AnteCode,GameBiz.Business"  table="C_SingleScheme_AnteCode">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AllowCodes" type="String">
+      <column name="AllowCodes" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+    <property name="SelectMatchId" type="String">
+      <column name="SelectMatchId" sql-type="nvarchar(max)"  length="2147483647" not-null="false"/>
+    </property>
+    <property name="ContainsMatchId" type="Boolean">
+      <column name="ContainsMatchId" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="FileBuffer" type="BinaryBlob">
+      <column name="FileBuffer" sql-type="image" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.YouHuaScheme_AnteCode,GameBiz.Business"  table="C_YouHuaScheme_AnteCode">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OrderSign" type="String">
+      <column name="OrderSign" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="Amount" type="Int32">
+      <column name="Amount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchId" type="String">
+      <column name="MatchId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AnteCode" type="String">
+      <column name="AnteCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.Sports_Ticket,GameBiz.Business"  table="C_Sports_Ticket">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TicketId" type="String">
+      <column name="TicketId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchIdList" type="String">
+      <column name="MatchIdList" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="BetUnits" type="Int32">
+      <column name="BetUnits" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Amount" type="Int32">
+      <column name="Amount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BetMoney" type="Decimal">
+      <column name="BetMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="BetContent" type="String">
+      <column name="BetContent" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="LocOdds" type="String">
+      <column name="LocOdds" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="TicketStatus" type="Int32">
+      <column name="TicketStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TicketLog" type="String">
+      <column name="TicketLog" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+    <property name="PrintNumber1" type="String">
+      <column name="PrintNumber1" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PrintNumber2" type="String">
+      <column name="PrintNumber2" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PrintNumber3" type="String">
+      <column name="PrintNumber3" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BarCode" type="String">
+      <column name="BarCode" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="BonusStatus" type="Int32">
+      <column name="BonusStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="PreTaxBonusMoney" type="Decimal">
+      <column name="PreTaxBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="AfterTaxBonusMoney" type="Decimal">
+      <column name="AfterTaxBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="PrizeDateTime" type="DateTime">
+      <column name="PrizeDateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="PrintDateTime" type="DateTime">
+      <column name="PrintDateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="Gateway" type="String">
+      <column name="Gateway" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsAppend" type="Boolean">
+      <column name="IsAppend" length="1" sql-type="bit" not-null="false"/>
+    </property>
+  </class>
+  
+  <class name="GameBiz.Domain.Entities.Sports_Ticket_History,GameBiz.Business"  table="C_Sports_Ticket_History">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="50" sql-type="bigint"  not-null="true" unique="true"></column>
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TicketId" type="String">
+      <column name="TicketId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchIdList" type="String">
+      <column name="MatchIdList" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="BetUnits" type="Int32">
+      <column name="BetUnits" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Amount" type="Int32">
+      <column name="Amount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BetMoney" type="Decimal">
+      <column name="BetMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="BetContent" type="String">
+      <column name="BetContent" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="LocOdds" type="String">
+      <column name="LocOdds" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="TicketStatus" type="Int32">
+      <column name="TicketStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TicketLog" type="String">
+      <column name="TicketLog" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+    <property name="PrintNumber1" type="String">
+      <column name="PrintNumber1" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PrintNumber2" type="String">
+      <column name="PrintNumber2" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PrintNumber3" type="String">
+      <column name="PrintNumber3" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BarCode" type="String">
+      <column name="BarCode" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="BonusStatus" type="Int32">
+      <column name="BonusStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="PreTaxBonusMoney" type="Decimal">
+      <column name="PreTaxBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="AfterTaxBonusMoney" type="Decimal">
+      <column name="AfterTaxBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="PrizeDateTime" type="DateTime">
+      <column name="PrizeDateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="PrintDateTime" type="DateTime">
+      <column name="PrintDateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="Gateway" type="String">
+      <column name="Gateway" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsAppend" type="Boolean">
+      <column name="IsAppend" length="1" sql-type="bit" not-null="false"/>
+    </property>
+  </class>
+  
+  <class name="GameBiz.Domain.Entities.SingleSchemeOrder,GameBiz.Business"  table="T_SingleScheme_Order">
+    <id name="OrderId" type="String" unsaved-value="null">
+      <column name="OrderId" length="50" sql-type="nvarchar(50)"  not-null="true" unique="true"></column>
+    </id>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String">
+      <column name="PlayType" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="IssuseNumber" type="String">
+      <column name="IssuseNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SelectMatchId" type="String">
+      <column name="SelectMatchId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AllowCodes" type="String">
+      <column name="AllowCodes" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ContainsMatchId" type="Boolean">
+      <column name="ContainsMatchId" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsVirtualOrder" type="Boolean">
+      <column name="IsVirtualOrder" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="Amount" type="Int32">
+      <column name="Amount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalMoney" type="Decimal">
+      <column name="TotalMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="FileBuffer" type="String">
+      <column name="FileBuffer" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <sql-query name="P_PrizeTicketList" read-only="true">
+    EXEC [P_PrizeTicketList] @GameCode=:gameCode,@Num=:num
+  </sql-query>
+
+  <sql-query name="P_Prize_OrderTicketList" read-only="true">
+    EXEC [P_Prize_OrderTicketList] @GameCode=:gameCode,@SchemeId=:schemeId
+  </sql-query>
+
+</hibernate-mapping>

@@ -37,10 +37,10 @@ namespace KaSon.FrameWork.ORM.Helper
                         join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
                         join real in DB.CreateQuery<E_Authentication_RealName>() on r.UserId equals real.UserId
                         join m in DB.CreateQuery<E_Authentication_Mobile>() on r.UserId equals m.UserId
-                        where (userId == string.Empty || r.UserId == userId)
+                        where (userId == "" || r.UserId == userId)
                         && r.RequestTime >= startTime && r.RequestTime < endTime
                         && (status == null || r.Status == (int)status)
-                        && (bankcode == string.Empty || bankcode == r.BankCode)
+                        && (bankcode == "" || bankcode == r.BankCode)
                         && (agent == null || r.WithdrawAgent == (int)agent)
                         && (minMoney == -1 || r.RequestMoney >= minMoney)
                         && (maxMoney == -1 || r.RequestMoney < maxMoney)

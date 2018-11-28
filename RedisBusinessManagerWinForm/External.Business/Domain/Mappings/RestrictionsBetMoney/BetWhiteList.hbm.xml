@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Domain.Entities.RestrictionsBetMoney.BetWhiteList, External.Business"  table="E_Bet_WhiteList">
+    <id name="WhiteLlistId" type="Int32" unsaved-value="null">
+      <column name="WhiteLlistId" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UserDisplayName" type="String">
+      <column name="UserDisplayName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsEnable" type="Boolean">
+      <column name="IsEnable" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="ExpansionOne" type="String">
+      <column name="ExpansionOne" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="ExpansionTwo" type="Decimal">
+      <column name="ExpansionTwo" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="RegisterTime" type="DateTime">
+      <column name="RegisterTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="IsOpenHeMai" type="Boolean">
+      <column name="IsOpenHeMai" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsOpenBDFX" type="Boolean">
+      <column name="IsOpenBDFX" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsSingleScheme" type="Boolean">
+      <column name="IsSingleScheme" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="SiteList" type="String">
+      <column name="SiteList" length="200" sql-type="nvarchar(200)" not-null="false"/>
+    </property>
+  </class>
+
+</hibernate-mapping>

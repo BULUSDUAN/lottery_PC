@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Domain.Entities.Celebritys.WinnerModelBidding,External.Business"  table="C_Winner_ModelBidding">
+    <id name="ModelId" type="String" unsaved-value="null">
+      <column name="ModelId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ClickNumber" type="Int32">
+      <column name="ClickNumber" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BidDouDou" type="Decimal">
+      <column name="BidDouDou" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CurrBidDouDou" type="Decimal">
+      <column name="CurrBidDouDou" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="ModifyTime" type="DateTime">
+      <column name="ModifyTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="IsSystemRecom" type="Boolean">
+      <column name="IsSystemRecom" length="1" sql-type="bit" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

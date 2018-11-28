@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.PluginClass,GameBiz.Business"  table="C_Activity_PluginClass">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="ClassName" type="String">
+      <column name="ClassName" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="InterfaceName" type="String">
+      <column name="InterfaceName" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="AssemblyFileName" type="String">
+      <column name="AssemblyFileName" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="IsEnable" type="Boolean">
+      <column name="IsEnable" length="1" sql-type="bit" not-null="false"></column>
+    </property>
+    <property name="OrderIndex" type="Int32">
+      <column name="OrderIndex" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="StartTime" type="DateTime">
+      <column name="StartTime" length="20" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="EndTime" type="DateTime">
+      <column name="EndTime" length="20" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

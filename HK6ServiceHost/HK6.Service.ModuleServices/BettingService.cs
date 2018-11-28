@@ -177,7 +177,7 @@ namespace HK6.ModuleBaseServices
                         issueNo = info.issueNo.ToString(),
                         OddsArr = AnteCodes,
                         ProgressStatus =0,
-
+                        unitPrice=item.unitPrice,
                         CreateTime = DateTime.Now
 
                     };
@@ -202,6 +202,8 @@ namespace HK6.ModuleBaseServices
                 DB.Commit();
 
                 #region 是否执行插件
+
+                //不需要执行插件
 
                 #endregion
                 //返回

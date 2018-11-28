@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <!-- 查询我的订单 -->
+  <sql-query name="P_Order_QueryMyOrderList" read-only="true">
+    EXEC [P_Order_QueryMyOrderList] @UserId=:userId,@BonusStatus=:bonusStatus,@GameCode=:gameCode
+      ,@FromDate=:fromDate,@ToDate=:toDate,@PageIndex=:pageIndex,@PageSize=:pageSize
+      ,@TotalCount=:totalCount OUTPUT,@TotalBuyMoney=:totalBuyMoney OUTPUT,@TotalBonusMoney=:totalBonusMoney OUTPUT
+  </sql-query>
+  <!-- 查询我的追号订单列表 -->
+  <sql-query name="P_Order_QueryMyChaseOrderList" read-only="true">
+    EXEC [P_Order_QueryMyChaseOrderList] @UserId=:userId,@GameCode=:gameCode
+    ,@FromDate=:fromDate,@ToDate=:toDate,@PageIndex=:pageIndex,@PageSize=:pageSize
+  </sql-query>
+  <!-- 查询订单列表 -->
+  <sql-query name="P_Order_QueryOrderList" read-only="true">
+    EXEC [P_Order_QueryOrderList] @UserId=:userId,@SchemeType=:schemeType,@ProgressStatus=:progressStatus,@BetCategory=:betCategory,@BonusStatus=:bonusStatus,@IsVirtual=:isVirtual,@SchemeSource=:schemeSource,@GameCode=:gameCode
+    ,@FromDate=:fromDate,@ToDate=:toDate,@SortType=:sortType,@AgentId=:agentId,@PageIndex=:pageIndex,@PageSize=:pageSize,@FieldName=:fieldName
+  </sql-query>
+  <!-- 按keyline查询追号列表 -->
+  <sql-query name="P_Order_QueryOrderListByChaseKeyLine" read-only="true">
+    EXEC [P_Order_QueryOrderListByChaseKeyLine] @KeyLine=:keyLine
+  </sql-query>
+  <!-- 查询指定订单的投注号码列表 -->
+  <sql-query name="P_Order_QueryAnteCodeListBySchemeId" read-only="true">
+    EXEC [P_Order_QueryAnteCodeListBySchemeId] @SchemeId=:schemeId
+  </sql-query>
+  <!-- 查询订单列表 -->
+  <sql-query name="P_Order_QueryCreateTogetherSchemeListByUserId" read-only="true">
+    EXEC [P_Order_QueryCreateTogetherSchemeListByUserId] @UserId=:userId,@BonusStatus=:bonusStatus,@GameCode=:gameCode,@DateFrom=:dateFrom,@DateTo=:dateTo,@PageIndex=:pageIndex,@PageSize=:pageSize
+    ,@TotalCount=:totalCount OUTPUT,@TotalBuyMoney=:totalBuyMoney OUTPUT,@TotalOrderMoney=:totalOrderMoney OUTPUT
+  </sql-query>
+  <!-- 查询订单列表 -->
+  <sql-query name="P_Order_QueryJoinTogetherSchemeListByUserId" read-only="true">
+    EXEC [P_Order_QueryJoinTogetherSchemeListByUserId] @UserId=:userId,@BonusStatus=:bonusStatus,@GameCode=:gameCode,@DateFrom=:dateFrom,@DateTo=:dateTo,@PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+  <!-- 查询合买创建统计报表 -->
+  <sql-query name="P_Order_QueryCreateTogetherReportGroupByUser" read-only="true">
+    EXEC [P_Order_QueryCreateTogetherReportGroupByUser] @UserIdList=:userIdList,@DateFrom=:dateFrom,@DateTo=:dateTo
+  </sql-query>
+
+  <!-- 中奖订单查询 -->
+  <sql-query name="P_Order_QueryBonusOrderList" read-only="true">
+    EXEC [P_Order_QueryBonusOrderList] @UserId=:userId,@GameCode=:gameCode,@GameType=:gameType,@IssuseNumber=:issuseNumber,@CompleteData=:completeData,@Key_UID_UName_SchemeId=:key
+      ,@PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+
+  <!-- 查询发单盈利排行榜 - 竞彩类 -->
+  <sql-query name="P_Rank_QueryBettingProfitRank_Sport" read-only="true">
+    EXEC [P_Rank_QueryBettingProfitRank_Sport] @ReportFromDate=:fromDate,@ReportToDate=:toDate,@GameCode=:gameCode,@GameType=:gameType,@PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+  <!-- 查询大奖排行榜 -->
+  <sql-query name="P_Rank_QueryBigBonusRank_Sport" read-only="true">
+    EXEC [P_Rank_QueryBigBonusRank_Sport] @ReportFromDate=:fromDate,@ReportToDate=:toDate,@GameCode=:gameCode,@GameType=:gameType,@PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+  <!-- 查询跟单盈利排行榜 - 竞彩类 -->
+  <sql-query name="P_Rank_QueryJoinProfitRank_Sport" read-only="true">
+    EXEC [P_Rank_QueryJoinProfitRank_Sport] @ReportFromDate=:fromDate,@ReportToDate=:toDate,@GameCode=:gameCode,@GameType=:gameType,@PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+  <!-- 查询累积中奖排行榜 - 竞彩类 -->
+  <sql-query name="P_Rank_QueryTotalBonusRank_Sport" read-only="true">
+    EXEC [P_Rank_QueryTotalBonusRank_Sport] @ReportFromDate=:fromDate,@ReportToDate=:toDate,@GameCode=:gameCode,@GameType=:gameType,@PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+  <!-- 中奖排行榜 - 按彩种查 -->
+  <sql-query name="P_Rank_QueryBonusRankByGameCode_All" read-only="true">
+    EXEC [P_Rank_QueryBonusRankByGameCode_All] @ReportFromDate=:fromDate,@ReportToDate=:toDate,@TopCount=:topCount,@GameCode=:gameCode
+  </sql-query>
+
+  <!-- 查询用户资金明细 -->
+  <sql-query name="P_User_QueryUserFundDetail" read-only="true">
+    EXEC [P_User_QueryUserFundDetail] @UserId=:userId,@FromDate=:fromDate,@ToDate=:toDate,@AccountTypeList=:accountTypeList,@CategoryList=:categoryList,@PageIndex=:pageIndex,@PageSize=:pageSize
+  </sql-query>
+  <!-- NEW查询用户资金明细 -->
+  <sql-query name="P_Fund_QueryMyFundDetail_Report" read-only="true">
+    EXEC [P_Fund_QueryMyFundDetail_Report] @UserId=:UserId,@KeyLine=:KeyLine,@StartTime=:StartTime,@EndTime=:EndTime,@AccountList=:AccountList,@CategoryList=:CategoryList,@PageIndex=:PageIndex,@PageSize=:PageSize
+  </sql-query>
+  <!-- 查询过关统计 - 竞彩类 -->
+  <sql-query name="P_Report_GuoGuanTongJi_Sport" read-only="true">
+    EXEC [P_Report_GuoGuanTongJi_Sport] @isVirtualOrder=:isVirtualOrder,@bettingCategory=:bettingCategory,@key_UID_UName_SchemeId=:key_UID_UName_SchemeId,@gameCode=:gameCode,@gameType=:gameType,@issuseNumber=:issuseNumber,@startTime=:startTime,@endTime=:endTime,@pageIndex=:pageIndex,@pageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+  
+  <!-- 查询提现明细 -->
+  <sql-query name="P_Fund_QueryWithdrawList" read-only="true">
+    EXEC [P_Fund_QueryWithdrawList] @UserId=:UserId,@WithdrawStatus=:withdrawStatus,@StartTime=:startTime,@EndTime=:endTime,@PageIndex=:PageIndex,@PageSize=:PageSize,@TotalCount=:TotalCount OUTPUT,@TotalMoney=:totalMoney OUTPUT
+  </sql-query>
+  <!-- 查询充值明细 -->
+  <sql-query name="P_Fund_QueryFillMoneyList" read-only="true">
+    EXEC [P_Fund_QueryFillMoneyList] @UserId=:userId,@AgentList=:agentList,@StatusList=:statusList,@SourceList=:sourceList,@StartTime=:startTime,@EndTime=:endTime
+    ,@PageIndex=:pageIndex,@PageSize=:pageSize,@OrderId=:orderId,@TotalCount=:totalCount OUTPUT,@TotalRequestMoney=:totalRequestMoney OUTPUT,@TotalResponseMoney=:totalResponseMoney OUTPUT
+  </sql-query>
+  <!-- 充值专员查询充值明细 -->
+  <sql-query name="P_Fund_QueryFillMoneyListByCzzy" read-only="true">
+    EXEC [P_Fund_QueryFillMoneyListByCzzy] @UserId=:userId,@AgentList=:agentList,@StatusList=:statusList,@SourceList=:sourceList,@StartTime=:startTime,@EndTime=:endTime
+    ,@PageIndex=:pageIndex,@PageSize=:pageSize,@OrderId=:orderId,@TotalCount=:totalCount OUTPUT,@TotalRequestMoney=:totalRequestMoney OUTPUT,@TotalResponseMoney=:totalResponseMoney OUTPUT
+  </sql-query>
+  <!--查询用户当前投注-->
+  <sql-query name="P_Order_QueryUserCurrentOrderList" read-only="true">
+    EXEC [P_Order_QueryUserCurrentOrderList] @UserId=:UserId,@GameCode=:GameCode,@PageIndex=:PageIndex,@PageSize=:PageSize,@TotalCount=:TotalCount OUTPUT
+  </sql-query>
+  <!--查询用户当前参与的合买-->
+  <sql-query name="P_Order_QueryUserCurrentTogetherOrderList" read-only="true">
+    EXEC [P_Order_QueryUserCurrentTogetherOrderList] @UserId=:UserId,@GameCode=:GameCode,@PageIndex=:PageIndex,@PageSize=:PageSize,@TotalCount=:TotalCount OUTPUT
+  </sql-query>
+  <!--后台查询人员列表-->
+  <sql-query name="P_User_QueryOpratorList" read-only="true">
+    EXEC [P_User_QueryOpratorList] @PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+  <!--分页存储过程-->
+  <sql-query name="P_Core_Pager" read-only="true">
+    EXEC [P_Core_Pager] @sqlStr=:sqlStr,@currentPageIndex=:currentPageIndex,@pageSize=:pageSize
+  </sql-query>  
+  <!--后台首页统计-->
+  <sql-query name="P_Report_BackgroundIndexsStatistics" read-only="true">
+    EXEC [P_Report_BackgroundIndexsStatistics] @sTime=:sTime,@eTime=:eTime
+  </sql-query>
+  <!--后台用户购彩情况统计-->
+  <sql-query name="P_Report_QueryUserBetStatistics" read-only="true">
+    EXEC [P_Report_QueryUserBetStatistics]
+  </sql-query>
+  <!--后台导出代理返点金额-->
+  <sql-query name="P_Report_QueryAgentRebateStatistics" read-only="true">
+    EXEC [P_Report_QueryAgentRebateStatistics] @ViewType=:ViewType,@GS_AgentId=:GS_AgentId,@StartTime=:StartTime,@EndTime=:EndTime
+  </sql-query>
+  <!--查询今日宝单【宝单分享】-->
+  <sql-query name="P_Order_QueryTodayBDFX" read-only="true">
+    EXEC [P_Order_QueryTodayBDFX] @GameCode=:GameCode,@UserName=:UserName,@UserId=:UserId,@OrderBy=:OrderBy,@Desc=:Desc,@StartTime=:StartTime,@EndTime=:EndTime,@LastweekStartTime=:LastweekStartTime,@LastweekEndTime=:LastweekEndTime,@PageIndex=:PageIndex,@PageSize=:PageSize,@IsMyBD=:IsMyBD,@TotalCount=:TotalCount OUTPUT
+  </sql-query>
+  <!--查询高手排行【宝单分享】-->
+  <sql-query name="P_QueryBDFXGSRank" read-only="true">
+    EXEC [P_QueryBDFXGSRank] @CurrUserId=:CurrUserId,@StartTime=:StartTime,@EndTime=:EndTime,@IsMyGZ=:IsMyGZ,@LastweekStartTime=:LastweekStartTime,@LastweekEndTime=:LastweekEndTime
+  </sql-query>
+  <!--查询我的主页【宝单分享】-->
+  <sql-query name="P_QueryBDFXAutherHomePage" read-only="true">
+    EXEC [P_QueryBDFXAutherHomePage] @UserId=:UserId,@CurrentTime=:CurrentTime,@StrIsBonus=:StrIsBonus,@PageIndex=:PageIndex,@PageSize=:PageSize,@TotalCount=:TotalCount OUTPUT,@AllTotalBuyCount=:AllTotalBuyCount OUTPUT,@AllTotalBonusMoney=:AllTotalBonusMoney OUTPUT
+  </sql-query>
+  <!--代理平台查询推广销量-->
+  <sql-query name="P_Agent_QueryLowerAgentSaleList" read-only="true">
+    EXEC [P_Agent_QueryLowerAgentSaleList] @agentId=:AgentId,@startTime=:StartTime,@endTime=:EndTime,@totalCount=:TotalCount OUTPUT
+  </sql-query>
+</hibernate-mapping>

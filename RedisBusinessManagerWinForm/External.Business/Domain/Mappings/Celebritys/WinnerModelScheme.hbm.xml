@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Domain.Entities.Celebritys.WinnerModelScheme,External.Business"  table="C_Winner_ModelScheme">
+    <id name="ModelSchemeId" type="Int32" unsaved-value="null">
+      <column name="ModelSchemeId" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="ModelId" type="String">
+      <column name="ModelId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ModelKeyLine" type="String">
+      <column name="ModelKeyLine" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="ModelName" type="String">
+      <column name="ModelName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="SchemeProgressStatus" type="Int32">
+      <column name="SchemeProgressStatus" length="4" sql-type="int" not-null="false"></column>
+    </property>
+    <property name="TotalChaseIssuseCount" type="Int32">
+      <column name="TotalChaseIssuseCount" length="4" sql-type="int" not-null="false"></column>
+    </property>
+    <property name="TotalMoney" type="Decimal">
+      <column name="TotalMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalBonusMoney" type="Decimal">
+      <column name="TotalBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="IsProfitedStop" type="Boolean" >
+      <column name="IsProfitedStop" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CompleteIssuseCount" type="Int32">
+      <column name="CompleteIssuseCount" length="4" sql-type="int" not-null="false"></column>
+    </property>
+    <property name="CompleteIssuseMoney" type="Decimal">
+      <column name="CompleteIssuseMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="IsStop" type="Boolean" >
+      <column name="IsStop" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="StopTime" type="DateTime">
+      <column name="StopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="StopDesc" type="String">
+      <column name="StopDesc" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="ProfiteRatio" type="Decimal">
+      <column name="ProfiteRatio" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="BettingType" type="Int32">
+      <column name="BettingType" length="4" sql-type="int" not-null="false"></column>
+    </property>
+    <property name="BuyType" type="Int32">
+      <column name="BuyType" length="4" sql-type="int" not-null="false"></column>
+    </property>
+    <property name="CurrLossMoney" type="Decimal">
+      <column name="CurrLossMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+  </class>
+</hibernate-mapping>

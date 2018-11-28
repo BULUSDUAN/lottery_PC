@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.FillMoney,GameBiz.Business"  table="C_FillMoney">
+    <id name="OrderId" type="String" unsaved-value="null">
+      <column name="OrderId" length="50" sql-type="nvarchar(50)"  not-null="true" unique="true"></column>
+    </id>
+    <property name="FillMoneyAgent" type="Int32">
+      <column name="FillMoneyAgent" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="true"></column>
+    </property>
+    <property name="GoodsName" type="String">
+      <column name="GoodsName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="GoodsType" type="String">
+      <column name="GoodsType" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="GoodsDescription" type="String">
+      <column name="GoodsDescription" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="IsNeedDelivery" type="String">
+      <column name="IsNeedDelivery" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="DeliveryAddress" type="String">
+      <column name="DeliveryAddress" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="RequestBy" type="String">
+      <column name="RequestBy" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="RequestExtensionInfo" type="String">
+      <column name="RequestExtensionInfo" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="RequestMoney" type="Decimal">
+      <column name="RequestMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="PayMoney" type="Decimal">
+      <column name="PayMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="RequestTime" type="DateTime">
+      <column name="RequestTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="ReturnUrl" type="String">
+      <column name="ReturnUrl" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="NotifyUrl" type="String">
+      <column name="NotifyUrl" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="ShowUrl" type="String">
+      <column name="ShowUrl" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="Status" type="Int32">
+      <column name="Status" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="ResponseBy" type="String">
+      <column name="ResponseBy" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="ResponseCode" type="String">
+      <column name="ResponseCode" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="ResponseMessage" type="String">
+      <column name="ResponseMessage" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="ResponseMoney" type="Decimal">
+      <column name="ResponseMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="ResponseTime" type="DateTime">
+      <column name="ResponseTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="OuterFlowId" type="String">
+      <column name="OuterFlowId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="SchemeSource" type="Int32">
+      <column name="SchemeSource" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

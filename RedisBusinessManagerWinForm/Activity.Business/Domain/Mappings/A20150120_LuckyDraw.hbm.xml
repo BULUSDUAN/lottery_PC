@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Activity.Domain.Entities.A20150120_LuckyDraw, Activity.Business"  table="E_A20150120_LuckyDraw">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="LotteryNumber" type="String" >
+      <column name="LotteryNumber" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+    <property name="IsUse" type="Boolean" >
+      <column name="IsUse" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="BelongUserId" type="String" >
+      <column name="BelongUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BelongUserName" type="String" >
+      <column name="BelongUserName" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+    <property name="LotteryType" type="String" >
+      <column name="LotteryType" length="100" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+    <property name="AgentId" type="String" >
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

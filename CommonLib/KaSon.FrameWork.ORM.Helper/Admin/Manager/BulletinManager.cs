@@ -70,7 +70,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             var endDate = endTime.AddDays(1).Date;
             var query = from s in DB.CreateQuery<E_Sitemessage_Banner>()
-                        where (title == string.Empty || s.BannerTitle.Contains(title)) &&
+                        where (title == "" || s.BannerTitle.Contains(title)) &&
                             (s.CreateTime >= startTime.Date && s.CreateTime < endDate)
                         select s;
             if (query != null)

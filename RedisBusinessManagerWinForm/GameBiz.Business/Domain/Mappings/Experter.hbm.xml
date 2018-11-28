@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.Experter,GameBiz.Business"  table="E_Experter">
+    <id name="UserId" type="String" unsaved-value="null">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="ExperterSummary" type="String">
+      <column name="ExperterSummary" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="ExperterHeadImage" type="String">
+      <column name="ExperterHeadImage" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="AdeptGameCode" type="String">
+      <column name="AdeptGameCode" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="RecentlyOrderCount" type="Int32">
+      <column name="RecentlyOrderCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="ExperterType" type="Int32">
+      <column name="ExperterType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="WeekShooting" type="Decimal">
+      <column name="WeekShooting" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="MonthShooting" type="Decimal">
+      <column name="MonthShooting" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalShooting" type="Decimal">
+      <column name="TotalShooting" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="WeekRate" type="Decimal">
+      <column name="WeekRate" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="MonthRate" type="Decimal">
+      <column name="MonthRate" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalRate" type="Decimal">
+      <column name="TotalRate" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="IsEnable" type="Boolean">
+      <column name="IsEnable" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="DealWithType" type="Int32">
+      <column name="DealWithType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="DisposeOpinion" type="String">
+      <column name="DisposeOpinion" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.ExperterAnalyzeScheme,GameBiz.Business"  table="E_Experter_AnalyzeScheme">
+    <id name="AnalyzeId" type="String" unsaved-value="null">
+      <column name="AnalyzeId" length="50" sql-type="nvarchar(50)"  not-null="true" unique="true"/>
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Title" type="String">
+      <column name="Title" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Source"  type="String">
+      <column name="Source" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Content" type="String">
+      <column name="Content" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="Price" type="Decimal">
+      <column name="Price" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="SellCount" type="Int32">
+      <column name="SellCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="DealWithType" type="Int32">
+      <column name="DealWithType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="DisposeOpinion" type="String">
+      <column name="DisposeOpinion" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="CurrentTime" type="String">
+      <column name="CurrentTime" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.ExperterAnalyzeTransaction,GameBiz.Business"  table="E_Experter_AnalyzeTransaction">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="AnalyzeId" type="String">
+      <column name="AnalyzeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ExperterId"  type="String">
+      <column name="ExperterId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Price" type="Decimal">
+      <column name="Price" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CurrentTime" type="String">
+      <column name="CurrentTime" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.ExperterComments,GameBiz.Business"  table="E_Experter_Comments">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SendUserId" type="String">
+      <column name="SendUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="RecommendSchemeId" type="String">
+      <column name="RecommendSchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AnalyzeSchemeId" type="String">
+      <column name="AnalyzeSchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Content" type="String">
+      <column name="Content" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="DealWithType" type="Int32">
+      <column name="DealWithType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CommentsTpye" type="Int32">
+      <column name="CommentsTpye" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="DisposeOpinion" type="String">
+      <column name="DisposeOpinion" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="CurrentTime" type="String">
+      <column name="CurrentTime" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.ExperterScheme,GameBiz.Business"  table="E_Experter_Scheme">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ExperterType" type="Int32">
+      <column name="ExperterType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="BetMoney" type="Decimal">
+      <column name="BetMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="BonusMoney" type="Decimal">
+      <column name="BonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="BonusStatus" type="Int32">
+      <column name="BonusStatus" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Support" type="Int32">
+      <column name="Support" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Against" type="Int32">
+      <column name="Against" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HomeTeamComments" type="String">
+      <column name="HomeTeamComments"   sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="GuestTeamComments" type="String">
+      <column name="GuestTeamComments"   sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="StopTime" type="DateTime">
+      <column name="StopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CurrentTime" type="String">
+      <column name="CurrentTime" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.ExperterSchemeSupport,GameBiz.Business"  table="E_Experter_SchemeSupport">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SupportUserId" type="String">
+      <column name="SupportUserId"   sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AgainstUserId" type="String">
+      <column name="AgainstUserId"   sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.ExperterUpdateHitstroy,GameBiz.Business"  table="E_ExperterUpdateHitstroy">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="ExperterSummary" type="String">
+      <column name="ExperterSummary" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="ExperterHeadImage" type="String">
+      <column name="ExperterHeadImage" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="AdeptGameCode" type="String">
+      <column name="AdeptGameCode" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="DealWithType" type="Int32">
+      <column name="DealWithType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="DisposeOpinion" type="String">
+      <column name="DisposeOpinion" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <sql-query name="P_Experter_Ranking" read-only="true">
+    EXEC [P_Experter_Ranking] @StarTime=:starTime,@EndTime=:endTime
+  </sql-query>
+  
+</hibernate-mapping>
+
+

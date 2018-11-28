@@ -1,0 +1,374 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{23F85AD0-56F2-48B3-BAB9-845019EB8EE1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Common.XML</DocumentationFile>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Common.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Accessibility">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SuperSocket.ClientEngine, Version=0.10.0.0, Culture=neutral, PublicKeyToken=ee9af13f57f00acc, processorArchitecture=MSIL">
+      <HintPath>..\packages\SuperSocket.ClientEngine.Core.0.10.0\lib\net40-client\SuperSocket.ClientEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebSocket4Net, Version=0.15.2.11, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocket4Net.0.15.2\lib\net40\WebSocket4Net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Algorithms\Combination.cs" />
+    <Compile Include="Algorithms\Permutation.cs" />
+    <Compile Include="Algorithms\SMGBonus.cs" />
+    <Compile Include="Gateway\BBPay\BBPayAPI.cs" />
+    <Compile Include="Gateway\BBPay\BBPayAPIInfo.cs" />
+    <Compile Include="Gateway\BiFuBao\BBPayAPI.cs" />
+    <Compile Include="Gateway\BiFuBao\BBPayAPIInfo.cs" />
+    <Compile Include="Business\LotteryHelper.cs" />
+    <Compile Include="Business\OpenDataInfo.cs" />
+    <Compile Include="CommonWCF\HttpWcfClient_JSON.cs" />
+    <Compile Include="CommonWCF\IWcfService_JSON.cs" />
+    <Compile Include="CommonWCF\WcfClient_JSON.cs" />
+    <Compile Include="CommonWCF\WcfService_JSON.cs" />
+    <Compile Include="Cryptography\RSACrypt.cs" />
+    <Compile Include="Database.cs" />
+    <Compile Include="Cryptography\AuthExceptioncs.cs" />
+    <Compile Include="Cryptography\UserTokenHandler.cs" />
+    <Compile Include="Expansion\StringHelper.cs" />
+    <Compile Include="Gateway\Alipay\WAPPay\AlipayConfig.cs" />
+    <Compile Include="Gateway\Alipay\WAPPay\AlipayFunction.cs" />
+    <Compile Include="Gateway\Alipay\WAPPay\AlipayService.cs" />
+    <Compile Include="Gateway\Alipay\WAPPay\AlipaySubmit.cs" />
+    <Compile Include="Gateway\Alipay\WAPLogin\AlipayConfig.cs" />
+    <Compile Include="Gateway\Alipay\WAPLogin\AlipayCore.cs" />
+    <Compile Include="Gateway\Alipay\WAPLogin\AlipayNotify.cs" />
+    <Compile Include="Gateway\Alipay\WAPLogin\AlipaySubmit.cs" />
+    <Compile Include="Gateway\BoYing\BoYingAPI.cs" />
+    <Compile Include="Gateway\BoYing\BoYingConfig.cs" />
+    <Compile Include="Gateway\ChinaBank.cs" />
+    <Compile Include="Gateway\ChinaCacheCDN.cs" />
+    <Compile Include="Gateway\DPPay\DepositeInfo.cs" />
+    <Compile Include="Gateway\DPPay\DepositeResult.cs" />
+    <Compile Include="Gateway\DPPay\DPDepositeAPI.cs" />
+    <Compile Include="Gateway\DPPay\HttpUtil.cs" />
+    <Compile Include="Gateway\DPPay\MD5Utils.cs" />
+    <Compile Include="Gateway\DPPay\ResponseInfo.cs" />
+    <Compile Include="Gateway\DPPay\WithdrawAPI.cs" />
+    <Compile Include="Gateway\DPPay\WithdrawApplyInfo.cs" />
+    <Compile Include="Gateway\DPPay\WithdrawResultRequest.cs" />
+    <Compile Include="Gateway\HuiChao\HuiChaoAPI.cs" />
+    <Compile Include="Gateway\HuiChao\HuiChaoInfo.cs" />
+    <Compile Include="Gateway\KQ\Pay\KQConfig.cs" />
+    <Compile Include="Gateway\KQ\Pay\KQRtnMsg.cs" />
+    <Compile Include="Gateway\KQ\Pay\KQHandler.cs" />
+    <Compile Include="Gateway\Alipay\GeneralPoint\Alipay.cs" />
+    <Compile Include="Gateway\Alipay\GeneralPoint\AlipayConfig.cs" />
+    <Compile Include="Gateway\Alipay\GeneralPoint\AlipaySign.cs" />
+    <Compile Include="Gateway\Alipay\GeneralPoint\NotifyHandler.cs" />
+    <Compile Include="Gateway\Alipay\Logistics\AlipayConfig.cs" />
+    <Compile Include="Gateway\Alipay\Logistics\AlipayCore.cs" />
+    <Compile Include="Gateway\Alipay\Logistics\AlipayNotify.cs" />
+    <Compile Include="Gateway\Alipay\Logistics\AlipayService.cs" />
+    <Compile Include="Gateway\Alipay\Logistics\AlipaySubmit.cs" />
+    <Compile Include="Gateway\Alipay\Pay\Alipay.cs" />
+    <Compile Include="Gateway\Alipay\Pay\AlipayConfig.cs" />
+    <Compile Include="Gateway\Alipay\Pay\AlipaySign.cs" />
+    <Compile Include="Gateway\Alipay\Pay\NotifyHandler.cs" />
+    <Compile Include="Gateway\Alipay\Login\AlipayConfig.cs" />
+    <Compile Include="Gateway\Alipay\Login\AlipayCore.cs" />
+    <Compile Include="Gateway\Alipay\Login\AlipayNotify.cs" />
+    <Compile Include="Gateway\Alipay\Login\AlipaySubmit.cs" />
+    <Compile Include="Algorithms\ArrayCombination.cs" />
+    <Compile Include="Communication\CommonActionResult.cs" />
+    <Compile Include="Communication\CommunicationObjectAttribute.cs" />
+    <Compile Include="Communication\CommunicationSerializer.cs" />
+    <Compile Include="Communication\WcfByteHandler.cs" />
+    <Compile Include="Communication\WcfService.cs" />
+    <Compile Include="Communication\HttpWcfClient.cs" />
+    <Compile Include="Communication\IWcfService.cs" />
+    <Compile Include="Communication\KnownTypeRegister.cs" />
+    <Compile Include="Communication\LogicException.cs" />
+    <Compile Include="Communication\WcfClient.cs" />
+    <Compile Include="Communication\WcfException.cs" />
+    <Compile Include="Communication\WcfInvokeInfo.cs" />
+    <Compile Include="Communication\WcfInvokeResult.cs" />
+    <Compile Include="Compression\ByteCompresser.cs" />
+    <Compile Include="Cryptography\Encipherment.cs" />
+    <Compile Include="Cryptography\SymmetricCrypt.cs" />
+    <Compile Include="DebugTracker.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Gateway\SXF\SXFPay.cs" />
+    <Compile Include="Gateway\Tenpay\Pay\CheckRequestHandler.cs" />
+    <Compile Include="Gateway\Tenpay\Pay\ClientResponseHandler.cs" />
+    <Compile Include="Gateway\Tenpay\Pay\MD5Util.cs" />
+    <Compile Include="Gateway\Tenpay\Pay\RequestHandler.cs" />
+    <Compile Include="Gateway\Tenpay\Pay\ResponseHandler.cs" />
+    <Compile Include="Gateway\Tenpay\Pay\TenpayHttpClient.cs" />
+    <Compile Include="Gateway\Tenpay\Pay\TenpayUtil.cs" />
+    <Compile Include="Gateway\WXPay\HttpService.cs" />
+    <Compile Include="Gateway\WXPay\WXPayApi.cs" />
+    <Compile Include="Gateway\WXPay\WxPayData.cs" />
+    <Compile Include="Gateway\YiJiFu\Functions.cs" />
+    <Compile Include="Gateway\YiJiFu\Config.cs" />
+    <Compile Include="Gateway\YiJiFu\YiJiFuService.cs" />
+    <Compile Include="Gateway\YinBao\YinBao.cs" />
+    <Compile Include="Gateway\YinBao\Config.cs" />
+    <Compile Include="Gateway\YinBao\YinBaoSign.cs" />
+    <Compile Include="Gateway\YinBao\YinBaoNotify.cs" />
+    <Compile Include="Gateway\YiShen\SignData.cs" />
+    <Compile Include="Gateway\YiShen\YiShenAPI.cs" />
+    <Compile Include="Gateway\YiShen\YiShenInfo.cs" />
+    <Compile Include="Gateway\ZhiFu\ZhiFuAPI.cs" />
+    <Compile Include="Gateway\ZhiFu\ZhiFuInfo.cs" />
+    <Compile Include="JSON\JsonHelper.cs" />
+    <Compile Include="JSON\JsonParse.cs" />
+    <Compile Include="JSON\JsonSerializer.cs" />
+    <Compile Include="Log\ErrorLogWriter.cs" />
+    <Compile Include="Log\FileLogWriter.cs" />
+    <Compile Include="Log\ILogWriter.cs" />
+    <Compile Include="Log\OperateLogWriter.cs" />
+    <Compile Include="Log\SingleLogWriter.cs" />
+    <Compile Include="Mappings\EntityMappingFieldAttribute.cs" />
+    <Compile Include="Mappings\EntityMappingTableAttribute.cs" />
+    <Compile Include="Net\AndroidSMS.cs" />
+    <Compile Include="Net\BYSMS.cs" />
+    <Compile Include="Net\C123.cs" />
+    <Compile Include="Net\CFSMS.cs" />
+    <Compile Include="Net\EmailSender.cs" />
+    <Compile Include="Net\GetNews.cs" />
+    <Compile Include="Net\GYSMS.cs" />
+    <Compile Include="Net\IpManager.cs" />
+    <Compile Include="Net\PostManager.cs" />
+    <Compile Include="Net\RLSMS.cs" />
+    <Compile Include="Net\SMSSender.cs" />
+    <Compile Include="Net\SMSSender_10658.cs" />
+    <Compile Include="Net\UrlHelper.cs" />
+    <Compile Include="Net\HTSMS.cs" />
+    <Compile Include="Net\IOSMS.cs" />
+    <Compile Include="Net\VeeSingSMS.cs" />
+    <Compile Include="Net\WXTSMS.cs" />
+    <Compile Include="Net\YMSMS.cs" />
+    <Compile Include="Pay\af\afPay.cs" />
+    <Compile Include="Pay\af\afUtil.cs" />
+    <Compile Include="Pay\haio\Pay.cs" />
+    <Compile Include="Pay\hfb\CertUtil.cs" />
+    <Compile Include="Pay\hfb\HFBComparer.cs" />
+    <Compile Include="Pay\hfb\hfbpay.cs" />
+    <Compile Include="Pay\hfb\HFBUtil.cs" />
+    <Compile Include="Pay\hfb\SecurityUtil.cs" />
+    <Compile Include="Pay\HttpHelp.cs" />
+    <Compile Include="Pay\jhz\JHZPayAPI.cs" />
+    <Compile Include="Pay\jhz\SafeUtil.cs" />
+    <Compile Include="Pay\ka101\Encrypt.cs" />
+    <Compile Include="Pay\ka101\Utils.cs" />
+    <Compile Include="Pay\mobao\mobaoUtil.cs" />
+    <Compile Include="Pay\PaymentLock.cs" />
+    <Compile Include="Pay\huiwang\SecurityRSAPay.cs" />
+    <Compile Include="Pay\payworth\Assist.cs" />
+    <Compile Include="Pay\payworth\BouncyCastle.cs" />
+    <Compile Include="Pay\payworth\CMD5.cs" />
+    <Compile Include="Pay\payworth\HttpsRequest.cs" />
+    <Compile Include="Pay\payworth\JXDConvert.cs" />
+    <Compile Include="Pay\payworth\RsaReadUtil.cs" />
+    <Compile Include="Pay\payworth\RSAUtil.cs" />
+    <Compile Include="Pay\payworth\ToXMLJSON.cs" />
+    <Compile Include="Pay\payworth\UtilSign.cs" />
+    <Compile Include="Pay\sandpay\CryptUtils.cs" />
+    <Compile Include="Pay\sandpay\HttpUtils.cs" />
+    <Compile Include="Pay\sandpay\MessageWorker.cs" />
+    <Compile Include="Pay\sfb\pay.cs" />
+    <Compile Include="Pay\shenfu\sfpay.cs" />
+    <Compile Include="Pay\shunlifu\SLF_PAY.cs" />
+    <Compile Include="Pay\tianfubao\Pay.cs" />
+    <Compile Include="Pay\tianfubao\Util.cs" />
+    <Compile Include="Pay\xingfu\xinfupay.cs" />
+    <Compile Include="Pay\ysepay\Commonyespay.cs" />
+    <Compile Include="Pay\ysepay\DataCertificate.cs" />
+    <Compile Include="Pay\ysepay\JiShi.cs" />
+    <Compile Include="Pay\ysepay\SecurityUtil.cs" />
+    <Compile Include="Pay\zhongtie\DataEncryptHelper.cs" />
+    <Compile Include="Pay\zhongtie\DataRequest.cs" />
+    <Compile Include="Pay\zhongtie\DataResponse.cs" />
+    <Compile Include="Pay\zhongtie\PayHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SharpZipLib\BZip2\BZip2.cs" />
+    <Compile Include="SharpZipLib\BZip2\BZip2Constants.cs" />
+    <Compile Include="SharpZipLib\BZip2\BZip2Exception.cs" />
+    <Compile Include="SharpZipLib\BZip2\BZip2InputStream.cs" />
+    <Compile Include="SharpZipLib\BZip2\BZip2OutputStream.cs" />
+    <Compile Include="SharpZipLib\Checksums\Adler32.cs" />
+    <Compile Include="SharpZipLib\Checksums\CRC32.cs" />
+    <Compile Include="SharpZipLib\Checksums\IChecksum.cs" />
+    <Compile Include="SharpZipLib\Checksums\StrangeCRC.cs" />
+    <Compile Include="SharpZipLib\Core\FileSystemScanner.cs" />
+    <Compile Include="SharpZipLib\Core\INameTransform.cs" />
+    <Compile Include="SharpZipLib\Core\IScanFilter.cs" />
+    <Compile Include="SharpZipLib\Core\NameFilter.cs" />
+    <Compile Include="SharpZipLib\Core\PathFilter.cs" />
+    <Compile Include="SharpZipLib\Core\StreamUtils.cs" />
+    <Compile Include="SharpZipLib\Core\WindowsPathUtils.cs" />
+    <Compile Include="SharpZipLib\Encryption\PkzipClassic.cs" />
+    <Compile Include="SharpZipLib\Encryption\ZipAESStream.cs" />
+    <Compile Include="SharpZipLib\Encryption\ZipAESTransform.cs" />
+    <Compile Include="SharpZipLib\GZip\GZIPConstants.cs" />
+    <Compile Include="SharpZipLib\GZip\GZipException.cs" />
+    <Compile Include="SharpZipLib\GZip\GzipInputStream.cs" />
+    <Compile Include="SharpZipLib\GZip\GzipOutputStream.cs" />
+    <Compile Include="SharpZipLib\Lzw\LzwConstants.cs" />
+    <Compile Include="SharpZipLib\Lzw\LzwException.cs" />
+    <Compile Include="SharpZipLib\Lzw\LzwInputStream.cs" />
+    <Compile Include="SharpZipLib\SharpZipBaseException.cs" />
+    <Compile Include="SharpZipLib\Tar\InvalidHeaderException.cs" />
+    <Compile Include="SharpZipLib\Tar\TarArchive.cs" />
+    <Compile Include="SharpZipLib\Tar\TarBuffer.cs" />
+    <Compile Include="SharpZipLib\Tar\TarEntry.cs" />
+    <Compile Include="SharpZipLib\Tar\TarException.cs" />
+    <Compile Include="SharpZipLib\Tar\TarHeader.cs" />
+    <Compile Include="SharpZipLib\Tar\TarInputStream.cs" />
+    <Compile Include="SharpZipLib\Tar\TarOutputStream.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Deflater.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\DeflaterConstants.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\DeflaterEngine.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\DeflaterHuffman.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\DeflaterPending.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Inflater.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\InflaterDynHeader.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\InflaterHuffmanTree.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\PendingBuffer.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Streams\DeflaterOutputStream.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Streams\InflaterInputStream.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Streams\OutputWindow.cs" />
+    <Compile Include="SharpZipLib\Zip\Compression\Streams\StreamManipulator.cs" />
+    <Compile Include="SharpZipLib\Zip\FastZip.cs" />
+    <Compile Include="SharpZipLib\Zip\IEntryFactory.cs" />
+    <Compile Include="SharpZipLib\Zip\WindowsNameTransform.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipConstants.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipEntry.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipEntryFactory.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipException.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipExtraData.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipFile.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipHelperStream.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipInputStream.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipNameTransform.cs" />
+    <Compile Include="SharpZipLib\Zip\ZipOutputStream.cs" />
+    <Compile Include="Snapshot\NativeMethods.cs" />
+    <Compile Include="Snapshot\SendSchemeSnapshot.cs" />
+    <Compile Include="Snapshot\Snapshot.cs" />
+    <Compile Include="Snapshot\UnsafeNativeMethods.cs" />
+    <Compile Include="Snapshot\WebPageSnapshot.cs" />
+    <Compile Include="Utilities\AreaHelper.cs" />
+    <Compile Include="Utilities\BeautyNumberHelper.cs" />
+    <Compile Include="Utilities\Chinese2Spell.cs" />
+    <Compile Include="Utilities\ConvertDeeplyMappingAttribute.cs" />
+    <Compile Include="Utilities\FCFileWatcher.cs" />
+    <Compile Include="Utilities\FileHelper.cs" />
+    <Compile Include="Utilities\ObjectConvert.cs" />
+    <Compile Include="Utilities\PreconditionAssert.cs" />
+    <Compile Include="Utilities\PreconditionException.cs" />
+    <Compile Include="Utilities\RegHelper.cs" />
+    <Compile Include="Utilities\UsefullHelper.cs" />
+    <Compile Include="Utilities\ValidateHelper.cs" />
+    <Compile Include="Utilities\ZipHelper.cs" />
+    <Compile Include="WinService\IWindowsService.cs" />
+    <Compile Include="WinService\WindowsServiceHelper.cs" />
+    <Compile Include="XmlAnalyzer\ConnConfigAnalyzer.cs" />
+    <Compile Include="XmlAnalyzer\XmlAnalyzeHelper.cs" />
+    <Compile Include="XmlAnalyzer\XmlMappingAttribute.cs" />
+    <Compile Include="XmlAnalyzer\XmlMappingObject.cs" />
+    <Compile Include="XmlAnalyzer\SettingConfigAnalyzer.cs" />
+    <Compile Include="XmlAnalyzer\AgentHostMappingConfigAnalyzer.cs" />
+    <Compile Include="XmlAnalyzer\SensitiveAnalyzer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChinaRailway\ChinaRailway.csproj">
+      <Project>{c7fe44c7-044e-4d2a-a1c1-add6e9987e4e}</Project>
+      <Name>ChinaRailway</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(ProjectDir)..\BuildDll"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

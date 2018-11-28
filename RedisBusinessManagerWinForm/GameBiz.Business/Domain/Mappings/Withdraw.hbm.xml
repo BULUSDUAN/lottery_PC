@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.Withdraw,GameBiz.Business"  table="C_Withdraw">
+    <id name="OrderId" type="String" unsaved-value="null">
+      <column name="OrderId" length="50" sql-type="nvarchar(50)"  not-null="true" unique="true"></column>
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="WithdrawAgent" type="Int32">
+      <column name="WithdrawAgent" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="WithdrawCategory" type="Int32">
+      <column name="WithdrawCategory" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="ProvinceName" type="String">
+      <column name="ProvinceName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="CityName" type="String">
+      <column name="CityName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="BankCode" type="String">
+      <column name="BankCode" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="BankName" type="String">
+      <column name="BankName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="BankSubName" type="String">
+      <column name="BankSubName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="BankCardNumber" type="String">
+      <column name="BankCardNumber" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="RequestMoney" type="Decimal">
+      <column name="RequestMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="RequestTime" type="DateTime">
+      <column name="RequestTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="Status" type="Int32">
+      <column name="Status" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="ResponseUserId" type="String">
+      <column name="ResponseUserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="ResponseMoney" type="Decimal">
+      <column name="ResponseMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="ResponseMessage" type="String">
+      <column name="ResponseMessage" length="500" sql-type="nvarchar(500)" not-null="false"></column>
+    </property>
+    <property name="ResponseTime" type="DateTime">
+      <column name="ResponseTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,451 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B36818B5-0D1B-4B88-8BA2-F6036791209B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GameBiz.Business</RootNamespace>
+    <AssemblyName>GameBiz.Business</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHibernate.3.2.0.4000\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="StackExchange.Redis, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.1.1.572-alpha\lib\net40\StackExchange.Redis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Threading.Tasks, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BankCardBusiness.cs" />
+    <Compile Include="Domain\Entities\ActivityPrizeConfig.cs" />
+    <Compile Include="Domain\Entities\APPConfig.cs" />
+    <Compile Include="Domain\Entities\BDFXRecordSingleCopy.cs" />
+    <Compile Include="Domain\Entities\CoreConfig.cs" />
+    <Compile Include="Domain\Entities\Experter.cs" />
+    <Compile Include="Domain\Entities\ExperterAnalyzeScheme.cs" />
+    <Compile Include="Domain\Entities\ExperterComments.cs" />
+    <Compile Include="Domain\Entities\ExperterScheme.cs" />
+    <Compile Include="Domain\Entities\FinanceSettings.cs" />
+    <Compile Include="Domain\Entities\IndexMatch.cs" />
+    <Compile Include="Domain\Entities\InnerMail.cs" />
+    <Compile Include="Domain\Entities\LotteryScheme.cs" />
+    <Compile Include="Domain\Entities\OCAgentReportSales.cs" />
+    <Compile Include="Domain\Entities\PluginClass.cs" />
+    <Compile Include="Domain\Entities\ReceiveNoticeLog.cs" />
+    <Compile Include="Domain\Entities\RedBagDetail.cs" />
+    <Compile Include="Domain\Entities\SendMsgHistoryRecord.cs" />
+    <Compile Include="Domain\Entities\SFGG_Match.cs" />
+    <Compile Include="Domain\Entities\SingleTreasureAttention.cs" />
+    <Compile Include="Domain\Entities\SiteMessageInnerMailListNew.cs" />
+    <Compile Include="Domain\Entities\SJB_Match.cs" />
+    <Compile Include="Domain\Entities\Ticket\JCLQ_Odds.cs" />
+    <Compile Include="Domain\Entities\Ticket\Sport_EntityBase.cs" />
+    <Compile Include="Domain\Entities\Ticket\Sport_Odds.cs" />
+    <Compile Include="Domain\Entities\Ticket\Ticket_BonusPool.cs" />
+    <Compile Include="Domain\Entities\Ticket\Ticket_Order.cs" />
+    <Compile Include="Domain\Entities\TotalSingleTreasure.cs" />
+    <Compile Include="Domain\Entities\UserBeedings.cs" />
+    <Compile Include="Domain\Entities\UserGetPrize.cs" />
+    <Compile Include="Domain\Entities\UserIntegralBalance.cs" />
+    <Compile Include="Domain\Entities\UserIntegralDetail.cs" />
+    <Compile Include="Domain\Entities\SiteMessageBanner.cs" />
+    <Compile Include="Domain\Entities\ExperterAnalyzeTransaction.cs" />
+    <Compile Include="Domain\Entities\TogetherHotUser.cs" />
+    <Compile Include="Domain\Entities\Blog.cs" />
+    <Compile Include="Domain\Entities\UserSiteService.cs" />
+    <Compile Include="Domain\Entities\VirtualUserData.cs" />
+    <Compile Include="Domain\Entities\WithdrawApplyResult.cs" />
+    <Compile Include="Domain\Managers\BankCode.cs" />
+    <Compile Include="Domain\Managers\BJDCMatchManager.cs" />
+    <Compile Include="Domain\Managers\BonusRuleManager.cs" />
+    <Compile Include="Domain\Managers\ExperterAnalyzeSchemeManager.cs" />
+    <Compile Include="Domain\Managers\ExperterCommentsManager.cs" />
+    <Compile Include="Domain\Managers\ExperterManager.cs" />
+    <Compile Include="Domain\Managers\InnerMailManager.cs" />
+    <Compile Include="Domain\Managers\PluginClassManager.cs" />
+    <Compile Include="Domain\Managers\SFGGMatchManager.cs" />
+    <Compile Include="Domain\Managers\SJBMatchManager.cs" />
+    <Compile Include="Domain\Entities\Ticket\JCZQ_Odds.cs" />
+    <Compile Include="Domain\Managers\SqlBulkCopyHelper.cs" />
+    <Compile Include="Domain\Managers\Ticket\JCLQ_OddsManager.cs" />
+    <Compile Include="Domain\Managers\Ticket\JCZQ_OddsManager.cs" />
+    <Compile Include="Domain\Managers\Ticket\Ticket_BonusManager.cs" />
+    <Compile Include="Domain\Managers\TotalSingleTreasureManager.cs" />
+    <Compile Include="Domain\Managers\UserIntegralManager.cs" />
+    <Compile Include="Domain\Managers\ExperterSchemeManager.cs" />
+    <Compile Include="Domain\Managers\TogetherHotUserManager.cs" />
+    <Compile Include="Domain\Managers\BlogManager.cs" />
+    <Compile Include="ExpertBusiness.cs" />
+    <Compile Include="PluginClassBusiness.cs" />
+    <Compile Include="SiteMessageControllBusiness.cs" />
+    <Compile Include="Sports_Business.cs" />
+    <Compile Include="SqlQueryBusiness.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Domain\Entities\BankCard.cs" />
+    <Compile Include="Domain\Entities\CTZQ_Match.cs" />
+    <Compile Include="Domain\Entities\BJDC_Match.cs" />
+    <Compile Include="Domain\Entities\FillMoney.cs" />
+    <Compile Include="Domain\Entities\FundDetail.cs" />
+    <Compile Include="Domain\Entities\JCLQ_Match.cs" />
+    <Compile Include="Domain\Entities\JCZQ_Match.cs" />
+    <Compile Include="Domain\Entities\OrderDetail.cs" />
+    <Compile Include="Domain\Entities\Sports_Order.cs" />
+    <Compile Include="Domain\Entities\Sports_Together.cs" />
+    <Compile Include="Domain\Entities\TogetherFollowerRule.cs" />
+    <Compile Include="Domain\Entities\TogetherSchemeMain.cs" />
+    <Compile Include="Domain\Entities\Withdraw.cs" />
+    <Compile Include="Domain\Managers\BankCardManager.cs" />
+    <Compile Include="Domain\Managers\Sports_Manager.cs" />
+    <Compile Include="Domain\Managers\CTZQMatchManager.cs" />
+    <Compile Include="Domain\Managers\FundManager.cs" />
+    <Compile Include="Domain\Managers\JCLQMatchManager.cs" />
+    <Compile Include="Domain\Managers\JCZQMatchManager.cs" />
+    <Compile Include="Domain\Managers\TogetherManager.cs" />
+    <Compile Include="FundBusiness.cs" />
+    <Compile Include="GameBizManagement.cs" />
+    <Compile Include="Domain\Entities\BonusRule.cs" />
+    <Compile Include="Domain\Entities\UserBalance.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Domain\Managers\SqlQueryManager.cs" />
+    <Compile Include="Domain\Entities\GameIssuse.cs" />
+    <Compile Include="Domain\Entities\LotteryGame.cs" />
+    <Compile Include="Domain\Entities\LotteryGameType.cs" />
+    <Compile Include="Domain\Managers\SchemeManager.cs" />
+    <Compile Include="Domain\Managers\LotteryGameManager.cs" />
+    <Compile Include="Domain\Managers\UserBalanceManager.cs" />
+    <Compile Include="GameBusiness.cs" />
+    <Compile Include="IssuseBusiness.cs" />
+    <Compile Include="OpenBusiness.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PrizeBusiness.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BusinessHelper.cs" />
+    <Compile Include="Ticket\TicketGatewayAdmin.cs" />
+    <Compile Include="Ticket\TicketGatewayAdmin_BJDC.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ticket\TicketGatewayAdmin_CTZQ.cs" />
+    <Compile Include="Ticket\TicketGatewayAdmin_JCLQ.cs" />
+    <Compile Include="Ticket\TicketGatewayAdmin_JCZQ.cs" />
+    <Compile Include="UserBusiness.cs" />
+    <Compile Include="CacheDataBusiness.cs" />
+    <Compile Include="UserIntegralBusiness.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\LotteryGame.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Mappings\LotteryGameType.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Mappings\UserBalance.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Database.NHibernate\Common.Database.NHibernate.csproj">
+      <Project>{B1DE3032-6171-4F3D-AE4C-7A041CD0CA06}</Project>
+      <Name>Common.Database.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Database\Common.Database.csproj">
+      <Project>{6df75b69-f86f-4b3c-b494-4de36f575a49}</Project>
+      <Name>Common.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Lottery.Redis\Common.Lottery.Redis.csproj">
+      <Project>{4ec4118b-fe8a-4569-a0e2-69cbcced9ecd}</Project>
+      <Name>Common.Lottery.Redis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Lottery\Common.Lottery.csproj">
+      <Project>{A1A397D4-6C38-4F41-97E3-915A0C8DA5D3}</Project>
+      <Name>Common.Lottery</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{23f85ad0-56f2-48b3-bab9-845019eb8ee1}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameBiz.Auth.Business\GameBiz.Auth.Business.csproj">
+      <Project>{A4FFE7C0-7268-4077-B1E6-34D75FE7C09D}</Project>
+      <Name>GameBiz.Auth.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameBiz.Core\GameBiz.Core.csproj">
+      <Project>{587712a2-28ca-4279-adb8-3251e72f30e2}</Project>
+      <Name>GameBiz.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MatchBiz.Core\MatchBiz.Core.csproj">
+      <Project>{fa380af1-3097-4798-9037-fa0e5ed2eeb9}</Project>
+      <Name>MatchBiz.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\BonusRule.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\FundDetail.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\OrderDetail.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\FillMoney.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Withdraw.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\GameIssuse.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\BankCard.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\CTZQ_Match.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\BJDC_Match.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Sports_Order.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\JCZQ_Match.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\JCLQ_Match.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\TogetherFollowerRule.hbm.xml" />
+    <EmbeddedResource Include="Domain\Mappings\Sports_Together.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\UserBeedings.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SqlQueryMapping.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\FinanceSettings.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\ActivityPrizeConfig.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\UserGetPrize.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\UserIntegralBalance.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\UserIntegralDetail.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\ReceiveNoticeLog.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\PluginClass.hbm.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\CoreConfig.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SJB_Match.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Mappings\SiteMessageBanner.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\RedBagDetail.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Experter.hbm.xml" />
+    <EmbeddedResource Include="Domain\Mappings\TogetherHotUser.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Blog.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SendMsgHistoryRecord.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SFGG_Match.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\VirtualUserData.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\AppConfig.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\NestedUrlConfig.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\TotalSingleTreasure.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\BDFXRecordSingleCopy.hbm.xml" />
+    <EmbeddedResource Include="Domain\Mappings\SingleTreasureAttention.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\UserSiteService.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\OCAgentReportSales.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\InnerMail.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\JCLQ_Odds.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\JCZQ_Odds.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Ticket_Bonus.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\IndexMatch.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SiteMessageInnerMailListNew.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(ProjectDir)..\BuildDll"</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

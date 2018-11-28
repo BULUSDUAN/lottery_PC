@@ -30,7 +30,7 @@ namespace HK6.ModuleBaseServices
     {
         [Service(Date = "2018-9-3", Director = "kason", Name = "管理登陆")]
         //
-        Task<CommonActionResult> Betting(HK6Sports_BetingInfo info);
+        Task<CommonActionResult> Betting(HK6Sports_BetingInfo info, string password, decimal redBagMoney, string userid);
 
 
     }

@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.JCLQ_Match,GameBiz.Business"  table="C_JCLQ_Match">
+    <id name="MatchId" type="String" unsaved-value="null">
+      <column name="MatchId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="MatchIdName" type="String">
+      <column name="MatchIdName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchData" type="String">
+      <column name="MatchData" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchNumber" type="String">
+      <column name="MatchNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Mid" type="Int32">
+      <column name="Mid" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="LeagueId" type="Int32">
+      <column name="LeagueId" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="LeagueName" type="String">
+      <column name="LeagueName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="LeagueColor" type="String">
+      <column name="LeagueColor" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HomeTeamId" type="Int32">
+      <column name="HomeTeamId" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HomeTeamName" type="String">
+      <column name="HomeTeamName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GuestTeamId" type="Int32">
+      <column name="GuestTeamId" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GuestTeamName" type="String">
+      <column name="GuestTeamName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchState" type="Int32">
+      <column name="MatchState" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="AverageWin" type="Decimal">
+      <column name="AverageWin" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="AverageLose" type="Decimal">
+      <column name="AverageLose" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="StartDateTime" type="DateTime">
+      <column name="StartDateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="DSStopBettingTime" type="DateTime">
+      <column name="DSStopBettingTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="FSStopBettingTime" type="DateTime">
+      <column name="FSStopBettingTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="PrivilegesType" type="String">
+      <column name="PrivilegesType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+  </class>
+
+
+  <class name="GameBiz.Domain.Entities.JCLQ_MatchResult,GameBiz.Business"  table="C_JCLQ_MatchResult">
+    <id name="MatchId" type="String" unsaved-value="null">
+      <column name="MatchId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="MatchData" type="String">
+      <column name="MatchData" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchNumber" type="String">
+      <column name="MatchNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HomeScore" type="Int32">
+      <column name="HomeScore" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GuestScore" type="Int32">
+      <column name="GuestScore" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchState" type="String">
+      <column name="MatchState" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SF_Result" type="String">
+      <column name="SF_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SF_SP" type="Decimal">
+      <column name="SF_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="RFSF_Result" type="String">
+      <column name="RFSF_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="RFSF_SP" type="Decimal">
+      <column name="RFSF_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="SFC_Result" type="String">
+      <column name="SFC_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SFC_SP" type="Decimal">
+      <column name="SFC_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="DXF_Result" type="String">
+      <column name="DXF_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="DXF_SP" type="Decimal">
+      <column name="DXF_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="RFSF_Trend" type="String">
+      <column name="RFSF_Trend" sql-type="nvarchar(MAX)" not-null="false"/>
+    </property>
+    <property name="DXF_Trend" type="String">
+      <column name="DXF_Trend" sql-type="nvarchar(MAX)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.JCLQ_MatchResult_Prize,GameBiz.Business"  table="C_JCLQ_MatchResult_Prize">
+    <id name="MatchId" type="String" unsaved-value="null">
+      <column name="MatchId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="MatchData" type="String">
+      <column name="MatchData" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchNumber" type="String">
+      <column name="MatchNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HomeScore" type="Int32">
+      <column name="HomeScore" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GuestScore" type="Int32">
+      <column name="GuestScore" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MatchState" type="String">
+      <column name="MatchState" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SF_Result" type="String">
+      <column name="SF_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SF_SP" type="Decimal">
+      <column name="SF_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="RFSF_Result" type="String">
+      <column name="RFSF_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="RFSF_SP" type="Decimal">
+      <column name="RFSF_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="SFC_Result" type="String">
+      <column name="SFC_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SFC_SP" type="Decimal">
+      <column name="SFC_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="DXF_Result" type="String">
+      <column name="DXF_Result" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="DXF_SP" type="Decimal">
+      <column name="DXF_SP" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="RFSF_Trend" type="String">
+      <column name="RFSF_Trend" sql-type="nvarchar(MAX)" not-null="false"/>
+    </property>
+    <property name="DXF_Trend" type="String">
+      <column name="DXF_Trend" sql-type="nvarchar(MAX)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

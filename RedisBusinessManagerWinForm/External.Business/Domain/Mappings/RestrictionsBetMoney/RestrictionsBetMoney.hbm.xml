@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Business.Domain.Entities.RestrictionsBetMoney.RestrictionsBetMoneys, External.Business"  table="E_RestrictionsBetMoney">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TodayBetMoney" type="Decimal">
+      <column name="TodayBetMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="MaxRestrictionsMoney" type="Decimal">
+      <column name="MaxRestrictionsMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="External.Business.Domain.Entities.RestrictionsBetMoney.RestrictionsUsers, External.Business"  table="E_RestrictionsUser">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MaxMoney" type="Decimal">
+      <column name="MaxMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  
+</hibernate-mapping>

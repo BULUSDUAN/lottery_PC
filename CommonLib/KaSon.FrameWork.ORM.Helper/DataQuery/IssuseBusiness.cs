@@ -44,7 +44,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var query = from i in DB.CreateQuery<C_Game_Issuse>()
                         join g in DB.CreateQuery<C_Lottery_Game>() on i.GameCode equals g.GameCode
                         orderby i.IssuseNumber descending
-                        where i.GameCode == gameCode && (gameType == string.Empty || i.GameType == gameType) && i.WinNumber != string.Empty && i.WinNumber != null
+                        where i.GameCode == gameCode && (gameType == "" || i.GameType == gameType) && i.WinNumber != string.Empty && i.WinNumber != null
                         && i.AwardTime >= startTime && i.AwardTime < endTime
                         select new WinNumber_QueryInfo
                         {

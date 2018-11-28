@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Domain.Entities.SiteMessage.SiteActivity, External.Business"  table="E_SiteActivity">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="ImageUrl" type="String">
+      <column name="ImageUrl" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="ArticleUrl" type="String">
+      <column name="ArticleUrl" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="Titile" type="String">
+      <column name="Titile" length="500" sql-type="nvarchar(500)" not-null="false"  />
+    </property>
+    <property name="StartTime" type="DateTime">
+      <column name="StartTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="EndTime" type="DateTime">
+      <column name="EndTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

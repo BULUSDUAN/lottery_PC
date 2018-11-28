@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+
+  <class name="External.Domain.Entities.Agent.OCAgent, External.Business"  table="P_OCAgent">
+    <id name="UserId" type="String" unsaved-value="null">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+    </id>
+    <property name="StoreId" type="String">
+      <column name="StoreId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OCAgentCategory" type="Int32">
+      <column name="OCAgentCategory" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="ParentUserId" type="String">
+      <column name="ParentUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CustomerDomain" type="String">
+      <column name="CustomerDomain" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="ParentPath" type="String">
+      <column name="ParentPath" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="CPSMode" type="Int32">
+      <column name="CPSMode" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="ChannelName" type="String">
+      <column name="ChannelName" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+  </class>
+  
+  <class name="External.Domain.Entities.Agent.OCAgentRebate, External.Business"  table="P_OCAgent_Rebate">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="int" not-null="true" unique="true" />
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"  />
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Rebate" type="Decimal">
+      <column name="Rebate" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="RebateType" type="Int32">
+      <column name="RebateType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="SubUserRebate" type="Decimal">
+      <column name="SubUserRebate" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CPSMode" type="Int32">
+      <column name="CPSMode" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="External.Domain.Entities.Agent.OCAgentPayDetail, External.Business"  table="P_OCAgent_PayDetail">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="int" not-null="true" unique="true" />
+      <generator class="native" />
+    </id>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"  />
+    </property>
+    <property name="OrderUser" type="String">
+      <column name="OrderUser" length="50" sql-type="nvarchar(50)" not-null="false"  />
+    </property>
+    <property name="PayInUserId" type="String">
+      <column name="PayInUserId" length="50" sql-type="nvarchar(50)" not-null="false"  />
+    </property>
+    <property name="SchemeType" type="Int32">
+      <column name="SchemeType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Rebate" type="Decimal">
+      <column name="Rebate" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="OrderTotalMoney" type="Decimal">
+      <column name="OrderTotalMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="PayMoney" type="Decimal">
+      <column name="PayMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="Remark" type="String">
+      <column name="Remark" length="50" sql-type="nvarchar(50)" not-null="false"  />
+    </property>
+    <property name="CPSMode" type="Int32">
+      <column name="CPSMode" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HandlPeople" type="String">
+      <column name="HandlPeople" length="50" sql-type="nvarchar(50)" not-null="false"  />
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <!-- 佣金管理，查询结算报表 -->
+  <sql-query name="P_Agent_GetPayDetailReport" read-only="true">
+    EXEC P_Agent_GetPayDetailReport @PAgentId=:pAgentId,@FromDate=:fromDate,@ToDate=:toDate
+  </sql-query>
+  <!--查询下级用户已返点的订单-->
+  <sql-query name="P_Agent_QuerySubUserPayRebateOrderList" read-only="true">
+    EXEC P_Agent_QuerySubUserPayRebateOrderList @key=:key,@agentId=:agentId,@starTime=:starTime,@endTime=:endTime,@pageIndex=:pageIndex,@pageSize=:pageSize,@totalCount=:totalCount OUTPUT,@totalUserCount=:totalUserCount output,@totalMoney=:totalMoney output,@totalRealPayRebateMoney=:totalRealPayRebateMoney output
+  </sql-query>
+  <!--查询下级用户未返点的订单-->
+  <sql-query name="P_Agent_QuerySubUserNoPayRebateOrderList" read-only="true">
+    EXEC P_Agent_QuerySubUserNoPayRebateOrderList @key=:key,@agentId=:agentId,@starTime=:starTime,@endTime=:endTime,@pageIndex=:pageIndex,@pageSize=:pageSize,@totalCount=:totalCount OUTPUT,@totalUserCount=:totalUserCount output,@totalMoney=:totalMoney output
+  </sql-query>
+  <!--代理统计数据-->
+  <sql-query name="P_Agent_QueryAgentDetail" read-only="true">
+    EXEC P_Agent_QueryAgentDetail @agentId=:agentId,@gameCode=:gameCode,@starTime=:starTime,@endTime=:endTime,@pageIndex=:pageIndex,@pageSize=:pageSize
+  </sql-query>
+
+</hibernate-mapping>

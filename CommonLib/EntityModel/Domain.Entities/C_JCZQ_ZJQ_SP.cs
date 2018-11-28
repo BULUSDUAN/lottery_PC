@@ -81,6 +81,10 @@ namespace EntityModel.Domain.Entities
         /// </summary>
         [Field("CreateTime")]
         public string CreateTime { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string NoSaleState { get; set; }
 
         public override bool Equals(object obj)

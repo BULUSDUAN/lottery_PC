@@ -31,6 +31,9 @@ namespace EntityModel
         [Field("SchemeId")]
         public string SchemeId { get; set; }
 
+        [Field("userId")]
+        public int userId { get; set; }
+
 
         /// <summary>
         // 
@@ -67,7 +70,7 @@ namespace EntityModel
         [Field("Odds")]
         public decimal Odds { get; set; }
         /// <summary>
-        // 
+        // BonusStatus 改为2中奖
         ///</summary>
         [ProtoMember(9)]
         [Field("BonusStatus")]
@@ -110,6 +113,18 @@ namespace EntityModel
         [ProtoMember(17)]
         [Field("CreateTime")]
         public DateTime CreateTime { get; set; }
+
+
+        [Field("updateTime")]
+        public DateTime updateTime { get; set; }
+        /// <summary>
+        /// 投注单价
+        /// </summary>
+        [Field("unitPrice")]
+        public decimal unitPrice { get; set; }
+
+        [Field("issueDate")]
+        public string issueDate { get; set; }
 
         /// <summary>
         /// 每个码对应的赔率

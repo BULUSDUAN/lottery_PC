@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="External.Domain.Entities.SiteMessage.Bulletin, External.Business"  table="E_SiteMessage_Bulletin_List">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+		<property name="Title" type="String">
+			<column name="Title" length="500" sql-type="nvarchar(500)" not-null="false"/>
+		</property>
+    <property name="Content" type="String">
+      <column name="Content" sql-type="nvarchar(max)" not-null="false"  length="2147483647"/>
+    </property>
+    <property name="BulletinAgent" type="Int32">
+      <column name="BulletinAgent" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Status" type="Int32">
+      <column name="Status" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="EffectiveFrom" type="DateTime">
+      <column name="EffectiveFrom" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="EffectiveTo" type="DateTime">
+      <column name="EffectiveTo" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="Priority" type="Int32">
+      <column name="Priority" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CreateBy" type="String">
+      <column name="CreateBy" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+		<property name="UpdateTime" type="DateTime">
+			<column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="UpdateBy" type="String">
+      <column name="UpdateBy" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsPutTop" type="Int32">
+      <column name="IsPutTop" length="4" sql-type="int" not-null="false"/>
+    </property>
+	</class>
+  
+  <sql-query name="P_QueryBulletinList_Admin" read-only="true">
+    EXEC [P_SiteMessage_QueryBulletinList_Admin] :Key, :Status, :Priority, :IsPutTop, :PageIndex, :PageSize, :TotalCount OUTPUT
+  </sql-query>
+  <sql-query name="P_QueryBulletinList_Web" read-only="true">
+    EXEC [P_SiteMessage_QueryBulletinList_Web] :BulletinAgent, :PageIndex, :PageSize, :TotalCount OUTPUT
+  </sql-query>
+</hibernate-mapping>

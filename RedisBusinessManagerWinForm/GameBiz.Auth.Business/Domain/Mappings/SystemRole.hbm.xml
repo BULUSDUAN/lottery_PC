@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="GameBiz.Auth.Domain.Entities.SystemRole, GameBiz.Auth.Business"  table="C_Auth_Roles">
+		<id name="RoleId" type="String" unsaved-value="null">
+			<column name="RoleId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+		</id>
+    <property name="RoleName" type="String">
+      <column name="RoleName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <many-to-one name="ParentRole" not-found="exception" class="GameBiz.Auth.Domain.Entities.SystemRole, GameBiz.Auth.Business">
+      <column name="ParentRoleId" sql-type="nvarchar(50)" length="50" not-null="false" />
+    </many-to-one>
+    <property name="RoleType" type="Int32">
+      <column name="RoleType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IsInner" type="Boolean">
+      <column name="IsInner" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsAdmin" type="Boolean">
+      <column name="IsAdmin" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <bag name="FunctionList" generic="true" inverse="true">
+      <key column="RoleId"/>
+      <one-to-many class="GameBiz.Auth.Domain.Entities.RoleFunction, GameBiz.Auth.Business" />
+    </bag>
+	</class>
+</hibernate-mapping>

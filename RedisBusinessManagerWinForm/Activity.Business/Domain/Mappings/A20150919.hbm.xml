@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+
+  <class name="Activity.Domain.Entities.ActivityConfig,Activity.Business"  table="E_Activity_Config">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="ConfigKey" type="String">
+      <column name="ConfigKey" length="100" sql-type="nvarchar(100)" not-null="false"></column>
+    </property>
+    <property name="ConfigName" type="String">
+      <column name="ConfigName" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="ConfigValue" type="String">
+      <column name="ConfigValue" sql-type="nvarchar(max)" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+
+  <class name="Activity.Domain.Entities.A20150919_已绑定身份和手机的用户登录送红包, Activity.Business"  table="E_A20150919_已绑定身份和手机的用户登录送红包">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="LoginDate" type="String" >
+      <column name="LoginDate" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GiveRedBagMoney" type="Decimal" >
+      <column name="GiveRedBagMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="Activity.Domain.Entities.A20150919_注册送红包, Activity.Business"  table="E_A20150919_注册送红包">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GiveRedBagMoney" type="Decimal" >
+      <column name="GiveRedBagMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  
+  <class name="Activity.Domain.Entities.A20150919_注册绑定送红包, Activity.Business"  table="E_A20150919_注册绑定送红包">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsBindBankCard" type="Boolean">
+      <column name="IsBindBankCard" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsBindRealName" type="Boolean">
+      <column name="IsBindRealName" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsBindMobile" type="Boolean">
+      <column name="IsBindMobile" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsGiveRedBag" type="Boolean">
+      <column name="IsGiveRedBag" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="GiveRedBagMoney" type="Decimal" >
+      <column name="GiveRedBagMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="IsBonus" type="Boolean">
+      <column name="IsBonus" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="GiveBonusMoney" type="Decimal" >
+      <column name="GiveBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+
+  <class name="Activity.Domain.Entities.A20150919_充值送红包配置, Activity.Business"  table="E_A20150919_充值送红包配置">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="FillMoney" type="Decimal" >
+      <column name="FillMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="GiveMoney" type="Decimal" >
+      <column name="GiveMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  
+  <class name="Activity.Domain.Entities.A20150919_充值送红包记录, Activity.Business"  table="E_A20150919_充值送红包记录">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="PayType" type="Int32" >
+      <column name="PayType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OrderId" type="String" >
+      <column name="OrderId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GiveMonth" type="String" >
+      <column name="GiveMonth" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="FillMoney" type="Decimal" >
+      <column name="FillMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="GiveMoney" type="Decimal" >
+      <column name="GiveMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+
+
+  <class name="Activity.Domain.Entities.A20150919_加奖配置, Activity.Business"  table="E_A20150919_加奖配置">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="OrderIndex" type="Int32">
+      <column name="OrderIndex" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String" >
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String" >
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String" >
+      <column name="PlayType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AddBonusMoneyPercent" type="Decimal" >
+      <column name="AddBonusMoneyPercent" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="MaxAddBonusMoney" type="Decimal" >
+      <column name="MaxAddBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="AddMoneyWay" type="String">
+      <column name="AddMoneyWay" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+
+  <class name="Activity.Domain.Entities.A20150919_加奖赠送记录, Activity.Business"  table="E_A20150919_加奖赠送记录">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="OrderId" type="String" >
+      <column name="OrderId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String" >
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String" >
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String" >
+      <column name="PlayType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="BonusMoney" type="Decimal" >
+      <column name="BonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="AddBonusMoney" type="Decimal" >
+      <column name="AddBonusMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="Activity.Domain.Entities.A20150919_红包使用配置, Activity.Business"  table="E_A20150919_红包使用配置">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="GameCode" type="String" >
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UsePercent" type="Decimal" >
+      <column name="UsePercent" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="Activity.Domain.Entities.A20150919_列表用户不加奖, Activity.Business"  table="E_A20150919_列表用户不加奖">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String" >
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String" >
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PlayType" type="String" >
+      <column name="PlayType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+</hibernate-mapping>

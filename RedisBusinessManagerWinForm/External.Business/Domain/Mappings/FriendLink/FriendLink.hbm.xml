@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Domain.Entities.FriendLink.FriendLinks,External.Business"  table="E_SiteMessage_FriendLink">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="IndexLink" type="Int32">
+      <column name="IndexLink" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="InnerText" type="String" >
+      <column name="InnerText" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="LinkUrl"  type="String">
+      <column name="LinkUrl" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="Isfriendship" type="Boolean" >
+      <column name="Isfriendship" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

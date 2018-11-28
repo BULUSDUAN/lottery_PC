@@ -96,7 +96,7 @@ namespace KaSon.FrameWork.ORM.Helper
             List<string> strUserIds = new List<string>();
             foreach (var item in xjUser)
             {
-                var currRebate = parentUser.FirstOrDefault(s => s.GameCode == item.GameCode && (item.GameType == string.Empty || s.GameType == item.GameType));
+                var currRebate = parentUser.FirstOrDefault(s => s.GameCode == item.GameCode && (item.GameType == "" || s.GameType == item.GameType));
                 if (currRebate != null)
                 {
                     if (item.Rebate > currRebate.Rebate)

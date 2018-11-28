@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.SiteMessageInnerMailListNew, GameBiz.Business"  table="E_SiteMessage_InnerMail_List_New">
+    <id name="MailId" type="String" unsaved-value="null">
+      <column name="MailId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="Title" type="String">
+      <column name="Title" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="MsgContent" type="String">
+      <column name="MsgContent" length="8000" sql-type="nvarchar(max)" not-null="false"/>
+    </property>
+    <property name="SendTime" type="DateTime">
+      <column name="SendTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <!--<property name="ActionTime" type="DateTime">
+      <column name="ActionTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>-->
+    <property name="SenderId" type="String">
+      <column name="SenderId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <!--<property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>-->
+    <property name="ReceiverId" type="String">
+      <column name="ReceiverId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="HandleType" type="Int32">
+      <column name="HandleType" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <!--<property name="ReceiverType" type="Int32">
+      <column name="ReceiverType" length="4" sql-type="int" not-null="true"/>
+    </property>-->
+    <property name="ReadTime" type="DateTime">
+      <column name="ReadTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

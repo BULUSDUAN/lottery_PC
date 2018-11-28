@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6DF75B69-F86F-4B3C-B494-4DE36F575A49}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Common.Database</RootNamespace>
+    <AssemblyName>Common.Database</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Common.Database.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Common.Database.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.0\lib\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Configuration\ConnectionConfiguration.cs" />
+    <Compile Include="Configuration\SqlConnectionConfiguration.cs" />
+    <Compile Include="DbAccess\DbAccessBase.cs" />
+    <Compile Include="DbAccess\DbAccessException.cs" />
+    <Compile Include="DbAccess\DbAccessHelper.cs" />
+    <Compile Include="DbAccess\DbEngine.cs" />
+    <Compile Include="DbAccess\DbFactory.cs" />
+    <Compile Include="DbAccess\DbMsSql.cs" />
+    <Compile Include="DbAccess\DbTran.cs" />
+    <Compile Include="DbAccess\ErrorMessages.cs" />
+    <Compile Include="DbAccess\IDbAccess.cs" />
+    <Compile Include="ORM\DbCommandCreator\DbCommandCreator.cs" />
+    <Compile Include="ORM\DbCommandCreator\DeleteCommandCreator.cs" />
+    <Compile Include="ORM\DbCommandCreator\InsertCommandCreator.cs" />
+    <Compile Include="ORM\DbCommandCreator\ModifyCommandCreator.cs" />
+    <Compile Include="ORM\DbCommandCreator\SelectCommandCreator.cs" />
+    <Compile Include="ORM\EntityManagement.cs" />
+    <Compile Include="ORM\Enums.cs" />
+    <Compile Include="ORM\Filter\Criteria.cs" />
+    <Compile Include="ORM\Filter\Expression.cs" />
+    <Compile Include="ORM\Filter\ExpressionCollection.cs" />
+    <Compile Include="ORM\Filter\LogicExpression.cs" />
+    <Compile Include="ORM\Filter\OperateExpression.cs" />
+    <Compile Include="ORM\ObjectPersistence.cs" />
+    <Compile Include="ORM\ORMException.cs" />
+    <Compile Include="ORM\ORMHelper.cs" />
+    <Compile Include="ORM\ORMSchemaCache.cs" />
+    <Compile Include="SqlClient\DataAccessor.cs" />
+    <Compile Include="SqlDbNotification.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Fakes Include="Fakes\Common.fakes" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{23f85ad0-56f2-48b3-bab9-845019eb8ee1}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(ProjectDir)..\BuildDll"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
