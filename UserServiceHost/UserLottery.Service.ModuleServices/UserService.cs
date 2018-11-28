@@ -1361,6 +1361,7 @@ namespace UserLottery.Service.ModuleServices
             }
         }
 
+        private static object objlock = new object();
         /// <summary>
         /// 提款成功
         /// </summary>
@@ -1372,12 +1373,15 @@ namespace UserLottery.Service.ModuleServices
         {
             try
             {
-                new FundBusiness().RequestWithdraw_Step2(info, userId, balancepwd);
-                return Task.FromResult(new CommonActionResult
+                lock (objlock)
                 {
-                    IsSuccess = true,
-                    Message = "申请提现成功",
-                });
+                    new FundBusiness().RequestWithdraw_Step2(info, userId, balancepwd);
+                    return Task.FromResult(new CommonActionResult
+                    {
+                        IsSuccess = true,
+                        Message = "申请提现成功",
+                    }); 
+                }
             }
             catch (LogicException ex)
             {

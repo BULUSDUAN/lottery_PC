@@ -166,6 +166,9 @@ namespace KaSon.FrameWork.ORM.Helper
             //资金密码判断
             string place = "Withdraw";
             decimal payoutMoney = info.RequestMoney;
+            DB.Begin();
+            try
+            {
             var userBalance = userManager.QueryUserBalance(userId);
             if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
             if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
@@ -187,9 +190,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var currentTimes = fundManager.QueryTodayWithdrawTimes(userId);
             if (currentTimes >= maxTimes)
                 throw new LogicException(string.Format("每日只能提现{0}次", maxTimes));
-            DB.Begin();
-            try
-            {
+         
 
                 var resonseMoney = 0M;
                
