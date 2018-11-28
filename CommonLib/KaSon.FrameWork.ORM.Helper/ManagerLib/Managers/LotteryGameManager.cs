@@ -197,7 +197,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //    var query = from g in C_Game_IssuseList
             //                where g.GameCode == gameCode
             //                && g.IssuseNumber == issuseNumber
-            //                && (gameType == string.Empty || g.GameType == gameType)
+            //                && (gameType == "" || g.GameType == gameType)
             //                select g;
             //    return query.FirstOrDefault();
             //}
@@ -213,7 +213,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //var query = from g in this.DB.CreateQuery<C_Game_Issuse>()
             //            where g.GameCode == gameCode
             //            && g.IssuseNumber == issuseNumber
-            //            && (gameType == string.Empty || g.GameType == gameType)
+            //            && (gameType == "" || g.GameType == gameType)
             //            select g;
             //return query.FirstOrDefault();
         }

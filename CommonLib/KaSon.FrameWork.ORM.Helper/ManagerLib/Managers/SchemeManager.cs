@@ -65,7 +65,7 @@ namespace KaSon.FrameWork.ORM.Helper
             
             var query = from d in DB.CreateQuery<C_OrderDetail>()
                         where d.UserId == userId
-                        && (playType == string.Empty || (d.PlayType == playType && (d.GameCode == "JCZQ" || d.GameCode == "JCLQ")))
+                        && (playType == "" || (d.PlayType == playType && (d.GameCode == "JCZQ" || d.GameCode == "JCLQ")))
                         && d.BonusStatus == (int)BonusStatus.Win
                         select d;
             return query.Count();

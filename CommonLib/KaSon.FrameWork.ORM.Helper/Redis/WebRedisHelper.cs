@@ -95,16 +95,16 @@ namespace KaSon.FrameWork.ORM.Helper
         //var query = from s in list
         //            where arrProg.Contains(Convert.ToInt32(s.ProgressStatus).ToString())
         //              && (betC == -1 || Convert.ToInt32(s.SchemeBettingCategory) == betC)
-        //              && (issuseNumber == string.Empty || s.IssuseNumber == issuseNumber)
+        //              && (issuseNumber == "" || s.IssuseNumber == issuseNumber)
         //              && (s.StopTime >= DateTime.Now)
-        //              && (gameCode == string.Empty || s.GameCode == gameCode)
-        //              && (gameType == string.Empty || s.GameType == gameType)
+        //              && (gameCode == "" || s.GameCode == gameCode)
+        //              && (gameType == "" || s.GameType == gameType)
         //              && (minMoney == -1 || s.TotalMoney >= minMoney)
         //              && (maxMoney == -1 || s.TotalMoney <= maxMoney)
         //              && (minProgress == -1 || s.Progress >= minProgress)
         //              && (maxProgress == -1 || s.Progress <= maxProgress)
         //              && (seC == -1 || Convert.ToInt32(s.Security) == seC)
-        //              && (key == string.Empty || s.CreateUserId == key || s.SchemeId == key || s.CreaterDisplayName == key)
+        //              && (key == "" || s.CreateUserId == key || s.SchemeId == key || s.CreaterDisplayName == key)
         //            select s;
         //cache.TotalCount = query.Count();
         //cache.List = query.Skip(pageIndex * pageSize).Take(pageSize).ToList();

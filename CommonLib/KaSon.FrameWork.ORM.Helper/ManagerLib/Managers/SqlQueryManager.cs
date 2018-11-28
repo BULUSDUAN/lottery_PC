@@ -89,9 +89,9 @@ namespace KaSon.FrameWork.ORM.Helper
             int? Agent = (int?)agent;
             var query = (from r in DB.CreateQuery<C_Withdraw>()
                          join u in DB.CreateQuery<C_User_Register>() on r.UserId equals u.UserId
-                         where (userId == string.Empty || r.UserId == userId)                  
+                         where (userId == "" || r.UserId == userId)                  
                          && (status == -1 || r.Status == status)
-                         && (orderId == string.Empty || r.OrderId == orderId)
+                         && (orderId == "" || r.OrderId == orderId)
                          && (agent == null || r.WithdrawAgent == Agent)
                          && (minMoney == -1 || r.RequestMoney >= minMoney)
                          && (maxMoney == -1 || r.RequestMoney <= maxMoney)select new {r,u })

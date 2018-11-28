@@ -457,7 +457,7 @@ namespace KaSon.FrameWork.ORM.Helper
         //            BDFXGSRankInfo info = new BDFXGSRankInfo();
 
         //            info.BeConcernedUserCount = Convert.ToInt32(Row["BeConcernedUserCount"]);
-        //            info.IsGZ = Row["IsGZ"] == string.Empty ? false : Convert.ToBoolean(Row["IsGZ"]);
+        //            info.IsGZ = Row["IsGZ"] == "" ? false : Convert.ToBoolean(Row["IsGZ"]);
         //            info.CurrProfitRate = Convert.ToDecimal(Row["CurrProfitRate"]);
         //            info.RankNumber = Convert.ToInt32(Row["RankNumber"]);
         //            info.SchemeId = Convert.ToString(Row["SchemeId"]);
