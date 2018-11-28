@@ -17,7 +17,7 @@ namespace EntityModel
     { 
         public C_Sports_Order_Running()
         {
-        
+            
         }
             /// <summary>
             // 方案编号

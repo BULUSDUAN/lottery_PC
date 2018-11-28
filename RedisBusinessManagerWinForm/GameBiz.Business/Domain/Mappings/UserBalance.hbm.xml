@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.UserBalance,GameBiz.Business"  table="C_User_Balance">
+    <id name="UserId" type="String" unsaved-value="null">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+      <generator class="foreign">
+        <param name="property">User</param>
+      </generator>
+    </id>
+    <version name="Version" column="Version" type="int" unsaved-value="0"/>
+    <one-to-one class="GameBiz.Auth.Domain.Entities.SystemUser,GameBiz.Auth.Business" name="User" cascade="none" outer-join="auto" constrained="true"  >
+    </one-to-one>
+
+    <property name="FillMoneyBalance" type="Decimal">
+      <column name="FillMoneyBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="BonusBalance" type="Decimal">
+      <column name="BonusBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CommissionBalance" type="Decimal">
+      <column name="CommissionBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ExpertsBalance" type="Decimal">
+      <column name="ExpertsBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="FreezeBalance" type="Decimal">
+      <column name="FreezeBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="RedBagBalance" type="Decimal">
+      <column name="RedBagBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CPSBalance" type="Decimal">
+      <column name="CPSBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+
+    <property name="UserGrowth" type="Int32">
+      <column name="UserGrowth" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CurrentDouDou" type="Int32">
+      <column name="CurrentDouDou" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IsSetPwd" type="Boolean">
+      <column name="IsSetPwd" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="NeedPwdPlace" type="String">
+      <column name="NeedPwdPlace" length="200" sql-type="nvarchar(100)" not-null="false"/>
+    </property>
+    <property name="Password" type="String">
+      <column name="Password" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.UserBalanceFreeze,GameBiz.Business"  table="C_User_Balance_FreezeList">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OrderId" type="String">
+      <column name="OrderId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="FreezeMoney" type="Decimal">
+      <column name="FreezeMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="Category" type="Int32">
+      <column name="Category" length="4" sql-type="int" not-null="true"/>
+    </property>
+    <property name="Description" type="String">
+      <column name="Description" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.UserRegister,GameBiz.Business"  table="C_User_Register">
+    <id name="UserId" type="String" unsaved-value="null">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+      <generator class="foreign">
+        <param name="property">User</param>
+      </generator>
+    </id>
+    <one-to-one class="GameBiz.Auth.Domain.Entities.SystemUser,GameBiz.Auth.Business" name="User" cascade="none" outer-join="auto" constrained="true"  >
+    </one-to-one>
+    <property name="VipLevel" type="Int32">
+      <column name="VipLevel" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="DisplayName" type="String">
+      <column name="DisplayName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ComeFrom" type="String">
+      <column name="ComeFrom" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="RegisterIp" type="String">
+      <column name="RegisterIp" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ReferrerUrl" type="String">
+      <column name="ReferrerUrl" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+    <property name="Referrer" type="String">
+      <column name="Referrer" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="RegType" type="String">
+      <column name="RegType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsEnable" type="Boolean">
+      <column name="IsEnable" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsAgent" type="Boolean">
+      <column name="IsAgent" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="HideDisplayNameCount" type="Int32">
+      <column name="HideDisplayNameCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IsFillMoney" type="Boolean">
+      <column name="IsFillMoney" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="AgentId" type="String">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsIgnoreReport" type="Boolean">
+      <column name="IsIgnoreReport" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="ParentPath" type="String">
+      <column name="ParentPath" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="UserType" type="Int32">
+      <column name="UserType" length="4" sql-type="int" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.UserBalanceHistory,GameBiz.Business"  table="C_User_Balance_History">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="SaveDateTime" type="String">
+      <column name="SaveDateTime" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="FillMoneyBalance" type="Decimal">
+      <column name="FillMoneyBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="BonusBalance" type="Decimal">
+      <column name="BonusBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CommissionBalance" type="Decimal">
+      <column name="CommissionBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ExpertsBalance" type="Decimal">
+      <column name="ExpertsBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="FreezeBalance" type="Decimal">
+      <column name="FreezeBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="RedBagBalance" type="Decimal">
+      <column name="RedBagBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="UserGrowth" type="Int32">
+      <column name="UserGrowth" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CurrentDouDou" type="Int32">
+      <column name="CurrentDouDou" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="GameBiz.Domain.Entities.UserBalanceReport,GameBiz.Business"  table="C_User_Balance_Report">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="SaveDateTime" type="String">
+      <column name="SaveDateTime" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TotalFillMoneyBalance" type="Decimal">
+      <column name="TotalFillMoneyBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalBonusBalance" type="Decimal">
+      <column name="TotalBonusBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalCommissionBalance" type="Decimal">
+      <column name="TotalCommissionBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalExpertsBalance" type="Decimal">
+      <column name="TotalExpertsBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalFreezeBalance" type="Decimal">
+      <column name="TotalFreezeBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalRedBagBalance" type="Decimal">
+      <column name="TotalRedBagBalance" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalUserGrowth" type="Int32">
+      <column name="TotalUserGrowth" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalDouDou" type="Int32">
+      <column name="TotalDouDou" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  <sql-query name="P_Fund_QueryDayBusinessData" read-only="true">
+    EXEC [P_Fund_QueryDayBusinessData] @startTime=:StartTime,@endTime=:EndTime
+  </sql-query>
+
+</hibernate-mapping>
+
+

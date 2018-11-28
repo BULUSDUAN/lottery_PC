@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="Validation.Email.Domain.Entities.EmailValidation, Validation.Business.Email"  table="E_Validation_Email">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="bigint" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="Email" type="String" >
+      <column name="Email" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Category" type="String">
+      <column name="Category" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ValidateCode" type="String">
+      <column name="ValidateCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SendTimes" type="Int32">
+      <column name="SendTimes" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="RetryTimes" type="Int32">
+      <column name="RetryTimes" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+	</class>
+</hibernate-mapping>

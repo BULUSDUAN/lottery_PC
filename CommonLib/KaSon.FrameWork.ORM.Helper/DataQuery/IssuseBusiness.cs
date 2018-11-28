@@ -167,6 +167,21 @@ namespace KaSon.FrameWork.ORM.Helper
                 return new List<BJDC_MatchInfo>();
             return JsonSerializer.Deserialize<List<BJDC_MatchInfo>>(json);
         }
+
+        /// <summary>
+        ///  改为Mongo  读取赛事数据
+        /// </summary>
+        /// <param name="issuseNumber"></param>
+        /// <returns></returns>
+        private List<BJDC_MatchInfo> LoadBJDCMatchList_Mongo(string issuseNumber)
+        {
+            var fileName = string.Format(@"{2}\{0}\{1}\Match_List.json", "BJDC", issuseNumber, _baseDir);
+            var json = ReadFileString(fileName);
+            if (string.IsNullOrEmpty(json))
+                return new List<BJDC_MatchInfo>();
+            return JsonSerializer.Deserialize<List<BJDC_MatchInfo>>(json);
+        }
+
         private void UpdateBJDCMatch(string issuseNumber, string[] matchIdList, List<BJDC_MatchInfo> matchInfoList)
         {
             //开启事务

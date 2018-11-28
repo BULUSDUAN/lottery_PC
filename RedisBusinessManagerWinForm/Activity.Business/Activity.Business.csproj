@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{840F558B-916A-446D-BAEF-0C136AB02678}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Activity.Business</RootNamespace>
+    <AssemblyName>Activity.Business</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Activity.Core">
+      <HintPath>..\BuildDll\Activity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Common">
+      <HintPath>..\BuildDll\Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Database">
+      <HintPath>..\BuildDll\Common.Database.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Database.NHibernate">
+      <HintPath>..\BuildDll\Common.Database.NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Lottery">
+      <HintPath>..\BuildDll\Common.Lottery.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Lottery.Redis">
+      <HintPath>..\BuildDll\Common.Lottery.Redis.dll</HintPath>
+    </Reference>
+    <Reference Include="External.Business">
+      <HintPath>..\BuildDll\External.Business.dll</HintPath>
+    </Reference>
+    <Reference Include="External.Core">
+      <HintPath>..\BuildDll\External.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GameBiz.Business">
+      <HintPath>..\BuildDll\GameBiz.Business.dll</HintPath>
+    </Reference>
+    <Reference Include="GameBiz.Core">
+      <HintPath>..\BuildDll\GameBiz.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHibernate.3.2.0.4000\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="StackExchange.Redis, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StackExchange.Redis.1.1.572-alpha\lib\net40\StackExchange.Redis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="A20120915_测试阶段注册送10000测试金.cs" />
+    <Compile Include="A20131105.cs" />
+    <Compile Include="A20150919.cs" />
+    <Compile Include="ActivityBusiness.cs" />
+    <Compile Include="ActivityCache.cs" />
+    <Compile Include="Domain\Entities\A20150618_首页充值100送5.cs" />
+    <Compile Include="Domain\Entities\A20120925_二期活动.cs" />
+    <Compile Include="Domain\Entities\A20121009.cs" />
+    <Compile Include="Domain\Entities\A20121128_首次中奖超过100送5元.cs" />
+    <Compile Include="Domain\Entities\A20121210_活动.cs" />
+    <Compile Include="Domain\Entities\A20130114_加奖统计.cs" />
+    <Compile Include="Domain\Entities\A20130226Vip_充值送.cs" />
+    <Compile Include="Domain\Entities\A20130807_充值送钱.cs" />
+    <Compile Include="Domain\Entities\A20130808_注册送3元.cs" />
+    <Compile Include="Domain\Entities\A20130903_竞彩足球加奖.cs" />
+    <Compile Include="Domain\Entities\A20131101_新用户首充送钱.cs" />
+    <Compile Include="Domain\Entities\A20131105_优惠券.cs" />
+    <Compile Include="Domain\Entities\A20140214_SSC红包.cs" />
+    <Compile Include="Domain\Entities\A20140214_首次充20送11.cs" />
+    <Compile Include="Domain\Entities\A20140307_美家颂.cs" />
+    <Compile Include="Domain\Entities\A20140318_现场送彩票.cs" />
+    <Compile Include="Domain\Entities\20140731_DouDou.cs" />
+    <Compile Include="Domain\Entities\A20140902_加奖百分之十八.cs" />
+    <Compile Include="Domain\Entities\A20140902_购彩返利.cs" />
+    <Compile Include="Domain\Entities\A20140902首冲送钱.cs" />
+    <Compile Include="Domain\Entities\A20140902购彩不花钱.cs" />
+    <Compile Include="Domain\Entities\A20140902足彩安慰奖.cs" />
+    <Compile Include="Domain\Entities\A20141203GiveLottery.cs" />
+    <Compile Include="Domain\Entities\A20150120_JoinLuckyDraw.cs" />
+    <Compile Include="Domain\Entities\A20150120_LuckyDraw.cs" />
+    <Compile Include="Domain\Entities\A20150919.cs" />
+    <Compile Include="Domain\Managers\A20120925Manager.cs" />
+    <Compile Include="Domain\Managers\A20121128Manager.cs" />
+    <Compile Include="Domain\Managers\A20121210Manager.cs" />
+    <Compile Include="Domain\Managers\A20130114Manager.cs" />
+    <Compile Include="Domain\Managers\A20130226Manager.cs" />
+    <Compile Include="Domain\Managers\A20130807Manager.cs" />
+    <Compile Include="Domain\Managers\A20130808Manager.cs" />
+    <Compile Include="Domain\Managers\A20130903Manager.cs" />
+    <Compile Include="Domain\Managers\A20131101Manager.cs" />
+    <Compile Include="Domain\Managers\A20131105Manager.cs" />
+    <Compile Include="Domain\Managers\A20140214Manager.cs" />
+    <Compile Include="Domain\Managers\A20140307Manager.cs" />
+    <Compile Include="Domain\Managers\A20140318Manager.cs" />
+    <Compile Include="Domain\Managers\A20141203Manager_GiveLotty.cs" />
+    <Compile Include="Domain\Managers\A20150120Manager_LuckDraw.cs" />
+    <Compile Include="Domain\Managers\A20150618Manager_首页充值100送5.cs" />
+    <Compile Include="Domain\Managers\A20150919Manager.cs" />
+    <Compile Include="Domain\Managers\ActivityManager.cs" />
+    <Compile Include="Domain\Managers\A20140318Manager_充值最高送1000.cs" />
+    <Compile Include="Domain\Managers\A20140318Manager_竞彩北单奖上奖.cs" />
+    <Compile Include="Domain\Managers\A20140731_DouDouManager.cs" />
+    <Compile Include="Domain\Managers\A20140902Manager_加奖百分之十八.cs" />
+    <Compile Include="Domain\Managers\A20140902Manager_购彩返利.cs" />
+    <Compile Include="Domain\Managers\A20140902Manager首冲送钱.cs" />
+    <Compile Include="Domain\Managers\A20140902Manager购彩不花钱.cs" />
+    <Compile Include="Domain\Managers\A20140902Manager足彩安慰奖.cs" />
+    <Compile Include="PredicateExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools.cs" />
+    <Compile Include="A20140731_DouDouBusiness.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20120925_二期活动.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20121128_活动.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20121210_活动.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20130114_加奖统计.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20130226Vip_充值送.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20130807_充值送钱.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20130808_注册送3元.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20130903_竞彩足球加奖.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20131101_新用户首充送钱.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20131105_优惠券.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140214_SSC红包.hbm.xml" />
+    <EmbeddedResource Include="Domain\Mappings\A20140214_首次充20送11.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20121009.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140318_充值最高送1000.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140318_竞彩北单奖上奖.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140318_现场送彩票.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140307_美家颂.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140731_DouDou.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140902_加奖百分之十八.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140902_购彩返利.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140902首冲送钱.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140902购彩不花钱.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20140902足彩安慰奖.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20141203GiveLottery.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20150120_LuckyDraw.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20150120_JoinLuckyDraw.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20150618_首页充值100送5.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\A20150919.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(ProjectDir)..\BuildDll"</PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{26DAE2F9-AB52-40EF-8238-0CE9546DD298}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>External.Business</RootNamespace>
+    <AssemblyName>External.Business</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common">
+      <HintPath>..\BuildDll\Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Database">
+      <HintPath>..\BuildDll\Common.Database.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Database.NHibernate">
+      <HintPath>..\BuildDll\Common.Database.NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Lottery">
+      <HintPath>..\BuildDll\Common.Lottery.dll</HintPath>
+    </Reference>
+    <Reference Include="External.Core">
+      <HintPath>..\BuildDll\External.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GameBiz.Auth.Business">
+      <HintPath>..\GameBiz.Auth.Business\bin\Debug\GameBiz.Auth.Business.dll</HintPath>
+    </Reference>
+    <Reference Include="GameBiz.Business">
+      <HintPath>..\BuildDll\GameBiz.Business.dll</HintPath>
+    </Reference>
+    <Reference Include="GameBiz.Core">
+      <HintPath>..\BuildDll\GameBiz.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHibernate.3.2.0.4000\lib\Net35\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminMenuBusiness.cs" />
+    <Compile Include="AgentBusiness.cs" />
+    <Compile Include="AlipayAuthenticationBusiness.cs" />
+    <Compile Include="AlipayLoginBusiness.cs" />
+    <Compile Include="AppendBonusConfigBusiness.cs" />
+    <Compile Include="BDFXOrderBusiness.cs" />
+    <Compile Include="Domain\Entities\Activity\ActivityList.cs" />
+    <Compile Include="Domain\Entities\AdminMenu\SysOperationLog.cs" />
+    <Compile Include="Domain\Entities\Agent\Agent.cs" />
+    <Compile Include="Domain\Entities\AppendBonusConfig\AppendBonusConfig.cs" />
+    <Compile Include="Domain\Entities\Authentication\UserAlipay.cs" />
+    <Compile Include="Domain\Entities\Authentication\UserQQ.cs" />
+    <Compile Include="Domain\Entities\BettingPoint\TeamVote.cs" />
+    <Compile Include="Domain\Entities\BettingPoint\TeamComment.cs" />
+    <Compile Include="Domain\Entities\Celebritys\Celebrity.cs" />
+    <Compile Include="Domain\Entities\Celebritys\WinnerModel.cs" />
+    <Compile Include="Domain\Entities\Celebritys\WinnerModelCollection.cs" />
+    <Compile Include="Domain\Entities\Celebritys\WinnerModelCycle.cs" />
+    <Compile Include="Domain\Entities\Celebritys\WinnerModelScheme.cs" />
+    <Compile Include="Domain\Entities\Celebritys\WinnerModelSchemeDetail.cs" />
+    <Compile Include="Domain\Entities\FriendLink\FriendLinks.cs" />
+    <Compile Include="Domain\Entities\Agent\OCAgent.cs" />
+    <Compile Include="Domain\Entities\RestrictionsBetMoney\BetWhiteList.cs" />
+    <Compile Include="Domain\Entities\RestrictionsBetMoney\RestrictionsBetMoneys.cs" />
+    <Compile Include="Domain\Entities\SiteMessage\LotteryNewBonus.cs" />
+    <Compile Include="Domain\Entities\SiteMessage\SiteActivity.cs" />
+    <Compile Include="Domain\Entities\SMSLog\SMSSendLog.cs" />
+    <Compile Include="Domain\Entities\Task\TaskList.cs" />
+    <Compile Include="Domain\Entities\Celebritys\WinnerModelBidding.cs" />
+    <Compile Include="Domain\Managers\Activity\ActivityListManager.cs" />
+    <Compile Include="Domain\Managers\Agent\AgentManager.cs" />
+    <Compile Include="Domain\Managers\Agent\IntegralManager.cs" />
+    <Compile Include="Domain\Managers\Agent\OCAgentManager.cs" />
+    <Compile Include="Domain\Managers\AppendBonusConfig\AppendBonusConfigManager.cs" />
+    <Compile Include="Domain\Managers\Authentication\UserQQManager.cs" />
+    <Compile Include="Domain\Managers\Authentication\UserAlipayManager.cs" />
+    <Compile Include="Domain\Managers\BDFX\BDFXManager.cs" />
+    <Compile Include="Domain\Managers\BettingPoint\BettingPointTeamManager.cs" />
+    <Compile Include="Domain\Managers\Celebrity\CelebrityManager.cs" />
+    <Compile Include="Domain\Managers\FriendLink\FriendLinkManager.cs" />
+    <Compile Include="Domain\Managers\RestrictionsBetMoney\RestrictionsBetMoneyManager.cs" />
+    <Compile Include="Domain\Managers\SiteMessage\SiteActivityManager.cs" />
+    <Compile Include="Domain\Managers\SiteMessage\SysLogManager.cs" />
+    <Compile Include="Domain\Managers\SMSLog\SMSSendLogManager.cs" />
+    <Compile Include="Domain\Managers\Task\TaskListManager.cs" />
+    <Compile Include="EmailAuthenticationBusiness.cs" />
+    <Compile Include="Domain\Entities\AdminMenu\MenuItem.cs" />
+    <Compile Include="Domain\Entities\Authentication\UserEmail.cs" />
+    <Compile Include="Domain\Entities\Authentication\UserMobile.cs" />
+    <Compile Include="Domain\Entities\Authentication\UserRealName.cs" />
+    <Compile Include="Domain\Entities\Login\LoginAlipay.cs" />
+    <Compile Include="Domain\Entities\Login\LoginLocal.cs" />
+    <Compile Include="Domain\Entities\Login\LoginQQ.cs" />
+    <Compile Include="Domain\Entities\SiteMessage\Article.cs" />
+    <Compile Include="Domain\Entities\SiteMessage\Bulletin.cs" />
+    <Compile Include="Domain\Entities\SiteMessage\Doubt.cs" />
+    <Compile Include="Domain\Entities\SiteMessage\UserIdea.cs" />
+    <Compile Include="Domain\Managers\AdminMenu\MenuManager.cs" />
+    <Compile Include="Domain\Managers\Authentication\UserEmailManager.cs" />
+    <Compile Include="Domain\Managers\Authentication\UserMobileManager.cs" />
+    <Compile Include="Domain\Managers\Authentication\UserRealNameManager.cs" />
+    <Compile Include="Domain\Managers\Login\LoginAlipayManager.cs" />
+    <Compile Include="Domain\Managers\Login\LoginLocalManager.cs" />
+    <Compile Include="Domain\Managers\Login\LoginQQManager.cs" />
+    <Compile Include="Domain\Managers\SiteMessage\ArticleManager.cs" />
+    <Compile Include="Domain\Managers\SiteMessage\BulletinManager.cs" />
+    <Compile Include="Domain\Managers\SiteMessage\DoubtManager.cs" />
+    <Compile Include="Domain\Managers\SiteMessage\UserIdeaManager.cs" />
+    <Compile Include="ExternalIntegralBusiness.cs" />
+    <Compile Include="FriendLinkBusiness.cs" />
+    <Compile Include="HandleWinnerModelCycleBusiness.cs" />
+    <Compile Include="LocalLoginBusiness.cs" />
+    <Compile Include="LotteryPrizeMoneyBusiness.cs" />
+    <Compile Include="MobileAuthenticationBusiness.cs" />
+    <Compile Include="OCAgentBusiness.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QCAgentBusiness.cs" />
+    <Compile Include="QQLoginBusiness.cs" />
+    <Compile Include="RealNameAuthenticationBusiness.cs" />
+    <Compile Include="SendInnerMsgBusiness.cs" />
+    <Compile Include="SiteMessageBusiness.cs" />
+    <Compile Include="UpdateTicketStateBusiness.cs" />
+    <Compile Include="PrivilegeServiceBusiness.cs" />
+    <Compile Include="TaskBusiness.cs" />
+    <Compile Include="QQAuthenticationBusiness.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Authentication\UserEmail.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Authentication\UserMobile.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Authentication\UserRealName.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\AdminMenu\MenuItem.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Login\LoginAlipay.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Login\LoginLocal.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Login\LoginQQ.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SiteMessage\Article.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SiteMessage\UserIdea.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SiteMessage\Bulletin.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SiteMessage\Doubt.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\AppendBonusConfig\AppendBonusConfig.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SMSLog\SMSSendLog.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\FriendLink\FriendLink.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Agent\Agent.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\BettingPoint\TeamVote.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\BettingPoint\TeamComment.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SiteMessage\SiteActivity.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Task\TaskList.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Agent\OCAgent.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Activity\ActivityList.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Celebritys\Celebrity.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Celebritys\WinnerModel.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Celebritys\WinnerModelCollection.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Celebritys\WinnerModelCycle.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Celebritys\WinnerModelScheme.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Celebritys\WinnerModelSchemeDetail.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Celebritys\WinnerModelBidding.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\RestrictionsBetMoney\RestrictionsBetMoney.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\RestrictionsBetMoney\BetWhiteList.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Authentication\UserQQ.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Authentication\UserAlipay.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\SiteMessage\LotteryNewBonus.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(ProjectDir)..\BuildDll"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

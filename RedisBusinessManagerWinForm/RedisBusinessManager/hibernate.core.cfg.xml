@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-configuration  xmlns="urn:nhibernate-configuration-2.2" >
+  <session-factory name="NHibernate.Core">
+    <!--加密用-->
+    <!--<property name="connection.provider">Common.Database.NHibernate.CryptDriverConnectionProvider,Common.Database.NHibernate</property>-->
+    <property name="connection.driver_class">NHibernate.Driver.SqlClientDriver</property>
+    <property name="connection.connection_string">
+      Data Source=10.0.3.6;Initial Catalog=ECP_Core;UID=sa;PWD=x123456789;
+      <!--Data Source=localhost;Initial Catalog=ECP_Core;UID=sa;PWD=x123456789;-->
+    </property>
+    <property name="adonet.batch_size">100</property>
+    <property name="show_sql">true</property>
+    <property name="dialect">NHibernate.Dialect.MsSql2008Dialect</property>
+    <property name="command_timeout">60</property>
+    <property name="query.substitutions">true 1, false 0, yes 'Y', no 'N'</property>
+
+    <!--以下三行开启二级缓存-->
+    <property name="cache.provider_class">NHibernate.Cache.HashtableCacheProvider,NHibernate</property>
+    <property name="cache.use_second_level_cache">true</property>
+    <property name="cache.use_query_cache">false</property>
+    <!--以上三行开启二级缓存-->
+
+    <mapping assembly="GameBiz.Business"/>
+    <mapping assembly="GameBiz.Auth.Business"/>
+
+    <mapping assembly="External.Business"/>
+    <mapping assembly="Activity.Business"/>
+    <mapping assembly="Validation.Business.Email"/>
+    <mapping assembly="Validation.Business.Mobile"/>
+
+
+    <class-cache class="GameBiz.Auth.Domain.Entities.SystemRole, GameBiz.Auth.Business" usage="read-write" />
+    <class-cache class="GameBiz.Auth.Domain.Entities.Function, GameBiz.Auth.Business" usage="read-write" />
+    <class-cache class="GameBiz.Auth.Domain.Entities.RoleFunction, GameBiz.Auth.Business" usage="read-write" />
+    <class-cache class="GameBiz.Auth.Domain.Entities.UserFunction, GameBiz.Auth.Business" usage="read-write" />
+
+  </session-factory>
+</hibernate-configuration>

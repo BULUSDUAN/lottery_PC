@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C7FE44C7-044E-4D2A-A1C1-ADD6E9987E4E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ChinaRailway</RootNamespace>
+    <AssemblyName>ChinaRailway</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>..\packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\DataSerializer.cs" />
+    <Compile Include="Common\DataSignature.cs" />
+    <Compile Include="Common\HS256.cs" />
+    <Compile Include="Common\RS256.cs" />
+    <Compile Include="Payment\ChinaRailwayApp.cs" />
+    <Compile Include="Payment\Models\Charge\BankEasy\BankCardAdd.cs" />
+    <Compile Include="Payment\Models\Charge\BankEasy\BankCardAddConfirm.cs" />
+    <Compile Include="Payment\Models\Charge\BankEasy\BankCardAddConfirmResult.cs" />
+    <Compile Include="Payment\Models\Charge\BankEasy\BankCardAddResult.cs" />
+    <Compile Include="Payment\Models\Charge\BankEasy\BankCardQuery.cs" />
+    <Compile Include="Payment\Models\Charge\BankEasy\BankCardQueryResult.cs" />
+    <Compile Include="Payment\Models\Charge\BankEasy\BankCardRemove.cs" />
+    <Compile Include="Payment\Models\Charge\BankEasy\BankCardRemoveResult.cs" />
+    <Compile Include="Payment\Models\Charge\Charge.cs" />
+    <Compile Include="Payment\Models\Charge\ChargeResult.cs" />
+    <Compile Include="Payment\Models\Charge\ChargeSucceeded.cs" />
+    <Compile Include="Payment\Models\Charge\QueryCharge.cs" />
+    <Compile Include="Payment\Models\Charge\QueryChargeResult.cs" />
+    <Compile Include="Payment\Models\Charge\QueryRefundCharge.cs" />
+    <Compile Include="Payment\Models\Charge\QueryRefundChargeResult.cs" />
+    <Compile Include="Payment\Models\Charge\RefundCharge.cs" />
+    <Compile Include="Payment\Models\Charge\RefundChargeResult.cs" />
+    <Compile Include="Payment\Models\Charge\RefundChargeSucceeded.cs" />
+    <Compile Include="Payment\Models\ErrorResult.cs" />
+    <Compile Include="Payment\Models\EventNames.cs" />
+    <Compile Include="Payment\Models\Pay\Pay.cs" />
+    <Compile Include="Payment\Models\Pay\PayResult.cs" />
+    <Compile Include="Payment\Models\Pay\PaySucceeded.cs" />
+    <Compile Include="Payment\Models\Pay\QueryPay.cs" />
+    <Compile Include="Payment\Models\Pay\QueryPayResult.cs" />
+    <Compile Include="Payment\Models\Pay\QueryRefundPay.cs" />
+    <Compile Include="Payment\Models\Pay\QueryRefundPayResult.cs" />
+    <Compile Include="Payment\Models\Pay\RefundPay.cs" />
+    <Compile Include="Payment\Models\Pay\RefundPayResult.cs" />
+    <Compile Include="Payment\Models\Pay\RefundPaySucceeded.cs" />
+    <Compile Include="Payment\Models\Transfer\QueryRefundTransfer.cs" />
+    <Compile Include="Payment\Models\Transfer\QueryRefundTransferResult.cs" />
+    <Compile Include="Payment\Models\Transfer\QueryTransfer.cs" />
+    <Compile Include="Payment\Models\Transfer\QueryTransferResult.cs" />
+    <Compile Include="Payment\Models\Transfer\RefundTransfer.cs" />
+    <Compile Include="Payment\Models\Transfer\RefundTransferResult.cs" />
+    <Compile Include="Payment\Models\Transfer\RefundTransferSucceeded.cs" />
+    <Compile Include="Payment\Models\Transfer\Transfer.cs" />
+    <Compile Include="Payment\Models\Transfer\TransferResult.cs" />
+    <Compile Include="Payment\Models\Transfer\TransferSucceeded.cs" />
+    <Compile Include="Payment\Tasks\BaseTask.cs" />
+    <Compile Include="Payment\Tasks\ChargeTask.cs" />
+    <Compile Include="Payment\Tasks\PayTask.cs" />
+    <Compile Include="Payment\Tasks\Serializer.cs" />
+    <Compile Include="Payment\Tasks\TransferTask.cs" />
+    <Compile Include="Payment\Tasks\WebHookTask.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Smartunicom\DateTimeHelper.cs" />
+    <Compile Include="Smartunicom\Runtime\Serialization\ContractResolver\JsonSnakeCasePropertyNamesContractResolver.cs" />
+    <Compile Include="Smartunicom\Security\Cryptography\X509\PEMHelper.cs" />
+    <Compile Include="Smartunicom\System\IO\StreamExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Smartunicom\DistributedService\Message\Param\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(ProjectDir)..\BuildDll"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

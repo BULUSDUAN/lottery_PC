@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <!--
+  <class name="External.Domain.Entities.Agent.AgentUsers, External.Business"  table="P_Agent_Users">
+    <id name="AgentId" type="String" unsaved-value="null">
+      <column name="AgentId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+    </id>
+    <property name="AgentLevel" type="Int32">
+      <column name="AgentLevel" length="4" sql-type="int" not-null="false"  />
+    </property>
+    <property name="DisplayName" type="String">
+      <column name="DisplayName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="IsEnable" type="Int32">
+      <column name="IsEnable" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="PAgentId" type="String">
+      <column name="PAgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+  </class>
+  -->
+
+
+  
+  <class name="External.Domain.Entities.Agent.AgentReturnPoint, External.Business"  table="P_Agent_ReturnPoint">
+    <id name="ID" type="Int32" unsaved-value="null">
+      <column name="ID" length="4" sql-type="int" not-null="true" unique="true" />
+      <generator class="native" />
+    </id>
+    <property name="AgentIdFrom" type="String">
+      <column name="AgentIdFrom" length="50" sql-type="nvarchar(50)" not-null="false"  />
+    </property>
+    <property name="AgentIdTo" type="String">
+      <column name="AgentIdTo" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SetLevel" type="Int32">
+      <column name="SetLevel" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ReturnPoint" type="Decimal">
+      <column name="ReturnPoint" length="8" sql-type="money" not-null="false"/>
+    </property>
+  </class>
+  
+
+  <class name="External.Domain.Entities.Agent.AgentReturnPointReality, External.Business"  table="P_Agent_ReturnPointReality">
+    <id name="ID" type="Int32" unsaved-value="null">
+      <column name="ID" length="4" sql-type="int" not-null="true" unique="true" />
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"  />
+    </property>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+
+    <property name="MyPoint" type="Decimal">
+      <column name="MyPoint"  length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="LowerPoint" type="Decimal">
+      <column name="LowerPoint" length="8" sql-type="money" not-null="false"/>
+    </property>
+
+    <property name="LowerUpTime" type="DateTime">
+      <column name="LowerUpTime"  length="8" sql-type="datetime" not-null="false"  />
+    </property>
+    <property name="MyUpTime" type="DateTime">
+      <column name="MyUpTime" length="8" sql-type="datetime" not-null="false"  />
+    </property>
+  </class>
+
+
+
+  <class name="External.Domain.Entities.Agent.AgentCommissionApply, External.Business"  table="P_Agent_CommissionApply">
+    <id name="ID" type="String" unsaved-value="null">
+      <column name="ID" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+    </id>
+    <property name="RequestTime" type="DateTime">
+      <column name="RequestTime" length="8" sql-type="datetime" not-null="false"  />
+    </property>
+    <property name="FromTime" type="DateTime">
+      <column name="FromTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="ToTime" type="DateTime">
+      <column name="ToTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="RequestUserId" type="String">
+      <column name="RequestUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="RequestCommission" type="Decimal">
+      <column name="RequestCommission" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ResponseCommission" type="Decimal">
+      <column name="ResponseCommission" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ResponseUserId" type="String">
+      <column name="ResponseUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="DealSale" type="Decimal">
+      <column name="DealSale" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ResponseTime" type="DateTime">
+      <column name="ResponseTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="ApplyState" type="Int32">
+      <column name="ApplyState" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Remark" type="String">
+      <column name="Remark" length="2000" sql-type="nvarchar(2000)" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="External.Domain.Entities.Agent.AgentCommissionDetail, External.Business"  table="P_Agent_CommissionDetail">
+    <id name="ID" type="Int32" unsaved-value="null">
+      <column name="ID" length="4" sql-type="int" not-null="true" unique="true" />
+      <generator class="native" />
+    </id>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"  />
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ApplyState" type="Int32">
+      <column name="ApplyState" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="PAgentId" type="String">
+      <column name="PAgentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Category" type="Int32">
+      <column name="Category" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="Sale" type="Decimal">
+      <column name="Sale" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="InitialPoint" type="Decimal">
+      <column name="InitialPoint" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="LowerPoint" type="Decimal">
+      <column name="LowerPoint" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ActualPoint" type="Decimal">
+      <column name="ActualPoint" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="Deduction" type="Decimal">
+      <column name="Deduction" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="BeforeCommission" type="Decimal">
+      <column name="BeforeCommission" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ActualCommission" type="Decimal">
+      <column name="ActualCommission" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="Remark" type="String">
+      <column name="Remark" length="2000" sql-type="nvarchar(2000)" not-null="false"/>
+    </property>
+    <property name="DetailKeyword" type="String">
+      <column name="DetailKeyword" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ComplateDateTime" type="DateTime">
+      <column name="ComplateDateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="External.Domain.Entities.Agent.RebateDetail, External.Business"  table="P_RebateDetail">
+    <id name="ID" type="Int32" unsaved-value="null">
+      <column name="ID" length="4" sql-type="int" not-null="true" unique="true" />
+      <generator class="native" />
+    </id>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"  />
+    </property>
+    <property name="GameType" type="String">
+      <column name="GameType" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Point" type="Decimal">
+      <column name="Point" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="PayinMoney" type="Decimal">
+      <column name="PayinMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="Remark" type="String">
+      <column name="Remark" length="2000" sql-type="nvarchar(2000)" not-null="false"/>
+    </property>
+    <property name="SchemeId" type="String">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SchemeType" type="Int32">
+      <column name="SchemeType" length="4" sql-type="int" not-null="false"/>
+    </property>
+  </class>
+
+  <class name="External.Domain.Entities.Agent.AgentCaculateHistory, External.Business"  table="P_Agent_CaculateHistory">
+    <id name="ID" type="Int64" unsaved-value="null">
+      <column name="ID" length="8" sql-type="bigint" not-null="true" unique="true" />
+      <generator class="native" />
+    </id>
+    <property name="CaculateTimeFrom" type="DateTime">
+      <column name="CaculateTimeFrom" length="8" sql-type="datetime" not-null="false"  />
+    </property>
+    <property name="CaculateTimeTo" type="DateTime">
+      <column name="CaculateTimeTo" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="TotalAgentCount" type="Int32">
+      <column name="TotalAgentCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalOrderCount" type="Int32">
+      <column name="TotalOrderCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalOrderMoney" type="Decimal">
+      <column name="TotalOrderMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalBuyMoney" type="Decimal">
+      <column name="TotalBuyMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="TotalCommisionMoney" type="Decimal">
+      <column name="TotalCommisionMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ErrorCount" type="Int32">
+      <column name="ErrorCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="ErrorOrderMoney" type="Decimal">
+      <column name="ErrorOrderMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ErrorBuyMoney" type="Decimal">
+      <column name="ErrorBuyMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ErrorSchemeIdList" type="String">
+      <column name="ErrorSchemeIdList" sql-type="nvarchar(MAX)" not-null="false"/>
+    </property>
+    <property name="MillisecondSpan" type="Int64">
+      <column name="MillisecondSpan" length="8" sql-type="bigint" not-null="false"/>
+    </property>
+    <property name="CreateBy" type="String">
+      <column name="CreateBy" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+
+
+  <sql-query name="P_Agent_QueryUserList" read-only="true">
+    EXEC P_Agent_QueryUserList @Keyword=:keyword,@PAgentId=:pAgentId,@IsAgent=:isAgent,@PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+
+  <sql-query name="P_Agent_GetCommissionReport" read-only="true">
+    EXEC P_Agent_GetCommissionReport @FromDate=:fromDate,@ToDate=:toDate,@PAgentId=:pAgentId,@UserId=:userId,@DisplayName=:displayName,@ApplyState=:applyState,@SaleTotal=:saleTotal OUTPUT,@ActualCommissionTotal=:actualCommissionTotal OUTPUT
+  </sql-query>
+
+  <sql-query name="P_Agent_QueryCommissionDetailList" read-only="true">
+    EXEC P_Agent_QueryCommissionDetailList @FromDate=:fromDate,@ToDate=:toDate,@PAgentId=:pAgentId,@UserId=:userId,@DisplayName=:displayName,@PageIndex=:pageIndex,@PageSize=:pageSize,@ApplyState=:applyState,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+
+  <sql-query name="P_Agent_QueryCommissionApplyList" read-only="true">
+    EXEC P_Agent_QueryCommissionApplyList @FromDate=:fromDate,@ToDate=:toDate,@PageIndex=:pageIndex,@PageSize=:pageSize,@ApplyState=:applyState,@PAgentId=:pAgentId,@UserId=:userId,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+
+  <sql-query name="P_Agent_QueryWaitingCommissionOrderList" read-only="true">
+    EXEC P_Agent_QueryWaitingCommissionOrderList @ComplateFromDate=:fromDate,@ComplateToDate=:toDate,@PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+
+  <sql-query name="P_Agent_GetReturnPointByUserId" read-only="true">
+    EXEC P_Agent_GetReturnPointByUserId @UserId=:userId,@GameCode=:gameCode,@GameType=:gameType
+  </sql-query>
+
+  <sql-query name="P_Agent_QueryLottoTopList" read-only="true">
+    EXEC P_Agent_QueryLottoTopList @AgentId=:agentId,@UserId=:userId,@DisplayName=:displayName,@FromDate=:fromDate,@ToDate=:toDate,@PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+
+  <sql-query name="P_Agent_QueryFillMoneyTopList" read-only="true">
+    EXEC P_Agent_QueryFillMoneyTopList @AgentId=:agentId,@UserId=:userId,@DisplayName=:displayName,@FromDate=:fromDate,@ToDate=:toDate,@PageIndex=:pageIndex,@PageSize=:pageSize,@TotalCount=:totalCount OUTPUT
+  </sql-query>
+
+  <sql-query name="P_Agent_GetReturnPointList" read-only="true">
+    EXEC P_Agent_GetReturnPointList :userId
+  </sql-query>
+
+  <sql-query name="P_Agent_GetScheme" read-only="true">
+    EXEC P_Agent_GetScheme :agentId,:userId,:displayName,:progressStatus,:ticketStatus,:fromDate,:toDate,:pageIndex,:pageSize,:totalCount OUTPUT
+  </sql-query>
+
+  <sql-query name="P_Agent_GetCommissionReportList" read-only="true">
+    EXEC P_Agent_GetCommissionReportList :GameCode,:GameType,:PAgentId,:UserId,:DisplayName,:Category,:FromDate,:ToDate,:PageIndex,:PageSize,:TotalCount OUTPUT
+  </sql-query>
+
+  <sql-query name="P_Agent_CheckIsUserConcern" read-only="true">
+    EXEC P_Agent_CheckIsUserConcern :AgentId,:UserId
+  </sql-query>
+
+  <sql-query name="P_Agent_GetWithdrawRecord" read-only="true">
+    EXEC P_Agent_GetWithdrawRecord :UserId,:FromDate,:ToDate,:PageIndex,:PageSize,:TotalCount OUTPUT
+  </sql-query>
+  
+</hibernate-mapping>

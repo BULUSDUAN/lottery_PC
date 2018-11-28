@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="External.Domain.Entities.SiteMessage.UserIdea, External.Business"  table="E_SiteMessage_UserIdea_List">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+		<property name="Description" type="String">
+			<column name="Description" length="500" sql-type="nvarchar(500)" not-null="false"/>
+		</property>
+    <property name="Category" type="String">
+      <column name="Category" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Status" type="String">
+      <column name="Status" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsAnonymous" type="Boolean">
+      <column name="IsAnonymous" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="CreateUserId" type="String">
+      <column name="CreateUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateUserDisplayName" type="String">
+      <column name="CreateUserDisplayName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateUserMoibile" type="String">
+      <column name="CreateUserMoibile" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+		<property name="UpdateTime" type="DateTime">
+			<column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="UpdateUserId" type="String">
+      <column name="UpdateUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="UpdateUserDisplayName" type="String">
+      <column name="UpdateUserDisplayName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="PageOpenSpeed" type="Decimal">
+      <column name="PageOpenSpeed" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="InterfaceBeautiful" type="Decimal">
+      <column name="InterfaceBeautiful" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ComposingReasonable" type="Decimal">
+      <column name="ComposingReasonable" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="OperationReasonable" type="Decimal">
+      <column name="OperationReasonable" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ContentConveyDistinct" type="Decimal">
+      <column name="ContentConveyDistinct" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="ManageReply" type="String">
+      <column name="ManageReply" length="2147483647" sql-type="nvarchar(MAX)" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

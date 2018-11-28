@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="External.Domain.Entities.Authentication.TeamVote,External.Business"  table="E_TeamVote_Fans">
+    <id name="ID" type="Int32" unsaved-value="null">
+      <column name="ID" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="GameCode" type="String">
+      <column name="GameCode" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchDate" type="String" >
+      <column name="MatchDate" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="OrderNumber" type="String">
+      <column name="OrderNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MatchStartTime" type="DateTime">
+      <column name="MatchStartTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="Category" type="Int32">
+      <column name="Category" length="8" sql-type="int" not-null="false"/>
+    </property>
+    <property name="HomeTeamFans" type="Int32">
+      <column name="HomeTeamFans" length="8" sql-type="int" not-null="false"/>
+    </property>
+    <property name="GuestTeamNameFans" type="Int32">
+      <column name="GuestTeamNameFans" length="8" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+
+
+  <class name="External.Domain.Entities.Authentication.TeamVoteRecord,External.Business"  table="E_TeamVote_Record">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="TeamVoteId" type="Int32">
+      <column name="TeamVoteId" length="8" sql-type="int" not-null="false"/>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Category" type="Int32">
+      <column name="Category" length="8" sql-type="int" not-null="false"/>
+    </property>
+    <property name="VoteToHomeTeam" type="Boolean" >
+      <column name="VoteToHomeTeam" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+
+  </class>
+  
+  
+  
+</hibernate-mapping>

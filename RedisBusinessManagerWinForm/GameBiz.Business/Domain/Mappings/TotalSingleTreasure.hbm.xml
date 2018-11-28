@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.TotalSingleTreasure,GameBiz.Business"  table="C_TotalSingleTreasure">
+    <id name="SchemeId" type="String" unsaved-value="null">
+      <column name="SchemeId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true"/>
+    </id>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TotalBuyCount" type="Int32">
+      <column name="TotalBuyCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalBuyMoney" type="Decimal">
+      <column name="TotalBuyMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalBonusMoney" type="Decimal">
+      <column name="TotalBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="ProfitRate" type="Decimal">
+      <column name="ProfitRate" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="CurrentBetMoney" type="Decimal">
+      <column name="CurrentBetMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="CurrBonusMoney" type="Decimal">
+      <column name="CurrBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="ExpectedBonusMoney" type="Decimal">
+      <column name="ExpectedBonusMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="ExpectedReturnRate" type="Decimal">
+      <column name="ExpectedReturnRate" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="Commission" type="Decimal">
+      <column name="Commission" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalCommissionMoney" type="Decimal">
+      <column name="TotalCommissionMoney" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="FirstMatchStopTime" type="DateTime">
+      <column name="FirstMatchStopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="LastMatchStopTime" type="DateTime">
+      <column name="LastMatchStopTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="IsBonus" type="Boolean">
+      <column name="IsBonus" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsComplate" type="Boolean">
+      <column name="IsComplate" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="SingleTreasureDeclaration" type="String">
+      <column name="SingleTreasureDeclaration" sql-type="nvarchar(max)" length="2147483647" not-null="false"/>
+    </property>
+    <property name="Security" type="Int32">
+      <column name="Security" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CurrProfitRate" type="Decimal">
+      <column name="CurrProfitRate" length="8" sql-type="money" not-null="false"></column>
+    </property>
+  </class>
+
+
+  <class name="GameBiz.Domain.Entities.BDFXReportStatisticsData, GameBiz.Business"  table="E_BDFX_ReportStatisticsData">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TotalProfit" type="Decimal">
+      <column name="TotalProfit" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="MonthProfit" type="Decimal">
+      <column name="MonthProfit" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="WeekProfit" type="Decimal">
+      <column name="WeekProfit" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="TotalFansCount" type="Int32">
+      <column name="TotalFansCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MonthFansCount" type="Int32">
+      <column name="MonthFansCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="WeekFansCount" type="Int32">
+      <column name="WeekFansCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalSingleCopyCount" type="Int32">
+      <column name="TotalSingleCopyCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="MonthSingleCopyCount" type="Int32">
+      <column name="MonthSingleCopyCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="WeekSingleCopyCount" type="Int32">
+      <column name="WeekSingleCopyCount" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="TotalRecord" type="String" >
+      <column name="TotalRecord" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="MonthRecord" type="String" >
+      <column name="MonthRecord" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="WeekRecord" type="String" >
+      <column name="WeekRecord" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="TotalRecordRatio" type="Decimal">
+      <column name="TotalRecordRatio" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="MonthRecordRatio" type="Decimal">
+      <column name="MonthRecordRatio" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="WeekRecordRatio" type="Decimal">
+      <column name="WeekRecordRatio" length="8" sql-type="money" not-null="false"></column>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+    <property name="UpdateTime" type="DateTime">
+      <column name="UpdateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+  
+  <class name="GameBiz.Domain.Entities.UserSchemeShareExpert, GameBiz.Business"  table="E_User_SchemeShareExpert">
+    <id name="Id" type="Int64" unsaved-value="null">
+      <column name="Id" length="8" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="UserId" type="String" >
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ExpertType" type="Int32" >
+      <column name="ExpertType" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="IsEnable" type="Boolean">
+      <column name="IsEnable" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="ShowSort" type="Int32" >
+      <column name="ShowSort" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

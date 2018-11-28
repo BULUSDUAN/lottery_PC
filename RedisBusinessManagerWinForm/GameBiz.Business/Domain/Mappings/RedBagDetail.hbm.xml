@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.RedBagDetail,GameBiz.Business"  table="C_Fund_RedBagDetail">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="RedBagCategory" type="Int32">
+      <column name="RedBagCategory" length="4" sql-type="int" not-null="false"/>
+    </property>
+    <property name="OrderId" type="String">
+      <column name="OrderId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="UserId" type="String">
+      <column name="UserId" length="50" sql-type="nvarchar(50)" not-null="false"></column>
+    </property>
+    <property name="RedBagMoney" type="Decimal">
+      <column name="RedBagMoney" length="8" sql-type="money" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

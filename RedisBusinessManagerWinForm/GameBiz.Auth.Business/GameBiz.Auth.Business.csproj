@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A4FFE7C0-7268-4077-B1E6-34D75FE7C09D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GameBiz.Auth.Business</RootNamespace>
+    <AssemblyName>GameBiz.Auth.Business</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\00.ReferenceDlls\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\Entities\Function.cs" />
+    <Compile Include="Domain\Entities\MethodFunction.cs" />
+    <Compile Include="Domain\Entities\SystemUser.cs" />
+    <Compile Include="Domain\Entities\RoleFunction.cs" />
+    <Compile Include="Domain\Entities\SystemRole.cs" />
+    <Compile Include="Domain\Entities\UserFunction.cs" />
+    <Compile Include="Domain\Entities\AccessControlItem.cs" />
+    <Compile Include="Domain\Managers\RoleManager.cs" />
+    <Compile Include="Domain\Managers\UserManager.cs" />
+    <Compile Include="GameBizAuthBusiness.cs" />
+    <Compile Include="GameBizAuthManagement.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\Function.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Mappings\RoleFunction.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Mappings\UserFunction.hbm.xml" />
+    <EmbeddedResource Include="Domain\Mappings\SystemUser.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Mappings\SystemRole.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Domain\Mappings\MethodFunction.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common.Database.NHibernate\Common.Database.NHibernate.csproj">
+      <Project>{b1de3032-6171-4f3d-ae4c-7a041cd0ca06}</Project>
+      <Name>Common.Database.NHibernate</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Database\Common.Database.csproj">
+      <Project>{6df75b69-f86f-4b3c-b494-4de36f575a49}</Project>
+      <Name>Common.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Lottery\Common.Lottery.csproj">
+      <Project>{a1a397d4-6c38-4f41-97e3-915a0c8da5d3}</Project>
+      <Name>Common.Lottery</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{23f85ad0-56f2-48b3-bab9-845019eb8ee1}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GameBiz.Core\GameBiz.Core.csproj">
+      <Project>{587712a2-28ca-4279-adb8-3251e72f30e2}</Project>
+      <Name>GameBiz.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(ProjectDir)..\BuildDll"</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

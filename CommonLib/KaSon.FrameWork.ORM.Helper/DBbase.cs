@@ -81,6 +81,43 @@ namespace KaSon.FrameWork.ORM.Helper
             }
 
         }
+
+
+        public DbProvider MongoDB
+        {
+            get
+            {
+                if (db == null)
+                {
+                    db = new DbProvider();
+                    //// db.Init("Default");
+                    if (_DBType == "MySql")
+                    {
+                        db.Init("MySql.Default");
+                    }
+                    else
+                    {
+                        db.Init("SqlServer.Default");
+                    }
+
+
+                }
+                else if (!db.HasDbKey())
+                {
+                    if (_DBType == "MySql")
+                    {
+                        db.Init("MySql.Default");
+                    }
+                    else
+                    {
+                        db.Init("SqlServer.Default");
+                    }
+
+                }
+                return db;
+            }
+
+        }
         /// <summary>
         /// 静态DB
         /// </summary>

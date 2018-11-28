@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.BDFXRecordSingleCopy,GameBiz.Business"  table="C_BDFX_RecordSingleCopy">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int"  not-null="true" unique="true"></column>
+      <generator class="native" />
+    </id>
+    <property name="BDXFSchemeId" type="String">
+      <column name="BDXFSchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="SingleCopySchemeId" type="String">
+      <column name="SingleCopySchemeId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

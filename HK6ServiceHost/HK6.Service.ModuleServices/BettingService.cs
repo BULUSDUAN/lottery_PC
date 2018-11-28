@@ -150,8 +150,40 @@ namespace HK6.ModuleBaseServices
 
                 #region 校验金额是否足够
 
-               // var LoginUser = DB.LettoryDB<E_Login_Local>();
+                var LoginUser = LettoryDB.CreateQuery<E_Login_Local>();
+
+                decimal totalMoney = 0M;
+                foreach (var item in info.orderList)
+                {
+                    totalMoney = totalMoney + item.unitPrice;
+
+                }
+
+                foreach (var item in info.planList)
+                {
+                    totalMoney++;//加上追期钱
+                    totalMoney = totalMoney * item.multiple;//加倍钱
+                }
+                totalMoney = totalMoney + redBagMoney;
+
+
+
                 #endregion
+
+                //if (redBagMoney > 0M)
+                //{
+                //    var fundManager = new FundManager();
+                //    var percent = fundManager.QueryRedBagUseConfig(info.GameCode);
+                //    var maxUseMoney = info.TotalMoney * percent / 100;
+                //    if (redBagMoney > maxUseMoney)
+                //        throw new LogicException(string.Format("本彩种只允许使用红包为订单总金额的{0:N2}%，即{1:N2}元", percent, maxUseMoney));
+                //    //红包支付
+                //    BusinessHelper.Payout_RedBag_To_End(BusinessHelper.FundCategory_Betting, userId, keyLine, redBagMoney, msg, "Bet", balancePassword);
+                //}
+                ////其它账户支付
+                //BusinessHelper.Payout_To_End(BusinessHelper.FundCategory_Betting, userId, keyLine, totalBetMoney - redBagMoney
+                //    , msg, "Bet", balancePassword);
+
             }
             catch (Exception)
             {

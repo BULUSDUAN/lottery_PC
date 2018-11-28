@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="GameBiz.Domain.Entities.VirtualUserData, GameBiz.Business"  table="E_VirtualUser_Data">
+    <id name="Id" type="Int32" unsaved-value="null">
+      <column name="Id" length="4" sql-type="int" not-null="true" unique="true"/>
+      <generator class="native" />
+    </id>
+    <property name="NickName" type="String" >
+      <column name="NickName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="RealName" type="String" >
+      <column name="RealName" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="Mobile" type="String" >
+      <column name="Mobile" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IdCardNumber" type="String" >
+      <column name="IdCardNumber" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="IsUser" type="Boolean" >
+      <column name="IsUser" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="CreateUserId" type="String" >
+      <column name="CreateUserId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="CreateTime" type="DateTime">
+      <column name="CreateTime" length="8" sql-type="datetime" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>

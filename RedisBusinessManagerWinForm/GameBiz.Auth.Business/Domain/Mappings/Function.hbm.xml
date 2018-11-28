@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="GameBiz.Auth.Domain.Entities.Function, GameBiz.Auth.Business"  table="C_Auth_Function_List">
+		<id name="FunctionId" type="String" unsaved-value="null">
+			<column name="FunctionId" length="50" sql-type="nvarchar(50)" not-null="true" unique="true" />
+		</id>
+    <property name="IsWebBasic" type="Boolean">
+      <column name="IsWebBasic" length="1" sql-type="bit" not-null="false"/>
+    </property>
+    <property name="IsBackBasic" type="Boolean">
+      <column name="IsBackBasic" length="1" sql-type="bit" not-null="false"/>
+    </property>
+		<property name="DisplayName" type="String">
+			<column name="DisplayName" length="100" sql-type="nvarchar(100)" not-null="false"/>
+		</property>
+    <property name="ParentId" type="String">
+      <column name="ParentId" length="50" sql-type="nvarchar(50)" not-null="false"/>
+    </property>
+    <property name="ParentPath" type="String">
+      <column name="ParentPath" length="500" sql-type="nvarchar(500)" not-null="false"/>
+    </property>
+  </class>
+</hibernate-mapping>
