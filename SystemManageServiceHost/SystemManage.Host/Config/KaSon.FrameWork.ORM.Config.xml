@@ -23,7 +23,7 @@
   </OrmConfigInfo>
   <OrmConfigInfo>
 	<DbKey>MySql.Default</DbKey>
-	<ConnectionString>server=10.0.3.27;user=root;database=testdb;port=3306;password=a123456;SSL Mode=none</ConnectionString>
+	<ConnectionString>server=10.0.3.6;user=root;database=ecp_newcai;port=3306;password=!@#123456abc;SSL Mode=none</ConnectionString>
 	<Provider>MySql</Provider>
 	<CommandTimeout>300</CommandTimeout>
 	<FactoryType>KaSon.ORM.Factory.MySqlFactory</FactoryType>

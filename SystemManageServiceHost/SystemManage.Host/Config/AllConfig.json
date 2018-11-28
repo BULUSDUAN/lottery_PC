@@ -316,14 +316,14 @@
     },
     {
       "Key": "HK6Issuse",
-      "IsStart": false,
+      "IsStart": true,
       "Desc": "六合彩期号采集",
       "Param": "gameName|HK6",
       "Path": "creawSer/numcraw/NumLettory_HK6Issuse"
     },
     {
       "Key": "HostoryHK6",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "六合彩 奖号采集",
       "Param": "gameName|HostoryHK6",
       "Path": "creawSer/numcraw/NumLettory_HK6Issuse"
@@ -345,7 +345,7 @@
   },
   //必须配置 服务发现配置
   "ConsulSettings": {
-    "IpAddrs": "10.0.3.27:8500" //服务启动IP
+    "IpAddrs": "127.0.0.1:8500" //服务启动IP
   }
 
 

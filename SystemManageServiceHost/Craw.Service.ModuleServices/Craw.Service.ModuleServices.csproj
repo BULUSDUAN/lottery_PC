@@ -29,7 +29,7 @@
       <HintPath>..\..\FramWorkDLL\HK6DLL\KaSon.FrameWork.ORM.dll</HintPath>
     </Reference>
     <Reference Include="KaSon.FrameWork.Services">
-      <HintPath>..\..\..\..\Lettory_PC\Lottery_02\FramWorkDLL\HK6DLL\KaSon.FrameWork.Services.dll</HintPath>
+      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
     </Reference>
     <Reference Include="Kason.Sg.Core.Caching">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Caching.dll</HintPath>

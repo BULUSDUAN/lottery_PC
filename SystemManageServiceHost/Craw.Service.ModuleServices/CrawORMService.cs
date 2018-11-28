@@ -198,18 +198,19 @@ namespace Craw.Service.ModuleServices
                         index = 1;
                         Year = DateTime.Parse(item).Year+"";
                     }
-                    if (index <10)
-                    {
-                        atcNo = Year + "00" + index;
-                    }
-                    if (index>=10 && index < 100)
-                    {
-                        atcNo = Year + "0"+index;
-                    }
-                    if (index > 100)
-                    {
-                        atcNo = Year + "" + index;
-                    }
+                    atcNo = index + "";
+                    //if (index <10)
+                    //{
+                    //    atcNo = Year + "00" + index;
+                    //}
+                    //if (index>=10 && index < 100)
+                    //{
+                    //    atcNo = Year + "0"+index;
+                    //}
+                    //if (index > 100)
+                    //{
+                    //    atcNo = Year + "" + index;
+                    //}
                     var one = db.CreateQuery<blast_data_time>().Where(b => b.actionDate == item).FirstOrDefault();
                     if (one == null)
                     {
@@ -279,7 +280,7 @@ namespace Craw.Service.ModuleServices
                    // index++;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
