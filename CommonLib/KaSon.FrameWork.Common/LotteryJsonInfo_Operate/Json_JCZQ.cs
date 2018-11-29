@@ -115,6 +115,7 @@ namespace KaSon.FrameWork.Common
         /// <returns>队伍信息及比赛结果信息</returns>
         public static List<JCZQ_MatchInfo_WEB> MatchList_WEB(string gameType, string newVerType, string matchDate = null, bool isLeftJoin = true)
         {
+            //var matchspf = MatchList(gameType, oddtype, matchDate);
             BettingHelper bizHelper = new BettingHelper();
             List<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo> sp_spf =new List<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(); //bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile_Mg(gameType, matchDate)); //让球胜平负sp数据
             List<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo> sp_brqspf = new List<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>();
@@ -158,7 +159,10 @@ namespace KaSon.FrameWork.Common
                         //   var filter = Builders<JCLQ_SP>.Filter.Empty;
                         sp_bqc = MgMatchDataHelper.JCZQ_SP<JCZQ_BQC_SPInfo>(gameType, matchDate);// as IList<JCZQ_BQC_SPInfo>;
                         break;
-
+                    case "EXY":
+                        sp_spf = MgMatchDataHelper.JCZQ_SP<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(gameType, matchDate);// as IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>;
+                        sp_brqspf = MgMatchDataHelper.JCZQ_SP<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(gameType, matchDate);//as IList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>;
+                        break;
                     default://DXF
                         sp_zjq = MgMatchDataHelper.JCZQ_SP<JCZQ_ZJQ_SPInfo>(gameType, matchDate); ;// as IList<JCZQ_ZJQ_SPInfo>;
 

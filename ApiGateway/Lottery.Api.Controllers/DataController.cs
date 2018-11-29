@@ -2433,6 +2433,12 @@ namespace Lottery.Api.Controllers
                                 }
 
                                 #endregion
+                                #region 添加主客二选一
+                                if (gameType.ToLower() == "exy")
+                                {
+                                    oddlist_jczq = oddlist_jczq.Where(o => o.LetBall == -1 || o.LetBall == 1).ToList();
+                                }
+                                #endregion
                             }
                         }
                         matchDataList.AddRange(oddlist_jczq);
