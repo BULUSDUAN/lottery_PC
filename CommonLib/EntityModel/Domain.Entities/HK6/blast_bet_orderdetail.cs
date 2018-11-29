@@ -70,7 +70,7 @@ namespace EntityModel
         [Field("Odds")]
         public decimal Odds { get; set; }
         /// <summary>
-        // BonusStatus 改为2中奖
+        // BonusStatus 改为2中奖,3不中奖为期号过
         ///</summary>
         [ProtoMember(9)]
         [Field("BonusStatus")]
@@ -101,6 +101,9 @@ namespace EntityModel
         [ProtoMember(15)]
         [Field("winNumber")]
         public string winNumber { get; set; }
+
+        [Field("winNumberDesc")]
+        public string winNumberDesc { get; set; }
         /// <summary>
         // 进行状态
         ///</summary>
@@ -125,6 +128,8 @@ namespace EntityModel
 
         [Field("issueDate")]
         public string issueDate { get; set; }
+
+  
 
         /// <summary>
         /// 每个码对应的赔率

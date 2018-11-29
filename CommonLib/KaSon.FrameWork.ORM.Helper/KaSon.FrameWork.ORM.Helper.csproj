@@ -41,15 +41,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="KaSon.FrameWork.ORM">
-      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.ORM.dll</HintPath>
-    </Reference>
-    <Reference Include="KaSon.FrameWork.Services">
-      <HintPath>..\..\FramWorkDLL\KaSon.FrameWork.Services.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="MyServerXML.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -69,6 +60,15 @@
 
   <ItemGroup>
     <Folder Include="LotteryJsonInfo_Operate\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="KaSon.FrameWork.ORM">
+      <HintPath>..\..\..\..\Lottery_02\FramWorkDLL\HK6DLL\KaSon.FrameWork.ORM.dll</HintPath>
+    </Reference>
+    <Reference Include="KaSon.FrameWork.Services">
+      <HintPath>..\..\..\..\Lottery_02\FramWorkDLL\HK6DLL\KaSon.FrameWork.Services.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>

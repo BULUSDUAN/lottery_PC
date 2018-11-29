@@ -21,6 +21,7 @@ using Microsoft.Extensions.Logging;
 using KaSon.FrameWork.ORM;
 using EntityModel;
 using KaSon.FrameWork.Analyzer.Hk6Model;
+using KaSon.FrameWork.Common.Hk6;
 
 namespace HK6.ModuleBaseServices
 {
@@ -71,10 +72,13 @@ namespace HK6.ModuleBaseServices
                 {
                     //开始结算
                     string playIdStr = "";
+                    string tm = winNum.Split('|')[1];
+                    string zm = winNum.Split('|')[0];
+                    
                     switch (playIdStr)
                     {
                         case "TM"://特码
-                            string tm = winNum.Split('|')[1];
+                         
                             if (tm.Trim()==item.AnteCodes.Trim())
                             {
                                  // 故中奖
@@ -82,20 +86,36 @@ namespace HK6.ModuleBaseServices
                             }
                             break;
                         case "ZM"://正码
-                            string zm = winNum.Split('|')[0];
+                         
                             if (zm.Trim().Contains( item.AnteCodes.Trim()))
                             {
                                 // 故中奖
                                 goto LabelWin;
                             }
                             break;
-                        case "LM"://两面
-                            string lm = winNum.Split('|')[0];
-                            if (lm.Trim().Contains(item.AnteCodes.Trim()))
+                        case "ZX"://生肖正肖
+                        
+                            var codeArr = item.AnteCodes.Trim().Split(',');
+                            int winCount = 0;
+                            List<string> winCodeList = new List<string>();
+                            foreach (var code in codeArr)
                             {
-                                // 故中奖
-                                goto LabelWin;
+                                if (zm.Contains(code))
+                                {
+                                    //中奖一次
+                                    winCount++;
+                                    winCodeList.Add(code);
+                                }
                             }
+                            //算出对应号码
+                            //生成号码
+                            //if (temp)
+                            //{
+
+                            //}
+
+                          //确定这个是01
+
                             break;
                         default:
                             break;
@@ -119,14 +139,14 @@ namespace HK6.ModuleBaseServices
 
                         }, b => b.id == orderDetailId);
 
-                        DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
-                        {
-                            winNumber = winNum,
-                            BonusAwardsMoney = winMoney,
-                            updateTime = DateTime.Now,
-                            BonusStatus = 2  //为中奖状态
+                        //DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+                        //{
+                        //    winNumber = winNum,
+                        //    BonusAwardsMoney = winMoney,
+                        //    updateTime = DateTime.Now,
+                        //    BonusStatus = 2  //为中奖状态
 
-                        }, b => b.id == orderDetailId);
+                        //}, b => b.id == orderDetailId);
 
                         //添加用户金币 加钱  blast_lhc_member
 
