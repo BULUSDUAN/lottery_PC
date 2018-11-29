@@ -58,7 +58,7 @@ namespace Lottery.ApiGateway
                 .UseApplicationInsights()
                 .Build();
 
-            ConsoleHelper.Clear();
+          //  ConsoleHelper.Clear();
 
             host.Run();
             

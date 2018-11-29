@@ -31,7 +31,7 @@ using KaSon.FrameWork.Common.Expansion;
 namespace Lottery.Api.Controllers
 {
     [Area("api")]
-    [ReusltFilter]
+   // [ReusltFilter]
     public class UserController : BaseController
     {
         private IHttpContextAccessor _accessor;
@@ -2462,9 +2462,9 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.userToken;
-                string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+              //  string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param.Add("UserId", UserId);
+                param.Add("UserId", "123");
                 object obj = await _serviceProxyProvider.Invoke<UserLoginHistoryCollection>(param, "api/user/QueryCache_UserLoginHistoryCollection");
 
                 var LoginHistory = (UserLoginHistoryCollection)obj;
