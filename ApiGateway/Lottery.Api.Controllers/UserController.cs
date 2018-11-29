@@ -57,7 +57,12 @@ namespace Lottery.Api.Controllers
                 param["loginName"] = loginName;
                 param["password"] = password;
                 param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
-                var loginInfo = await _serviceProxyProvider.Invoke<LoginInfo>(param, "api/user/user_login");
+                Kason.Sg.Core.ProxyGenerator.Implementation.ServiceProxyProvider sp = _serviceProxyProvider as Kason.Sg.Core.ProxyGenerator.Implementation.ServiceProxyProvider;
+
+             //   sp.Invoke<LoginInfo>(param, "api/user/user_login");
+
+                var loginInfo = await sp.Invoke<LoginInfo>(param, "api/user/user_login");
+
                 if (loginInfo == null)
                     throw new Exception("登录失败");
                 if (!loginInfo.IsSuccess)
