@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSRedisCore", "..\CommonLib
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FrameWork", "FrameWork", "{038A8BEC-6EAC-4228-8D75-1919E6F918CB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BettingLottery.Service.Host", "BettingLottery.Service\BettingLottery.Service.Host.csproj", "{7492E577-0B5A-48A7-A747-E41054E73BCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{6841FD68-6165-4677-894D-72970A99DAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6841FD68-6165-4677-894D-72970A99DAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6841FD68-6165-4677-894D-72970A99DAC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7492E577-0B5A-48A7-A747-E41054E73BCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7492E577-0B5A-48A7-A747-E41054E73BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7492E577-0B5A-48A7-A747-E41054E73BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7492E577-0B5A-48A7-A747-E41054E73BCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

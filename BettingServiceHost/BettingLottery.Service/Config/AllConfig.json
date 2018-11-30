@@ -50,7 +50,7 @@
   },
   //必须配置 服务发现配置
   "ConsulSettings": {
-    "IpAddrs": "10.0.3.27:8501",
+    "IpAddrs": "10.0.3.27:8500",
 
     "SelfDomain": "http://localhost:729",
     "MobileDomain": "http://localhost:729",
