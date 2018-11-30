@@ -2498,7 +2498,7 @@ namespace Lottery.Api.Controllers
             {
               
                 var p = WebHelper.Decode(entity.Param);
-                var userToken = p.userToken;
+                string userToken = p.userToken;
                 string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 string mailid = PreconditionAssert.IsNotEmptyString((string)p.MailId, "站内消息ID不能为空。");
                 var mailid_ = mailid.Split(',');
@@ -2536,8 +2536,8 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = WebHelper.Decode(entity.Param);
-                var id = p.id;
-                var userToken = p.userToken;
+                string id = p.id;
+                string userToken = p.userToken;
                 var followId = long.Parse(PreconditionAssert.IsNotEmptyString(id, "定制跟单编号不能为空"));
                 Dictionary<string, object> param = new Dictionary<string, object>();
                 string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
@@ -2584,7 +2584,7 @@ namespace Lottery.Api.Controllers
                 var isUsed = string.IsNullOrEmpty((string)p.isUsed) ? true : bool.Parse((string)p.isUsed);
                 var isAutoStop = string.IsNullOrEmpty((string)p.isAutoStop) ? false : bool.Parse((string)p.isAutoStop);
                 var autoStopCount = string.IsNullOrEmpty((string)p.autoStopCount) ? 10 : int.Parse((string)p.autoStopCount);
-                var userToken = p.userToken;
+                string userToken = p.userToken;
                 string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 TogetherFollowerRuleInfo info = new TogetherFollowerRuleInfo()
                 {

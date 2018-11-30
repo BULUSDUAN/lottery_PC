@@ -273,9 +273,9 @@ namespace KaSon.FrameWork.ORM.Helper
 
         public List<UserLoginHistoryInfo> QueryUserLoginHistoryCollection(string userId)
         {
-           
+         
             return new BlogManager().QueryBlog_UserLoginHistory(userId);
-           
+          
         }
 
         public ProfileUserInfo QueryProfileUserInfo(string userId)
