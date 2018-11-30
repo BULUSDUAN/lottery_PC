@@ -1,6 +1,7 @@
 ﻿using EntityModel.CoreModel;
 using EntityModel.Interface;
 using EntityModel.LotteryJsonInfo;
+using ProtoBuf;
 using System;
 using System.Collections.Generic;
 
@@ -59,31 +60,40 @@ namespace EntityModel
     #region 用户登录日志
    // [CommunicationObject]
     [Serializable]
+    [ProtoContract]
     public class UserLoginHistoryInfo
     {
+        [ProtoMember(1)]
         public int Id { get; set; }
         /// <summary>
         /// 用户Id
         /// </summary>
+        [ProtoMember(2)]
         public string UserId { get; set; }
         /// <summary>
         /// 用户Id
         /// </summary>
+        [ProtoMember(3)]
         public string LoginFrom { get; set; }
         /// <summary>
         /// IP
         /// </summary>
+        [ProtoMember(4)]
         public string LoginIp { get; set; }
         /// <summary>
         /// 地址
         /// </summary>
+        [ProtoMember(5)]
         public string IpDisplayName { get; set; }
         /// <summary>
         /// 时间
         /// </summary>
+        [ProtoMember(6)]
         public DateTime LoginTime { get; set; }
     }
-   // [CommunicationObject]
+    // [CommunicationObject]
+    [Serializable]
+    [ProtoContract]
     public class UserLoginHistoryCollection : List<UserLoginHistoryInfo>
     {
     }

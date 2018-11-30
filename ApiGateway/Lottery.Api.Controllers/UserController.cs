@@ -2464,7 +2464,7 @@ namespace Lottery.Api.Controllers
                 string userToken = p.userToken;
               //  string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param.Add("UserId", "123");
+                param.Add("UserId", "admin");
                 object obj = await _serviceProxyProvider.Invoke<UserLoginHistoryCollection>(param, "api/user/QueryCache_UserLoginHistoryCollection");
 
                 var LoginHistory = (UserLoginHistoryCollection)obj;
