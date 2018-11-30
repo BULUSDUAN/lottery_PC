@@ -2462,17 +2462,16 @@ namespace Lottery.Api.Controllers
             {
                 var p = JsonHelper.Decode(entity.Param);
                 string userToken = p.userToken;
-              //  string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 Dictionary<string, object> param = new Dictionary<string, object>();
-                param.Add("UserId", "admin");
-                object obj = await _serviceProxyProvider.Invoke<UserLoginHistoryCollection>(param, "api/user/QueryCache_UserLoginHistoryCollection");
+                param.Add("UserId", UserId);
+                var obj = await _serviceProxyProvider.Invoke<List<UserLoginHistoryInfo>>(param, "api/user/QueryCache_UserLoginHistoryCollection");
 
-                var LoginHistory = (UserLoginHistoryCollection)obj;
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
                     Message = "查询成功",
-                    Value = LoginHistory,
+                    Value = obj,
                 });
             }
             catch (Exception ex)

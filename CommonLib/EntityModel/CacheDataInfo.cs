@@ -55,11 +55,10 @@ namespace EntityModel
         }
     }
 
-   
+
 
     #region 用户登录日志
-   // [CommunicationObject]
-    [Serializable]
+    // [CommunicationObject]
     [ProtoContract]
     public class UserLoginHistoryInfo
     {
@@ -92,7 +91,6 @@ namespace EntityModel
         public DateTime LoginTime { get; set; }
     }
     // [CommunicationObject]
-    [Serializable]
     [ProtoContract]
     public class UserLoginHistoryCollection : List<UserLoginHistoryInfo>
     {
