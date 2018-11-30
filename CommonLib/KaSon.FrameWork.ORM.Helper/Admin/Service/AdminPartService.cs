@@ -679,7 +679,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <summary>
         /// 根据用户编号查询用户历史登录
         /// </summary>
-        public UserLoginHistoryCollection QueryCache_UserLoginHistoryCollectionByUserId(string userId)
+        public List<UserLoginHistoryInfo> QueryCache_UserLoginHistoryCollectionByUserId(string userId)
         {
             try
             {

@@ -146,7 +146,7 @@ namespace UserLottery.Service.IModuleServices
         [Service(Date = "2018-9-25", Director = "renjun", Name = "查询是否有关注")]
         Task<bool> QueryIsAttention(string beAttentionUserId, string currentUserId);
         [Service(Date = "2018-9-25", Director = "renjun", Name = "查询用户历史登录")]
-        Task<UserLoginHistoryCollection> QueryCache_UserLoginHistoryCollection(string UserId);
+        Task<List<UserLoginHistoryInfo>> QueryCache_UserLoginHistoryCollection(string UserId);
         [Service(Date = "2018-9-25", Director = "renjun", Name = "根据用户编号，查询总的站内信条数")]
         Task<int> GetUserInnerMailCount(string UserId);
         [Service(Date = "2018-9-25", Director = "renjun", Name = "查询我的站内信")]

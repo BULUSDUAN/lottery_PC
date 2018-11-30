@@ -271,11 +271,11 @@ namespace KaSon.FrameWork.ORM.Helper
             return DB.CreateQuery<C_Lottery_Game>().ToList();
         }
 
-        public UserLoginHistoryCollection QueryUserLoginHistoryCollection(string userId)
+        public List<UserLoginHistoryInfo> QueryUserLoginHistoryCollection(string userId)
         {
-            var result = new UserLoginHistoryCollection();
-            result.AddRange(new BlogManager().QueryBlog_UserLoginHistory(userId));
-            return result;
+           
+            return new BlogManager().QueryBlog_UserLoginHistory(userId);
+           
         }
 
         public ProfileUserInfo QueryProfileUserInfo(string userId)

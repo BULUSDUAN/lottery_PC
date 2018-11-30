@@ -1709,7 +1709,7 @@ namespace UserLottery.Service.ModuleServices
         /// </summary>
         /// <param name="userToken"></param>
         /// <returns></returns>
-        public Task<UserLoginHistoryCollection> QueryCache_UserLoginHistoryCollection(string UserId)
+        public Task<List<UserLoginHistoryInfo>> QueryCache_UserLoginHistoryCollection(string UserId)
         {
             // 验证用户身份及权限
             try
