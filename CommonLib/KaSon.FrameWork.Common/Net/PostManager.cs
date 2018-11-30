@@ -241,9 +241,11 @@ namespace KaSon.FrameWork.Common.Net
                 System.Net.CookieContainer c = new System.Net.CookieContainer();
                 request.CookieContainer = c;
                 if (requestHandler != null) requestHandler(request);
-
+               
                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                StreamReader reader = new StreamReader(response.GetResponseStream(), encoding);
+                Stream stm = new System.IO.Compression.GZipStream(response.GetResponseStream(), System.IO.Compression.CompressionMode.Decompress);
+                //StreamReader reader = new StreamReader(response.GetResponseStream(), encoding);
+                StreamReader reader = new StreamReader(stm, encoding);
                 return reader.ReadToEnd();
 
             }

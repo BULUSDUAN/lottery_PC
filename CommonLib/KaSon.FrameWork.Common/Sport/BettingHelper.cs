@@ -1287,7 +1287,7 @@ namespace KaSon.FrameWork.Common.Sport
         {
             try
             {
-                string strResult = PostManager.Get(fullUrl, Encoding.UTF8);
+                string strResult = PostManager.Get(fullUrl,Encoding.UTF8);
                 if (strResult == "404") return string.Empty;
 
                 if (!string.IsNullOrEmpty(strResult))
