@@ -29,7 +29,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(2)]
             [Field("userid")]
-            public int userId { get; set; }
+            public string userId { get; set; }
        
           
             /// <summary>
@@ -137,6 +137,9 @@ namespace EntityModel
         [ProtoMember(22)]
             [Field("anteCodeNum")]
             public int anteCodeNum { get; set; }
+
+        [Field("BeiSu")]
+        public int BeiSu { get; set; }
         /// <summary>
         // ¶©µ¥ºÅ
         ///</summary>

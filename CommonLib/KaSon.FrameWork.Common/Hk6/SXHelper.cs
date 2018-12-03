@@ -6,10 +6,13 @@ namespace KaSon.FrameWork.Common.Hk6
 {
 
     public class XiaoModel {
-
+        public int Index { get; set; }
         public string DisPlayName { get; set; }
         public string Name { get; set; }
         public List<string> CodeList { get; set; }
+
+
+      
 
     }
 
@@ -29,7 +32,29 @@ namespace KaSon.FrameWork.Common.Hk6
     /// 生肖计算
     /// </summary>
     public  class SXHelper
-    {
+    {//
+
+       // 红波 :01、02、07、08、12、13、18、19、23、24、29、30、34、35、40、45、46
+            
+        public static string[] RedBox = new string[] {
+                      "01","02","07","08","12","13",
+                      "18","19","23","24","29","30",
+                      "34","35","40","45","46"
+                    };
+
+        //蓝波 :03、04、09、10、14、15、20、25、26、31、36、37、41、42、47、48
+            
+        public static string[] BluBox = new string[] {
+                     "03","04","09","10","14",
+                    "15","20","25","26","31",
+                    "36","37","41","42","47","48"
+                    };
+        public static string[] GreenBox = new string[] {
+            "05","06","11","16","17","21",
+            "22","27","28","32","33","38",
+            "39","43","44","49"
+
+                    };
         //天肖
         // 
         // 牛（10 22 34 46）、兔（08 20 32 44）、龙（07 19 31 43）、
@@ -134,7 +159,19 @@ namespace KaSon.FrameWork.Common.Hk6
 
         }
 
-        public static XiaoCollectionModel XiaoCollection() {
+        public static List<XiaoModel> XiaoCollection12()
+        {
+            List<XiaoModel> XM = new List<XiaoModel>();
+            for (int i = 1; i < 13; i++)
+            {
+                XiaoModel xl= new XiaoModel();
+                xl.Index = i;
+                xl.CodeList=ScodeArr(i);
+                XM.Add(xl);
+            }
+            return XM;
+        }
+            public static XiaoCollectionModel XiaoCollection() {
 
             XiaoCollectionModel m = new XiaoCollectionModel();
             //天肖 牛02,兔04,05龙,马07,猴09,猪12

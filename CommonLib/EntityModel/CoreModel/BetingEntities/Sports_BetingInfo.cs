@@ -71,7 +71,7 @@ namespace EntityModel.CoreModel
 
         public decimal TotalMoney { get; set; }
 
-        public int userId { get; set; }
+        public string userId { get; set; }
         /// <summary>
         /// 期号
         /// </summary>

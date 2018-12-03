@@ -56,6 +56,8 @@ namespace EntityModel
 
         [Field("anteCodeNum")]
         public int anteCodeNum { get; set; }
+        [Field("BeiSu")]
+        public int BeiSu { get; set; }
 
         /// <summary>
         // 投注号
@@ -70,7 +72,7 @@ namespace EntityModel
         [Field("Odds")]
         public decimal Odds { get; set; }
         /// <summary>
-        // BonusStatus 改为2中奖,3不中奖为期号过
+        // BonusStatus 改为2中奖,3不中奖为期号过,4和局
         ///</summary>
         [ProtoMember(9)]
         [Field("BonusStatus")]
