@@ -29,6 +29,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using KaSon.FrameWork.ORM.Provider;
+using KaSon.FrameWork.Common.KaSon;
 
 namespace Lottery.Service.Host
 {
@@ -62,7 +63,7 @@ namespace Lottery.Service.Host
                         //.UseRabbitMQTransport()
                         //.AddRabbitMQAdapt()
 
-                        .AddCache()
+                        //.AddCache()
                         //.UseKafkaMQTransport(kafkaOption =>
                         //{
                         //    kafkaOption.Servers = "127.0.0.1";
@@ -113,12 +114,14 @@ namespace Lottery.Service.Host
                 InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
 
                 #endregion
-                System.Threading.Tasks.Task.Factory.StartNew(() =>
-                {
-                    testAsync();
-                });
+                //System.Threading.Tasks.Task.Factory.StartNew(() =>
+                //{
+                //    testAsync();
+                //});
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
             }
+            ConsoleHelper.Clear();
+            Console.ReadLine();
         }
 
 

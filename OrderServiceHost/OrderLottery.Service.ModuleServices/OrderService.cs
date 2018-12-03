@@ -653,7 +653,7 @@ namespace OrderLottery.Service.ModuleServices
         /// <summary>
         /// 查询用户保存的订单信息
         /// </summary>
-        public Task<SaveOrder_LotteryBettingInfoCollection> QuerySaveOrder_Lottery(string UserId)
+        public Task<List<SaveOrder_LotteryBettingInfo>> QuerySaveOrder_Lottery(string UserId)
         {
 
             try

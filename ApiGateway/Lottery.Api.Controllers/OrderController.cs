@@ -3206,7 +3206,7 @@ namespace Lottery.Api.Controllers
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var param = new Dictionary<string, object>();
                 param.Add("UserId", userId);
-                var list = await _serviceProxyProvider.Invoke<SaveOrder_LotteryBettingInfoCollection>(param, "api/Order/QuerySaveOrder_Lottery");
+                var list = await _serviceProxyProvider.Invoke<List<SaveOrder_LotteryBettingInfo>>(param, "api/Order/QuerySaveOrder_Lottery");
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
