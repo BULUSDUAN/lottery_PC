@@ -150,5 +150,8 @@ namespace OrderLottery.Service.IModuleServices
 
         [Service(Date = "2018-10-29", Director = "renjun", Name = "查询用户保存的订单信息")]
         Task<List<SaveOrder_LotteryBettingInfo>> QuerySaveOrder_Lottery(string UserId);
+
+        [Service(Date = "2018-12-03", Director = "renjun", Name = "推广用户")]
+        Task<SporeadUsersCollection> QuerySporeadUsers(string agentId, DateTime startTime, DateTime endTime, int pageIndex, int pageSize);
     }
 }
