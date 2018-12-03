@@ -162,9 +162,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询奇偶走势列表按时间倒叙 
         /// </summary>
-        public PL3_JIOU_InfoCollection QueryPL3_JIOU_info(int length)
+        public List<PL3_JIOU_Info> QueryPL3_JIOU_info(int length)
         {
-            PL3_JIOU_InfoCollection Collection = new PL3_JIOU_InfoCollection();
+            List<PL3_JIOU_Info> Collection = new List<PL3_JIOU_Info>();
 
             var list = this.QueryGameChart<PL3_JIOU_Info>(string.Format("QueryPL3_JIOU_info_{0}", length), () =>
             {
@@ -182,9 +182,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询奇偶号码走势列表按时间倒叙 
         /// </summary>
-        public PL3_JOHM_InfoCollection QueryPL3_JOHM_info(int length)
+        public List<PL3_JOHM_Info> QueryPL3_JOHM_info(int length)
         {
-            PL3_JOHM_InfoCollection Collection = new PL3_JOHM_InfoCollection();
+            List<PL3_JOHM_Info> Collection = new List<PL3_JOHM_Info>();
             var list = this.QueryGameChart<PL3_JOHM_Info>(string.Format("QueryPL3_JOHM_info_{0}", length), () =>
                 {
                     var infoList = new List<PL3_JOHM_Info>();
@@ -201,9 +201,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询质和走势列表按时间倒叙 
         /// </summary>
-        public PL3_ZhiHe_InfoCollection QueryPL3_ZhiHe_info(int length)
+        public List<PL3_ZhiHe_Info> QueryPL3_ZhiHe_info(int length)
         {
-            PL3_ZhiHe_InfoCollection Collection = new PL3_ZhiHe_InfoCollection();
+            List<PL3_ZhiHe_Info> Collection = new List<PL3_ZhiHe_Info>();
             var list = this.QueryGameChart<PL3_ZhiHe_Info>(string.Format("QueryPL3_ZhiHe_info_{0}", length), () =>
                {
                    var infoList = new List<PL3_ZhiHe_Info>();
@@ -220,9 +220,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询质和号码走势列表按时间倒叙 
         /// </summary>
-        public PL3_ZHHM_InfoCollection QueryPL3_ZHHM_info(int length)
+        public List<PL3_ZHHM_Info> QueryPL3_ZHHM_info(int length)
         {
-            PL3_ZHHM_InfoCollection Collection = new PL3_ZHHM_InfoCollection();
+            List<PL3_ZHHM_Info> Collection = new List<PL3_ZHHM_Info>();
             var list = this.QueryGameChart<PL3_ZHHM_Info>(string.Format("QueryPL3_ZHHM_info_{0}", length), () =>
                {
                    var infoList = new List<PL3_ZHHM_Info>();

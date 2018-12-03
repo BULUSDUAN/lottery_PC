@@ -1449,7 +1449,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 除3走势
         /// </summary>
-        public Task<SSQ_C3_InfoCollection> QueryCache_SSQ_C3_Info(int index)
+        public Task<List<SSQ_C3_Info>> QueryCache_SSQ_C3_Info(int index)
         {
             try
             {
@@ -1464,7 +1464,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 奇偶走势
         /// </summary>
-        public Task<SSQ_JiOu_InfoCollection> QueryCache_SSQ_JiOu_Info(int index)
+        public Task<List<SSQ_JiOu_Info>> QueryCache_SSQ_JiOu_Info(int index)
         {
             try
             {
@@ -1479,7 +1479,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 跨度SW走势
         /// </summary>
-        public Task<SSQ_KuaDu_SW_InfoCollection> QueryCache_SSQ_KuaDu_SW_Info(int index)
+        public Task<List<SSQ_KuaDu_SW_Info>> QueryCache_SSQ_KuaDu_SW_Info(int index)
         {
             try
             {
@@ -1494,7 +1494,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 和值走势
         /// </summary>
-        public Task<SSQ_HeZhi_InfoCollection> QueryCache_SSQ_HeZhi_Info(int index)
+        public Task<List<SSQ_HeZhi_Info>> QueryCache_SSQ_HeZhi_Info(int index)
         {
             try
             {
@@ -1509,7 +1509,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 质合走势
         /// </summary>
-        public Task<SSQ_ZhiHe_InfoCollection> QueryCache_SSQ_ZhiHe_Info(int index)
+        public Task<List<SSQ_ZhiHe_Info>> QueryCache_SSQ_ZhiHe_Info(int index)
         {
             try
             {
@@ -1524,7 +1524,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 跨度1_6走势
         /// </summary>
-        public Task<SSQ_KuaDu_1_6_InfoCollection> QueryCache_SSQ_KuaDu_1_6_Info(int index)
+        public Task<List<SSQ_KuaDu_1_6_Info>> QueryCache_SSQ_KuaDu_1_6_Info(int index)
         {
             try
             {
@@ -1541,7 +1541,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询除3走势
         /// </summary>
-        public Task<DLT_Chu3_InfoCollection> QueryDLT_Chu3_Info(int length)
+        public Task<List<DLT_Chu3_Info>> QueryDLT_Chu3_Info(int length)
         {
             try
             {
@@ -1556,7 +1556,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询大小走势
         /// </summary>
-        public Task<DLT_DX_InfoCollection> QueryDLT_DX_Info(int length)
+        public Task<List<DLT_DX_Info>> QueryDLT_DX_Info(int length)
         {
             try
             {
@@ -1570,7 +1570,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询和值走势
         /// </summary>
-        public Task<DLT_HeZhi_InfoCollection> QueryDLT_HeZhi_Info(int length)
+        public Task<List<DLT_HeZhi_Info>> QueryDLT_HeZhi_Info(int length)
         {
             try
             {
@@ -1585,7 +1585,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询基本走势
         /// </summary>
-        public Task<DLT_JiBenZouSi_InfoCollection> QueryDLT_JiBenZouSi_Info(int length)
+        public Task<List<DLT_JiBenZouSi_Info>> QueryDLT_JiBenZouSi_Info(int length)
         {
             try
             {
@@ -1599,7 +1599,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询奇偶走势
         /// </summary>
-        public Task<DLT_JiOu_InfoCollection> QueryDLT_JiOu_Info(int length)
+        public Task<List<DLT_JiOu_Info>> QueryDLT_JiOu_Info(int length)
         {
             try
             {
@@ -1614,7 +1614,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         ///查询12走势列表按时间倒叙 
         /// </summary>
-        public Task<DLT_KuaDu_12_InfoCollection> QueryDLT_KuaDu_12_Info(int length)
+        public Task<List<DLT_KuaDu_12_Info>> QueryDLT_KuaDu_12_Info(int length)
         {
             try
             {
@@ -1628,7 +1628,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         ///查询23走势列表按时间倒叙 
         /// </summary>
-        public Task<DLT_KuaDu_23_InfoCollection> QueryDLT_KuaDu_23_Info(int length)
+        public Task<List<DLT_KuaDu_23_Info>> QueryDLT_KuaDu_23_Info(int length)
         {
             try
             {
@@ -1643,7 +1643,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         ///查询34走势列表按时间倒叙 
         /// </summary>
-        public Task<DLT_KuaDu_34_InfoCollection> QueryDLT_KuaDu_34_Info(int length)
+        public Task<List<DLT_KuaDu_34_Info>> QueryDLT_KuaDu_34_Info(int length)
         {
             try
             {
@@ -1658,7 +1658,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         ///查询45走势列表按时间倒叙 
         /// </summary>
-        public Task<DLT_KuaDu_45_InfoCollection> QueryDLT_KuaDu_45_Info(int length)
+        public Task<List<DLT_KuaDu_45_Info>> QueryDLT_KuaDu_45_Info(int length)
         {
             try
             {
@@ -1673,7 +1673,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         ///查询首尾走势列表按时间倒叙 
         /// </summary>
-        public Task<DLT_KuaDu_SW_InfoCollection> QueryDLT_KuaDu_SW_Info(int length)
+        public Task<List<DLT_KuaDu_SW_Info>> QueryDLT_KuaDu_SW_Info(int length)
         {
             try
             {
@@ -1688,7 +1688,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询质和走势
         /// </summary>
-        public Task<DLT_ZhiHe_InfoCollection> QueryDLT_ZhiHe_Info(int length)
+        public Task<List<DLT_ZhiHe_Info>> QueryDLT_ZhiHe_Info(int length)
         {
             try
             {
@@ -1705,7 +1705,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 直选走势
         /// </summary>
-        public Task<FC3D_ZhiXuanZouSi_InfoCollection> QueryCache_FC3D_ZhiXuanZouSi_Info(int index)
+        public Task<List<FC3D_ZhiXuanZouSi_Info>> QueryCache_FC3D_ZhiXuanZouSi_Info(int index)
         {
             try
             {
@@ -1720,7 +1720,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 总跨度
         /// </summary>
-        public Task<FC3D_KuaDu_Z_InfoCollection> QueryCache_FC3D_KuaDu_Z_Info(int index)
+        public Task<List<FC3D_KuaDu_Z_Info>> QueryCache_FC3D_KuaDu_Z_Info(int index)
         {
             try
             {
@@ -1735,7 +1735,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 和值走势
         /// </summary>
-        public Task<FC3D_HZZS_InfoCollection> QueryCache_FC3D_HZZS_Info(int index)
+        public Task<List<FC3D_HZZS_Info>> QueryCache_FC3D_HZZS_Info(int index)
         {
             try
             {
@@ -1750,7 +1750,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 奇偶号码
         /// </summary>
-        public Task<FC3D_JOHM_InfoCollection> QueryCache_FC3D_JOHM_Info(int index)
+        public Task<List<FC3D_JOHM_Info>> QueryCache_FC3D_JOHM_Info(int index)
         {
             try
             {
@@ -1765,7 +1765,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 除3_3
         /// </summary>
-        public Task<FC3D_Chu33_InfoCollection> QueryCache_FC3D_Chu33_Info(int index)
+        public Task<List<FC3D_Chu33_Info>> QueryCache_FC3D_Chu33_Info(int index)
         {
             try
             {
@@ -1780,7 +1780,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 大小号码
         /// </summary>
-        public Task<FC3D_DXHM_InfoCollection> QueryCache_FC3D_DXHM_Info(int index)
+        public Task<List<FC3D_DXHM_Info>> QueryCache_FC3D_DXHM_Info(int index)
         {
             try
             {
@@ -1795,7 +1795,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 组选走势
         /// </summary>
-        public Task<FC3D_ZuXuanZouSi_InfoCollection> QueryCache_FC3D_ZuXuanZouSi_Info(int index)
+        public Task<List<FC3D_ZuXuanZouSi_Info>> QueryCache_FC3D_ZuXuanZouSi_Info(int index)
         {
             try
             {
@@ -1810,7 +1810,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 除3_1
         /// </summary>
-        public Task<FC3D_Chu31_InfoCollection> QueryCache_FC3D_Chu31_Info(int index)
+        public Task<List<FC3D_Chu31_Info>> QueryCache_FC3D_Chu31_Info(int index)
         {
             try
             {
@@ -1825,7 +1825,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 除3_2
         /// </summary>
-        public Task<FC3D_Chu32_InfoCollection> QueryCache_FC3D_Chu32_Info(int index)
+        public Task<List<FC3D_Chu32_Info>> QueryCache_FC3D_Chu32_Info(int index)
         {
             try
             {
@@ -1840,7 +1840,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 跨度百位、十位
         /// </summary>
-        public Task<FC3D_KuaDu_12_InfoCollection> QueryCache_FC3D_KuaDu_12_Info(int index)
+        public Task<List<FC3D_KuaDu_12_Info>> QueryCache_FC3D_KuaDu_12_Info(int index)
         {
             try
             {
@@ -1855,7 +1855,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 跨度百位、个位
         /// </summary>
-        public Task<FC3D_KuaDu_13_InfoCollection> QueryCache_FC3D_KuaDu_13_Info(int index)
+        public Task<List<FC3D_KuaDu_13_Info>> QueryCache_FC3D_KuaDu_13_Info(int index)
         {
             try
             {
@@ -1870,7 +1870,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 跨度十位、个位
         /// </summary>
-        public Task<FC3D_KuaDu_23_InfoCollection> QueryCache_FC3D_KuaDu_23_Info(int index)
+        public Task<List<FC3D_KuaDu_23_Info>> QueryCache_FC3D_KuaDu_23_Info(int index)
         {
             try
             {
@@ -1885,7 +1885,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 大小形态走势
         /// </summary>
-        public Task<FC3D_DXXT_InfoCollection> QueryCache_FC3D_DXXT_Info(int index)
+        public Task<List<FC3D_DXXT_Info>> QueryCache_FC3D_DXXT_Info(int index)
         {
             try
             {
@@ -1900,7 +1900,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 和值分布
         /// </summary>
-        public Task<FC3D_HZFB_InfoCollection> QueryCache_FC3D_HZFB_Info(int index)
+        public Task<List<FC3D_HZFB_Info>> QueryCache_FC3D_HZFB_Info(int index)
         {
             try
             {
@@ -1915,7 +1915,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 和值特征
         /// </summary>
-        public Task<FC3D_HZTZ_InfoCollection> QueryCache_FC3D_HZTZ_Info(int index)
+        public Task<List<FC3D_HZTZ_Info>> QueryCache_FC3D_HZTZ_Info(int index)
         {
             try
             {
@@ -1931,7 +1931,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 奇偶形态
         /// </summary>
-        public Task<FC3D_JOXT_InfoCollection> QueryCache_FC3D_JOXT_Info(int index)
+        public Task<List<FC3D_JOXT_Info>> QueryCache_FC3D_JOXT_Info(int index)
         {
             try
             {
@@ -1946,7 +1946,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 质合号码
         /// </summary>
-        public Task<FC3D_ZHHM_InfoCollection> QueryCache_FC3D_ZHHM_Info(int index)
+        public Task<List<FC3D_ZHHM_Info>> QueryCache_FC3D_ZHHM_Info(int index)
         {
             try
             {
@@ -1961,7 +1961,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 质合形态
         /// </summary>
-        public Task<FC3D_ZHXT_InfoCollection> QueryCache_FC3D_ZHXT_Info(int index)
+        public Task<List<FC3D_ZHXT_Info>> QueryCache_FC3D_ZHXT_Info(int index)
         {
             try
             {
@@ -1979,7 +1979,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询基本走势
         /// </summary>
-        public Task<PL3_JiBenZouSi_InfoCollection> QueryPL3_JiBenZouSi_Info(int length)
+        public Task<List<PL3_JiBenZouSi_Info>> QueryPL3_JiBenZouSi_Info(int length)
         {
             try
             {
@@ -1994,7 +1994,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询组选走势
         /// </summary>
-        public Task<PL3_ZuXuanZouSi_InfoCollection> QueryPL3_ZuXuanZouSi_info(int length)
+        public Task<List<PL3_ZuXuanZouSi_Info>> QueryPL3_ZuXuanZouSi_info(int length)
         {
             try
             {
@@ -2009,7 +2009,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询大小走势
         /// </summary>
-        public Task<PL3_DX_InfoCollection> QueryPL3_DX_info(int length)
+        public Task<List<PL3_DX_Info>> QueryPL3_DX_info(int length)
         {
             try
             {
@@ -2024,7 +2024,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询大小号码走势
         /// </summary>
-        public Task<PL3_DXHM_InfoCollection> QueryPL3_DXHM_info(int length)
+        public Task<List<PL3_DXHM_Info>> QueryPL3_DXHM_info(int length)
         {
             try
             {
@@ -2039,7 +2039,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询奇偶走势
         /// </summary>
-        public Task<PL3_JIOU_InfoCollection> QueryPL3_JIOU_info(int length)
+        public Task<List<PL3_JIOU_Info>> QueryPL3_JIOU_info(int length)
         {
             try
             {
@@ -2054,7 +2054,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询奇偶号码走势
         /// </summary>
-        public Task<PL3_JOHM_InfoCollection> QueryPL3_JOHM_info(int length)
+        public Task<List<PL3_JOHM_Info>> QueryPL3_JOHM_info(int length)
         {
             try
             {
@@ -2069,7 +2069,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询质和走势
         /// </summary>
-        public Task<PL3_ZhiHe_InfoCollection> QueryPL3_ZhiHe_info(int length)
+        public Task<List<PL3_ZhiHe_Info>> QueryPL3_ZhiHe_info(int length)
         {
             try
             {
@@ -2084,7 +2084,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询质和号码走势
         /// </summary>
-        public Task<PL3_ZHHM_InfoCollection> QueryPL3_ZHHM_info(int length)
+        public Task<List<PL3_ZHHM_Info>> QueryPL3_ZHHM_info(int length)
         {
             try
             {
@@ -3250,7 +3250,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询基本走势
         /// </summary>
-        public Task<JSK3_JBZS_InfoCollection> QueryJSK3_JBZS_Info(int length)
+        public Task<List<JSK3_JBZS_Info>> QueryJSK3_JBZS_Info(int length)
         {
             try
             {
@@ -3265,7 +3265,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询和值走势
         /// </summary>
-        public Task<JSK3_HZ_InfoCollection> QueryJSK3_HZ_Info(int length)
+        public Task<List<JSK3_HZ_Info>> QueryJSK3_HZ_Info(int length)
         {
             try
             {
@@ -3280,7 +3280,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询形态走势
         /// </summary>
-        public Task<JSK3_XT_InfoCollection> QueryJSK3_XT_Info(int length)
+        public Task<List<JSK3_XT_Info>> QueryJSK3_XT_Info(int length)
         {
             try
             {
@@ -3295,7 +3295,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询组合走势
         /// </summary>
-        public Task<JSK3_ZH_InfoCollection> QueryJSK3_ZH_Info(int length)
+        public Task<List<JSK3_ZH_Info>> QueryJSK3_ZH_Info(int length)
         {
             try
             {
@@ -3310,7 +3310,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 查询综合走势
         /// </summary>
-        public Task<JSK3_ZHZS_InfoCollection> QueryJSK3_ZHZS_Info(int length)
+        public Task<List<JSK3_ZHZS_Info>> QueryJSK3_ZHZS_Info(int length)
         {
             try
             {
