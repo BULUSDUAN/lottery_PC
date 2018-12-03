@@ -20,7 +20,7 @@ namespace KaSon.FrameWork.ORM.Helper
             string tm = winNum.Split('|')[1];
             string zm = winNum.Split('|')[0];
             var codeArr = orderdetail.AnteCodes.Trim().Split(',');
-            int userId = orderdetail.userId;
+            string userId = orderdetail.userId;
             int winCount = 0;
             List<string> winCodeList = new List<string>();
 
@@ -128,7 +128,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //计算中奖号码
             decimal Odds = decimal.Parse(orderdetail.OddsArr);
 
-            decimal winMoney = orderdetail.unitPrice * (Odds);
+            decimal winMoney = orderdetail.unitPrice * (Odds) * orderdetail.BeiSu;
 
             int orderDetailId = orderdetail.id;
 
@@ -177,7 +177,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //添加用户金币 加钱  blast_lhc_member
             if (int.Parse(tm) == 49)//和局
             {
-                winMoney = orderdetail.unitPrice * orderdetail.BeiSu==0?1: orderdetail.BeiSu;
+                winMoney = orderdetail.unitPrice *  orderdetail.BeiSu;
                 DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
                 {
                     gameMoney = b.gameMoney + winMoney

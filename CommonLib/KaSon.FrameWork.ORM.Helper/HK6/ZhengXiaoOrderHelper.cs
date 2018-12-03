@@ -19,7 +19,7 @@ namespace KaSon.FrameWork.ORM.Helper
             string tm = winNum.Split('|')[1];
             string zm = winNum.Split('|')[0];
             var codeArr = orderdetail.AnteCodes.Trim().Split(',');
-            int userId = orderdetail.userId;
+            string userId = orderdetail.userId;
             int winCount = 0;
             List<string> winCodeList = new List<string>();
             foreach (var code in codeArr)

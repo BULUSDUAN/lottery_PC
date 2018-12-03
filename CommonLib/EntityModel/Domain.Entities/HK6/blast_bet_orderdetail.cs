@@ -32,7 +32,7 @@ namespace EntityModel
         public string SchemeId { get; set; }
 
         [Field("userId")]
-        public int userId { get; set; }
+        public string userId { get; set; }
 
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace EntityModel
         [Field("anteCodeNum")]
         public int anteCodeNum { get; set; }
         [Field("BeiSu")]
-        public int BeiSu { get; set; }
+        public int BeiSu { get; set; }=1
 
         /// <summary>
         // Í¶×¢ºÅ

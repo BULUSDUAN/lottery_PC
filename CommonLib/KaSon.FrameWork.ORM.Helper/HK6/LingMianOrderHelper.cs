@@ -220,7 +220,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
             }
 
-            int userId = orderdetail.userId;
+            string userId = orderdetail.userId;
            
             decimal winMoney =0;
             int orderDetailId = orderdetail.id;
@@ -230,7 +230,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (isWin)
             {
                 decimal Odds = decimal.Parse(orderdetail.OddsArr);
-                 winMoney = orderdetail.unitPrice * Odds;
+                 winMoney = orderdetail.unitPrice * Odds * orderdetail.BeiSu;
                 BonusStatus = 2;
             }
            

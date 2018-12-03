@@ -18,8 +18,8 @@ namespace KaSon.FrameWork.ORM.Helper
         public void WinMoney(blast_bet_orderdetail orderdetail, string winNum) {
             string tm = winNum.Split('|')[1];
             string zm = winNum.Split('|')[0];
-           
-            int userId = orderdetail.userId;
+
+            string userId = orderdetail.userId;
            
             decimal winMoney =0;
             int orderDetailId = orderdetail.id;
@@ -29,7 +29,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (tm.Trim() == orderdetail.AnteCodes.Trim())
             {
                 decimal Odds = decimal.Parse(orderdetail.OddsArr);
-                 winMoney = orderdetail.unitPrice * Odds;
+                 winMoney = orderdetail.unitPrice * Odds*orderdetail.BeiSu;
                 BonusStatus = 2;
             }
            

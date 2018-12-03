@@ -19,7 +19,7 @@ namespace KaSon.FrameWork.ORM.Helper
             string tm = winNum.Split('|')[1];
             string zm = winNum.Split('|')[0];
             var codeArr = orderdetail.AnteCodes.Trim().Split(',');
-            int userId = orderdetail.userId;
+            string userId = orderdetail.userId;
             int winCount = 0;
             List<string> winCodeList = new List<string>();
             foreach (var code in codeArr)
@@ -36,7 +36,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //计算中奖号码
             decimal Odds = decimal.Parse(orderdetail.OddsArr);
             winCount = 1;
-            decimal winMoney = orderdetail.unitPrice * (Odds-1)* winCount+ orderdetail.unitPrice;
+            decimal winMoney = (orderdetail.unitPrice * (Odds-1)* winCount+ orderdetail.unitPrice) * orderdetail.BeiSu;
 
             int orderDetailId = orderdetail.id;
 

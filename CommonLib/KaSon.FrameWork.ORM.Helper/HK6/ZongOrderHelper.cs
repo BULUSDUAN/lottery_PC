@@ -26,7 +26,7 @@ namespace KaSon.FrameWork.ORM.Helper
             List<string> CoreList = clist.ToList();
             CoreList.Add(tm);
 
-            int userId = orderdetail.userId;
+            string userId = orderdetail.userId;
             int winCount = 0;
             List<string> winCodeList = new List<string>();
            
@@ -96,7 +96,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //计算中奖号码
             decimal Odds = decimal.Parse(orderdetail.OddsArr);
 
-            decimal winMoney = orderdetail.unitPrice * (Odds-1)* 1+ orderdetail.unitPrice;
+            decimal winMoney = (orderdetail.unitPrice * (Odds-1)* 1+ orderdetail.unitPrice) * orderdetail.BeiSu;
 
             int orderDetailId = orderdetail.id;
 
