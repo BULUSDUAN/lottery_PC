@@ -62,44 +62,70 @@ namespace KaSon.FrameWork.ORM.Helper
             int orderDetailId = orderdetail.id;
 
             string windesc = string.Join(",", winCodeList);
-            if (isWin)
+            if (int.Parse(tm) == 49)//和局
             {
-
                 DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
                 {
                     winNumber = winNum,
                     BonusAwardsMoney = winMoney,
                     updateTime = DateTime.Now,
-                    BonusStatus = 2,  //为中奖状态
-                    winNumberDesc= ""
+                    BonusStatus = 4,  //为中奖状态
+                    winNumberDesc = ""
 
                 }, b => b.id == orderDetailId);
-
             }
-            else {
+            else
+            {
 
-                DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+
+                if (isWin)
                 {
-                    //winNumber = winNum,
-                    //BonusAwardsMoney = winMoney,
-                    updateTime = DateTime.Now,
-                    BonusStatus =3, //为中奖状态
-                    winNumber= winNum,
-                    winNumberDesc = windesc
-                }, b => b.id == orderDetailId);
-            }
 
+                    DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+                    {
+                        winNumber = winNum,
+                        BonusAwardsMoney = winMoney,
+                        updateTime = DateTime.Now,
+                        BonusStatus = 2,  //为中奖状态
+                        winNumberDesc = ""
+
+                    }, b => b.id == orderDetailId);
+
+                }
+                else
+                {
+
+                    DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+                    {
+                        //winNumber = winNum,
+                        //BonusAwardsMoney = winMoney,
+                        updateTime = DateTime.Now,
+                        BonusStatus = 3, //为中奖状态
+                        winNumber = winNum,
+                        winNumberDesc = windesc
+                    }, b => b.id == orderDetailId);
+                }
+            }
 
 
             //添加用户金币 加钱  blast_lhc_member
-            if (isWin)
+            //添加用户金币 加钱  blast_lhc_member
+            if (int.Parse(tm) == 49)//和局
+            {
+                winMoney = orderdetail.unitPrice * orderdetail.BeiSu == 0 ? 1 : orderdetail.BeiSu;
+                DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
+                {
+                    gameMoney = b.gameMoney + winMoney
+                }, b => b.userId == userId);
+            }
+            else if (isWin)
             {
                 DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
                 {
                     gameMoney = b.gameMoney + winMoney
-                }, b => b.userId== userId);
+                }, b => b.userId == userId);
             }
-              
+
 
         }
     }

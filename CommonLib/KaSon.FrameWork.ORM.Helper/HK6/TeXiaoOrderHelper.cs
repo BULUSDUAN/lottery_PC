@@ -1,19 +1,19 @@
 ﻿using EntityModel;
-using KaSon.FrameWork.Common.Hk6;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
+
 namespace KaSon.FrameWork.ORM.Helper
 {
     /// <summary>
-    /// 7色
+    /// 生肖正肖
     /// </summary>
-   public class SBQiSeOrderHelper : IOrderHelper
+   public class TeXiaoOrderHelper : IOrderHelper
     {
         private IDbProvider DB = null;
        
-        public SBQiSeOrderHelper(IDbProvider _DB) {
+        public TeXiaoOrderHelper(IDbProvider _DB) {
             DB = _DB;
         }
         public void WinMoney(blast_bet_orderdetail orderdetail, string winNum) {
@@ -23,46 +23,20 @@ namespace KaSon.FrameWork.ORM.Helper
             int userId = orderdetail.userId;
             int winCount = 0;
             List<string> winCodeList = new List<string>();
-
-            string antuCode = orderdetail.AnteCodes;
-           bool isWin = false;
-            switch (antuCode)
+            var tp = orderdetail.AnteCodes.Split(',');
+            bool isWin = false;
+            if (tp.Contains(tm))
             {
-                case "Red":
-                    if (SXHelper.GreenBox.Contains(tm))
-                    {
-                        isWin = true;
-                    }
+                //中奖一次
 
-                    break;
-                case "Blu":
-                    if (SXHelper.BluBox.Contains(tm))
-                    {
-                        isWin = true;
-                    }
-
-                    break;
-                case "Green":
-                    if (SXHelper.GreenBox.Contains(tm))
-                    {
-                        isWin = true;
-                    }
-                    break;
-                case "HeJu":
-                    if (int.Parse(tm)==49)
-                    {
-                        isWin = true;
-                    }
-                    break;
-                default:
-                    break;
+                isWin = true;
             }
 
             //故中奖
             //计算中奖号码
             decimal Odds = decimal.Parse(orderdetail.OddsArr);
 
-            decimal winMoney = orderdetail.unitPrice * (Odds);
+            decimal winMoney = orderdetail.unitPrice * (Odds-1)+ orderdetail.unitPrice;
 
             int orderDetailId = orderdetail.id;
 
@@ -76,7 +50,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     BonusAwardsMoney = winMoney,
                     updateTime = DateTime.Now,
                     BonusStatus = 2,  //为中奖状态
-                    winNumberDesc= ""
+                    winNumberDesc= windesc
 
                 }, b => b.id == orderDetailId);
 
@@ -97,7 +71,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
             //添加用户金币 加钱  blast_lhc_member
-            if (isWin)
+            if (winCount > 0)
             {
                 DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
                 {

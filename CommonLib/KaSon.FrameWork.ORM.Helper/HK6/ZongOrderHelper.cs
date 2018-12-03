@@ -1,55 +1,89 @@
 ﻿using EntityModel;
-using KaSon.FrameWork.Common.Hk6;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using KaSon.FrameWork.Common.Hk6;
+
 namespace KaSon.FrameWork.ORM.Helper
 {
     /// <summary>
-    /// 7色
+    /// 生肖正肖
     /// </summary>
-   public class SBQiSeOrderHelper : IOrderHelper
+   public class ZongOrderHelper : IOrderHelper
     {
         private IDbProvider DB = null;
        
-        public SBQiSeOrderHelper(IDbProvider _DB) {
+        public ZongOrderHelper(IDbProvider _DB) {
             DB = _DB;
         }
         public void WinMoney(blast_bet_orderdetail orderdetail, string winNum) {
             string tm = winNum.Split('|')[1];
             string zm = winNum.Split('|')[0];
-            var codeArr = orderdetail.AnteCodes.Trim().Split(',');
+            string AnteCodes = orderdetail.AnteCodes.Trim();
+
+            var clist = zm.Split(',');
+            List<string> CoreList = clist.ToList();
+            CoreList.Add(tm);
+
             int userId = orderdetail.userId;
             int winCount = 0;
             List<string> winCodeList = new List<string>();
-
-            string antuCode = orderdetail.AnteCodes;
-           bool isWin = false;
-            switch (antuCode)
+           
+            List<XiaoModel> xlist = SXHelper.XiaoCollection12();
+            List<XiaoModel> countList = new List<XiaoModel>();
+           
+            foreach (var code in CoreList)
             {
-                case "Red":
-                    if (SXHelper.GreenBox.Contains(tm))
-                    {
-                        isWin = true;
-                    }
 
-                    break;
-                case "Blu":
-                    if (SXHelper.BluBox.Contains(tm))
+                var p = (from b in xlist
+                         where b.CodeList.Contains(code)
+                         select b).FirstOrDefault();
+                countList.Add(p);
+            }
+            var count = 0;
+            bool isWin = false;
+            count = countList.DistinctBy(p => p.Index).Count();
+            switch (AnteCodes)
+            {
+                case "234X":
+                   
+                    if (count>=2&count<=4)
                     {
                         isWin = true;
                     }
+                    break;
+                case "5X":
+                  
+                    if (count ==5)
+                    {
+                        isWin = true;
+                    }
+                    break;
+                case "6X":
 
-                    break;
-                case "Green":
-                    if (SXHelper.GreenBox.Contains(tm))
+                    if (count == 6)
                     {
                         isWin = true;
                     }
                     break;
-                case "HeJu":
-                    if (int.Parse(tm)==49)
+                case "7X":
+
+                    if (count == 6)
+                    {
+                        isWin = true;
+                    }
+                    break;
+                case "DX":
+
+                    if (count %2 !=0)
+                    {
+                        isWin = true;
+                    }
+                    break;
+                case "SX":
+
+                    if (count % 2 == 0)
                     {
                         isWin = true;
                     }
@@ -62,7 +96,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //计算中奖号码
             decimal Odds = decimal.Parse(orderdetail.OddsArr);
 
-            decimal winMoney = orderdetail.unitPrice * (Odds);
+            decimal winMoney = orderdetail.unitPrice * (Odds-1)* 1+ orderdetail.unitPrice;
 
             int orderDetailId = orderdetail.id;
 
@@ -76,7 +110,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     BonusAwardsMoney = winMoney,
                     updateTime = DateTime.Now,
                     BonusStatus = 2,  //为中奖状态
-                    winNumberDesc= ""
+                    winNumberDesc= windesc
 
                 }, b => b.id == orderDetailId);
 
@@ -97,7 +131,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
             //添加用户金币 加钱  blast_lhc_member
-            if (isWin)
+            if (winCount > 0)
             {
                 DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
                 {

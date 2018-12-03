@@ -6,10 +6,13 @@ namespace KaSon.FrameWork.Common.Hk6
 {
 
     public class XiaoModel {
-
+        public int Index { get; set; }
         public string DisPlayName { get; set; }
         public string Name { get; set; }
         public List<string> CodeList { get; set; }
+
+
+      
 
     }
 
@@ -156,7 +159,19 @@ namespace KaSon.FrameWork.Common.Hk6
 
         }
 
-        public static XiaoCollectionModel XiaoCollection() {
+        public static List<XiaoModel> XiaoCollection12()
+        {
+            List<XiaoModel> XM = new List<XiaoModel>();
+            for (int i = 1; i < 13; i++)
+            {
+                XiaoModel xl= new XiaoModel();
+                xl.Index = i;
+                xl.CodeList=ScodeArr(i);
+                XM.Add(xl);
+            }
+            return XM;
+        }
+            public static XiaoCollectionModel XiaoCollection() {
 
             XiaoCollectionModel m = new XiaoCollectionModel();
             //天肖 牛02,兔04,05龙,马07,猴09,猪12

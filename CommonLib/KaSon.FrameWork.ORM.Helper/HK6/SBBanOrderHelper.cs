@@ -121,7 +121,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             if (int.Parse(tm)==49)
             {
-                isWin = false;
+             //   isWin = false;
                 //是否和局
             }
             //故中奖
@@ -147,15 +147,27 @@ namespace KaSon.FrameWork.ORM.Helper
                 }, b => b.id == orderDetailId);
 
             }
-            else {
-
+            if (int.Parse(tm) == 49)
+            {
                 DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
                 {
                     //winNumber = winNum,
                     //BonusAwardsMoney = winMoney,
                     updateTime = DateTime.Now,
-                    BonusStatus =3, //为中奖状态
-                    winNumber= winNum,
+                    BonusStatus = 4, //和局
+                    winNumber = winNum,
+                    winNumberDesc = windesc
+                }, b => b.id == orderDetailId);
+
+            }
+            else {
+                DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+                {
+                    //winNumber = winNum,
+                    //BonusAwardsMoney = winMoney,
+                    updateTime = DateTime.Now,
+                    BonusStatus = 3, //为中奖状态
+                    winNumber = winNum,
                     winNumberDesc = windesc
                 }, b => b.id == orderDetailId);
             }
@@ -163,7 +175,15 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
             //添加用户金币 加钱  blast_lhc_member
-            if (isWin)
+            if (int.Parse(tm) == 49)//和局
+            {
+                winMoney = orderdetail.unitPrice * orderdetail.BeiSu==0?1: orderdetail.BeiSu;
+                DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
+                {
+                    gameMoney = b.gameMoney + winMoney
+                }, b => b.userId == userId);
+            }
+            else if (isWin  )
             {
                 DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
                 {
