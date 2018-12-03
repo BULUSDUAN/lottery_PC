@@ -73,9 +73,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询基本走势列表按时间倒叙 
         /// </summary>
-        public DLT_JiBenZouSi_InfoCollection QueryDLT_JiBenZouSi_Info(int length)
+        public List<DLT_JiBenZouSi_Info> QueryDLT_JiBenZouSi_Info(int length)
         {
-            DLT_JiBenZouSi_InfoCollection Collection = new DLT_JiBenZouSi_InfoCollection();
+            List<DLT_JiBenZouSi_Info> Collection = new List<DLT_JiBenZouSi_Info>();
             var list = this.QueryGameChart<DLT_JiBenZouSi_Info>(string.Format("QueryDLT_JiBenZouSi_Info_{0}", length), () =>
            {
                var infoList = new List<DLT_JiBenZouSi_Info>();
@@ -92,9 +92,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询大小走势列表按时间倒叙 
         /// </summary>
-        public DLT_DX_InfoCollection QueryDLT_DX_Info(int length)
+        public List<DLT_DX_Info> QueryDLT_DX_Info(int length)
         {
-            DLT_DX_InfoCollection Collection = new DLT_DX_InfoCollection();
+            List<DLT_DX_Info> Collection = new List<DLT_DX_Info>();
             var list = this.QueryGameChart<DLT_DX_Info>(string.Format("QueryDLT_DX_Info_{0}", length), () =>
                 {
                     var infoList = new List<DLT_DX_Info>();
@@ -111,9 +111,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询奇偶走势列表按时间倒叙 
         /// </summary>
-        public DLT_JiOu_InfoCollection QueryDLT_JiOu_Info(int length)
+        public List<DLT_JiOu_Info> QueryDLT_JiOu_Info(int length)
         {
-            DLT_JiOu_InfoCollection Collection = new DLT_JiOu_InfoCollection();
+            List<DLT_JiOu_Info> Collection = new List<DLT_JiOu_Info>();
             var list = this.QueryGameChart<DLT_JiOu_Info>(string.Format("QueryDLT_JiOu_Info_{0}", length), () =>
              {
                  var infoList = new List<DLT_JiOu_Info>();
@@ -130,9 +130,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询质和走势列表按时间倒叙 
         /// </summary>
-        public DLT_ZhiHe_InfoCollection QueryDLT_ZhiHe_Info(int length)
+        public List<DLT_ZhiHe_Info> QueryDLT_ZhiHe_Info(int length)
         {
-            DLT_ZhiHe_InfoCollection Collection = new DLT_ZhiHe_InfoCollection();
+            List<DLT_ZhiHe_Info> Collection = new List<DLT_ZhiHe_Info>();
             var list = this.QueryGameChart<DLT_ZhiHe_Info>(string.Format("QueryDLT_ZhiHe_Info_{0}", length), () =>
                 {
                     var infoList = new List<DLT_ZhiHe_Info>();
@@ -149,9 +149,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询和值走势列表按时间倒叙 
         /// </summary>
-        public DLT_HeZhi_InfoCollection QueryDLT_HeZhi_Info(int length)
+        public List<DLT_HeZhi_Info> QueryDLT_HeZhi_Info(int length)
         {
-            DLT_HeZhi_InfoCollection Collection = new DLT_HeZhi_InfoCollection();
+            List<DLT_HeZhi_Info> Collection = new List<DLT_HeZhi_Info>();
             var list = this.QueryGameChart<DLT_HeZhi_Info>(string.Format("QueryDLT_HeZhi_Info_{0}", length), () =>
                {
                    var infoList = new List<DLT_HeZhi_Info>();
@@ -168,9 +168,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询除3走势列表按时间倒叙 
         /// </summary>
-        public DLT_Chu3_InfoCollection QueryDLT_Chu3_Info(int length)
+        public List<DLT_Chu3_Info> QueryDLT_Chu3_Info(int length)
         {
-            DLT_Chu3_InfoCollection Collection = new DLT_Chu3_InfoCollection();
+            List<DLT_Chu3_Info> Collection = new List<DLT_Chu3_Info>();
             var list = this.QueryGameChart<DLT_Chu3_Info>(string.Format("QueryDLT_Chu3_Info_{0}", length), () =>
                 {
                     var infoList = new List<DLT_Chu3_Info>();
@@ -187,9 +187,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询首尾走势列表按时间倒叙 
         /// </summary>
-        public DLT_KuaDu_SW_InfoCollection QueryDLT_KuaDu_SW_Info(int length)
+        public List<DLT_KuaDu_SW_Info> QueryDLT_KuaDu_SW_Info(int length)
         {
-            DLT_KuaDu_SW_InfoCollection Collection = new DLT_KuaDu_SW_InfoCollection();
+            List<DLT_KuaDu_SW_Info> Collection = new List<DLT_KuaDu_SW_Info>();
             var list = this.QueryGameChart<DLT_KuaDu_SW_Info>(string.Format("QueryDLT_KuaDu_SW_Info_{0}", length), () =>
                 {
                     var infoList = new List<DLT_KuaDu_SW_Info>();
@@ -207,9 +207,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询12走势列表按时间倒叙 
         /// </summary>
-        public DLT_KuaDu_12_InfoCollection QueryDLT_KuaDu_12_Info(int length)
+        public List<DLT_KuaDu_12_Info> QueryDLT_KuaDu_12_Info(int length)
         {
-            DLT_KuaDu_12_InfoCollection Collection = new DLT_KuaDu_12_InfoCollection();
+            List<DLT_KuaDu_12_Info> Collection = new List<DLT_KuaDu_12_Info>();
             var list = this.QueryGameChart<DLT_KuaDu_12_Info>(string.Format("QueryDLT_KuaDu_12_Info_{0}", length), () =>
             {
                 var infoList = new List<DLT_KuaDu_12_Info>();
@@ -226,9 +226,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询23走势列表按时间倒叙 
         /// </summary>
-        public DLT_KuaDu_23_InfoCollection QueryDLT_KuaDu_23_Info(int length)
+        public List<DLT_KuaDu_23_Info> QueryDLT_KuaDu_23_Info(int length)
         {
-            DLT_KuaDu_23_InfoCollection Collection = new DLT_KuaDu_23_InfoCollection();
+            List<DLT_KuaDu_23_Info> Collection = new List<DLT_KuaDu_23_Info>();
             var list = this.QueryGameChart<DLT_KuaDu_23_Info>(string.Format("QueryDLT_KuaDu_23_Info_{0}", length), () =>
                 {
                     var infoList = new List<DLT_KuaDu_23_Info>();
@@ -245,9 +245,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询34走势列表按时间倒叙 
         /// </summary>
-        public DLT_KuaDu_34_InfoCollection QueryDLT_KuaDu_34_Info(int length)
+        public List<DLT_KuaDu_34_Info> QueryDLT_KuaDu_34_Info(int length)
         {
-            DLT_KuaDu_34_InfoCollection Collection = new DLT_KuaDu_34_InfoCollection();
+            List<DLT_KuaDu_34_Info> Collection = new List<DLT_KuaDu_34_Info>();
             var list = this.QueryGameChart<DLT_KuaDu_34_Info>(string.Format("QueryDLT_KuaDu_34_Info_{0}", length), () =>
                 {
                     var infoList = new List<DLT_KuaDu_34_Info>();
@@ -264,9 +264,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询45走势列表按时间倒叙 
         /// </summary>
-        public DLT_KuaDu_45_InfoCollection QueryDLT_KuaDu_45_Info(int length)
+        public List<DLT_KuaDu_45_Info> QueryDLT_KuaDu_45_Info(int length)
         {
-            DLT_KuaDu_45_InfoCollection Collection = new DLT_KuaDu_45_InfoCollection();
+            List<DLT_KuaDu_45_Info> Collection = new List<DLT_KuaDu_45_Info>();
             var list = this.QueryGameChart<DLT_KuaDu_45_Info>(string.Format("QueryDLT_KuaDu_45_Info_{0}", length), () =>
                 {
                     var infoList = new List<DLT_KuaDu_45_Info>();

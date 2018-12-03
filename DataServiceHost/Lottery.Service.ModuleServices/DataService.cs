@@ -1419,7 +1419,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 基本走势
         /// </summary>
-        public Task<SSQ_JiBenZouSi_InfoCollection> QueryCache_SSQ_JiBenZouSi_Info(int index)
+        public Task<List<SSQ_JiBenZouSi_Info>> QueryCache_SSQ_JiBenZouSi_Info(int index)
         {
             try
             {
@@ -1434,7 +1434,7 @@ namespace Lottery.Service.ModuleServices
         /// <summary>
         /// 大小走势
         /// </summary>
-        public Task<SSQ_DX_InfoCollection> QueryCache_SSQ_DX_Info(int index)
+        public Task<List<SSQ_DX_Info>> QueryCache_SSQ_DX_Info(int index)
         {
             try
             {

@@ -85,9 +85,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询基本走势列表按时间倒叙 
         /// </summary>
-        public PL3_JiBenZouSi_InfoCollection QueryPL3_JiBenZouSi_Info(int length)
+        public List<PL3_JiBenZouSi_Info> QueryPL3_JiBenZouSi_Info(int length)
         {
-            PL3_JiBenZouSi_InfoCollection Collection = new PL3_JiBenZouSi_InfoCollection();
+            List<PL3_JiBenZouSi_Info> Collection = new List<PL3_JiBenZouSi_Info>();
             var list = this.QueryGameChart<PL3_JiBenZouSi_Info>(string.Format("QueryPL3_JiBenZouSi_Info_{0}", length), () =>
             {
                 var infoList = new List<PL3_JiBenZouSi_Info>();
@@ -104,9 +104,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询组选走势列表按时间倒叙 
         /// </summary>
-        public PL3_ZuXuanZouSi_InfoCollection QueryPL3_ZuXuanZouSi_info(int length)
+        public List<PL3_ZuXuanZouSi_Info> QueryPL3_ZuXuanZouSi_info(int length)
         {
-            PL3_ZuXuanZouSi_InfoCollection Collection = new PL3_ZuXuanZouSi_InfoCollection();
+            List<PL3_ZuXuanZouSi_Info> Collection = new List<PL3_ZuXuanZouSi_Info>();
             var list = this.QueryGameChart<PL3_ZuXuanZouSi_Info>(string.Format("QueryPL3_ZuXuanZouSi_info_{0}", length), () =>
             {
                 var infoList = new List<PL3_ZuXuanZouSi_Info>();
@@ -123,9 +123,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询大小走势列表按时间倒叙 
         /// </summary>
-        public PL3_DX_InfoCollection QueryPL3_DX_info(int length)
+        public List<PL3_DX_Info> QueryPL3_DX_info(int length)
         {
-            PL3_DX_InfoCollection Collection = new PL3_DX_InfoCollection();
+            List<PL3_DX_Info> Collection = new List<PL3_DX_Info>();
             var list = this.QueryGameChart<PL3_DX_Info>(string.Format("QueryPL3_DX_info_{0}", length), () =>
             {
                 var infoList = new List<PL3_DX_Info>();
@@ -142,9 +142,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询大小号码走势列表按时间倒叙 
         /// </summary>
-        public PL3_DXHM_InfoCollection QueryPL3_DXHM_info(int length)
+        public List<PL3_DXHM_Info> QueryPL3_DXHM_info(int length)
         {
-            PL3_DXHM_InfoCollection Collection = new PL3_DXHM_InfoCollection();
+            List<PL3_DXHM_Info> Collection = new List<PL3_DXHM_Info>();
 
             var list = this.QueryGameChart<PL3_DXHM_Info>(string.Format("QueryPL3_DXHM_info_{0}", length), () =>
             {

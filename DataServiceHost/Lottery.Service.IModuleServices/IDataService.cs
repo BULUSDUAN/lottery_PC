@@ -221,24 +221,24 @@ namespace Lottery.Service.IModuleServices
 
         #region 时时彩走势
         [Service(Date = "2018-10-08", Director = "renjun", Name = "基本走势")]
-        Task<SSQ_JiBenZouSi_InfoCollection> QueryCache_SSQ_JiBenZouSi_Info(int index);
+        Task<List<SSQ_JiBenZouSi_Info>> QueryCache_SSQ_JiBenZouSi_Info(int index);
         [Service(Date = "2018-10-08", Director = "renjun", Name = "大小走势")]
-        Task<SSQ_DX_InfoCollection> QueryCache_SSQ_DX_Info(int index);
+        Task<List<SSQ_DX_Info>> QueryCache_SSQ_DX_Info(int index);
 
         [Service(Date = "2018-10-08", Director = "renjun", Name = "除3走势")]
-        Task<SSQ_C3_InfoCollection> QueryCache_SSQ_C3_Info(int index);
+        Task<List<SSQ_C3_Info>> QueryCache_SSQ_C3_Info(int index);
         [Service(Date = "2018-10-08", Director = "renjun", Name = "奇偶走势")]
-        Task<SSQ_JiOu_InfoCollection> QueryCache_SSQ_JiOu_Info(int index);
+        Task<List<SSQ_JiOu_Info>> QueryCache_SSQ_JiOu_Info(int index);
 
         [Service(Date = "2018-10-08", Director = "renjun", Name = "跨度SW走势")]
-        Task<SSQ_KuaDu_SW_InfoCollection> QueryCache_SSQ_KuaDu_SW_Info(int index);
+        Task<List<SSQ_KuaDu_SW_Info>> QueryCache_SSQ_KuaDu_SW_Info(int index);
 
         [Service(Date = "2018-10-08", Director = "renjun", Name = "和值走势")]
-        Task<SSQ_HeZhi_InfoCollection> QueryCache_SSQ_HeZhi_Info(int index);
+        Task<List<SSQ_HeZhi_Info>> QueryCache_SSQ_HeZhi_Info(int index);
         [Service(Date = "2018-10-08", Director = "renjun", Name = "质合走势")]
-        Task<SSQ_ZhiHe_InfoCollection> QueryCache_SSQ_ZhiHe_Info(int index);        
+        Task<List<SSQ_ZhiHe_Info>> QueryCache_SSQ_ZhiHe_Info(int index);        
         [Service(Date = "2018-10-08", Director = "renjun", Name = "跨度1_6走势")]
-        Task<SSQ_KuaDu_1_6_InfoCollection> QueryCache_SSQ_KuaDu_1_6_Info(int index);
+        Task<List<SSQ_KuaDu_1_6_Info>> QueryCache_SSQ_KuaDu_1_6_Info(int index);
         #endregion
 
         #region 大乐透走势
@@ -272,7 +272,7 @@ namespace Lottery.Service.IModuleServices
 
         #region 福彩3D走势
         [Service(Date = "2018-10-09", Director = "renjun", Name = "直选走势")]
-        Task<FC3D_ZhiXuanZouSi_InfoCollection> QueryCache_FC3D_ZhiXuanZouSi_Info(int index);
+        Task<List<FC3D_ZhiXuanZouSi_Info>> QueryCache_FC3D_ZhiXuanZouSi_Info(int index);
 
         [Service(Date = "2018-10-09", Director = "renjun", Name = "总跨度")]
         Task<FC3D_KuaDu_Z_InfoCollection> QueryCache_FC3D_KuaDu_Z_Info(int index);
@@ -280,17 +280,17 @@ namespace Lottery.Service.IModuleServices
         [Service(Date = "2018-10-09", Director = "renjun", Name = "和值走势")]
         Task<FC3D_HZZS_InfoCollection> QueryCache_FC3D_HZZS_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "奇偶号码")]
-        Task<FC3D_JOHM_InfoCollection> QueryCache_FC3D_JOHM_Info(int index);
+        Task<List<FC3D_JOHM_Info>> QueryCache_FC3D_JOHM_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "除3_3")]
         Task<FC3D_Chu33_InfoCollection> QueryCache_FC3D_Chu33_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "大小号码")]
-        Task<FC3D_DXHM_InfoCollection> QueryCache_FC3D_DXHM_Info(int index);   
+        Task<List<FC3D_DXHM_Info>> QueryCache_FC3D_DXHM_Info(int index);   
         [Service(Date = "2018-10-09", Director = "renjun", Name = "组选走势")]
-        Task<FC3D_ZuXuanZouSi_InfoCollection> QueryCache_FC3D_ZuXuanZouSi_Info(int index);
+        Task<List<FC3D_ZuXuanZouSi_Info>> QueryCache_FC3D_ZuXuanZouSi_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "除3_1")]
         Task<FC3D_Chu31_InfoCollection> QueryCache_FC3D_Chu31_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "除3_2")]
-        Task<FC3D_Chu32_InfoCollection> QueryCache_FC3D_Chu32_Info(int index);
+        Task<List<FC3D_Chu32_Info>> QueryCache_FC3D_Chu32_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "跨度百位、十位")]
         Task<FC3D_KuaDu_12_InfoCollection> QueryCache_FC3D_KuaDu_12_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "跨度百位、个位")]
@@ -298,17 +298,17 @@ namespace Lottery.Service.IModuleServices
         [Service(Date = "2018-10-09", Director = "renjun", Name = "跨度十位、个位")]
         Task<FC3D_KuaDu_23_InfoCollection> QueryCache_FC3D_KuaDu_23_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "大小形态走势")]
-        Task<FC3D_DXXT_InfoCollection> QueryCache_FC3D_DXXT_Info(int index);
+        Task<List<FC3D_DXXT_Info>> QueryCache_FC3D_DXXT_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "和值分布")]
         Task<FC3D_HZFB_InfoCollection> QueryCache_FC3D_HZFB_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "和值特征")]
         Task<FC3D_HZTZ_InfoCollection> QueryCache_FC3D_HZTZ_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "奇偶形态")]
-        Task<FC3D_JOXT_InfoCollection> QueryCache_FC3D_JOXT_Info(int index);
+        Task<List<FC3D_JOXT_Info>> QueryCache_FC3D_JOXT_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "质合号码")]
-        Task<FC3D_ZHHM_InfoCollection> QueryCache_FC3D_ZHHM_Info(int index);
+        Task<List<FC3D_ZHHM_Info>> QueryCache_FC3D_ZHHM_Info(int index);
         [Service(Date = "2018-10-09", Director = "renjun", Name = "质合形态")]
-        Task<FC3D_ZHXT_InfoCollection> QueryCache_FC3D_ZHXT_Info(int index);
+        Task<List<FC3D_ZHXT_Info>> QueryCache_FC3D_ZHXT_Info(int index);
         #endregion
 
         #region 排列3走势

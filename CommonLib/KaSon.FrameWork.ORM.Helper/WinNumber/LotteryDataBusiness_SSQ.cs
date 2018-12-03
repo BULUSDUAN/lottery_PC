@@ -789,9 +789,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 基本走势查询
         /// </summary>
-        public SSQ_JiBenZouSi_InfoCollection QuerySSQ_JiBenZouSi(int index)
+        public List<SSQ_JiBenZouSi_Info> QuerySSQ_JiBenZouSi(int index)
         {
-            SSQ_JiBenZouSi_InfoCollection Collection = new SSQ_JiBenZouSi_InfoCollection();
+            List<SSQ_JiBenZouSi_Info> Collection = new List<SSQ_JiBenZouSi_Info>();
 
             var list = this.QueryGameChart<SSQ_JiBenZouSi_Info>(string.Format("QuerySSQ_JiBenZouSi_{0}", index), () =>
             {
@@ -818,9 +818,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 大小走势查询
         /// </summary>
-        public SSQ_DX_InfoCollection QuerySSQ_DX(int index)
+        public List<SSQ_DX_Info> QuerySSQ_DX(int index)
         {
-            SSQ_DX_InfoCollection Collection = new SSQ_DX_InfoCollection();
+            List<SSQ_DX_Info> Collection = new List<SSQ_DX_Info>();
             var list = this.QueryGameChart<SSQ_DX_Info>(string.Format("QuerySSQ_DX_{0}", index), () =>
             {
                 var infoList = new List<SSQ_DX_Info>();
@@ -842,9 +842,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// C3走势查询
         /// </summary>
-        public SSQ_C3_InfoCollection QuerySSQ_C3(int index)
+        public List<SSQ_C3_Info> QuerySSQ_C3(int index)
         {
-            SSQ_C3_InfoCollection Collection = new SSQ_C3_InfoCollection();
+            List<SSQ_C3_Info> Collection = new List<SSQ_C3_Info>();
             var list = this.QueryGameChart<SSQ_C3_Info>(string.Format("QuerySSQ_C3_{0}", index), () =>
             {
                 var infoList = new List<SSQ_C3_Info>();
@@ -866,9 +866,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 和值走势查询
         /// </summary>
-        public SSQ_HeZhi_InfoCollection QuerySSQ_HeZhi(int index)
+        public List<SSQ_HeZhi_Info> QuerySSQ_HeZhi(int index)
         {
-            SSQ_HeZhi_InfoCollection Collection = new SSQ_HeZhi_InfoCollection();
+            List<SSQ_HeZhi_Info> Collection = new List<SSQ_HeZhi_Info>();
             var list = this.QueryGameChart<SSQ_HeZhi_Info>(string.Format("QuerySSQ_HeZhi_{0}", index), () =>
             {
                 var infoList = new List<SSQ_HeZhi_Info>();
@@ -890,9 +890,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 奇偶走势查询
         /// </summary>
-        public SSQ_JiOu_InfoCollection QuerySSQ_JiOu(int index)
+        public List<SSQ_JiOu_Info> QuerySSQ_JiOu(int index)
         {
-            SSQ_JiOu_InfoCollection Collection = new SSQ_JiOu_InfoCollection();
+            List<SSQ_JiOu_Info> Collection = new List<SSQ_JiOu_Info>();
             var list = this.QueryGameChart<SSQ_JiOu_Info>(string.Format("QuerySSQ_JiOu_{0}", index), () =>
             {
                 var infoList = new List<SSQ_JiOu_Info>();
@@ -914,9 +914,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 跨度1_6走势查询
         /// </summary>
-        public SSQ_KuaDu_1_6_InfoCollection QuerySSQ_KuaDu_1_6(int index)
+        public List<SSQ_KuaDu_1_6_Info> QuerySSQ_KuaDu_1_6(int index)
         {
-            SSQ_KuaDu_1_6_InfoCollection Collection = new SSQ_KuaDu_1_6_InfoCollection();
+            List<SSQ_KuaDu_1_6_Info> Collection = new List<SSQ_KuaDu_1_6_Info>();
             var list = this.QueryGameChart<SSQ_KuaDu_1_6_Info>(string.Format("QuerySSQ_KuaDu_1_6_{0}", index), () =>
             {
                 var infoList = new List<SSQ_KuaDu_1_6_Info>();
@@ -938,9 +938,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 跨度SW走势查询
         /// </summary>
-        public SSQ_KuaDu_SW_InfoCollection QuerySSQ_KuaDu_SW(int index)
+        public List<SSQ_KuaDu_SW_Info> QuerySSQ_KuaDu_SW(int index)
         {
-            SSQ_KuaDu_SW_InfoCollection Collection = new SSQ_KuaDu_SW_InfoCollection();
+            List<SSQ_KuaDu_SW_Info> Collection = new List<SSQ_KuaDu_SW_Info>();
             var list = this.QueryGameChart<SSQ_KuaDu_SW_Info>(string.Format("QuerySSQ_KuaDu_SW_{0}", index), () =>
             {
                 var infoList = new List<SSQ_KuaDu_SW_Info>();
@@ -962,9 +962,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 质合走势查询
         /// </summary>
-        public SSQ_ZhiHe_InfoCollection QuerySSQ_ZhiHe(int index)
+        public List<SSQ_ZhiHe_Info> QuerySSQ_ZhiHe(int index)
         {
-            SSQ_ZhiHe_InfoCollection Collection = new SSQ_ZhiHe_InfoCollection();
+            List<SSQ_ZhiHe_Info> Collection = new List<SSQ_ZhiHe_Info>();
             var list = this.QueryGameChart<SSQ_ZhiHe_Info>(string.Format("QuerySSQ_ZhiHe_{0}", index), () =>
             {
                 var infoList = new List<SSQ_ZhiHe_Info>();

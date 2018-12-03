@@ -60,9 +60,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询基本走势列表按时间倒叙 
         /// </summary>
-        public JSK3_JBZS_InfoCollection QueryJSK3_JBZS_Info(int length)
+        public List<JSK3_JBZS_Info> QueryJSK3_JBZS_Info(int length)
         {
-            JSK3_JBZS_InfoCollection Collection = new JSK3_JBZS_InfoCollection();
+            List<JSK3_JBZS_Info> Collection = new List<JSK3_JBZS_Info>();
             var list = this.QueryGameChart<JSK3_JBZS_Info>(string.Format("QueryJSK3_JBZS_Info_{0}", length), () =>
             {
                 var infoList = new List<JSK3_JBZS_Info>();
@@ -79,9 +79,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询和值走势列表按时间倒叙 
         /// </summary>
-        public JSK3_HZ_InfoCollection QueryJSK3_HZ_Info(int length)
+        public List<JSK3_HZ_Info> QueryJSK3_HZ_Info(int length)
         {
-            JSK3_HZ_InfoCollection Collection = new JSK3_HZ_InfoCollection();
+            List<JSK3_HZ_Info> Collection = new List<JSK3_HZ_Info>();
             var list = this.QueryGameChart<JSK3_HZ_Info>(string.Format("QueryJSK3_HZ_Info_{0}", length), () =>
             {
                 var infoList = new List<JSK3_HZ_Info>();
@@ -98,9 +98,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询形态走势列表按时间倒叙 
         /// </summary>
-        public JSK3_XT_InfoCollection QueryJSK3_XT_Info(int length)
+        public List<JSK3_XT_Info> QueryJSK3_XT_Info(int length)
         {
-            JSK3_XT_InfoCollection Collection = new JSK3_XT_InfoCollection();
+            List<JSK3_XT_Info> Collection = new List<JSK3_XT_Info>();
             var list = this.QueryGameChart<JSK3_XT_Info>(string.Format("QueryJSK3_XT_Info_{0}", length), () =>
             {
                 var infoList = new List<JSK3_XT_Info>();
@@ -117,9 +117,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询组合走势列表按时间倒叙 
         /// </summary>
-        public JSK3_ZH_InfoCollection QueryJSK3_ZH_Info(int length)
+        public List<JSK3_ZH_Info> QueryJSK3_ZH_Info(int length)
         {
-            JSK3_ZH_InfoCollection Collection = new JSK3_ZH_InfoCollection();
+            List<JSK3_ZH_Info> Collection = new List<JSK3_ZH_Info>();
             var list = this.QueryGameChart<JSK3_ZH_Info>(string.Format("QueryJSK3_ZH_Info_{0}", length), () =>
             {
                 var infoList = new List<JSK3_ZH_Info>();
@@ -136,9 +136,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询综合走势列表按时间倒叙 
         /// </summary>
-        public JSK3_ZHZS_InfoCollection QueryJSK3_ZHZS_Info(int length)
+        public List<JSK3_ZHZS_Info> QueryJSK3_ZHZS_Info(int length)
         {
-            JSK3_ZHZS_InfoCollection Collection = new JSK3_ZHZS_InfoCollection();
+            List<JSK3_ZHZS_Info> Collection = new List<JSK3_ZHZS_Info>();
             var list = this.QueryGameChart<JSK3_ZHZS_Info>(string.Format("QueryJSK3_ZHZS_Info_{0}", length), () =>
             {
                 var infoList = new List<JSK3_ZHZS_Info>();
