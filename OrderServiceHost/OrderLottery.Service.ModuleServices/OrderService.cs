@@ -653,7 +653,7 @@ namespace OrderLottery.Service.ModuleServices
         /// <summary>
         /// 查询用户保存的订单信息
         /// </summary>
-        public Task<SaveOrder_LotteryBettingInfoCollection> QuerySaveOrder_Lottery(string UserId)
+        public Task<List<SaveOrder_LotteryBettingInfo>> QuerySaveOrder_Lottery(string UserId)
         {
 
             try
@@ -666,6 +666,43 @@ namespace OrderLottery.Service.ModuleServices
             }
         }
 
+        /// <summary>
+        /// 查询普通用户下所有销量
+        /// </summary>
+        public Task<SporeadUsersCollection> QuerySporeadUsers(string agentId, DateTime startTime, DateTime endTime, int pageIndex, int pageSize)
+        {
+            try
+            {
+                int TotalCount = 0;
+                var siteBiz = new SporeadUsersCollection();
+                var result = new BlogManager().QueryBlog_UserSpreadList(agentId, pageIndex, pageSize, startTime, endTime, out TotalCount);
+                siteBiz.TotalCount = TotalCount;
+                foreach (var item in result)
+                {
+                    siteBiz.BlogUserSpreadList.Add(new BlogUserSpread()
+                    {
+                        Id = item.Id,
+                        UserId = item.UserId,
+                        userName = item.userName,
+                        AgentId = item.AgentId,
+                        CrateTime = item.CrateTime,
+                        CTZQ = item.CTZQ,
+                        BJDC = item.BJDC,
+                        JCZQ = item.JCZQ,
+                        JCLQ = item.JCLQ,
+                        SZC = item.SZC,
+                        GPC = item.GPC,
+                        UpdateTime = item.UpdateTime
+
+                    });
+                }
+                return Task.FromResult(siteBiz);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
         /// <summary>
         /// 查询足彩合买列表
         /// </summary>

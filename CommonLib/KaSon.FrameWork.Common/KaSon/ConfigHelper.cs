@@ -25,7 +25,7 @@ namespace KaSon.FrameWork.Common
             if (AllConfigInfo["MongoSettings"] !=null)
             {
                 MongoSettings = AllConfigInfo["MongoSettings"];
-                CrawDataBaseIsMongo = bool.Parse(MongoSettings["CrawDataBaseIsMongo"].ToString());
+                //CrawDataBaseIsMongo = bool.Parse(MongoSettings["CrawDataBaseIsMongo"].ToString());
             }
           
         }

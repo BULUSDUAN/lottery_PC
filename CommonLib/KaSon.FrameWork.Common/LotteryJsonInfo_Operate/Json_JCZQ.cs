@@ -176,6 +176,11 @@ namespace KaSon.FrameWork.Common
                 matchresult = bizHelper.GetMatchInfoList<C_JCZQ_MatchResult>(MatchResultFile(matchDate));
                 sp_spf = bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //让球胜平负sp数据
                 sp_brqspf = bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile(gameType, matchDate)); //胜平负sp数据
+                if (gameType.ToUpper() == "EXY")
+                {
+                    sp_spf = bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile("SPF", matchDate)); //让球胜平负sp数据
+                    sp_brqspf = bizHelper.GetMatchInfoList<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(SPFile("BRQSPF", matchDate)); //胜平负sp数据
+                }
                 sp_zjq = bizHelper.GetMatchInfoList<JCZQ_ZJQ_SPInfo>(SPFile(gameType, matchDate)); //总进球sp数据
                 sp_bf = bizHelper.GetMatchInfoList<JCZQ_BF_SPInfo>(SPFile(gameType, matchDate)); //比分sp数据
                 sp_bqc = bizHelper.GetMatchInfoList<JCZQ_BQC_SPInfo>(SPFile(gameType, matchDate)); //半全场sp数据

@@ -114,7 +114,7 @@ namespace OrderLottery.Service.Host
                 #endregion
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
             }
-            Console.ReadKey(true);
+            Console.ReadKey();
         }
     }
 

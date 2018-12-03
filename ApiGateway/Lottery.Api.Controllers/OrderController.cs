@@ -3206,7 +3206,7 @@ namespace Lottery.Api.Controllers
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 var param = new Dictionary<string, object>();
                 param.Add("UserId", userId);
-                var list = await _serviceProxyProvider.Invoke<SaveOrder_LotteryBettingInfoCollection>(param, "api/Order/QuerySaveOrder_Lottery");
+                var list = await _serviceProxyProvider.Invoke<List<SaveOrder_LotteryBettingInfo>>(param, "api/Order/QuerySaveOrder_Lottery");
                 return Json(new LotteryServiceResponse
                 {
                     Code = ResponseCode.成功,
@@ -3394,83 +3394,86 @@ namespace Lottery.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<IActionResult> AutoFollow([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
-        {
-            try
-            {
-                var p = JsonHelper.Decode(entity.Param);
-                string gameCode = p.gameCode;
-                string gameType = p.gameType;
-                string pageIndexStr = p.pageIndex;
-                string pageSizeStr = p.pageSize;
-                gameCode = gameCode.ToLower();
-                gameType = gameType.ToLower();
-                var pageIndex = string.IsNullOrEmpty(pageIndexStr) ? 0 : Convert.ToInt32(pageIndexStr);
-                var pageSize = string.IsNullOrEmpty(pageSizeStr) ? 10 : Convert.ToInt32(pageSizeStr);
-                var param = new Dictionary<string, object>();
-                param.Add("gameCode", gameCode);
-                param.Add("gameType", gameType);
-                param.Add("pageIndex", pageIndex);
-                param.Add("pageSize", pageSize);
-                var model = await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowRule");
-                return Json(new LotteryServiceResponse
-                {
-                    Code = ResponseCode.成功,
-                    Message = "获取我的定制列表成功",
-                    MsgId = entity.MsgId,
-                    Value = model,
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new LotteryServiceResponse
-                {
-                    Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
-                    MsgId = entity.MsgId,
-                    Value = ex.ToGetMessage(),
-                });
-            }
-        }
+        //public async Task<IActionResult> AutoFollow([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        //{
+        //    try
+        //    {
+        //        var p = JsonHelper.Decode(entity.Param);
+        //        string gameCode = p.gameCode;
+        //        string gameType = p.gameType;
+        //        string pageIndexStr = p.pageIndex;
+        //        string pageSizeStr = p.pageSize;
+        //        string userToken = p.userToken;
+        //        gameCode = gameCode.ToLower();
+        //        gameType = gameType.ToLower();
+        //        string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+        //        var pageIndex = string.IsNullOrEmpty(pageIndexStr) ? 0 : Convert.ToInt32(pageIndexStr);
+        //        var pageSize = string.IsNullOrEmpty(pageSizeStr) ? 10 : Convert.ToInt32(pageSizeStr);
+        //        var param = new Dictionary<string, object>();
+        //        param.Add("gameCode", gameCode);
+        //        param.Add("gameType", gameType);
+        //        param.Add("pageIndex", pageIndex);
+        //        param.Add("pageSize", pageSize);
+        //        param.Add("UserId", userId);
+        //        var model = await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowRule");
+        //        return Json(new LotteryServiceResponse
+        //        {
+        //            Code = ResponseCode.成功,
+        //            Message = "获取我的定制列表成功",
+        //            MsgId = entity.MsgId,
+        //            Value = model,
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new LotteryServiceResponse
+        //        {
+        //            Code = ResponseCode.失败,
+        //            Message = ex.ToGetMessage() + "●" + ex.ToString(),
+        //            MsgId = entity.MsgId,
+        //            Value = ex.ToGetMessage(),
+        //        });
+        //    }
+        //}
 
-        public async Task<IActionResult> FollowMe([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
-        {
-            try
-            {
-                var p = JsonHelper.Decode(entity.Param);
-                string gameCode = p.gameCode;
-                string gameType = p.gameType;
-                string pageIndexStr = p.pageIndex;
-                string pageSizeStr = p.pageSize;
-                gameCode = gameCode.ToLower();
-                gameType = gameType.ToLower();
-                var pageIndex = string.IsNullOrEmpty(pageIndexStr) ? 0 : Convert.ToInt32(pageIndexStr);
-                var pageSize = string.IsNullOrEmpty(pageSizeStr) ? 10 : Convert.ToInt32(pageSizeStr);
-                var param = new Dictionary<string, object>();
-                param.Add("gameCode", gameCode);
-                param.Add("gameType", gameType);
-                param.Add("pageIndex", pageIndex);
-                param.Add("pageSize", pageSize);
-                var model = await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowMeRule");
-                return Json(new LotteryServiceResponse
-                {
-                    Code = ResponseCode.成功,
-                    Message = "获取我的定制列表成功",
-                    MsgId = entity.MsgId,
-                    Value = model,
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new LotteryServiceResponse
-                {
-                    Code = ResponseCode.失败,
-                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
-                    MsgId = entity.MsgId,
-                    Value = ex.ToGetMessage(),
-                });
-            }
-        }
+        //public async Task<IActionResult> FollowMe([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        //{
+        //    try
+        //    {
+        //        var p = JsonHelper.Decode(entity.Param);
+        //        string gameCode = p.gameCode;
+        //        string gameType = p.gameType;
+        //        string pageIndexStr = p.pageIndex;
+        //        string pageSizeStr = p.pageSize;
+        //        gameCode = gameCode.ToLower();
+        //        gameType = gameType.ToLower();
+        //        var pageIndex = string.IsNullOrEmpty(pageIndexStr) ? 0 : Convert.ToInt32(pageIndexStr);
+        //        var pageSize = string.IsNullOrEmpty(pageSizeStr) ? 10 : Convert.ToInt32(pageSizeStr);
+        //        var param = new Dictionary<string, object>();
+        //        param.Add("gameCode", gameCode);
+        //        param.Add("gameType", gameType);
+        //        param.Add("pageIndex", pageIndex);
+        //        param.Add("pageSize", pageSize);
+        //        var model = await _serviceProxyProvider.Invoke<TogetherFollowerRuleQueryInfoCollection>(param, "api/Order/QueryUserFollowMeRule");
+        //        return Json(new LotteryServiceResponse
+        //        {
+        //            Code = ResponseCode.成功,
+        //            Message = "获取我的定制列表成功",
+        //            MsgId = entity.MsgId,
+        //            Value = model,
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new LotteryServiceResponse
+        //        {
+        //            Code = ResponseCode.失败,
+        //            Message = ex.ToGetMessage() + "●" + ex.ToString(),
+        //            MsgId = entity.MsgId,
+        //            Value = ex.ToGetMessage(),
+        //        });
+        //    }
+        //}
 
         /// <summary>
         /// 成功定制记录
@@ -3538,7 +3541,7 @@ namespace Lottery.Api.Controllers
                 var param = new Dictionary<string, object>();
                 param.Add("agentId", userId);
                 param.Add("startTime", beginTime);
-                param.Add("endTime", endTimeStr);
+                param.Add("endTime", endTime);
                 param.Add("pageIndex", pageIndex);
                 param.Add("pageSize", pageSize);
                 var list = await _serviceProxyProvider.Invoke<SporeadUsersCollection>(param, "api/Order/QuerySporeadUsers");
