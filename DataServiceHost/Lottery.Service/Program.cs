@@ -120,7 +120,7 @@ namespace Lottery.Service.Host
                 //});
                 Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
             }
-            ConsoleHelper.Clear();
+            //ConsoleHelper.Clear();
             Console.ReadLine();
         }
 

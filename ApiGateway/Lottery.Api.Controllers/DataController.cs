@@ -4003,10 +4003,12 @@ namespace Lottery.Api.Controllers
             try
             {
                 var p = JsonHelper.Decode(entity.Param);
-                int pageIndex = p.PageIndex;
-                int pageSize = p.PageSize;
+                string pageIndexStr = p.PageIndex;
+                string pageSizeStr = p.PageSize;
                 string userToken = p.UserToken;
                 string userId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+                var pageIndex = string.IsNullOrEmpty(pageIndexStr) ? 0 : Convert.ToInt32(pageIndexStr);
+                var pageSize = string.IsNullOrEmpty(pageSizeStr) ? 10 : Convert.ToInt32(pageSizeStr);
                 var param = new Dictionary<string, object>();
                 param.Add("pageIndex", pageIndex);
                 param.Add("pageSize", pageSize);
