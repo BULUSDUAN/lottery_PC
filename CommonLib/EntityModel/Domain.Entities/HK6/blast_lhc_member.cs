@@ -27,7 +27,7 @@ namespace EntityModel
 
         [ProtoMember(1)]
         [Field("userId")]
-        public int userId { get; set; }
+        public string userId { get; set; }
 
 
 

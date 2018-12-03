@@ -41,12 +41,12 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(4)]
             [Field("actionTime")]
-            public TimeSpan actionTime{ get; set; }
+            public DateTime actionTime{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(5)]
             [Field("stopTime")]
-            public TimeSpan stopTime{ get; set; }
+            public DateTime stopTime { get; set; }
     }
 }

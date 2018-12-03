@@ -15,7 +15,7 @@ using System.IO;
 using System.Text;
 using EntityModel.ExceptionExtend;
 
-
+using System.Linq;
 using Kason.Sg.Core.ProxyGenerator;
 using Microsoft.Extensions.Logging;
 using KaSon.FrameWork.ORM;
@@ -77,10 +77,45 @@ namespace HK6.ModuleBaseServices
                 //    return Task.FromResult(cresult);
                 //}
                 #endregion
+                #region 校验是否重复购买，
+                HK6Sports_BetingInfo betinfo = null;
+                _bettingListInfo.TryGetValue(info.userId, out betinfo);
+                if (betinfo !=null)
+                {
+                    if (info.TotalMoney==betinfo.TotalMoney
+                        && info.issueNo==betinfo.issueNo
+                       
+                        )
+                    {
+                        var isRePeat = true;
+                        foreach (var item in info.orderList)
+                        {
+                            var p = (from b in betinfo.orderList
+                                     where b.betingCode == item.betingCode
+                                             && b.unitPrice==item.unitPrice
+                                     select b).ToList();
+                            if (p.Count==0)
+                            {
+                                isRePeat = false;
+                                break;
+                            }
+                        }
+
+                        if (isRePeat)
+                        {
+                            cresult.IsSuccess = false;
+                            cresult.Message = "重复购买";
+                            return Task.FromResult(cresult);
+                        }
+
+                    }
+
+                }
+                #endregion
 
                 #region 校验追期期号是否合法，加倍是否合法
 
-                var issue = DB.CreateQuery<blast_lhc_time>().Where(b=>b.actionNo==info.issueNo).FirstOrDefault();
+              var issue = DB.CreateQuery<blast_data_time>().Where(b=>b.actionNo==info.issueNo).FirstOrDefault();
                 if (issue==null || issue.actionTime < DateTime.Now)
                 {
                     cresult.IsSuccess = false;
@@ -91,7 +126,7 @@ namespace HK6.ModuleBaseServices
                 foreach (var item in info.planList)
                 {
 
-                    if (item.issueNo <= issue.actionNo)
+                    if (item.issueNo < issue.actionNo)
                     {
                         cresult.IsSuccess = false;
                         cresult.Message = "期号错误无法购买";
@@ -144,6 +179,7 @@ namespace HK6.ModuleBaseServices
                     CreateTime = DateTime.Now,
                     totalMoney = totalmoney,
                     userId = info.userId,
+                    
                     username = LoginUser.loginName,
                     winAnteCodeStop=info.winStop==true?1:0,
                   
@@ -151,8 +187,19 @@ namespace HK6.ModuleBaseServices
 
                 };
                 List<blast_bet_orderdetail> orderDetailList = new List<blast_bet_orderdetail>();
+                int pindex = 0;
+                HK6Sports_PlanInfo plan = new HK6Sports_PlanInfo() {
+                    multiple=1
+                };
                 foreach (var item in info.orderList)
                 {
+                   
+                    if (info.planList.Count>0)
+                    {
+                        plan = info.planList[pindex];
+                    }
+                  
+                    pindex++;
                     blast_played p = playedList.Where(b => b.id == item.playedId).FirstOrDefault();
                     if (p==null)
                     {
@@ -160,14 +207,14 @@ namespace HK6.ModuleBaseServices
                         cresult.Message = "不存在该玩法";
                         return Task.FromResult(cresult);
                     }
-                    string AnteCodes = "";
+                    string AnteCodes = item.content;
                     //是否包含多个号码
-                    if (item.content.Contains(","))
-                    {
-                        var arr = item.content.Split(',');
-                        var oddslist=codeList.Where(b => arr.Contains(b.AnteCode) && b.playid == p.id).Select(b=>b.odds).ToArray();
-                        AnteCodes = String.Join(",", oddslist);
-                    }
+                    //if (item.content.Contains(","))
+                    //{
+                    //    var arr = item.content.Split(',');
+                    //    var oddslist=codeList.Where(b => arr.Contains(b.AnteCode) && b.playid == p.id).Select(b=>b.odds).ToArray();
+                    //    AnteCodes = String.Join(",", oddslist);
+                    //}
                     blast_bet_orderdetail orderDetail = new blast_bet_orderdetail()
                     {
                         SchemeId = keyLine,
@@ -177,7 +224,8 @@ namespace HK6.ModuleBaseServices
                         issueNo = info.issueNo.ToString(),
                         OddsArr = AnteCodes,
                         ProgressStatus =0,
-                        unitPrice=item.unitPrice,
+                        BeiSu= plan.multiple,
+                        unitPrice =item.unitPrice,
                         CreateTime = DateTime.Now
 
                     };
