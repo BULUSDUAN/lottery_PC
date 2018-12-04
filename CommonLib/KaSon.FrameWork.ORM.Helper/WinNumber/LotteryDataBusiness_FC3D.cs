@@ -1487,9 +1487,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 总跨度
         /// </summary>
-        public FC3D_KuaDu_Z_InfoCollection QueryFC3D_KuaDu_Z(int index)
+        public List<FC3D_KuaDu_Z_Info> QueryFC3D_KuaDu_Z(int index)
         {
-            FC3D_KuaDu_Z_InfoCollection Collection = new FC3D_KuaDu_Z_InfoCollection();
+            List<FC3D_KuaDu_Z_Info> Collection = new List<FC3D_KuaDu_Z_Info>();
             var list = this.QueryGameChart<FC3D_KuaDu_Z_Info>(string.Format("QueryFC3D_KuaDu_Z_{0}", index), () =>
             {
                 var infoList = new List<FC3D_KuaDu_Z_Info>();
@@ -1511,9 +1511,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 跨度百十位走势
         /// </summary>
-        public FC3D_KuaDu_12_InfoCollection QueryFC3D_KuaDu_12(int index)
+        public List<FC3D_KuaDu_12_Info> QueryFC3D_KuaDu_12(int index)
         {
-            FC3D_KuaDu_12_InfoCollection Collection = new FC3D_KuaDu_12_InfoCollection();
+            List<FC3D_KuaDu_12_Info> Collection = new List<FC3D_KuaDu_12_Info>();
             var list = this.QueryGameChart<FC3D_KuaDu_12_Info>(string.Format("QueryFC3D_KuaDu_12_{0}", index), () =>
             {
                 var infoList = new List<FC3D_KuaDu_12_Info>();
@@ -1535,9 +1535,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 跨度十个位走势
         /// </summary>
-        public FC3D_KuaDu_23_InfoCollection QueryFC3D_KuaDu_23(int index)
+        public List<FC3D_KuaDu_23_Info> QueryFC3D_KuaDu_23(int index)
         {
-            FC3D_KuaDu_23_InfoCollection Collection = new FC3D_KuaDu_23_InfoCollection();
+            List<FC3D_KuaDu_23_Info> Collection = new List<FC3D_KuaDu_23_Info>();
             var list = this.QueryGameChart<FC3D_KuaDu_23_Info>(string.Format("QueryFC3D_KuaDu_23_{0}", index), () =>
             {
                 var infoList = new List<FC3D_KuaDu_23_Info>();
@@ -1559,9 +1559,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 跨度百个位走势
         /// </summary>
-        public FC3D_KuaDu_13_InfoCollection QueryFC3D_KuaDu_13(int index)
+        public List<FC3D_KuaDu_13_Info> QueryFC3D_KuaDu_13(int index)
         {
-            FC3D_KuaDu_13_InfoCollection Collection = new FC3D_KuaDu_13_InfoCollection();
+            List<FC3D_KuaDu_13_Info> Collection = new List<FC3D_KuaDu_13_Info>();
             var list = this.QueryGameChart<FC3D_KuaDu_13_Info>(string.Format("QueryFC3D_KuaDu_13_{0}", index), () =>
             {
                 var infoList = new List<FC3D_KuaDu_13_Info>();
@@ -1583,9 +1583,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 和值走势
         /// </summary>
-        public FC3D_HZZS_InfoCollection QueryFC3D_HZZS(int index)
+        public List<FC3D_HZZS_Info> QueryFC3D_HZZS(int index)
         {
-            FC3D_HZZS_InfoCollection Collection = new FC3D_HZZS_InfoCollection();
+            List<FC3D_HZZS_Info> Collection = new List<FC3D_HZZS_Info>();
             var list = this.QueryGameChart<FC3D_HZZS_Info>(string.Format("QueryFC3D_HZZS_{0}", index), () =>
             {
                 var infoList = new List<FC3D_HZZS_Info>();
@@ -1607,9 +1607,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 和值特征
         /// </summary>
-        public FC3D_HZTZ_InfoCollection QueryFC3D_HZTZ(int index)
+        public List<FC3D_HZTZ_Info> QueryFC3D_HZTZ(int index)
         {
-            FC3D_HZTZ_InfoCollection Collection = new FC3D_HZTZ_InfoCollection();
+            List<FC3D_HZTZ_Info> Collection = new List<FC3D_HZTZ_Info>();
             var list = this.QueryGameChart<FC3D_HZTZ_Info>(string.Format("QueryFC3D_HZTZ_{0}", index), () =>
             {
                 var infoList = new List<FC3D_HZTZ_Info>();
@@ -1631,9 +1631,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 和值分布
         /// </summary>
-        public FC3D_HZFB_InfoCollection QueryFC3D_HZFB(int index)
+        public List<FC3D_HZFB_Info> QueryFC3D_HZFB(int index)
         {
-            FC3D_HZFB_InfoCollection Collection = new FC3D_HZFB_InfoCollection();
+            List<FC3D_HZFB_Info> Collection = new List<FC3D_HZFB_Info>();
             var list = this.QueryGameChart<FC3D_HZFB_Info>(string.Format("QueryFC3D_HZFB_{0}", index), () =>
             {
                 var infoList = new List<FC3D_HZFB_Info>();
@@ -1655,9 +1655,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 除3_3走势
         /// </summary>
-        public FC3D_Chu33_InfoCollection QueryFC3D_Chu33(int index)
+        public List<FC3D_Chu33_Info> QueryFC3D_Chu33(int index)
         {
-            FC3D_Chu33_InfoCollection Collection = new FC3D_Chu33_InfoCollection();
+            List<FC3D_Chu33_Info> Collection = new List<FC3D_Chu33_Info>();
             var list = this.QueryGameChart<FC3D_Chu33_Info>(string.Format("QueryFC3D_Chu33_{0}", index), () =>
             {
                 var infoList = new List<FC3D_Chu33_Info>();
@@ -1679,9 +1679,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 除3_2走势
         /// </summary>
-        public FC3D_Chu32_InfoCollection QueryFC3D_Chu32(int index)
+        public List<FC3D_Chu32_Info> QueryFC3D_Chu32(int index)
         {
-            FC3D_Chu32_InfoCollection Collection = new FC3D_Chu32_InfoCollection();
+            List<FC3D_Chu32_Info> Collection = new List<FC3D_Chu32_Info>();
             var list = this.QueryGameChart<FC3D_Chu32_Info>(string.Format("QueryFC3D_Chu32_{0}", index), () =>
             {
                 var infoList = new List<FC3D_Chu32_Info>();
@@ -1703,9 +1703,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 除3_1走势
         /// </summary>
-        public FC3D_Chu31_InfoCollection QueryFC3D_Chu31(int index)
+        public List<FC3D_Chu31_Info> QueryFC3D_Chu31(int index)
         {
-            FC3D_Chu31_InfoCollection Collection = new FC3D_Chu31_InfoCollection();
+            List<FC3D_Chu31_Info> Collection = new List<FC3D_Chu31_Info>();
             var list = this.QueryGameChart<FC3D_Chu31_Info>(string.Format("QueryFC3D_Chu31_{0}", index), () =>
             {
                 var infoList = new List<FC3D_Chu31_Info>();
@@ -1727,9 +1727,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 质合号码
         /// </summary>
-        public FC3D_ZHHM_InfoCollection QueryFC3D_ZHHM(int index)
+        public List<FC3D_ZHHM_Info> QueryFC3D_ZHHM(int index)
         {
-            FC3D_ZHHM_InfoCollection Collection = new FC3D_ZHHM_InfoCollection();
+            List<FC3D_ZHHM_Info> Collection = new List<FC3D_ZHHM_Info>();
             var list = this.QueryGameChart<FC3D_ZHHM_Info>(string.Format("QueryFC3D_ZHHM_{0}", index), () =>
             {
                 var infoList = new List<FC3D_ZHHM_Info>();
@@ -1751,9 +1751,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 质合形态走势
         /// </summary>
-        public FC3D_ZHXT_InfoCollection QueryFC3D_ZHXT(int index)
+        public List<FC3D_ZHXT_Info> QueryFC3D_ZHXT(int index)
         {
-            FC3D_ZHXT_InfoCollection Collection = new FC3D_ZHXT_InfoCollection();
+            List<FC3D_ZHXT_Info> Collection = new List<FC3D_ZHXT_Info>();
             var list = this.QueryGameChart<FC3D_ZHXT_Info>(string.Format("QueryFC3D_ZHXT_{0}", index), () =>
             {
                 var infoList = new List<FC3D_ZHXT_Info>();
@@ -1775,9 +1775,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 奇偶号码
         /// </summary>
-        public FC3D_JOHM_InfoCollection QueryFC3D_JOHM(int index)
+        public List<FC3D_JOHM_Info> QueryFC3D_JOHM(int index)
         {
-            FC3D_JOHM_InfoCollection Collection = new FC3D_JOHM_InfoCollection();
+            List<FC3D_JOHM_Info> Collection = new List<FC3D_JOHM_Info>();
             var list = this.QueryGameChart<FC3D_JOHM_Info>(string.Format("QueryFC3D_JOHM_{0}", index), () =>
             {
                 var infoList = new List<FC3D_JOHM_Info>();
@@ -1799,9 +1799,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 奇偶形态走势
         /// </summary>
-        public FC3D_JOXT_InfoCollection QueryFC3D_JOXT(int index)
+        public List<FC3D_JOXT_Info> QueryFC3D_JOXT(int index)
         {
-            FC3D_JOXT_InfoCollection Collection = new FC3D_JOXT_InfoCollection();
+            List<FC3D_JOXT_Info> Collection = new List<FC3D_JOXT_Info>();
             var list = this.QueryGameChart<FC3D_JOXT_Info>(string.Format("QueryFC3D_JOXT_{0}", index), () =>
             {
                 var infoList = new List<FC3D_JOXT_Info>();
@@ -1823,9 +1823,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 大小号码
         /// </summary>
-        public FC3D_DXHM_InfoCollection QueryFC3D_DXHM(int index)
+        public List<FC3D_DXHM_Info> QueryFC3D_DXHM(int index)
         {
-            FC3D_DXHM_InfoCollection Collection = new FC3D_DXHM_InfoCollection();
+            List<FC3D_DXHM_Info> Collection = new List<FC3D_DXHM_Info>();
             var list = this.QueryGameChart<FC3D_DXHM_Info>(string.Format("QueryFC3D_DXHM_{0}", index), () =>
             {
                 var infoList = new List<FC3D_DXHM_Info>();
@@ -1847,9 +1847,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 大小形态走势
         /// </summary>
-        public FC3D_DXXT_InfoCollection QueryFC3D_DXXT(int index)
+        public List<FC3D_DXXT_Info> QueryFC3D_DXXT(int index)
         {
-            FC3D_DXXT_InfoCollection Collection = new FC3D_DXXT_InfoCollection();
+            List<FC3D_DXXT_Info> Collection = new List<FC3D_DXXT_Info>();
             var list = this.QueryGameChart<FC3D_DXXT_Info>(string.Format("QueryFC3D_DXXT_{0}", index), () =>
             {
                 var infoList = new List<FC3D_DXXT_Info>();
@@ -1871,9 +1871,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 组选走势
         /// </summary>
-        public FC3D_ZuXuanZouSi_InfoCollection QueryFC3D_ZuXuanZouSi(int index)
+        public List<FC3D_ZuXuanZouSi_Info> QueryFC3D_ZuXuanZouSi(int index)
         {
-            FC3D_ZuXuanZouSi_InfoCollection Collection = new FC3D_ZuXuanZouSi_InfoCollection();
+            List<FC3D_ZuXuanZouSi_Info> Collection = new List<FC3D_ZuXuanZouSi_Info>();
             var list = this.QueryGameChart<FC3D_ZuXuanZouSi_Info>(string.Format("QueryFC3D_ZuXuanZouSi_{0}", index), () =>
             {
                 var infoList = new List<FC3D_ZuXuanZouSi_Info>();
@@ -1895,9 +1895,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 直选走势
         /// </summary>
-        public FC3D_ZhiXuanZouSi_InfoCollection QueryFC3D_ZhiXuanZouSi(int index)
+        public List<FC3D_ZhiXuanZouSi_Info> QueryFC3D_ZhiXuanZouSi(int index)
         {
-            FC3D_ZhiXuanZouSi_InfoCollection Collection = new FC3D_ZhiXuanZouSi_InfoCollection();
+            List<FC3D_ZhiXuanZouSi_Info> Collection = new List<FC3D_ZhiXuanZouSi_Info>();
             var list = this.QueryGameChart<FC3D_ZhiXuanZouSi_Info>(string.Format("QueryFC3D_ZhiXuanZouSi_{0}", index), () =>
             {
                 var infoList = new List<FC3D_ZhiXuanZouSi_Info>();

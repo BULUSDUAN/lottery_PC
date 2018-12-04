@@ -31,7 +31,7 @@ using KaSon.FrameWork.Common.Expansion;
 namespace Lottery.Api.Controllers
 {
     [Area("api")]
-   // [ReusltFilter]
+    [ReusltFilter]
     public class UserController : BaseController
     {
         private IHttpContextAccessor _accessor;
@@ -74,8 +74,8 @@ namespace Lottery.Api.Controllers
                 Dictionary<string, object> balanceParam = new Dictionary<string, object>();
                 balanceParam["userId"] = loginInfo.UserId;
                 //balanceParam["userToken"] = loginInfo.UserToken;
-                //var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
-                var balance = new UserBalanceInfo();
+                var balance = await _serviceProxyProvider.Invoke<UserBalanceInfo>(balanceParam, "api/user/QueryMyBalance");
+                //var balance = new UserBalanceInfo();
                 var bankInfo = await _serviceProxyProvider.Invoke<C_BankCard>(balanceParam, "api/user/QueryBankCard");
                 //var bankInfo = new C_BankCard();
                 //if (bankInfo == null) bankInfo = new C_BankCard();

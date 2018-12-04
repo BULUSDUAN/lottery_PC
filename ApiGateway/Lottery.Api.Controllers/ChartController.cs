@@ -25,51 +25,51 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
                 switch (id)
                 {
                     case "jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_JiBenZouSi_InfoCollection>>(param, "api/Data/QueryCache_SSQ_JiBenZouSi_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_JiBenZouSi_Info>>(param, "api/Data/QueryCache_SSQ_JiBenZouSi_Info");
                         break;
                     case "daxiao":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_DX_InfoCollection>>(param, "api/Data/QueryCache_SSQ_DX_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_DX_Info>>(param, "api/Data/QueryCache_SSQ_DX_Info");
                         break;
                     case "chu3":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_C3_InfoCollection>>(param, "api/Data/QueryCache_SSQ_C3_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_C3_Info>>(param, "api/Data/QueryCache_SSQ_C3_Info");
                         break;
                     case "hezhi":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_HeZhi_InfoCollection>>(param, "api/Data/QueryCache_SSQ_HeZhi_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<SSQ_HeZhi_InfoCollection>(param, "api/Data/QueryCache_SSQ_HeZhi_Info");
                         break;
                     case "jiou":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_JiOu_InfoCollection>>(param, "api/Data/QueryCache_SSQ_JiOu_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_JiOu_Info>>(param, "api/Data/QueryCache_SSQ_JiOu_Info");
                         break;
                     case "kuadu_12":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_KuaDu_1_6_InfoCollection>>(param, "api/Data/QueryCache_SSQ_KuaDu_1_6_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_KuaDu_1_6_Info>>(param, "api/Data/QueryCache_SSQ_KuaDu_1_6_Info");
                         break;
                     case "kuadu_23":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_KuaDu_1_6_InfoCollection>>(param, "api/Data/QueryCache_SSQ_KuaDu_1_6_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_KuaDu_1_6_Info>>(param, "api/Data/QueryCache_SSQ_KuaDu_1_6_Info");
                         break;
                     case "kuadu_34":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_KuaDu_1_6_InfoCollection>>(param, "api/Data/QueryCache_SSQ_KuaDu_1_6_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_KuaDu_1_6_Info>>(param, "api/Data/QueryCache_SSQ_KuaDu_1_6_Info");
                         break;
                     case "kuadu_45":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_KuaDu_1_6_InfoCollection>>(param, "api/Data/QueryCache_SSQ_KuaDu_1_6_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_KuaDu_1_6_Info>>(param, "api/Data/QueryCache_SSQ_KuaDu_1_6_Info");
                         break;
                     case "kuadu_56":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_KuaDu_1_6_InfoCollection>>(param, "api/Data/QueryCache_SSQ_KuaDu_1_6_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_KuaDu_1_6_Info>>(param, "api/Data/QueryCache_SSQ_KuaDu_1_6_Info");
                         break;
                     case "kuadu_sw":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_KuaDu_SW_InfoCollection>>(param, "api/Data/QueryCache_SSQ_KuaDu_SW_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_KuaDu_SW_Info>>(param, "api/Data/QueryCache_SSQ_KuaDu_SW_Info");
                         break;
                     case "zhihe":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<SSQ_ZhiHe_InfoCollection>>(param, "api/Data/QueryCache_SSQ_ZhiHe_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<SSQ_ZhiHe_InfoCollection>(param, "api/Data/QueryCache_SSQ_ZhiHe_Info");
                         break;
                     default:
                         break;
                 }
             }
-            catch (Exception ex)
+           catch (Exception ex)
             {
                 result.Code = ResponseCode.失败;
                 result.Value = null;
@@ -90,63 +90,63 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize",string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "zxzs" : (string)p.id;
                 switch (id)
                 {
                     case "zxzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_ZhiXuanZouSi_InfoCollection>>(param, "api/Data/QueryCache_FC3D_ZhiXuanZouSi_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_ZhiXuanZouSi_Info>>(param, "api/Data/QueryCache_FC3D_ZhiXuanZouSi_Info");
                         break;
                     case "zuxzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_ZuXuanZouSi_InfoCollection>>(param, "api/Data/QueryCache_FC3D_ZuXuanZouSi_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_ZuXuanZouSi_Info>> (param, "api/Data/QueryCache_FC3D_ZuXuanZouSi_Info");
                         break;
                     case "dxxt":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_DXXT_InfoCollection>>(param, "api/Data/QueryCache_FC3D_DXXT_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_DXXT_Info>>(param, "api/Data/QueryCache_FC3D_DXXT_Info");
                         break;
                     case "dxhm":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_DXHM_InfoCollection>>(param, "api/Data/QueryCache_FC3D_DXHM_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_DXHM_Info>>(param, "api/Data/QueryCache_FC3D_DXHM_Info");
                         break;
                     case "joxt":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_JOXT_InfoCollection>>(param, "api/Data/QueryCache_FC3D_JOXT_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_JOXT_Info>>(param, "api/Data/QueryCache_FC3D_JOXT_Info");
                         break;
                     case "johm":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_JOHM_InfoCollection>>(param, "api/Data/QueryCache_FC3D_JOHM_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_JOHM_Info>>(param, "api/Data/QueryCache_FC3D_JOHM_Info");
                         break;
                     case "zhxt":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_ZHXT_InfoCollection>>(param, "api/Data/QueryCache_FC3D_ZHXT_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_ZHXT_Info>>(param, "api/Data/QueryCache_FC3D_ZHXT_Info");
                         break;
                     case "zhhm":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_ZHHM_InfoCollection>>(param, "api/Data/QueryCache_FC3D_ZHHM_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_ZHHM_Info>>(param, "api/Data/QueryCache_FC3D_ZHHM_Info");
                         break;
                     case "chu33":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_Chu32_InfoCollection>>(param, "api/Data/QueryCache_FC3D_Chu32_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_Chu32_Info>>(param, "api/Data/QueryCache_FC3D_Chu32_Info");
                         break;
                     case "chu32":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_Chu31_InfoCollection>>(param, "api/Data/QueryCache_FC3D_Chu31_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_Chu31_Info>>(param, "api/Data/QueryCache_FC3D_Chu31_Info");
                         break;
                     case "chu31":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_Chu33_InfoCollection>>(param, "api/Data/QueryCache_FC3D_Chu33_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_Chu33_Info>>(param, "api/Data/QueryCache_FC3D_Chu33_Info");
                         break;
                     case "hzfb":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_HZFB_InfoCollection>>(param, "api/Data/QueryCache_FC3D_HZFB_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_HZFB_Info>>(param, "api/Data/QueryCache_FC3D_HZFB_Info");
                         break;
                     case "hztz":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_HZTZ_InfoCollection>>(param, "api/Data/QueryCache_FC3D_HZTZ_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_HZTZ_Info>>(param, "api/Data/QueryCache_FC3D_HZTZ_Info");
                         break;
                     case "hwzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_HZZS_InfoCollection>>(param, "api/Data/QueryCache_FC3D_HZZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_HZZS_Info>>(param, "api/Data/QueryCache_FC3D_HZZS_Info");
                         break;
                     case "kuadu13":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_KuaDu_13_InfoCollection>>(param, "api/Data/QueryCache_FC3D_KuaDu_13_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_KuaDu_13_Info>>(param, "api/Data/QueryCache_FC3D_KuaDu_13_Info");
                         break;
                     case "kuadu12":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_KuaDu_12_InfoCollection>>(param, "api/Data/QueryCache_FC3D_KuaDu_12_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_KuaDu_12_Info>>(param, "api/Data/QueryCache_FC3D_KuaDu_12_Info");
                         break;
                     case "kuadu23":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_KuaDu_23_InfoCollection>>(param, "api/Data/QueryCache_FC3D_KuaDu_23_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_KuaDu_23_Info>>(param, "api/Data/QueryCache_FC3D_KuaDu_23_Info");
                         break;
                     case "kuadu":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<FC3D_KuaDu_Z_InfoCollection>>(param, "api/Data/QueryCache_FC3D_KuaDu_Z_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<FC3D_KuaDu_Z_Info>>(param, "api/Data/QueryCache_FC3D_KuaDu_Z_Info");
                         break;
                     default:
                         break;
@@ -258,24 +258,24 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "hz" : (string)p.id;
                 switch (id)
                 {
                     case "hz":
-                        result.Value =await _serviceProxyProvider.Invoke<Task<JLK3_ZHZS_InfoCollection>>(param, "api/Data/QueryJSK3_HZ_Info");
+                        result.Value =await _serviceProxyProvider.Invoke<List<JSK3_HZ_Info>>(param, "api/Data/QueryJSK3_HZ_Info");
                         break;
                     case "jbzs":
-                        result.Value =await _serviceProxyProvider.Invoke<Task<JSK3_JBZS_InfoCollection>>(param, "api/Data/QueryJSK3_JBZS_Info");
+                        result.Value =await _serviceProxyProvider.Invoke<List<JSK3_JBZS_Info>>(param, "api/Data/QueryJSK3_JBZS_Info");
                         break;
                     case "xt":
-                        result.Value =await _serviceProxyProvider.Invoke<Task<JSK3_XT_InfoCollection>>(param, "api/Data/QueryJSK3_XT_Info");
+                        result.Value =await _serviceProxyProvider.Invoke<List<JSK3_XT_Info>>(param, "api/Data/QueryJSK3_XT_Info");
                         break;
                     case "zh":
-                        result.Value =await _serviceProxyProvider.Invoke<Task<JSK3_ZH_InfoCollection>>(param, "api/Data/QueryJSK3_ZH_Info");
+                        result.Value =await _serviceProxyProvider.Invoke<List<JSK3_ZH_Info>>(param, "api/Data/QueryJSK3_ZH_Info");
                         break;
                     case "zhzs":
-                        result.Value =await _serviceProxyProvider.Invoke<Task<JSK3_ZHZS_InfoCollection>>(param, "api/Data/QueryJSK3_ZHZS_Info");
+                        result.Value =await _serviceProxyProvider.Invoke<List<JSK3_ZHZS_Info>>(param, "api/Data/QueryJSK3_ZHZS_Info");
                         break;
                     default:
                         break;
@@ -518,42 +518,42 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
                 switch (id)
                 {
                     case "jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_JiBenZouSi_InfoCollection>>(param, "api/Data/QueryDLT_JiBenZouSi_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_JiBenZouSi_Info>>(param, "api/Data/QueryDLT_JiBenZouSi_Info");
                         break;
                     case "dx":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_DX_InfoCollection>>(param, "api/Data/QueryDLT_DX_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_DX_Info>>(param, "api/Data/QueryDLT_DX_Info");
                         break;
                     case "jiou":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_JiOu_InfoCollection>>(param, "api/Data/QueryDLT_JiOu_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_JiOu_Info>>(param, "api/Data/QueryDLT_JiOu_Info");
                         break;
                     case "zhihe":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_ZhiHe_InfoCollection>>(param, "api/Data/QueryDLT_ZhiHe_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_ZhiHe_Info>>(param, "api/Data/QueryDLT_ZhiHe_Info");
                         break;
                     case "hezhi":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_HeZhi_InfoCollection>>(param, "api/Data/QueryDLT_HeZhi_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_HeZhi_Info>>(param, "api/Data/QueryDLT_HeZhi_Info");
                         break;
                     case "chu3":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_Chu3_InfoCollection>>(param, "api/Data/QueryDLT_Chu3_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_Chu3_Info>>(param, "api/Data/QueryDLT_Chu3_Info");
                         break;
                     case "kuadu_sw":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_KuaDu_SW_InfoCollection>>(param, "api/Data/QueryDLT_KuaDu_SW_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_KuaDu_SW_Info>>(param, "api/Data/QueryDLT_KuaDu_SW_Info");
                         break;
                     case "kuadu_12":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_KuaDu_12_InfoCollection>>(param, "api/Data/QueryDLT_KuaDu_12_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_KuaDu_12_Info>>(param, "api/Data/QueryDLT_KuaDu_12_Info");
                         break;
                     case "kuadu_23":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_KuaDu_23_InfoCollection>>(param, "api/Data/QueryDLT_KuaDu_23_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_KuaDu_23_Info>>(param, "api/Data/QueryDLT_KuaDu_23_Info");
                         break;
                     case "kuadu_34":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_KuaDu_34_InfoCollection>>(param, "api/Data/QueryDLT_KuaDu_34_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_KuaDu_34_Info>>(param, "api/Data/QueryDLT_KuaDu_34_Info");
                         break;
                     case "kuadu_45":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<DLT_KuaDu_45_InfoCollection>>(param, "api/Data/QueryDLT_KuaDu_45_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<DLT_KuaDu_45_Info>> (param, "api/Data/QueryDLT_KuaDu_45_Info");
                         break;
                     default:
                         break;
@@ -579,60 +579,60 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
                 switch (id)
                 {
                     case "jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_JiBenZouSi_InfoCollection>>(param, "api/Data/QueryPL3_JiBenZouSi_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_JiBenZouSi_Info>>(param, "api/Data/QueryPL3_JiBenZouSi_Info");
                         break;
                     case "zxzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_ZuXuanZouSi_InfoCollection>>(param, "api/Data/QueryPL3_ZuXuanZouSi_info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_ZuXuanZouSi_Info>>(param, "api/Data/QueryPL3_ZuXuanZouSi_info");
                         break;
                     case "dx":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_DX_InfoCollection>>(param, "api/Data/QueryPL3_DX_info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_DX_Info>>(param, "api/Data/QueryPL3_DX_info");
                         break;
                     case "dxhm":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_DXHM_InfoCollection>>(param, "api/Data/QueryPL3_DXHM_info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_DXHM_Info>>(param, "api/Data/QueryPL3_DXHM_info");
                         break;
                     case "jo":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_JIOU_InfoCollection>>(param, "api/Data/QueryPL3_JIOU_info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_JIOU_Info>>(param, "api/Data/QueryPL3_JIOU_info");
                         break;
                     case "johm":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_JOHM_InfoCollection>>(param, "api/Data/QueryPL3_JOHM_info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_JOHM_Info>>(param, "api/Data/QueryPL3_JOHM_info");
                         break;
                     case "zhihe":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_ZhiHe_InfoCollection>>(param, "api/Data/QueryPL3_ZhiHe_info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_ZhiHe_Info>>(param, "api/Data/QueryPL3_ZhiHe_info");
                         break;
                     case "zhhm":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_ZHHM_InfoCollection>>(param, "api/Data/QueryPL3_ZHHM_info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_ZHHM_Info>>(param, "api/Data/QueryPL3_ZHHM_info");
                         break;
                     case "hezhi":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_HeiZhi_InfoCollection>>(param, "api/Data/QueryPL3_HeiZhi_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_HeiZhi_Info>>(param, "api/Data/QueryPL3_HeiZhi_Info");
                         break;
                     case "hztz":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_HZTZ_InfoCollection>>(param, "api/Data/QueryPL3_PL3_HZTZ_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_HZTZ_Info>>(param, "api/Data/QueryPL3_PL3_HZTZ_Info");
                         break;
                     case "hzhw":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_HZHW_InfoCollection>>(param, "api/Data/QueryPL3_PL3_HZHW_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_HZHW_Info>>(param, "api/Data/QueryPL3_PL3_HZHW_Info");
                         break;
                     case "kdbs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_KuaDu_12_InfoCollection>>(param, "api/Data/QueryPL3_KuaDu_12_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_KuaDu_12_Info>>(param, "api/Data/QueryPL3_KuaDu_12_Info");
                         break;
                     case "kdsg":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_KuaDu_23_InfoCollection>>(param, "api/Data/QueryPL3_KuaDu_23_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_KuaDu_23_Info>>(param, "api/Data/QueryPL3_KuaDu_23_Info");
                         break;
                     case "kdbg":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_KuaDu_13_InfoCollection>>(param, "api/Data/QueryPL3_KuaDu_13_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_KuaDu_13_Info>>(param, "api/Data/QueryPL3_KuaDu_13_Info");
                         break;
                     case "chu33":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_Chu32_InfoCollection>>(param, "api/Data/QueryPL3_PL3_Chu32_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_Chu32_Info>>(param, "api/Data/QueryPL3_PL3_Chu32_Info");
                         break;
                     case "chu32":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_Chu31_InfoCollection>>(param, "api/Data/QueryPL3_PL3_Chu31_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_Chu31_Info>>(param, "api/Data/QueryPL3_PL3_Chu31_Info");
                         break;
                     case "chu31":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<PL3_Chu33_InfoCollection>>(param, "api/Data/QueryPL3_PL3_Chu33_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<PL3_Chu33_Info>>(param, "api/Data/QueryPL3_PL3_Chu33_Info");
                         break;
                     default:
                         break;
@@ -747,57 +747,57 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
                 switch (id)
                 {
                     case "jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_JBZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_JBZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_JBZS_Info>>(param, "api/Data/QueryCache_YDJ11_JBZS_Info");
                         break;
                     case "chzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_CHZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_CHZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_CHZS_Info>>(param, "api/Data/QueryCache_YDJ11_CHZS_Info");
                         break;
                     case "dlzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_DLZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_DLZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_DLZS_Info>>(param, "api/Data/QueryCache_YDJ11_DLZS_Info");
                         break;
                     case "dwzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_012DWZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_012DWZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_012DWZS_Info>>(param, "api/Data/QueryCache_YDJ11_012DWZS_Info");
                         break;
                     case "elzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_2LZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_2LZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_2LZS_Info>>(param, "api/Data/QueryCache_YDJ11_2LZS_Info");
                         break;
                     case "ghzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_GHZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_GHZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_GHZS_Info>>(param, "api/Data/QueryCache_YDJ11_GHZS_Info");
                         break;
                     case "hzzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_HZZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_HZZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_HZZS_Info>>(param, "api/Data/QueryCache_YDJ11_HZZS_Info");
                         break;
                     case "kdzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_KDZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_KDZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_KDZS_Info>>(param, "api/Data/QueryCache_YDJ11_KDZS_Info");
                         break;
                     case "lzzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_012LZZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_012LZZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_012LZZS_Info>>(param, "api/Data/QueryCache_YDJ11_012LZZS_Info");
                         break;
                     case "q1jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_Q1JBZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_Q1JBZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_Q1JBZS_Info>>(param, "api/Data/QueryCache_YDJ11_Q1JBZS_Info");
                         break;
                     case "q1xtzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_Q1XTZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_Q1XTZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_Q1XTZS_Info>>(param, "api/Data/QueryCache_YDJ11_Q1XTZS_Info");
                         break;
                     case "q2jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_Q2JBZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_Q2JBZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_Q2JBZS_Info>>(param, "api/Data/QueryCache_YDJ11_Q2JBZS_Info");
                         break;
                     case "q2xtzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_Q2XTZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_Q2XTZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_Q2XTZS_Info>>(param, "api/Data/QueryCache_YDJ11_Q2XTZS_Info");
                         break;
                     case "q3jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_Q3JBZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_Q3JBZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_Q3JBZS_Info>>(param, "api/Data/QueryCache_YDJ11_Q3JBZS_Info");
                         break;
                     case "q3xtzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_Q3XTZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_Q3XTZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_Q3XTZS_Info>>(param, "api/Data/QueryCache_YDJ11_Q3XTZS_Info");
                         break;
                     case "xtzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<YDJ11_XTZS_InfoCollection>>(param, "api/Data/QueryCache_YDJ11_XTZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<YDJ11_XTZS_Info>>(param, "api/Data/QueryCache_YDJ11_XTZS_Info");
                         break;
                 }
             }
@@ -821,57 +821,57 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
                 switch (id)
                 {
                     case "jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_JBZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_JBZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_JBZS_Info>>(param, "api/Data/QueryCache_GD11X5_JBZS_Info");
                         break;
                     case "chzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_CHZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_CHZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_CHZS_Info>>(param, "api/Data/QueryCache_GD11X5_CHZS_Info");
                         break;
                     case "dlzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_DLZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_DLZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_DLZS_Info>>(param, "api/Data/QueryCache_GD11X5_DLZS_Info");
                         break;
                     case "dwzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_012DWZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_012DWZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_012DWZS_Info>>(param, "api/Data/QueryCache_GD11X5_012DWZS_Info");
                         break;
                     case "elzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_2LZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_2LZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_2LZS_Info>>(param, "api/Data/QueryCache_GD11X5_2LZS_Info");
                         break;
                     case "ghzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_GHZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_GHZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_GHZS_Info>>(param, "api/Data/QueryCache_GD11X5_GHZS_Info");
                         break;
                     case "hzzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_HZZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_HZZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_HZZS_Info>>(param, "api/Data/QueryCache_GD11X5_HZZS_Info");
                         break;
                     case "kdzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_KDZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_KDZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_KDZS_Info>>(param, "api/Data/QueryCache_GD11X5_KDZS_Info");
                         break;
                     case "lzzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_012LZZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_012LZZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_012LZZS_Info>>(param, "api/Data/QueryCache_GD11X5_012LZZS_Info");
                         break;
                     case "q1jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_Q1JBZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_Q1JBZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_Q1JBZS_Info>>(param, "api/Data/QueryCache_GD11X5_Q1JBZS_Info");
                         break;
                     case "q1xtzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_Q1XTZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_Q1XTZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_Q1XTZS_Info>>(param, "api/Data/QueryCache_GD11X5_Q1XTZS_Info");
                         break;
                     case "q2jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_Q2JBZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_Q2JBZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_Q2JBZS_Info>>(param, "api/Data/QueryCache_GD11X5_Q2JBZS_Info");
                         break;
                     case "q2xtzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_Q2XTZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_Q2XTZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_Q2XTZS_Info>>(param, "api/Data/QueryCache_GD11X5_Q2XTZS_Info");
                         break;
                     case "q3jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_Q3JBZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_Q3JBZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_Q3JBZS_Info>>(param, "api/Data/QueryCache_GD11X5_Q3JBZS_Info");
                         break;
                     case "q3xtzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_Q3XTZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_Q3XTZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_Q3XTZS_Info>>(param, "api/Data/QueryCache_GD11X5_Q3XTZS_Info");
                         break;
                     case "xtzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GD11X5_XTZS_InfoCollection>>(param, "api/Data/QueryCache_GD11X5_XTZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GD11X5_XTZS_Info>>(param, "api/Data/QueryCache_GD11X5_XTZS_Info");
                         break;
                 }
             }
@@ -900,67 +900,67 @@ namespace Lottery.Api.Controllers
                 switch (id)
                 {
                     case "rxjbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_RXJBZS_InfoCollection>>(param, "api/Data/QueryJX11X5_RXJBZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_RXJBZS_Info>>(param, "api/Data/QueryJX11X5_RXJBZS_Info");
                         break;
                     case "rxdx":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_RXDX_InfoCollection>>(param, "api/Data/QueryJX11X5_RXDX_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_RXDX_Info>>(param, "api/Data/QueryJX11X5_RXDX_Info");
                         break;
                     case "rxjo":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_RXJO_InfoCollection>>(param, "api/Data/QueryJX11X5_RXJO_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_RXJO_Info>>(param, "api/Data/QueryJX11X5_RXJO_Info");
                         break;
                     case "rxzh":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_RXZH_InfoCollection>>(param, "api/Data/QueryJX11X5_RXZH_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_RXZH_Info>>(param, "api/Data/QueryJX11X5_RXZH_Info");
                         break;
                     case "rxhz":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_RXHZ_InfoCollection>>(param, "api/Data/QueryJX11X5_RXHZ_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_RXHZ_Info>>(param, "api/Data/QueryJX11X5_RXHZ_Info");
                         break;
                     case "rxchu3":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Chu3_InfoCollection>>(param, "api/Data/QueryJX11X5_Chu3_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Chu3_Info>>(param, "api/Data/QueryJX11X5_Chu3_Info");
                         break;
                     case "rx1":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_RX1_InfoCollection>>(param, "api/Data/QueryJX11X5_RX1_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_RX1_Info>>(param, "api/Data/QueryJX11X5_RX1_Info");
                         break;
                     case "rx2":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_RX2_InfoCollection>>(param, "api/Data/QueryJX11X5_RX2_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_RX2_Info>>(param, "api/Data/QueryJX11X5_RX2_Info");
                         break;
                     case "rx3":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_RX3_InfoCollection>>(param, "api/Data/QueryJX11X5_RX3_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_RX3_Info>>(param, "api/Data/QueryJX11X5_RX3_Info");
                         break;
                     case "rx4":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_RX4_InfoCollection>>(param, "api/Data/QueryJX11X5_RX4_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_RX4_Info>>(param, "api/Data/QueryJX11X5_RX4_Info");
                         break;
                     case "rx5":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_RX5_InfoCollection>>(param, "api/Data/QueryJX11X5_RX5_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_RX5_Info>>(param, "api/Data/QueryJX11X5_RX5_Info");
                         break;
                     case "q3zx":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Q3ZS_InfoCollection>>(param, "api/Data/QueryJX11X5_Q3ZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Q3ZS_Info>>(param, "api/Data/QueryJX11X5_Q3ZS_Info");
                         break;
                     case "q3zux":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Q3ZUS_InfoCollection>>(param, "api/Data/QueryJX11X5_Q3ZUS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Q3ZUS_Info>>(param, "api/Data/QueryJX11X5_Q3ZUS_Info");
                         break;
                     case "q3dx":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Q3DX_InfoCollection>>(param, "api/Data/QueryJX11X5_Q3DX_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Q3DX_Info>>(param, "api/Data/QueryJX11X5_Q3DX_Info");
                         break;
                     case "q3jo":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Q3JO_InfoCollection>>(param, "api/Data/QueryJX11X5_Q3JO_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Q3JO_Info>>(param, "api/Data/QueryJX11X5_Q3JO_Info");
                         break;
                     case "q3zh":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Q3ZH_InfoCollection>>(param, "api/Data/QueryJX11X5_Q3ZH_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Q3ZH_Info>>(param, "api/Data/QueryJX11X5_Q3ZH_Info");
                         break;
                     case "q3chu3":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Q3Chu3_InfoCollection>>(param, "api/Data/QueryJX11X5_Q3Chu3_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Q3Chu3_Info>>(param, "api/Data/QueryJX11X5_Q3Chu3_Info");
                         break;
                     case "q3hz":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Q3HZ_InfoCollection>>(param, "api/Data/QueryJX11X5_Q3HZ_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Q3HZ_Info>>(param, "api/Data/QueryJX11X5_Q3HZ_Info");
                         break;
                     case "q2zx":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Q2ZS_InfoCollection>>(param, "api/Data/QueryJX11X5_Q2ZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Q2ZS_Info>>(param, "api/Data/QueryJX11X5_Q2ZS_Info");
                         break;
                     case "q2zux":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Q2ZUS_InfoCollection>>(param, "api/Data/QueryJX11X5_Q2ZUS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Q2ZUS_Info>>(param, "api/Data/QueryJX11X5_Q2ZUS_Info");
                         break;
                     case "q2hz":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<JX11X5_Q2HZ_InfoCollection>>(param, "api/Data/QueryJX11X5_Q2HZ_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<JX11X5_Q2HZ_Info>>(param, "api/Data/QueryJX11X5_Q2HZ_Info");
                         break;
                     default:
                         break;
@@ -1119,55 +1119,55 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "s3zxzs" : (string)p.id;
                 switch (id)
                 {
                     case "s2hzzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_2X_HZZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_2X_HZZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_2X_HZZS_Info>>(param, "api/Data/QueryCache_CQSSC_2X_HZZS_Info");
                         break;
                     case "s2zuxzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_2X_ZuXZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_2X_ZuXZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_2X_ZuXZS_Info>>(param, "api/Data/QueryCache_CQSSC_2X_ZuXZS_Info");
                         break;
                     case "s2zxzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_2X_ZXZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_2X_ZXZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_2X_ZXZS_Info>>(param, "api/Data/QueryCache_CQSSC_2X_ZXZS_Info");
                         break;
                     case "s3c3ys":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_3X_C3YS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_3X_C3YS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_3X_C3YS_Info>>(param, "api/Data/QueryCache_CQSSC_3X_C3YS_Info");
                         break;
                     case "s3dxzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_3X_DXZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_3X_DXZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_3X_DXZS_Info>>(param, "api/Data/QueryCache_CQSSC_3X_DXZS_Info");
                         break;
                     case "s3hzzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_3X_HZZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_3X_HZZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_3X_HZZS_Info>>(param, "api/Data/QueryCache_CQSSC_3X_HZZS_Info");
                         break;
                     case "s3jozs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_3X_JOZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_3X_JOZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_3X_JOZS_Info>>(param, "api/Data/QueryCache_CQSSC_3X_JOZS_Info");
                         break;
                     case "s3kd":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_3X_KD_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_3X_KD_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_3X_KD_Info>>(param, "api/Data/QueryCache_CQSSC_3X_KD_Info");
                         break;
                     case "s3zhzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_3X_ZHZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_3X_ZHZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_3X_ZHZS_Info>>(param, "api/Data/QueryCache_CQSSC_3X_ZHZS_Info");
                         break;
                     case "s3zuxzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_3X_ZuXZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_3X_ZuXZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_3X_ZuXZS_Info>>(param, "api/Data/QueryCache_CQSSC_3X_ZuXZS_Info");
                         break;
                     case "s3zxzs":
                         //result.Value = await _serviceProxyProvider.Invoke<Task<>>QueryCache_CQSSC_3X_ZXZS_Info_New(param,"api/Data/", phaseOrder);
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_3X_ZXZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_3X_ZXZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_3X_ZXZS_Info>>(param, "api/Data/QueryCache_CQSSC_3X_ZXZS_Info");
                         break;
                     case "s5hzzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_5X_HZZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_5X_HZZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_5X_HZZS_Info>>(param, "api/Data/QueryCache_CQSSC_5X_HZZS_Info");
                         break;
                     case "s5jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_5X_JBZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_5X_JBZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_5X_JBZS_Info>>(param, "api/Data/QueryCache_CQSSC_5X_JBZS_Info");
                         break;
                     case "dxds":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_DXDS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_DXDS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_DXDS_Info>>(param, "api/Data/QueryCache_CQSSC_DXDS_Info");
                         break;
                     case "s1zs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<CQSSC_1X_ZS_InfoCollection>>(param, "api/Data/QueryCache_CQSSC_1X_ZS_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<CQSSC_1X_ZS_Info>>(param, "api/Data/QueryCache_CQSSC_1X_ZS_Info");
                         break;
                     default:
                         break;
@@ -1266,30 +1266,30 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
                 switch (id)
                 {
                     case "jbzs":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GDKLSF_JBZS_InfoCollection>>(param, "api/Data/QueryGDKLSF_JBZS");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GDKLSF_JBZS_Info>>(param, "api/Data/QueryGDKLSF_JBZS");
                         break;
                     case "dx":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GDKLSF_DX_InfoCollection>>(param, "api/Data/QueryGDKLSF_DX");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GDKLSF_DX_Info>>(param, "api/Data/QueryGDKLSF_DX");
                         break;
                     case "jo":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GDKLSF_JO_InfoCollection>>(param, "api/Data/QueryGDKLSF_JO");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GDKLSF_JO_Info>>(param, "api/Data/QueryGDKLSF_JO");
                         break;
                     case "zh":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GDKLSF_ZH_InfoCollection>>(param, "api/Data/QueryGDKLSF_ZH");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GDKLSF_ZH_Info>>(param, "api/Data/QueryGDKLSF_ZH");
                         break;
                     case "dw1":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GDKLSF_DW1_InfoCollection>>(param, "api/Data/QueryGDKLSF_DW1");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GDKLSF_DW1_Info>>(param, "api/Data/QueryGDKLSF_DW1");
                         break;
                     case "dw2":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GDKLSF_DW2_InfoCollection>>(param, "api/Data/QueryGDKLSF_DW2");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GDKLSF_DW2_Info>>(param, "api/Data/QueryGDKLSF_DW2");
                         break;
                     case "dw3":
-                        result.Value = await _serviceProxyProvider.Invoke<Task<GDKLSF_DW3_InfoCollection>>(param, "api/Data/QueryGDKLSF_DW3");
+                        result.Value = await _serviceProxyProvider.Invoke<List<GDKLSF_DW3_Info>>(param, "api/Data/QueryGDKLSF_DW3");
                         break;
                     default:
                         break;

@@ -64,9 +64,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询基本走势列表按时间倒叙 
         /// </summary>
-        public GDKLSF_JBZS_InfoCollection QueryGDKLSF_JBZS(int length)
+        public List<GDKLSF_JBZS_Info> QueryGDKLSF_JBZS(int length)
         {
-            GDKLSF_JBZS_InfoCollection Collection = new GDKLSF_JBZS_InfoCollection();
+            List<GDKLSF_JBZS_Info> Collection = new List<GDKLSF_JBZS_Info>();
             var list = this.QueryGameChart<GDKLSF_JBZS_Info>(string.Format("QueryGDKLSF_JBZS_{0}", length), () =>
             {
                 var infoList = new List<GDKLSF_JBZS_Info>();
@@ -83,9 +83,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询定位第一位列表按时间倒叙 
         /// </summary>
-        public GDKLSF_DW1_InfoCollection QueryGDKLSF_DW1(int length)
+        public List<GDKLSF_DW1_Info> QueryGDKLSF_DW1(int length)
         {
-            GDKLSF_DW1_InfoCollection Collection = new GDKLSF_DW1_InfoCollection();
+            List<GDKLSF_DW1_Info> Collection = new List<GDKLSF_DW1_Info>();
             var list = this.QueryGameChart<GDKLSF_DW1_Info>(string.Format("QueryGDKLSF_DW1_{0}", length), () =>
             {
                 var infoList = new List<GDKLSF_DW1_Info>();
@@ -102,9 +102,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询定位第二位列表按时间倒叙 
         /// </summary>
-        public GDKLSF_DW2_InfoCollection QueryGDKLSF_DW2(int length)
+        public List<GDKLSF_DW2_Info> QueryGDKLSF_DW2(int length)
         {
-            GDKLSF_DW2_InfoCollection Collection = new GDKLSF_DW2_InfoCollection();
+            List<GDKLSF_DW2_Info> Collection = new List<GDKLSF_DW2_Info>();
             var list = this.QueryGameChart<GDKLSF_DW2_Info>(string.Format("QueryGDKLSF_DW2_{0}", length), () =>
             {
                 var infoList = new List<GDKLSF_DW2_Info>();
@@ -121,9 +121,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询定位第三位列表按时间倒叙 
         /// </summary>
-        public GDKLSF_DW3_InfoCollection QueryGDKLSF_DW3(int length)
+        public List<GDKLSF_DW3_Info> QueryGDKLSF_DW3(int length)
         {
-            GDKLSF_DW3_InfoCollection Collection = new GDKLSF_DW3_InfoCollection();
+            List<GDKLSF_DW3_Info> Collection = new List<GDKLSF_DW3_Info>();
             var list = this.QueryGameChart<GDKLSF_DW3_Info>(string.Format("QueryGDKLSF_DW3_{0}", length), () =>
             {
                 var infoList = new List<GDKLSF_DW3_Info>();
@@ -140,9 +140,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询大小列表按时间倒叙 
         /// </summary>
-        public GDKLSF_DX_InfoCollection QueryGDKLSF_DX(int length)
+        public List<GDKLSF_DX_Info> QueryGDKLSF_DX(int length)
         {
-            GDKLSF_DX_InfoCollection Collection = new GDKLSF_DX_InfoCollection();
+            List<GDKLSF_DX_Info> Collection = new List<GDKLSF_DX_Info>();
             var list = this.QueryGameChart<GDKLSF_DX_Info>(string.Format("QueryGDKLSF_DX_{0}", length), () =>
             {
                 var infoList = new List<GDKLSF_DX_Info>();
@@ -159,9 +159,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询奇偶列表按时间倒叙 
         /// </summary>
-        public GDKLSF_JO_InfoCollection QueryGDKLSF_JO(int length)
+        public List<GDKLSF_JO_Info> QueryGDKLSF_JO(int length)
         {
-            GDKLSF_JO_InfoCollection Collection = new GDKLSF_JO_InfoCollection();
+            List<GDKLSF_JO_Info> Collection = new List<GDKLSF_JO_Info>();
             var list = this.QueryGameChart<GDKLSF_JO_Info>(string.Format("QueryGDKLSF_JO_{0}", length), () =>
             {
                 var infoList = new List<GDKLSF_JO_Info>();
@@ -178,9 +178,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询质和列表按时间倒叙 
         /// </summary>
-        public GDKLSF_ZH_InfoCollection QueryGDKLSF_ZH(int length)
+        public List<GDKLSF_ZH_Info> QueryGDKLSF_ZH(int length)
         {
-            GDKLSF_ZH_InfoCollection Collection = new GDKLSF_ZH_InfoCollection();
+            List<GDKLSF_ZH_Info> Collection = new List<GDKLSF_ZH_Info>();
             var list = this.QueryGameChart<GDKLSF_ZH_Info>(string.Format("QueryGDKLSF_ZH_{0}", length), () =>
             {
                 var infoList = new List<GDKLSF_ZH_Info>();

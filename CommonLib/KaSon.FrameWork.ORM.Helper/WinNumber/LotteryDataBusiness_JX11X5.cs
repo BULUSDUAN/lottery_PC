@@ -92,9 +92,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选基本走势列表按时间倒叙 
         /// </summary>
-        public JX11X5_RXJBZS_InfoCollection QueryJX11X5_RXJBZS_Info(int length)
+        public List<JX11X5_RXJBZS_Info> QueryJX11X5_RXJBZS_Info(int length)
         {
-            JX11X5_RXJBZS_InfoCollection Collection = new JX11X5_RXJBZS_InfoCollection();
+            List<JX11X5_RXJBZS_Info> Collection = new List<JX11X5_RXJBZS_Info>();
             var list = this.QueryGameChart<JX11X5_RXJBZS_Info>(string.Format("QueryJX11X5_RXJBZS_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_RXJBZS_Info>();
@@ -111,9 +111,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选大小列表按时间倒叙 
         /// </summary>
-        public JX11X5_RXDX_InfoCollection QueryJX11X5_RXDX_Info(int length)
+        public List<JX11X5_RXDX_Info> QueryJX11X5_RXDX_Info(int length)
         {
-            JX11X5_RXDX_InfoCollection Collection = new JX11X5_RXDX_InfoCollection();
+            List<JX11X5_RXDX_Info> Collection = new List<JX11X5_RXDX_Info>();
             var list = this.QueryGameChart<JX11X5_RXDX_Info>(string.Format("QueryJX11X5_RXDX_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_RXDX_Info>();
@@ -130,9 +130,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选奇偶列表按时间倒叙 
         /// </summary>
-        public JX11X5_RXJO_InfoCollection QueryJX11X5_RXJO_Info(int length)
+        public List<JX11X5_RXJO_Info> QueryJX11X5_RXJO_Info(int length)
         {
-            JX11X5_RXJO_InfoCollection Collection = new JX11X5_RXJO_InfoCollection();
+            List<JX11X5_RXJO_Info> Collection = new List<JX11X5_RXJO_Info>();
             var list = this.QueryGameChart<JX11X5_RXJO_Info>(string.Format("QueryJX11X5_RXJO_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_RXJO_Info>();
@@ -149,9 +149,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选质和列表按时间倒叙 
         /// </summary>
-        public JX11X5_RXZH_InfoCollection QueryJX11X5_RXZH_Info(int length)
+        public List<JX11X5_RXZH_Info> QueryJX11X5_RXZH_Info(int length)
         {
-            JX11X5_RXZH_InfoCollection Collection = new JX11X5_RXZH_InfoCollection();
+            List<JX11X5_RXZH_Info> Collection = new List<JX11X5_RXZH_Info>();
             var list = this.QueryGameChart<JX11X5_RXZH_Info>(string.Format("QueryJX11X5_RXZH_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_RXZH_Info>();
@@ -168,9 +168,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选和值列表按时间倒叙 
         /// </summary>
-        public JX11X5_RXHZ_InfoCollection QueryJX11X5_RXHZ_Info(int length)
+        public List<JX11X5_RXHZ_Info> QueryJX11X5_RXHZ_Info(int length)
         {
-            JX11X5_RXHZ_InfoCollection Collection = new JX11X5_RXHZ_InfoCollection();
+            List<JX11X5_RXHZ_Info> Collection = new List<JX11X5_RXHZ_Info>();
             var list = this.QueryGameChart<JX11X5_RXHZ_Info>(string.Format("QueryJX11X5_RXHZ_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_RXHZ_Info>();
@@ -187,9 +187,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选除3列表按时间倒叙 
         /// </summary>
-        public JX11X5_Chu3_InfoCollection QueryJX11X5_Chu3_Info(int length)
+        public List<JX11X5_Chu3_Info> QueryJX11X5_Chu3_Info(int length)
         {
-            JX11X5_Chu3_InfoCollection Collection = new JX11X5_Chu3_InfoCollection();
+            List<JX11X5_Chu3_Info> Collection = new List<JX11X5_Chu3_Info>();
             var list = this.QueryGameChart<JX11X5_Chu3_Info>(string.Format("QueryJX11X5_Chu3_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Chu3_Info>();
@@ -206,9 +206,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选第一位列表按时间倒叙 
         /// </summary>
-        public JX11X5_RX1_InfoCollection QueryJX11X5_RX1_Info(int length)
+        public List<JX11X5_RX1_Info> QueryJX11X5_RX1_Info(int length)
         {
-            JX11X5_RX1_InfoCollection Collection = new JX11X5_RX1_InfoCollection();
+            List<JX11X5_RX1_Info> Collection = new List<JX11X5_RX1_Info>();
             var list = this.QueryGameChart<JX11X5_RX1_Info>(string.Format("QueryJX11X5_RX1_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_RX1_Info>();
@@ -225,9 +225,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选第二位列表按时间倒叙 
         /// </summary>
-        public JX11X5_RX2_InfoCollection QueryJX11X5_RX2_Info(int length)
+        public List<JX11X5_RX2_Info> QueryJX11X5_RX2_Info(int length)
         {
-            JX11X5_RX2_InfoCollection Collection = new JX11X5_RX2_InfoCollection();
+            List<JX11X5_RX2_Info> Collection = new List<JX11X5_RX2_Info>();
             var list = this.QueryGameChart<JX11X5_RX2_Info>(string.Format("QueryJX11X5_RX2_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_RX2_Info>();
@@ -244,9 +244,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选第三位列表按时间倒叙 
         /// </summary>
-        public JX11X5_RX3_InfoCollection QueryJX11X5_RX3_Info(int length)
+        public List<JX11X5_RX3_Info> QueryJX11X5_RX3_Info(int length)
         {
-            JX11X5_RX3_InfoCollection Collection = new JX11X5_RX3_InfoCollection();
+            List<JX11X5_RX3_Info> Collection = new List<JX11X5_RX3_Info>();
             var list = this.QueryGameChart<JX11X5_RX3_Info>(string.Format("QueryJX11X5_RX3_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_RX3_Info>();
@@ -263,9 +263,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选第四位列表按时间倒叙 
         /// </summary>
-        public JX11X5_RX4_InfoCollection QueryJX11X5_RX4_Info(int length)
+        public List<JX11X5_RX4_Info> QueryJX11X5_RX4_Info(int length)
         {
-            JX11X5_RX4_InfoCollection Collection = new JX11X5_RX4_InfoCollection();
+            List<JX11X5_RX4_Info> Collection = new List<JX11X5_RX4_Info>();
             var list = this.QueryGameChart<JX11X5_RX4_Info>(string.Format("QueryJX11X5_RX4_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_RX4_Info>();
@@ -282,9 +282,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询任选第五位列表按时间倒叙 
         /// </summary>
-        public JX11X5_RX5_InfoCollection QueryJX11X5_RX5_Info(int length)
+        public List<JX11X5_RX5_Info> QueryJX11X5_RX5_Info(int length)
         {
-            JX11X5_RX5_InfoCollection Collection = new JX11X5_RX5_InfoCollection();
+            List<JX11X5_RX5_Info> Collection = new List<JX11X5_RX5_Info>();
             var list = this.QueryGameChart<JX11X5_RX5_Info>(string.Format("QueryJX11X5_RX5_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_RX5_Info>();
@@ -301,9 +301,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询前三直选列表按时间倒叙 
         /// </summary>
-        public JX11X5_Q3ZS_InfoCollection QueryJX11X5_Q3ZS_Info(int length)
+        public List<JX11X5_Q3ZS_Info> QueryJX11X5_Q3ZS_Info(int length)
         {
-            JX11X5_Q3ZS_InfoCollection Collection = new JX11X5_Q3ZS_InfoCollection();
+            List<JX11X5_Q3ZS_Info> Collection = new List<JX11X5_Q3ZS_Info>();
             var list = this.QueryGameChart<JX11X5_Q3ZS_Info>(string.Format("QueryJX11X5_Q3ZS_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Q3ZS_Info>();
@@ -320,9 +320,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询前三组选列表按时间倒叙 
         /// </summary>
-        public JX11X5_Q3ZUS_InfoCollection QueryJX11X5_Q3ZUS_Info(int length)
+        public List<JX11X5_Q3ZUS_Info> QueryJX11X5_Q3ZUS_Info(int length)
         {
-            JX11X5_Q3ZUS_InfoCollection Collection = new JX11X5_Q3ZUS_InfoCollection();
+            List<JX11X5_Q3ZUS_Info> Collection = new List<JX11X5_Q3ZUS_Info>();
             var list = this.QueryGameChart<JX11X5_Q3ZUS_Info>(string.Format("QueryJX11X5_Q3ZUS_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Q3ZUS_Info>();
@@ -339,9 +339,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询前三大小列表按时间倒叙 
         /// </summary>
-        public JX11X5_Q3DX_InfoCollection QueryJX11X5_Q3DX_Info(int length)
+        public List<JX11X5_Q3DX_Info> QueryJX11X5_Q3DX_Info(int length)
         {
-            JX11X5_Q3DX_InfoCollection Collection = new JX11X5_Q3DX_InfoCollection();
+            List<JX11X5_Q3DX_Info> Collection = new List<JX11X5_Q3DX_Info>();
             var list = this.QueryGameChart<JX11X5_Q3DX_Info>(string.Format("QueryJX11X5_Q3DX_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Q3DX_Info>();
@@ -358,9 +358,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询前三奇偶列表按时间倒叙 
         /// </summary>
-        public JX11X5_Q3JO_InfoCollection QueryJX11X5_Q3JO_Info(int length)
+        public List<JX11X5_Q3JO_Info> QueryJX11X5_Q3JO_Info(int length)
         {
-            JX11X5_Q3JO_InfoCollection Collection = new JX11X5_Q3JO_InfoCollection();
+            List<JX11X5_Q3JO_Info> Collection = new List<JX11X5_Q3JO_Info>();
             var list = this.QueryGameChart<JX11X5_Q3JO_Info>(string.Format("QueryJX11X5_Q3JO_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Q3JO_Info>();
@@ -377,9 +377,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询前三质和列表按时间倒叙 
         /// </summary>
-        public JX11X5_Q3ZH_InfoCollection QueryJX11X5_Q3ZH_Info(int length)
+        public List<JX11X5_Q3ZH_Info> QueryJX11X5_Q3ZH_Info(int length)
         {
-            JX11X5_Q3ZH_InfoCollection Collection = new JX11X5_Q3ZH_InfoCollection();
+            List<JX11X5_Q3ZH_Info> Collection = new List<JX11X5_Q3ZH_Info>();
             var list = this.QueryGameChart<JX11X5_Q3ZH_Info>(string.Format("QueryJX11X5_Q3ZH_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Q3ZH_Info>();
@@ -396,9 +396,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询前三除3列表按时间倒叙 
         /// </summary>
-        public JX11X5_Q3Chu3_InfoCollection QueryJX11X5_Q3Chu3_Info(int length)
+        public List<JX11X5_Q3Chu3_Info> QueryJX11X5_Q3Chu3_Info(int length)
         {
-            JX11X5_Q3Chu3_InfoCollection Collection = new JX11X5_Q3Chu3_InfoCollection();
+            List<JX11X5_Q3Chu3_Info> Collection = new List<JX11X5_Q3Chu3_Info>();
             var list = this.QueryGameChart<JX11X5_Q3Chu3_Info>(string.Format("QueryJX11X5_Q3Chu3_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Q3Chu3_Info>();
@@ -415,9 +415,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询前三和值列表按时间倒叙 
         /// </summary>
-        public JX11X5_Q3HZ_InfoCollection QueryJX11X5_Q3HZ_Info(int length)
+        public List<JX11X5_Q3HZ_Info> QueryJX11X5_Q3HZ_Info(int length)
         {
-            JX11X5_Q3HZ_InfoCollection Collection = new JX11X5_Q3HZ_InfoCollection();
+            List<JX11X5_Q3HZ_Info> Collection = new List<JX11X5_Q3HZ_Info>();
             var list = this.QueryGameChart<JX11X5_Q3HZ_Info>(string.Format("QueryJX11X5_Q3HZ_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Q3HZ_Info>();
@@ -434,9 +434,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询前2直选列表按时间倒叙 
         /// </summary>
-        public JX11X5_Q2ZS_InfoCollection QueryJX11X5_Q2ZS_Info(int length)
+        public List<JX11X5_Q2ZS_Info> QueryJX11X5_Q2ZS_Info(int length)
         {
-            JX11X5_Q2ZS_InfoCollection Collection = new JX11X5_Q2ZS_InfoCollection();
+            List<JX11X5_Q2ZS_Info> Collection = new List<JX11X5_Q2ZS_Info>();
             var list = this.QueryGameChart<JX11X5_Q2ZS_Info>(string.Format("QueryJX11X5_Q2ZS_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Q2ZS_Info>();
@@ -453,9 +453,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询前2组选列表按时间倒叙 
         /// </summary>
-        public JX11X5_Q2ZUS_InfoCollection QueryJX11X5_Q2ZUS_Info(int length)
+        public List<JX11X5_Q2ZUS_Info> QueryJX11X5_Q2ZUS_Info(int length)
         {
-            JX11X5_Q2ZUS_InfoCollection Collection = new JX11X5_Q2ZUS_InfoCollection();
+            List<JX11X5_Q2ZUS_Info> Collection = new List<JX11X5_Q2ZUS_Info>();
             var list = this.QueryGameChart<JX11X5_Q2ZUS_Info>(string.Format("QueryJX11X5_Q2ZUS_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Q2ZUS_Info>();
@@ -472,9 +472,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询前2和值列表按时间倒叙 
         /// </summary>
-        public JX11X5_Q2HZ_InfoCollection QueryJX11X5_Q2HZ_Info(int length)
+        public List<JX11X5_Q2HZ_Info> QueryJX11X5_Q2HZ_Info(int length)
         {
-            JX11X5_Q2HZ_InfoCollection Collection = new JX11X5_Q2HZ_InfoCollection();
+            List<JX11X5_Q2HZ_Info> Collection = new List<JX11X5_Q2HZ_Info>();
             var list = this.QueryGameChart<JX11X5_Q2HZ_Info>(string.Format("QueryJX11X5_Q2HZ_Info_{0}", length), () =>
             {
                 var infoList = new List<JX11X5_Q2HZ_Info>();

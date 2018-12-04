@@ -181,14 +181,14 @@ namespace KaSon.FrameWork.ORM.Helper
                 DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
                 {
                     gameMoney = b.gameMoney + winMoney
-                }, b => b.userId == userId);
+                }, b => b.userId == userId.ToString());
             }
             else if (isWin  )
             {
                 DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
                 {
                     gameMoney = b.gameMoney + winMoney
-                }, b => b.userId== userId);
+                }, b => b.userId== userId.ToString());
             }
               
 

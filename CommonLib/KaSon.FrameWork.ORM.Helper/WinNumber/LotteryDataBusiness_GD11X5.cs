@@ -1184,9 +1184,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
 
         #region 查询数据
 
-        public GD11X5_012DWZS_InfoCollection QueryGD11X5_012DWZS(int index)
+        public List<GD11X5_012DWZS_Info> QueryGD11X5_012DWZS(int index)
         {
-            GD11X5_012DWZS_InfoCollection Collection = new GD11X5_012DWZS_InfoCollection();
+            List<GD11X5_012DWZS_Info> Collection = new List<GD11X5_012DWZS_Info>();
             var list = this.QueryGameChart<GD11X5_012DWZS_Info>(string.Format("QueryGD11X5_012DWZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_012DWZS_Info>();
@@ -1204,9 +1204,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_012LZZS_InfoCollection QueryGD11X5_012LZZS(int index)
+        public List<GD11X5_012LZZS_Info> QueryGD11X5_012LZZS(int index)
         {
-            GD11X5_012LZZS_InfoCollection Collection = new GD11X5_012LZZS_InfoCollection();
+            List<GD11X5_012LZZS_Info> Collection = new List<GD11X5_012LZZS_Info>();
             var list = this.QueryGameChart<GD11X5_012LZZS_Info>(string.Format("QueryGD11X5_012LZZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_012LZZS_Info>();
@@ -1224,9 +1224,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_2LZS_InfoCollection QueryGD11X5_2LZS(int index)
+        public List<GD11X5_2LZS_Info> QueryGD11X5_2LZS(int index)
         {
-            GD11X5_2LZS_InfoCollection Collection = new GD11X5_2LZS_InfoCollection();
+            List<GD11X5_2LZS_Info> Collection = new List<GD11X5_2LZS_Info>();
             var list = this.QueryGameChart<GD11X5_2LZS_Info>(string.Format("QueryGD11X5_2LZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_2LZS_Info>();
@@ -1244,9 +1244,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_CHZS_InfoCollection QueryGD11X5_CHZS(int index)
+        public List<GD11X5_CHZS_Info> QueryGD11X5_CHZS(int index)
         {
-            GD11X5_CHZS_InfoCollection Collection = new GD11X5_CHZS_InfoCollection();
+            List<GD11X5_CHZS_Info> Collection = new List<GD11X5_CHZS_Info>();
             var list = this.QueryGameChart<GD11X5_CHZS_Info>(string.Format("QueryGD11X5_CHZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_CHZS_Info>();
@@ -1264,9 +1264,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_DLZS_InfoCollection QueryGD11X5_DLZS(int index)
+        public List<GD11X5_DLZS_Info> QueryGD11X5_DLZS(int index)
         {
-            GD11X5_DLZS_InfoCollection Collection = new GD11X5_DLZS_InfoCollection();
+            List<GD11X5_DLZS_Info> Collection = new List<GD11X5_DLZS_Info>();
             var list = this.QueryGameChart<GD11X5_DLZS_Info>(string.Format("QueryGD11X5_DLZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_DLZS_Info>();
@@ -1284,9 +1284,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_GHZS_InfoCollection QueryGD11X5_GHZS(int index)
+        public List<GD11X5_GHZS_Info> QueryGD11X5_GHZS(int index)
         {
-            GD11X5_GHZS_InfoCollection Collection = new GD11X5_GHZS_InfoCollection();
+            List<GD11X5_GHZS_Info> Collection = new List<GD11X5_GHZS_Info>();
             var list = this.QueryGameChart<GD11X5_GHZS_Info>(string.Format("QueryGD11X5_GHZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_GHZS_Info>();
@@ -1304,9 +1304,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_HZZS_InfoCollection QueryGD11X5_HZZS(int index)
+        public List<GD11X5_HZZS_Info> QueryGD11X5_HZZS(int index)
         {
-            GD11X5_HZZS_InfoCollection Collection = new GD11X5_HZZS_InfoCollection();
+            List<GD11X5_HZZS_Info> Collection = new List<GD11X5_HZZS_Info>();
             var list = this.QueryGameChart<GD11X5_HZZS_Info>(string.Format("QueryGD11X5_HZZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_HZZS_Info>();
@@ -1324,9 +1324,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_JBZS_InfoCollection QueryGD11X5_JBZS(int index)
+        public List<GD11X5_JBZS_Info> QueryGD11X5_JBZS(int index)
         {
-            GD11X5_JBZS_InfoCollection Collection = new GD11X5_JBZS_InfoCollection();
+            List<GD11X5_JBZS_Info> Collection = new List<GD11X5_JBZS_Info>();
             var list = this.QueryGameChart<GD11X5_JBZS_Info>(string.Format("QueryGD11X5_JBZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_JBZS_Info>();
@@ -1344,9 +1344,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_KDZS_InfoCollection QueryGD11X5_KDZS(int index)
+        public List<GD11X5_KDZS_Info> QueryGD11X5_KDZS(int index)
         {
-            GD11X5_KDZS_InfoCollection Collection = new GD11X5_KDZS_InfoCollection();
+            List<GD11X5_KDZS_Info> Collection = new List<GD11X5_KDZS_Info>();
             var list = this.QueryGameChart<GD11X5_KDZS_Info>(string.Format("QueryGD11X5_KDZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_KDZS_Info>();
@@ -1364,9 +1364,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_Q1JBZS_InfoCollection QueryGD11X5_Q1JBZS(int index)
+        public List<GD11X5_Q1JBZS_Info> QueryGD11X5_Q1JBZS(int index)
         {
-            GD11X5_Q1JBZS_InfoCollection Collection = new GD11X5_Q1JBZS_InfoCollection();
+            List<GD11X5_Q1JBZS_Info> Collection = new List<GD11X5_Q1JBZS_Info>();
             var list = this.QueryGameChart<GD11X5_Q1JBZS_Info>(string.Format("QueryGD11X5_Q1JBZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_Q1JBZS_Info>();
@@ -1384,9 +1384,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_Q1XTZS_InfoCollection QueryGD11X5_Q1XTZS(int index)
+        public List<GD11X5_Q1XTZS_Info> QueryGD11X5_Q1XTZS(int index)
         {
-            GD11X5_Q1XTZS_InfoCollection Collection = new GD11X5_Q1XTZS_InfoCollection();
+            List<GD11X5_Q1XTZS_Info> Collection = new List<GD11X5_Q1XTZS_Info>();
             var list = this.QueryGameChart<GD11X5_Q1XTZS_Info>(string.Format("QueryGD11X5_Q1XTZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_Q1XTZS_Info>();
@@ -1404,9 +1404,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_Q2JBZS_InfoCollection QueryGD11X5_Q2JBZS(int index)
+        public List<GD11X5_Q2JBZS_Info> QueryGD11X5_Q2JBZS(int index)
         {
-            GD11X5_Q2JBZS_InfoCollection Collection = new GD11X5_Q2JBZS_InfoCollection();
+            List<GD11X5_Q2JBZS_Info> Collection = new List<GD11X5_Q2JBZS_Info>();
             var list = this.QueryGameChart<GD11X5_Q2JBZS_Info>(string.Format("QueryGD11X5_Q2JBZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_Q2JBZS_Info>();
@@ -1424,9 +1424,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_Q2XTZS_InfoCollection QueryGD11X5_Q2XTZS(int index)
+        public List<GD11X5_Q2XTZS_Info> QueryGD11X5_Q2XTZS(int index)
         {
-            GD11X5_Q2XTZS_InfoCollection Collection = new GD11X5_Q2XTZS_InfoCollection();
+            List<GD11X5_Q2XTZS_Info> Collection = new List<GD11X5_Q2XTZS_Info>();
             var list = this.QueryGameChart<GD11X5_Q2XTZS_Info>(string.Format("QueryGD11X5_Q2XTZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_Q2XTZS_Info>();
@@ -1444,9 +1444,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_Q3JBZS_InfoCollection QueryGD11X5_Q3JBZS(int index)
+        public List<GD11X5_Q3JBZS_Info> QueryGD11X5_Q3JBZS(int index)
         {
-            GD11X5_Q3JBZS_InfoCollection Collection = new GD11X5_Q3JBZS_InfoCollection();
+            List<GD11X5_Q3JBZS_Info> Collection = new List<GD11X5_Q3JBZS_Info>();
             var list = this.QueryGameChart<GD11X5_Q3JBZS_Info>(string.Format("QueryGD11X5_Q3JBZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_Q3JBZS_Info>();
@@ -1464,9 +1464,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_Q3XTZS_InfoCollection QueryGD11X5_Q3XTZS(int index)
+        public List<GD11X5_Q3XTZS_Info> QueryGD11X5_Q3XTZS(int index)
         {
-            GD11X5_Q3XTZS_InfoCollection Collection = new GD11X5_Q3XTZS_InfoCollection();
+            List<GD11X5_Q3XTZS_Info> Collection = new List<GD11X5_Q3XTZS_Info>();
             var list = this.QueryGameChart<GD11X5_Q3XTZS_Info>(string.Format("QueryGD11X5_Q3XTZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_Q3XTZS_Info>();
@@ -1484,9 +1484,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public GD11X5_XTZS_InfoCollection QueryGD11X5_XTZS(int index)
+        public List<GD11X5_XTZS_Info> QueryGD11X5_XTZS(int index)
         {
-            GD11X5_XTZS_InfoCollection Collection = new GD11X5_XTZS_InfoCollection();
+            List<GD11X5_XTZS_Info> Collection = new List<GD11X5_XTZS_Info>();
             var list = this.QueryGameChart<GD11X5_XTZS_Info>(string.Format("QueryGD11X5_XTZS_{0}", index), () =>
             {
                 var infoList = new List<GD11X5_XTZS_Info>();
