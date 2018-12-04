@@ -258,6 +258,8 @@ namespace HK6.ModuleBaseServices
                 cresult.IsSuccess = true;
                 cresult.Message = "投注成功";
                 cresult.ReturnValue = keyLine;
+                //清空重复验证缓存数据
+                _bettingListInfo.Clear();
             }
             catch (Exception ex)
             {

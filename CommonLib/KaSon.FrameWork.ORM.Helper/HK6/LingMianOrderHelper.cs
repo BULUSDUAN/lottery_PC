@@ -59,8 +59,32 @@ namespace KaSon.FrameWork.ORM.Helper
                         isWin = true;
                     }
                     break;
-                case "HDa"://和大
-                   arr=  tm.ToCharArray();
+                case "THDan"://特合单
+                    arr = tm.ToCharArray();
+                    sum = 0;
+                    foreach (var item in arr)
+                    {
+                        sum += int.Parse(item + "");
+                    }
+                    if (sum %2!=0 )
+                    {
+                        isWin = true;
+                    }
+                    break;
+                case "THShuang"://特合双
+                    arr = tm.ToCharArray();
+                    sum = 0;
+                    foreach (var item in arr)
+                    {
+                        sum += int.Parse(item + "");
+                    }
+                    if (sum % 2 == 0 )
+                    {
+                        isWin = true;
+                    }
+                    break;
+                case "THDa"://特合大
+                    arr =  tm.ToCharArray();
                      sum = 0;
                     foreach (var item in arr)
                     {
@@ -71,8 +95,8 @@ namespace KaSon.FrameWork.ORM.Helper
                         isWin = true;
                     }
                     break;
-                case "HXiao"://和小
-                     arr = tm.ToCharArray();
+                case "THX"://特合小
+                    arr = tm.ToCharArray();
                     sum = 0;
                     foreach (var item in arr)
                     {
@@ -83,7 +107,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         isWin = true;
                     }
                     break;
-                case "WDa"://尾大
+                case "TWDa"://尾大
                      arr = tm.ToCharArray();
                     sum = 0;
                       sum = int.Parse(arr[1] + "");
@@ -92,7 +116,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         isWin = true;
                     }
                     break;
-                case "WXiao"://尾小
+                case "TWXiao"://尾小
                     arr = tm.ToCharArray();
                     sum = 0;
                     sum = int.Parse(arr[1] + "");
@@ -128,7 +152,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     break;
-                case "TQXiao"://特地肖
+                case "TQXiao"://特前肖
                               //鼠（11 23 35 47）、虎（09 21 33 45）、蛇（06 18 30 42）、羊（04 16 28 40）、鸡（02 14 26 38）、狗（01 13 25 37 49）
 
 
@@ -141,7 +165,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     break;
-                case "THXiao"://特地肖
+                case "THXiao"://特后肖
                               //鼠（11 23 35 47）、虎（09 21 33 45）、蛇（06 18 30 42）、羊（04 16 28 40）、鸡（02 14 26 38）、狗（01 13 25 37 49）
 
 
@@ -167,8 +191,8 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     break;
-                case "TYeXiao"://特地肖
-                                //鼠（11 23 35 47）、虎（09 21 33 45）、蛇（06 18 30 42）、羊（04 16 28 40）、鸡（02 14 26 38）、狗（01 13 25 37 49）
+                case "TYXiao"://特野肖
+                              //鼠（11 23 35 47）、虎（09 21 33 45）、蛇（06 18 30 42）、羊（04 16 28 40）、鸡（02 14 26 38）、狗（01 13 25 37 49）
 
 
                     xiaoList = (from b in xm.YeShou
@@ -207,7 +231,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     break;
-                case "ZongSuan"://总单
+                case "ZongShuan"://总单
                                //鼠（11 23 35 47）、虎（09 21 33 45）、蛇（06 18 30 42）、羊（04 16 28 40）、鸡（02 14 26 38）、狗（01 13 25 37 49）
 
                     if (sum % 2 == 0)

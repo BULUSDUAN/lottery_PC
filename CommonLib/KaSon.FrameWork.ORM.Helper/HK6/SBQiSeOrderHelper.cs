@@ -48,7 +48,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         isWin = true;
                     }
                     break;
-                case "HeJu":
+                case "HeJu"://局
                     if (int.Parse(tm)==49)
                     {
                         isWin = true;
