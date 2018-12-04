@@ -19,7 +19,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
 
-        public void DataAdd两面(int playid) {
+        private void DataAdd两面(int playid) {
             //   519 1.98    特双  02  318 两面  1   2       TS
 
             List<dynamic> list = new List<dynamic>();
@@ -74,7 +74,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
-        public void DataAdd特码正码(int payid,decimal odds=48.8M, string mark="特码")
+        private void DataAdd特码正码(int payid,decimal odds=48.8M, string mark="特码")
         {
             //   519 1.98    特双  02  318 两面  1   2       TS
             string code = "";
@@ -116,7 +116,7 @@ namespace KaSon.FrameWork.ORM.Helper
         /// <param name="payid"></param>
         /// <param name="odds"></param>
         /// <param name="mark"></param>
-        public void DataAdd正肖特肖一肖(int payid, decimal odds = 48.8M, string mark = "正肖")
+        private void DataAdd正肖特肖一肖(int payid, decimal odds = 48.8M, string mark = "正肖")
         {
             string[] shuxiang = { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
             IList<blast_lhc_antecode> antList = new List<blast_lhc_antecode>();
@@ -151,7 +151,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
             Add(antList);
         }
-        public void DataAdd总肖(int payid)
+        private void DataAdd总肖(int payid)
         {
             string[] shuxiang = { "234肖", "5肖", "6肖", "7肖", "总肖单", "总肖双" };
             string[] oddsarr = { "15", "3.07", "1.96", "5.4", "1.98", "1.85" };
@@ -193,7 +193,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
-        public void Add(IList<blast_lhc_antecode> antList) {
+        private void Add(IList<blast_lhc_antecode> antList) {
             DB.Begin();
             try
             {
@@ -211,7 +211,7 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
-        public void DataAdd三色波(int payid)
+        private void DataAdd三色波(int payid)
         {
             string[] shuxiang = { "红波", "蓝波", "绿波" };
             string[] oddsarr = { "2.76", "2.86", "2.86" };
@@ -252,7 +252,7 @@ namespace KaSon.FrameWork.ORM.Helper
             Add(antList);
 
         }
-        public void DataAdd半波(int payid)
+        private void DataAdd半波(int payid)
         {
             string[] shuxiang = {
                                     "红单", "红双", "红大",
@@ -309,7 +309,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
-        public void DataAdd半半波(int payid)
+        private void DataAdd半半波(int payid)
         {
             string[] shuxiang = {
                                     "红大单", "红大双", "红小单",
@@ -366,7 +366,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
-        public void DataAdd七波(int payid)
+        private void DataAdd七波(int payid)
         {
             string[] shuxiang = {
                                     "红波", "蓝波", "绿波",
@@ -420,24 +420,25 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
         public void ADDDATA() {
-            var list = DB.CreateQuery<blast_played>();
+            var list = DB.CreateQuery<blast_played>().ToList<blast_played>();
           var played= list.Where(b=>b.name=="特码").FirstOrDefault();
            
 
-            DataAdd特码正码(played.id);
-            DataAdd特码正码(list.Where(b => b.name == "正码").FirstOrDefault().id);
-            DataAdd两面(list.Where(b => b.name == "两面").FirstOrDefault().id);
-            /// 特肖,11.6,一肖 2.1，总肖3.6
-            DataAdd正肖特肖一肖(list.Where(b => b.name == "正肖").FirstOrDefault().id);
-            DataAdd正肖特肖一肖(list.Where(b => b.name == "特肖").FirstOrDefault().id,11.6M, "特肖");
-            DataAdd正肖特肖一肖(list.Where(b => b.name == "一肖").FirstOrDefault().id, 3.6M, "一肖");
+            //DataAdd特码正码(played.playId);
+            //DataAdd特码正码(list.Where(b => b.name == "正码").FirstOrDefault().playId,8.02M, "正码");
+            Console.WriteLine("DataAdd特码正码");
+            DataAdd两面(list.Where(b => b.name == "两面").FirstOrDefault().playId);
+            ///// 特肖,11.6,一肖 2.1，总肖3.6
+            DataAdd正肖特肖一肖(list.Where(b => b.name == "正肖").FirstOrDefault().playId);
+            DataAdd正肖特肖一肖(list.Where(b => b.name == "特肖").FirstOrDefault().playId, 11.6M, "特肖");
+            DataAdd正肖特肖一肖(list.Where(b => b.name == "一肖").FirstOrDefault().playId, 3.6M, "一肖");
 
-            DataAdd总肖(list.Where(b => b.name == "总肖").FirstOrDefault().id);
-            DataAdd三色波(list.Where(b => b.name == "三色波").FirstOrDefault().id);
-            DataAdd半波(list.Where(b => b.name == "半波").FirstOrDefault().id);
-            DataAdd半半波(list.Where(b => b.name == "半半波").FirstOrDefault().id);
-            DataAdd七波(list.Where(b => b.name == "七色波").FirstOrDefault().id);
-
+            DataAdd总肖(list.Where(b => b.name == "总肖").FirstOrDefault().playId);
+            DataAdd三色波(list.Where(b => b.name == "三色波").FirstOrDefault().playId);
+            DataAdd半波(list.Where(b => b.name == "半波").FirstOrDefault().playId);
+            DataAdd半半波(list.Where(b => b.name == "半半波").FirstOrDefault().playId);
+            DataAdd七波(list.Where(b => b.name == "七色波").FirstOrDefault().playId);
+            Console.WriteLine("DataAdd特码正码*********");
 
 
         }

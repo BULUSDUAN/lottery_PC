@@ -71,7 +71,7 @@ namespace EntityModel
         [Field("updateTime")]
         public DateTime updateTime { get; set; }
 
-        [Field("antuSchemeId")]
-        public string antuSchemeId { get; set; }
+        //[Field("antuSchemeId")]
+        //public string antuSchemeId { get; set; }
     }
 }

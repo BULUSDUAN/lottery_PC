@@ -57,12 +57,12 @@ namespace EntityModel
         [Field("anteCodeNum")]
         public int anteCodeNum { get; set; }
         [Field("BeiSu")]
-        public int BeiSu { get; set; }=1
+        public int BeiSu { get; set; } = 1;
 
         /// <summary>
         // Í¶×¢ºÅ
         ///</summary>
-        [ProtoMember(7)]
+      
         [Field("AnteCodes")]
         public string AnteCodes { get; set; }
         /// <summary>

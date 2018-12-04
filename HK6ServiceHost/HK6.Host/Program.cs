@@ -37,6 +37,7 @@ using MongoDB.Driver;
 using System.Threading.Tasks;
 using System.Threading;
 using kason.Sg.Core.Dbbase;
+using KaSon.FrameWork.ORM;
 
 namespace SystemManage.Host
 {
@@ -153,12 +154,19 @@ namespace SystemManage.Host
                 KaSon.FrameWork.Common.InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
                 // AutoTaskServices.AutoCaheData(int.Parse(Sports_SchemeJobSeconds));
             }
+           var gdb= ServiceLocator.GetService<IDbProvider>();
+
+            var db = gdb.Init("MySql.Default", true);
+            DataInserterHelper dh = new DataInserterHelper(db);
+            dh.ADDDATA();
+
+
             //初始化内存期号 k_todo，可用彩种类型,执行一次
             // LotteryGameManager lotGm = new LotteryGameManager();
             // lotGm.StartInitData();
             //new Sports_Business().Test();
-           
-          
+
+
             //Task.Factory.StartNew(async delegate
             //{
             //    var obj = await Start_ConfigGameType(Auto_CollectSettings);

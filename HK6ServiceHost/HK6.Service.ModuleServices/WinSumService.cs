@@ -64,97 +64,24 @@ namespace HK6.ModuleBaseServices
             //
             try
             {
-
+                var playedlist = DB.CreateQuery<blast_played>().ToList();
               var list=  DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.issueDate == winDate).ToList<blast_bet_orderdetail>();
 
                 DB.Begin();
+             
+                BaseOrderHelper bh = new BaseOrderHelper(DB);
                 foreach (blast_bet_orderdetail item in list)
                 {
                     //开始结算
-                    string playIdStr = "";
+                    
                     string tm = winNum.Split('|')[1];
                     string zm = winNum.Split('|')[0];
-                    
-                    switch (playIdStr)
-                    {
-                        case "TM"://特码
-                         
-                            if (tm.Trim()==item.AnteCodes.Trim())
-                            {
-                                 // 故中奖
-                                     goto LabelWin;
-                            }
-                            break;
-                        case "ZM"://正码
-                         
-                            if (zm.Trim().Contains( item.AnteCodes.Trim()))
-                            {
-                                // 故中奖
-                                goto LabelWin;
-                            }
-                            break;
-                        case "ZX"://生肖正肖
-                        
-                            var codeArr = item.AnteCodes.Trim().Split(',');
-                            int winCount = 0;
-                            List<string> winCodeList = new List<string>();
-                            foreach (var code in codeArr)
-                            {
-                                if (zm.Contains(code))
-                                {
-                                    //中奖一次
-                                    winCount++;
-                                    winCodeList.Add(code);
-                                }
-                            }
-                            //算出对应号码
-                            //生成号码
-                            //if (temp)
-                            //{
+                    var p = playedlist.Where(b=>b.playId==item.playId).FirstOrDefault();
 
-                            //}
+                    IOrderHelper winHelper = bh.GetOrderHelper(item);
 
-                          //确定这个是01
+                    winHelper.WinMoney(item, winNum);
 
-                            break;
-                        default:
-                            break;
-                    }
-
-                     LabelWin: {
-                        //故中奖
-                        //计算中奖号码
-                        decimal Odds = decimal.Parse(item.OddsArr);
-
-                        decimal winMoney = item.unitPrice * Odds;
-
-                        int orderDetailId = item.id;
-
-                        DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
-                        {
-                            winNumber = winNum,
-                            BonusAwardsMoney = winMoney,
-                            updateTime = DateTime.Now,
-
-
-                        }, b => b.id == orderDetailId);
-
-                        //DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
-                        //{
-                        //    winNumber = winNum,
-                        //    BonusAwardsMoney = winMoney,
-                        //    updateTime = DateTime.Now,
-                        //    BonusStatus = 2  //为中奖状态
-
-                        //}, b => b.id == orderDetailId);
-
-                        //添加用户金币 加钱  blast_lhc_member
-
-                        DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
-                        {
-                            gameMoney = b.gameMoney + winMoney
-                        }, b => b.userId == item.userId);
-                    }
 
 
 
