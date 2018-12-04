@@ -239,9 +239,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询和值走势列表按时间倒叙 
         /// </summary>
-        public PL3_HeiZhi_InfoCollection QueryPL3_HeiZhi_Info(int length)
+        public List<PL3_HeiZhi_Info> QueryPL3_HeiZhi_Info(int length)
         {
-            PL3_HeiZhi_InfoCollection Collection = new PL3_HeiZhi_InfoCollection();
+            List<PL3_HeiZhi_Info> Collection = new List<PL3_HeiZhi_Info>();
 
             var list = this.QueryGameChart<PL3_HeiZhi_Info>(string.Format("QueryPL3_HeiZhi_Info_{0}", length), () =>
                {
@@ -259,9 +259,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询跨度百位、十位列表按时间倒叙 
         /// </summary>
-        public PL3_KuaDu_12_InfoCollection QueryPL3_KuaDu_12_Info(int length)
+        public List<PL3_KuaDu_12_Info> QueryPL3_KuaDu_12_Info(int length)
         {
-            PL3_KuaDu_12_InfoCollection Collection = new PL3_KuaDu_12_InfoCollection();
+            List<PL3_KuaDu_12_Info> Collection = new List<PL3_KuaDu_12_Info>();
             var list = this.QueryGameChart<PL3_KuaDu_12_Info>(string.Format("QueryPL3_KuaDu_12_Info_{0}", length), () =>
               {
                   var infoList = new List<PL3_KuaDu_12_Info>();
@@ -278,9 +278,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询跨度百位、个位列表按时间倒叙 
         /// </summary>
-        public PL3_KuaDu_13_InfoCollection QueryPL3_KuaDu_13_Info(int length)
+        public List<PL3_KuaDu_13_Info> QueryPL3_KuaDu_13_Info(int length)
         {
-            PL3_KuaDu_13_InfoCollection Collection = new PL3_KuaDu_13_InfoCollection();
+            List<PL3_KuaDu_13_Info> Collection = new List<PL3_KuaDu_13_Info>();
 
             var list = this.QueryGameChart<PL3_KuaDu_13_Info>(string.Format("QueryPL3_KuaDu_13_Info_{0}", length), () =>
               {
@@ -298,9 +298,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询跨度十位、个位列表按时间倒叙 
         /// </summary>
-        public PL3_KuaDu_23_InfoCollection QueryPL3_KuaDu_23_Info(int length)
+        public List<PL3_KuaDu_23_Info> QueryPL3_KuaDu_23_Info(int length)
         {
-            PL3_KuaDu_23_InfoCollection Collection = new PL3_KuaDu_23_InfoCollection();
+            List<PL3_KuaDu_23_Info> Collection = new List<PL3_KuaDu_23_Info>();
             var list = this.QueryGameChart<PL3_KuaDu_23_Info>(string.Format("QueryPL3_KuaDu_23_Info_{0}", length), () =>
              {
                  var infoList = new List<PL3_KuaDu_23_Info>();
@@ -317,9 +317,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询除3 1走势按时间倒叙 
         /// </summary>
-        public PL3_Chu31_InfoCollection QueryPL3_PL3_Chu31_Info(int length)
+        public List<PL3_Chu31_Info> QueryPL3_PL3_Chu31_Info(int length)
         {
-            PL3_Chu31_InfoCollection Collection = new PL3_Chu31_InfoCollection();
+            List<PL3_Chu31_Info> Collection = new List<PL3_Chu31_Info>();
 
             var list = this.QueryGameChart<PL3_Chu31_Info>(string.Format("QueryPL3_PL3_Chu31_Info_{0}", length), () =>
              {
@@ -337,9 +337,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询除3 2走势按时间倒叙 
         /// </summary>
-        public PL3_Chu32_InfoCollection QueryPL3_PL3_Chu32_Info(int length)
+        public List<PL3_Chu32_Info> QueryPL3_PL3_Chu32_Info(int length)
         {
-            PL3_Chu32_InfoCollection Collection = new PL3_Chu32_InfoCollection();
+            List<PL3_Chu32_Info> Collection = new List<PL3_Chu32_Info>();
 
             var list = this.QueryGameChart<PL3_Chu32_Info>(string.Format("QueryPL3_PL3_Chu32_Info_{0}", length), () =>
              {
@@ -357,9 +357,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///查询除3 3走势按时间倒叙 
         /// </summary>
-        public PL3_Chu33_InfoCollection QueryPL3_PL3_Chu33_Info(int length)
+        public List<PL3_Chu33_Info> QueryPL3_PL3_Chu33_Info(int length)
         {
-            PL3_Chu33_InfoCollection Collection = new PL3_Chu33_InfoCollection();
+            List<PL3_Chu33_Info> Collection = new List<PL3_Chu33_Info>();
 
             var list = this.QueryGameChart<PL3_Chu33_Info>(string.Format("QueryPL3_PL3_Chu33_Info_{0}", length), () =>
             {
@@ -377,9 +377,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///添加排列3 和值特征走势数据
         /// </summary>
-        public PL3_HZTZ_InfoCollection QueryPL3_PL3_HZTZ_Info(int length)
+        public List<PL3_HZTZ_Info> QueryPL3_PL3_HZTZ_Info(int length)
         {
-            PL3_HZTZ_InfoCollection Collection = new PL3_HZTZ_InfoCollection();
+            List<PL3_HZTZ_Info> Collection = new List<PL3_HZTZ_Info>();
 
             var list = this.QueryGameChart<PL3_HZTZ_Info>(string.Format("QueryPL3_PL3_HZTZ_Info_{0}", length), () =>
             {
@@ -397,9 +397,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         ///添加排列3 和值合尾走势数据
         /// </summary>
-        public PL3_HZHW_InfoCollection QueryPL3_PL3_HZHW_Info(int length)
+        public List<PL3_HZHW_Info> QueryPL3_PL3_HZHW_Info(int length)
         {
-            PL3_HZHW_InfoCollection Collection = new PL3_HZHW_InfoCollection();
+            List<PL3_HZHW_Info> Collection = new List<PL3_HZHW_Info>();
 
             var list = this.QueryGameChart<PL3_HZHW_Info>(string.Format("QueryPL3_PL3_HZHW_Info_{0}", length), () =>
             {

@@ -1192,9 +1192,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
 
         #region 查询数据
 
-        public YDJ11_012DWZS_InfoCollection QueryYDJ11_012DWZS(int index)
+        public List<YDJ11_012DWZS_Info> QueryYDJ11_012DWZS(int index)
         {
-            YDJ11_012DWZS_InfoCollection Collection = new YDJ11_012DWZS_InfoCollection();
+            List<YDJ11_012DWZS_Info> Collection = new List<YDJ11_012DWZS_Info>();
             var list = this.QueryGameChart<YDJ11_012DWZS_Info>(string.Format("QueryYDJ11_012DWZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_012DWZS_Info>();
@@ -1213,9 +1213,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             return Collection;
         }
 
-        public YDJ11_012LZZS_InfoCollection QueryYDJ11_012LZZS(int index)
+        public List<YDJ11_012LZZS_Info> QueryYDJ11_012LZZS(int index)
         {
-            YDJ11_012LZZS_InfoCollection Collection = new YDJ11_012LZZS_InfoCollection();
+            List<YDJ11_012LZZS_Info> Collection = new List<YDJ11_012LZZS_Info>();
             var list = this.QueryGameChart<YDJ11_012LZZS_Info>(string.Format("QueryYDJ11_012LZZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_012LZZS_Info>();
@@ -1233,9 +1233,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_2LZS_InfoCollection QueryYDJ11_2LZS(int index)
+        public List<YDJ11_2LZS_Info> QueryYDJ11_2LZS(int index)
         {
-            YDJ11_2LZS_InfoCollection Collection = new YDJ11_2LZS_InfoCollection();
+            List<YDJ11_2LZS_Info> Collection = new List<YDJ11_2LZS_Info>();
             var list = this.QueryGameChart<YDJ11_2LZS_Info>(string.Format("QueryYDJ11_2LZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_2LZS_Info>();
@@ -1253,9 +1253,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_CHZS_InfoCollection QueryYDJ11_CHZS(int index)
+        public List<YDJ11_CHZS_Info> QueryYDJ11_CHZS(int index)
         {
-            YDJ11_CHZS_InfoCollection Collection = new YDJ11_CHZS_InfoCollection();
+            List<YDJ11_CHZS_Info> Collection = new List<YDJ11_CHZS_Info>();
             var list = this.QueryGameChart<YDJ11_CHZS_Info>(string.Format("QueryYDJ11_CHZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_CHZS_Info>();
@@ -1273,9 +1273,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_DLZS_InfoCollection QueryYDJ11_DLZS(int index)
+        public List<YDJ11_DLZS_Info> QueryYDJ11_DLZS(int index)
         {
-            YDJ11_DLZS_InfoCollection Collection = new YDJ11_DLZS_InfoCollection();
+            List<YDJ11_DLZS_Info> Collection = new List<YDJ11_DLZS_Info>();
             var list = this.QueryGameChart<YDJ11_DLZS_Info>(string.Format("QueryYDJ11_DLZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_DLZS_Info>();
@@ -1293,9 +1293,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_GHZS_InfoCollection QueryYDJ11_GHZS(int index)
+        public List<YDJ11_GHZS_Info> QueryYDJ11_GHZS(int index)
         {
-            YDJ11_GHZS_InfoCollection Collection = new YDJ11_GHZS_InfoCollection();
+            List<YDJ11_GHZS_Info> Collection = new List<YDJ11_GHZS_Info>();
             var list = this.QueryGameChart<YDJ11_GHZS_Info>(string.Format("QueryYDJ11_GHZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_GHZS_Info>();
@@ -1313,9 +1313,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_HZZS_InfoCollection QueryYDJ11_HZZS(int index)
+        public List<YDJ11_HZZS_Info> QueryYDJ11_HZZS(int index)
         {
-            YDJ11_HZZS_InfoCollection Collection = new YDJ11_HZZS_InfoCollection();
+            List<YDJ11_HZZS_Info> Collection = new List<YDJ11_HZZS_Info>();
             var list = this.QueryGameChart<YDJ11_HZZS_Info>(string.Format("QueryYDJ11_HZZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_HZZS_Info>();
@@ -1333,9 +1333,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_JBZS_InfoCollection QueryYDJ11_JBZS(int index)
+        public List<YDJ11_JBZS_Info> QueryYDJ11_JBZS(int index)
         {
-            YDJ11_JBZS_InfoCollection Collection = new YDJ11_JBZS_InfoCollection();
+            List<YDJ11_JBZS_Info> Collection = new List<YDJ11_JBZS_Info>();
             var list = this.QueryGameChart<YDJ11_JBZS_Info>(string.Format("QueryYDJ11_JBZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_JBZS_Info>();
@@ -1353,9 +1353,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_KDZS_InfoCollection QueryYDJ11_KDZS(int index)
+        public List<YDJ11_KDZS_Info> QueryYDJ11_KDZS(int index)
         {
-            YDJ11_KDZS_InfoCollection Collection = new YDJ11_KDZS_InfoCollection();
+            List<YDJ11_KDZS_Info> Collection = new List<YDJ11_KDZS_Info>();
             var list = this.QueryGameChart<YDJ11_KDZS_Info>(string.Format("QueryYDJ11_KDZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_KDZS_Info>();
@@ -1373,9 +1373,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_Q1JBZS_InfoCollection QueryYDJ11_Q1JBZS(int index)
+        public List<YDJ11_Q1JBZS_Info> QueryYDJ11_Q1JBZS(int index)
         {
-            YDJ11_Q1JBZS_InfoCollection Collection = new YDJ11_Q1JBZS_InfoCollection();
+            List<YDJ11_Q1JBZS_Info> Collection = new List<YDJ11_Q1JBZS_Info>();
             var list = this.QueryGameChart<YDJ11_Q1JBZS_Info>(string.Format("QueryYDJ11_Q1JBZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_Q1JBZS_Info>();
@@ -1393,9 +1393,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_Q1XTZS_InfoCollection QueryYDJ11_Q1XTZS(int index)
+        public List<YDJ11_Q1XTZS_Info> QueryYDJ11_Q1XTZS(int index)
         {
-            YDJ11_Q1XTZS_InfoCollection Collection = new YDJ11_Q1XTZS_InfoCollection();
+            List<YDJ11_Q1XTZS_Info> Collection = new List<YDJ11_Q1XTZS_Info>();
             var list = this.QueryGameChart<YDJ11_Q1XTZS_Info>(string.Format("QueryYDJ11_Q1XTZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_Q1XTZS_Info>();
@@ -1413,9 +1413,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_Q2JBZS_InfoCollection QueryYDJ11_Q2JBZS(int index)
+        public List<YDJ11_Q2JBZS_Info> QueryYDJ11_Q2JBZS(int index)
         {
-            YDJ11_Q2JBZS_InfoCollection Collection = new YDJ11_Q2JBZS_InfoCollection();
+            List<YDJ11_Q2JBZS_Info> Collection = new List<YDJ11_Q2JBZS_Info>();
             var list = this.QueryGameChart<YDJ11_Q2JBZS_Info>(string.Format("QueryYDJ11_Q2JBZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_Q2JBZS_Info>();
@@ -1433,9 +1433,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_Q2XTZS_InfoCollection QueryYDJ11_Q2XTZS(int index)
+        public List<YDJ11_Q2XTZS_Info> QueryYDJ11_Q2XTZS(int index)
         {
-            YDJ11_Q2XTZS_InfoCollection Collection = new YDJ11_Q2XTZS_InfoCollection();
+            List<YDJ11_Q2XTZS_Info> Collection = new List<YDJ11_Q2XTZS_Info>();
             var list = this.QueryGameChart<YDJ11_Q2XTZS_Info>(string.Format("QueryYDJ11_Q2XTZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_Q2XTZS_Info>();
@@ -1453,9 +1453,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_Q3JBZS_InfoCollection QueryYDJ11_Q3JBZS(int index)
+        public List<YDJ11_Q3JBZS_Info> QueryYDJ11_Q3JBZS(int index)
         {
-            YDJ11_Q3JBZS_InfoCollection Collection = new YDJ11_Q3JBZS_InfoCollection();
+            List<YDJ11_Q3JBZS_Info> Collection = new List<YDJ11_Q3JBZS_Info>();
             var list = this.QueryGameChart<YDJ11_Q3JBZS_Info>(string.Format("QueryYDJ11_Q3JBZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_Q3JBZS_Info>();
@@ -1473,9 +1473,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_Q3XTZS_InfoCollection QueryYDJ11_Q3XTZS(int index)
+        public List<YDJ11_Q3XTZS_Info> QueryYDJ11_Q3XTZS(int index)
         {
-            YDJ11_Q3XTZS_InfoCollection Collection = new YDJ11_Q3XTZS_InfoCollection();
+            List<YDJ11_Q3XTZS_Info> Collection = new List<YDJ11_Q3XTZS_Info>();
             var list = this.QueryGameChart<YDJ11_Q3XTZS_Info>(string.Format("QueryYDJ11_Q3XTZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_Q3XTZS_Info>();
@@ -1493,9 +1493,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
             Collection.AddRange(list);
             return Collection;
         }
-        public YDJ11_XTZS_InfoCollection QueryYDJ11_XTZS(int index)
+        public List<YDJ11_XTZS_Info> QueryYDJ11_XTZS(int index)
         {
-            YDJ11_XTZS_InfoCollection Collection = new YDJ11_XTZS_InfoCollection();
+            List<YDJ11_XTZS_Info> Collection = new List<YDJ11_XTZS_Info>();
             var list = this.QueryGameChart<YDJ11_XTZS_Info>(string.Format("QueryYDJ11_XTZS_{0}", index), () =>
             {
                 var infoList = new List<YDJ11_XTZS_Info>();

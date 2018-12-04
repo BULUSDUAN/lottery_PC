@@ -1276,9 +1276,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 1星走势
         /// </summary>
-        public CQSSC_1X_ZS_InfoCollection QueryCQSSC_1X_ZS(int index)
+        public List<CQSSC_1X_ZS_Info> QueryCQSSC_1X_ZS(int index)
         {
-            CQSSC_1X_ZS_InfoCollection Collection = new CQSSC_1X_ZS_InfoCollection();
+            List<CQSSC_1X_ZS_Info> Collection = new List<CQSSC_1X_ZS_Info>();
             var list = this.QueryGameChart<CQSSC_1X_ZS_Info>(string.Format("QueryCQSSC_1X_ZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_1X_ZS_Info>();
@@ -1300,9 +1300,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 重庆2星和值走势
         /// </summary>
-        public CQSSC_2X_HZZS_InfoCollection QueryCQSSC_2X_HZZS(int index)
+        public List<CQSSC_2X_HZZS_Info> QueryCQSSC_2X_HZZS(int index)
         {
-            CQSSC_2X_HZZS_InfoCollection Collection = new CQSSC_2X_HZZS_InfoCollection();
+            List<CQSSC_2X_HZZS_Info> Collection = new List<CQSSC_2X_HZZS_Info>();
             var list = this.QueryGameChart<CQSSC_2X_HZZS_Info>(string.Format("QueryCQSSC_2X_HZZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_2X_HZZS_Info>();
@@ -1324,9 +1324,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 重庆2星组选走势
         /// </summary>
-        public CQSSC_2X_ZuXZS_InfoCollection QueryCQSSC_2X_ZuXZS(int index)
+        public List<CQSSC_2X_ZuXZS_Info> QueryCQSSC_2X_ZuXZS(int index)
         {
-            CQSSC_2X_ZuXZS_InfoCollection Collection = new CQSSC_2X_ZuXZS_InfoCollection();
+            List<CQSSC_2X_ZuXZS_Info> Collection = new List<CQSSC_2X_ZuXZS_Info>();
             var list = this.QueryGameChart<CQSSC_2X_ZuXZS_Info>(string.Format("QueryCQSSC_2X_ZuXZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_2X_ZuXZS_Info>();
@@ -1348,9 +1348,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 重庆2星直选走势
         /// </summary>
-        public CQSSC_2X_ZXZS_InfoCollection QueryCQSSC_2X_ZXZS(int index)
+        public List<CQSSC_2X_ZXZS_Info> QueryCQSSC_2X_ZXZS(int index)
         {
-            CQSSC_2X_ZXZS_InfoCollection Collection = new CQSSC_2X_ZXZS_InfoCollection();
+            List<CQSSC_2X_ZXZS_Info> Collection = new List<CQSSC_2X_ZXZS_Info>();
             var list = this.QueryGameChart<CQSSC_2X_ZXZS_Info>(string.Format("QueryCQSSC_2X_ZXZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_2X_ZXZS_Info>();
@@ -1372,9 +1372,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 除3
         /// </summary>
-        public CQSSC_3X_C3YS_InfoCollection QueryCQSSC_3X_C3YS(int index)
+        public List<CQSSC_3X_C3YS_Info> QueryCQSSC_3X_C3YS(int index)
         {
-            CQSSC_3X_C3YS_InfoCollection Collection = new CQSSC_3X_C3YS_InfoCollection();
+            List<CQSSC_3X_C3YS_Info> Collection = new List<CQSSC_3X_C3YS_Info>();
             var list = this.QueryGameChart<CQSSC_3X_C3YS_Info>(string.Format("QueryCQSSC_3X_C3YS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_3X_C3YS_Info>();
@@ -1396,9 +1396,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 大小走势
         /// </summary>
-        public CQSSC_3X_DXZS_InfoCollection QueryCQSSC_3X_DXZS(int index)
+        public List<CQSSC_3X_DXZS_Info> QueryCQSSC_3X_DXZS(int index)
         {
-            CQSSC_3X_DXZS_InfoCollection Collection = new CQSSC_3X_DXZS_InfoCollection();
+            List<CQSSC_3X_DXZS_Info> Collection = new List<CQSSC_3X_DXZS_Info>();
             var list = this.QueryGameChart<CQSSC_3X_DXZS_Info>(string.Format("QueryCQSSC_3X_DXZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_3X_DXZS_Info>();
@@ -1420,9 +1420,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 和值走势
         /// </summary>
-        public CQSSC_3X_HZZS_InfoCollection QueryCQSSC_3X_HZZS(int index)
+        public List<CQSSC_3X_HZZS_Info> QueryCQSSC_3X_HZZS(int index)
         {
-            CQSSC_3X_HZZS_InfoCollection Collection = new CQSSC_3X_HZZS_InfoCollection();
+            List<CQSSC_3X_HZZS_Info> Collection = new List<CQSSC_3X_HZZS_Info>();
             var list = this.QueryGameChart<CQSSC_3X_HZZS_Info>(string.Format("QueryCQSSC_3X_HZZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_3X_HZZS_Info>();
@@ -1444,9 +1444,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 奇偶走势
         /// </summary>
-        public CQSSC_3X_JOZS_InfoCollection QueryCQSSC_3X_JOZS(int index)
+        public List<CQSSC_3X_JOZS_Info> QueryCQSSC_3X_JOZS(int index)
         {
-            CQSSC_3X_JOZS_InfoCollection Collection = new CQSSC_3X_JOZS_InfoCollection();
+            List<CQSSC_3X_JOZS_Info> Collection = new List<CQSSC_3X_JOZS_Info>();
             var list = this.QueryGameChart<CQSSC_3X_JOZS_Info>(string.Format("QueryCQSSC_3X_JOZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_3X_JOZS_Info>();
@@ -1468,9 +1468,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 跨度
         /// </summary>
-        public CQSSC_3X_KD_InfoCollection QueryCQSSC_3X_KD(int index)
+        public List<CQSSC_3X_KD_Info> QueryCQSSC_3X_KD(int index)
         {
-            CQSSC_3X_KD_InfoCollection Collection = new CQSSC_3X_KD_InfoCollection();
+            List<CQSSC_3X_KD_Info> Collection = new List<CQSSC_3X_KD_Info>();
             var list = this.QueryGameChart<CQSSC_3X_KD_Info>(string.Format("QueryCQSSC_3X_KD_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_3X_KD_Info>();
@@ -1492,9 +1492,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 质合走势
         /// </summary>
-        public CQSSC_3X_ZHZS_InfoCollection QueryCQSSC_3X_ZHZS(int index)
+        public List<CQSSC_3X_ZHZS_Info> QueryCQSSC_3X_ZHZS(int index)
         {
-            CQSSC_3X_ZHZS_InfoCollection Collection = new CQSSC_3X_ZHZS_InfoCollection();
+            List<CQSSC_3X_ZHZS_Info> Collection = new List<CQSSC_3X_ZHZS_Info>();
             var list = this.QueryGameChart<CQSSC_3X_ZHZS_Info>(string.Format("QueryCQSSC_3X_ZHZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_3X_ZHZS_Info>();
@@ -1516,9 +1516,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 重庆3星组选走势
         /// </summary>
-        public CQSSC_3X_ZuXZS_InfoCollection QueryCQSSC_3X_ZuXZS(int index)
+        public List<CQSSC_3X_ZuXZS_Info> QueryCQSSC_3X_ZuXZS(int index)
         {
-            CQSSC_3X_ZuXZS_InfoCollection Collection = new CQSSC_3X_ZuXZS_InfoCollection();
+            List<CQSSC_3X_ZuXZS_Info> Collection = new List<CQSSC_3X_ZuXZS_Info>();
             var list = this.QueryGameChart<CQSSC_3X_ZuXZS_Info>(string.Format("QueryCQSSC_3X_ZuXZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_3X_ZuXZS_Info>();
@@ -1540,9 +1540,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 重庆3星直选走势
         /// </summary>
-        public CQSSC_3X_ZXZS_InfoCollection QueryCQSSC_3X_ZXZS(int index)
+        public List<CQSSC_3X_ZXZS_Info> QueryCQSSC_3X_ZXZS(int index)
         {
-            CQSSC_3X_ZXZS_InfoCollection Collection = new CQSSC_3X_ZXZS_InfoCollection();
+            List<CQSSC_3X_ZXZS_Info> Collection = new List<CQSSC_3X_ZXZS_Info>();
             var list = this.QueryGameChart<CQSSC_3X_ZXZS_Info>(string.Format("QueryCQSSC_3X_ZXZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_3X_ZXZS_Info>();
@@ -1588,9 +1588,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 和值走势
         /// </summary>
-        public CQSSC_5X_HZZS_InfoCollection QueryCQSSC_5X_HZZS(int index)
+        public List<CQSSC_5X_HZZS_Info> QueryCQSSC_5X_HZZS(int index)
         {
-            CQSSC_5X_HZZS_InfoCollection Collection = new CQSSC_5X_HZZS_InfoCollection();
+            List<CQSSC_5X_HZZS_Info> Collection = new List<CQSSC_5X_HZZS_Info>();
             var list = this.QueryGameChart<CQSSC_5X_HZZS_Info>(string.Format("QueryCQSSC_5X_HZZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_5X_HZZS_Info>();
@@ -1612,9 +1612,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 重庆5星基本走势
         /// </summary>
-        public CQSSC_5X_JBZS_InfoCollection QueryCQSSC_5X_JBZS(int index)
+        public List<CQSSC_5X_JBZS_Info> QueryCQSSC_5X_JBZS(int index)
         {
-            CQSSC_5X_JBZS_InfoCollection Collection = new CQSSC_5X_JBZS_InfoCollection();
+            List<CQSSC_5X_JBZS_Info> Collection = new List<CQSSC_5X_JBZS_Info>();
             var list = this.QueryGameChart<CQSSC_5X_JBZS_Info>(string.Format("QueryCQSSC_5X_JBZS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_5X_JBZS_Info>();
@@ -1636,9 +1636,9 @@ namespace KaSon.FrameWork.ORM.Helper.WinNumber
         /// <summary>
         /// 大小单双
         /// </summary>
-        public CQSSC_DXDS_InfoCollection QueryCQSSC_DXDS(int index)
+        public List<CQSSC_DXDS_Info> QueryCQSSC_DXDS(int index)
         {
-            CQSSC_DXDS_InfoCollection Collection = new CQSSC_DXDS_InfoCollection();
+            List<CQSSC_DXDS_Info> Collection = new List<CQSSC_DXDS_Info>();
             var list = this.QueryGameChart<CQSSC_DXDS_Info>(string.Format("QueryCQSSC_DXDS_{0}", index), () =>
             {
                 var infoList = new List<CQSSC_DXDS_Info>();
