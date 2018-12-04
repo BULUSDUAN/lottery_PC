@@ -404,11 +404,9 @@ namespace Lottery.Api.Controllers
                 {
                     case SchemeSource.NewAndroid:
                         userInfo.ComeFrom = "NewAndroid";
-                        userInfo.RegType = "Android";
                         break;
                     case SchemeSource.NewIphone:
                         userInfo.ComeFrom = "NewIOS";
-                        userInfo.RegType = "Ios";
                         break;
                     case SchemeSource.Wap:
                         userInfo.ComeFrom = "NewTOUCH";
