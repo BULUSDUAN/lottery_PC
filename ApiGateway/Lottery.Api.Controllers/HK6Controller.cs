@@ -76,10 +76,17 @@ namespace Lottery.Api.Controllers
         }
         public async Task<IActionResult> ReCharge([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity) {
             CommonActionResult result = new CommonActionResult();
+            var p = JsonHelper.Decode(entity.Param);
+            string userToken = p.UserToken;
+            string userDisplayName = p.userDisplayName;
+            decimal Money = p.Money;
+            if (string.IsNullOrEmpty(userToken))
+                throw new Exception("userToken不能为空");
+            string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
             var param = new Dictionary<string, object>();
-            param.Add("userId", "10005");//laofan
-            param.Add("userDisplayName", "laofan");
-            param.Add("Money", 100.0M);
+            param.Add("userId", userid);//laofan
+            param.Add("userDisplayName", userDisplayName);
+            param.Add("Money", Money);
             
             result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "hk6dataservice/data/recharge");
             //hk6dataservice/data/recharge
@@ -88,6 +95,27 @@ namespace Lottery.Api.Controllers
             return Json(result);
         }
 
+        public async Task<IActionResult> GameWithdraw([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            CommonActionResult result = new CommonActionResult();
+            var p = JsonHelper.Decode(entity.Param);
+            string userToken = p.UserToken;
+            string userDisplayName = p.userDisplayName;
+            decimal Money = p.Money;
+            if (string.IsNullOrEmpty(userToken))
+                throw new Exception("userToken不能为空");
+            string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+            var param = new Dictionary<string, object>();
+            param.Add("userId", userid);//laofan
+            param.Add("userDisplayName", userDisplayName);
+            param.Add("Money", Money);
+
+            result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "hk6dataservice/data/GameWithdraw");
+            //hk6dataservice/data/recharge
+
+
+            return Json(result);
+        }
 
     }
 }

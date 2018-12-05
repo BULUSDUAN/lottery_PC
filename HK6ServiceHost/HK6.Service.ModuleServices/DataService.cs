@@ -135,5 +135,86 @@ namespace HK6.ModuleBaseServices
 
             return Task.FromResult(result);
         }
+        public Task<CommonActionResult> GameWithdraw(string userId, string userDisplayName, decimal Money)
+        {
+            CommonActionResult result = new CommonActionResult();
+            // var omb = DB.CreateQuery<C_User_Balance>().Where(b => b.UserId == userId).FirstOrDefault();
+
+           
+
+            var orderId = BettingHelper.GetGameTransferId();
+            var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
+            if (mb.gameMoney < Money)
+            {
+                result.Message = $"提款金币不足金额：{Money}";
+                result.IsSuccess = false;
+                return Task.FromResult(result);
+            }
+            DB.Begin();
+            LettoryDB.Begin();
+
+
+
+            try
+            {
+                BusinessHelper.Payin_To_BalanceByDB(LettoryDB, AccountType.Bonus, BusinessHelper.FundCategory_GameWithdraw, userId, orderId, Money,
+               string.Format("游戏提款成功，金额：{0:N2}元存入账号", Money));
+                if (mb == null)
+                {
+                    //创建一个用户
+                    result.Message = $"系统错误,用户不存在{userId}";
+                    result.IsSuccess = false;
+                    return Task.FromResult(result);
+                }
+                else
+                {
+                    DB.GetDal<blast_member>().Update(b => new blast_member
+                    {
+                        gameMoney = b.gameMoney - Money,
+                        updateTime = DateTime.Now
+                    }, b => b.userId == userId);
+
+                }
+              
+
+                C_Game_Transfer ctransfer = new C_Game_Transfer()
+                {
+                    OrderId = orderId,
+                    RequestMoney = Money,
+                    RequestTime = DateTime.Now,
+                    Status = (int)FillMoneyStatus.Success,
+                    UserId = userId,
+                    TransferType = (int)GameTransferType.Withdraw,
+                    UserDisplayName = userDisplayName,
+                    GameType = (int)MGGameType.LHC
+                };
+                LettoryDB.GetDal<C_Game_Transfer>().Add(ctransfer);
+
+                LettoryDB.Commit();
+                DB.Commit();
+                result.Message = "提款金币成功";
+                result.IsSuccess = true;
+
+
+            }
+            catch (Exception ex)
+            {
+                LettoryDB.Rollback();
+                DB.Rollback();
+                result.Message = "系统错误";
+                result.IsSuccess = false;
+                result.ReturnValue = ex.ToString();
+            }
+            finally
+            {
+                DB.Dispose();
+                LettoryDB.Dispose();
+
+            }
+
+            return Task.FromResult(result);
+        }
+
+
     }
 }
