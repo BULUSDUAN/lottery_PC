@@ -11,10 +11,10 @@ namespace EntityModel
     //   ª·‘±±Ì
     ///</summary>
     [ProtoContract]
-    [Entity("blast_lhc_member", Type = EntityType.Table)]
-    public class blast_lhc_member
+    [Entity("blast_member", Type = EntityType.Table)]
+    public class blast_member
     { 
-        public blast_lhc_member()
+        public blast_member()
         {
         
         }

@@ -46,7 +46,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
             if (tm.Trim() == orderdetail.AnteCodes.Trim()) {
-                DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
+                DB.GetDal<blast_member>().Update(b => new blast_member
                 {
                     gameMoney = b.gameMoney + winMoney
                 }, b => b.userId == userId.ToString());

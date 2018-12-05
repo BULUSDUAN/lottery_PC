@@ -1666,7 +1666,11 @@ namespace EntityModel.Enum
         /// </summary>
         /// 
         [Remark("SMF")]
-        SMF = 1
+        SMF = 1,
+
+        LHC =10
+
+
     }
 
     #region 枚举标签

@@ -35,5 +35,10 @@ namespace EntityModel.Communication
         /// </summary>
         [ProtoMember(3)]
         public string ReturnValue { get; set; }
+
+        /// <summary>
+        /// 200 正确，502 系统错误，403
+        /// </summary>
+        public int StatuCode { get; set; }
     }
 }

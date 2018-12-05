@@ -151,7 +151,7 @@ namespace HK6.ModuleBaseServices
                 {
                     totalmoney = totalmoney+ basemoney * (item.multiple==0?1: item.multiple);
                 }
-                var LoginUser = DB.CreateQuery<blast_lhc_member>().Where(b => b.userId == info.userId).FirstOrDefault();
+                var LoginUser = DB.CreateQuery<blast_member>().Where(b => b.userId == info.userId).FirstOrDefault();
                
                 if (LoginUser == null || LoginUser.gameMoney<totalmoney)
                 {
@@ -246,7 +246,7 @@ namespace HK6.ModuleBaseServices
                 #region 扣款
 
                 decimal gameMoney = (LoginUser.gameMoney - totalmoney);
-                DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member()
+                DB.GetDal<blast_member>().Update(b => new blast_member()
                 {
                     gameMoney = gameMoney
                 }, b => b.userId == info.userId);

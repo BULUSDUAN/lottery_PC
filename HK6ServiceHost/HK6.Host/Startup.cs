@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Kason.Sg.Core.Caching.Configurations;
 using Kason.Sg.Core.CPlatform.Utilities;
-using Kason.Sg.Core.EventBusKafka.Configurations;
+
 
 namespace SystemManage.Host
 {

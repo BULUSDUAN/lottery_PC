@@ -69,7 +69,49 @@ namespace KaSon.FrameWork.ORM.Helper
             var sql = string.Format("update [C_User_Balance] set {0},[Version]+=1 FROM  C_User_Balance where userid='{1}'", string.Join(",", setList), userId);
             DB.CreateSQLQuery(sql).Excute();
         }
+        public void PayToUserBalanceByDB(IDbProvider _DB, string userId, params PayDetail[] array)
+        {
+            if (array.Length <= 0)
+                return;
 
+            var setList = new List<string>();
+            foreach (var item in array)
+            {
+                switch (item.AccountType)
+                {
+                    case AccountType.Bonus:
+                        setList.Add(string.Format(" [BonusBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        //  DB.GetDal<>
+                        break;
+                    case AccountType.Freeze:
+                        setList.Add(string.Format(" [FreezeBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.Commission:
+                        setList.Add(string.Format(" [CommissionBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.FillMoney:
+                        setList.Add(string.Format(" [FillMoneyBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.Experts:
+                        setList.Add(string.Format(" [ExpertsBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.RedBag:
+                        setList.Add(string.Format(" [RedBagBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.UserGrowth:
+                        setList.Add(string.Format(" [UserGrowth]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.DouDou:
+                        setList.Add(string.Format(" [CurrentDouDou]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            var sql = string.Format("update [C_User_Balance] set {0},[Version]+=1 FROM  C_User_Balance where userid='{1}'", string.Join(",", setList), userId);
+            _DB.CreateSQLQuery(sql).Excute();
+        }
         /// <summary>
         /// 查询用户余额
         /// </summary>

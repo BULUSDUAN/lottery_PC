@@ -71,10 +71,10 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
 
-            //添加用户金币 加钱  blast_lhc_member
+            //添加用户金币 加钱  blast_member
             if (winCount > 0)
             {
-                DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
+                DB.GetDal<blast_member>().Update(b => new blast_member
                 {
                     gameMoney = b.gameMoney + winMoney
                 }, b => b.userId== userId.ToString());

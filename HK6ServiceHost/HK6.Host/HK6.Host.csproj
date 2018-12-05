@@ -31,6 +31,9 @@
     <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
     <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
     <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.PlugIn\KaSon.FrameWork.PlugIn.csproj" />
+    <ProjectReference Include="..\HK6.ModuleBaseServices\HK6.ModuleBaseServices.csproj" />
+    <ProjectReference Include="..\HK6.Service.IModuleServices\HK6.Service.IModuleServices.csproj" />
+    <ProjectReference Include="..\HK6.Service.ModuleServices\HK6.Service.ModuleServices.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,12 +69,6 @@
     </Reference>
     <Reference Include="Kason.Sg.Core.DotNetty">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.DotNetty.dll</HintPath>
-    </Reference>
-    <Reference Include="Kason.Sg.Core.EventBusKafka">
-      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.EventBusKafka.dll</HintPath>
-    </Reference>
-    <Reference Include="Kason.Sg.Core.EventBusRabbitMQ">
-      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.EventBusRabbitMQ.dll</HintPath>
     </Reference>
     <Reference Include="Kason.Sg.Core.Log4net">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Log4net.dll</HintPath>

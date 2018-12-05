@@ -74,7 +74,20 @@ namespace Lottery.Api.Controllers
 
             return Json(result);
         }
+        public async Task<IActionResult> ReCharge([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity) {
+            CommonActionResult result = new CommonActionResult();
+            var param = new Dictionary<string, object>();
+            param.Add("userId", "10005");//laofan
+            param.Add("userDisplayName", "laofan");
+            param.Add("Money", 100.0M);
+            
+            result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "hk6dataservice/data/recharge");
+            //hk6dataservice/data/recharge
 
-    
+
+            return Json(result);
+        }
+
+
     }
 }
