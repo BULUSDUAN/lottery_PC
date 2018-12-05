@@ -131,11 +131,13 @@ namespace EntityModel
         [Field("issueDate")]
         public string issueDate { get; set; }
 
-  
+        [Field("anteSchemeId")]
+        public string anteSchemeId { get; set; }
 
         /// <summary>
         /// 每个码对应的赔率
         /// </summary>
+        [Field("OddsArr")]
         public string OddsArr { get; set; }
 
     }

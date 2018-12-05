@@ -69,7 +69,7 @@ namespace HK6.ModuleBaseServices
 
                 DB.Begin();
              
-                BaseOrderHelper bh = new BaseOrderHelper(DB);
+               // BaseOrderHelper bh = new BaseOrderHelper();
                 foreach (blast_bet_orderdetail item in list)
                 {
                     //开始结算
@@ -78,12 +78,8 @@ namespace HK6.ModuleBaseServices
                     string zm = winNum.Split('|')[0];
                     var p = playedlist.Where(b=>b.playId==item.playId).FirstOrDefault();
 
-                    IOrderHelper winHelper = bh.GetOrderHelper(item);
-
+                    BaseOrderHelper winHelper = BaseOrderHelper.GetOrderHelper(item, DB);
                     winHelper.WinMoney(item, winNum);
-
-
-
 
                 }
                 DB.Commit();

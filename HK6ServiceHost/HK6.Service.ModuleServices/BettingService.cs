@@ -215,6 +215,8 @@ namespace HK6.ModuleBaseServices
                     //    var oddslist=codeList.Where(b => arr.Contains(b.AnteCode) && b.playid == p.id).Select(b=>b.odds).ToArray();
                     //    AnteCodes = String.Join(",", oddslist);
                     //}
+
+                  
                     blast_bet_orderdetail orderDetail = new blast_bet_orderdetail()
                     {
                         SchemeId = keyLine,
@@ -229,6 +231,9 @@ namespace HK6.ModuleBaseServices
                         CreateTime = DateTime.Now
 
                     };
+                    BaseOrderHelper winHelper = BaseOrderHelper.GetOrderHelper(orderDetail, DB);
+                    orderDetail.AnteCodes = winHelper.BuildCodes(item.content);
+
                     orderDetailList.Add(orderDetail);
 
                 }

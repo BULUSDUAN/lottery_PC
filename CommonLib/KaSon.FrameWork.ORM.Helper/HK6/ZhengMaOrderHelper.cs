@@ -8,14 +8,15 @@ namespace KaSon.FrameWork.ORM.Helper
     /// <summary>
     /// 生肖正肖 liangmian
     /// </summary>
-   public class ZhengMaOrderHelper : IOrderHelper
+   public class ZhengMaOrderHelper : BaseOrderHelper
     {
         private IDbProvider DB = null;
        
-        public ZhengMaOrderHelper(IDbProvider _DB) {
+        public ZhengMaOrderHelper(IDbProvider _DB) 
+        {
             DB = _DB;
         }
-        public void WinMoney(blast_bet_orderdetail orderdetail, string winNum) {
+        public override void WinMoney(blast_bet_orderdetail orderdetail, string winNum) {
             string tm = winNum.Split('|')[1];
             string zm = winNum.Split('|')[0];
            
@@ -54,6 +55,10 @@ namespace KaSon.FrameWork.ORM.Helper
              
 
 
+        }
+        public override string BuildCodes(string content)
+        {
+            return content;
         }
     }
 }
