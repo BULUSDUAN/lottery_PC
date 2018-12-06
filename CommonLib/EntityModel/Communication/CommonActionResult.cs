@@ -36,6 +36,8 @@ namespace EntityModel.Communication
         [ProtoMember(3)]
         public string ReturnValue { get; set; }
 
+        public object ReturnObj { get; set; }
+
         /// <summary>
         /// 200 正确，502 系统错误，403
         /// </summary>

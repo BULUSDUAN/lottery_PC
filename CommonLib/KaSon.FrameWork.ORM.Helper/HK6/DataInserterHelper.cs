@@ -56,7 +56,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 blast_lhc_antecode ant = new blast_lhc_antecode()
                 {
                     sort = index,
-                    enable = 1,
+                    enable = true,
                     fag = item.fag,
                     AnteCode = item.fag,
                     displayName = item.Name,
@@ -93,7 +93,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 blast_lhc_antecode ant = new blast_lhc_antecode()
                 {
                     sort = i,
-                    enable = 1,
+                    enable = true,
                     fag = code,
                     AnteCode = code,
                     displayName = code,
@@ -136,7 +136,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 blast_lhc_antecode ant = new blast_lhc_antecode()
                 {
                     sort = i,
-                    enable = 1,
+                    enable = true,
                     fag = code,
                     AnteCode = code,
                     displayName = item,
@@ -174,7 +174,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 blast_lhc_antecode ant = new blast_lhc_antecode()
                 {
                     sort = i,
-                    enable = 1,
+                    enable = true,
                     fag = fagsarr[index],
                     AnteCode = fagsarr[index],
                     displayName = item,
@@ -234,7 +234,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 blast_lhc_antecode ant = new blast_lhc_antecode()
                 {
                     sort = i,
-                    enable = 1,
+                    enable =true,
                     fag = fagsarr[index],
                     AnteCode = fagsarr[index],
                     displayName = item,
@@ -290,7 +290,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 blast_lhc_antecode ant = new blast_lhc_antecode()
                 {
                     sort = i,
-                    enable = 1,
+                    enable = true,
                     fag = fagsarr[index],
                     AnteCode = fagsarr[index],
                     displayName = item,
@@ -347,7 +347,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 blast_lhc_antecode ant = new blast_lhc_antecode()
                 {
                     sort = i,
-                    enable = 1,
+                    enable = true,
                     fag = fagsarr[index],
                     AnteCode = fagsarr[index],
                     displayName = item,
@@ -398,7 +398,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 blast_lhc_antecode ant = new blast_lhc_antecode()
                 {
                     sort = i,
-                    enable = 1,
+                    enable = true,
                     fag = fagsarr[index],
                     AnteCode = fagsarr[index],
                     displayName = item,

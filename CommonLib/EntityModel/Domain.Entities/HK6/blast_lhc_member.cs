@@ -35,8 +35,8 @@ namespace EntityModel
         // 
         ///</summary>
         [ProtoMember(2)]
-        [Field("loginName")]
-        public string loginName { get; set; }
+        [Field("displayName")]
+        public string displayName { get; set; }
 
         /// <summary>
         /// сно╥╫П╤Н

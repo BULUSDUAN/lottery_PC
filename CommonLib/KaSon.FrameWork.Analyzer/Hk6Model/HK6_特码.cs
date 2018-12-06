@@ -38,10 +38,10 @@ namespace  KaSon.FrameWork.Analyzer.Model
         public static  bool BetingCodeCheck(HK6Sports_OrderInfo order)
         {
 
-            if (string.IsNullOrEmpty(order.betingCode))
-            {
-                return false;
-            }
+            //if (string.IsNullOrEmpty(order.betingCode))
+            //{
+            //    return false;
+            //}
             //继续完善
             return true;
         }

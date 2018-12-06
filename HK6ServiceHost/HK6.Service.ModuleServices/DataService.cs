@@ -41,6 +41,7 @@ namespace HK6.ModuleBaseServices
         private readonly Repository _rep;
         private IDbProvider DB = null;
         private IDbProvider LettoryDB = null;
+        CommonActionResult result = new CommonActionResult();
         public DataService(Repository repository)
         {
            // _Log = log;
@@ -51,7 +52,7 @@ namespace HK6.ModuleBaseServices
 
         public Task<CommonActionResult> ReCharge(string userId, string userDisplayName, decimal Money)
         {
-            CommonActionResult result = new CommonActionResult();
+          //  CommonActionResult result = new CommonActionResult();
             // var omb = DB.CreateQuery<C_User_Balance>().Where(b => b.UserId == userId).FirstOrDefault();
 
             //if (omb.FillMoneyBalance < Money)
@@ -137,7 +138,7 @@ namespace HK6.ModuleBaseServices
         }
         public Task<CommonActionResult> GameWithdraw(string userId, string userDisplayName, decimal Money)
         {
-            CommonActionResult result = new CommonActionResult();
+          
             // var omb = DB.CreateQuery<C_User_Balance>().Where(b => b.UserId == userId).FirstOrDefault();
 
            
@@ -215,6 +216,47 @@ namespace HK6.ModuleBaseServices
             return Task.FromResult(result);
         }
 
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> UserInfo(string userId) {
 
+            var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
+            result.ReturnObj = mb;
+            result.IsSuccess = false;
+            if (mb==null)
+            {
+                result.IsSuccess = false;
+                result.ReturnObj = new blast_member();
+            }
+
+            return Task.FromResult(result);
+        }
+
+        /// <summary>
+        /// 获取订单信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> OrderInfo(string userId)
+        {
+
+            var list = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.userId == userId).ToList();
+            result.ReturnObj = list;
+            result.IsSuccess = true;
+            if (list.Count<=0)
+            {
+                result.IsSuccess = false;
+            }
+            //if (list)
+            //{
+            //    result.ReturnObj = new blast_member();
+            //}
+
+
+            return Task.FromResult(result);
+        }
     }
 }

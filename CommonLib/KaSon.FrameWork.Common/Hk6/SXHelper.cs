@@ -138,7 +138,7 @@ namespace KaSon.FrameWork.Common.Hk6
             while (true)
             {
                 temp = temp - 12;
-                if (temp <=1)
+                if (temp >=1)
                 {
                     if (temp >= 10)
                     {

@@ -58,16 +58,17 @@ namespace Lottery.Api.Controllers
                 redBagMoney = 0;
 
           
-            if (string.IsNullOrEmpty(totalMoney.ToString()))
-                throw new Exception("投注金额不能为空");
-            if (string.IsNullOrEmpty(userToken))
-                throw new Exception("userToken不能为空");
-            if (totalMoney > 200000)
-                throw new Exception("您的购买金额不能超过20万");
+            //if (string.IsNullOrEmpty(totalMoney.ToString()))
+            //    throw new Exception("投注金额不能为空");
+            //if (string.IsNullOrEmpty(userToken))
+            //    throw new Exception("userToken不能为空");
+            //if (totalMoney > 200000)
+            //    throw new Exception("您的购买金额不能超过20万");
            // var IsSaveOrder = "0";//是否为保存订单，0：不是保存订单；1：保存订单；
           
-            string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+            //string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
             var param = new Dictionary<string, object>();
+            //p.userId = userid;
             param.Add("info", p);
 
             var result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "HK6Betting/Betting/Betting");
@@ -116,6 +117,44 @@ namespace Lottery.Api.Controllers
 
             return Json(result);
         }
+        public async Task<IActionResult> UserInfo([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity) {
+            CommonActionResult result = new CommonActionResult();
+            var p = JsonHelper.Decode(entity.Param);
+            string userToken = p.UserToken;
+           
+            if (string.IsNullOrEmpty(userToken))
+                throw new Exception("userToken不能为空");
+            string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+            var param = new Dictionary<string, object>();
+            param.Add("userId", userid);//laofan
+       
+            result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "hk6dataservice/data/UserInfo");
+            //hk6dataservice/data/recharge
 
+
+            return Json(result);
+
+        }
+
+
+        public async Task<IActionResult> OrderInfo([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            CommonActionResult result = new CommonActionResult();
+            var p = JsonHelper.Decode(entity.Param);
+            string userToken = p.UserToken;
+
+            if (string.IsNullOrEmpty(userToken))
+                throw new Exception("userToken不能为空");
+            string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+            var param = new Dictionary<string, object>();
+            param.Add("userId", userid);//laofan
+
+            result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "hk6dataservice/data/OrderInfo");
+            //hk6dataservice/data/recharge
+
+
+            return Json(result);
+
+        }
     }
 }

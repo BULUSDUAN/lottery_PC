@@ -36,8 +36,12 @@ namespace HK6.ModuleBaseServices
         [Service(Date = "2018-9-3", Director = "kason", Name = "充值")]
          Task<CommonActionResult> ReCharge(string userId, string userDisplayName, decimal Money);
 
-        [Service(Date = "2018-9-3", Director = "kason", Name = "充值")]
+        [Service(Date = "2018-9-3", Director = "kason", Name = "提现")]
         Task<CommonActionResult> GameWithdraw(string userId, string userDisplayName, decimal Money);
 
-    }
+        [Service(Date = "2018-9-3", Director = "kason", Name = "用户信息")]
+         Task<CommonActionResult> UserInfo(string userId);
+        [Service(Date = "2018-9-3", Director = "kason", Name = "订单信息")]
+        Task<CommonActionResult> OrderInfo(string userId);
+        }
 }
