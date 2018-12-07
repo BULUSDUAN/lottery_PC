@@ -22,6 +22,7 @@ using KaSon.FrameWork.ORM;
 using EntityModel;
 using KaSon.FrameWork.Analyzer.Hk6Model;
 using KaSon.FrameWork.Common.Utilities;
+using KaSon.FrameWork.Common.Hk6;
 
 namespace HK6.ModuleBaseServices
 {
@@ -234,7 +235,52 @@ namespace HK6.ModuleBaseServices
 
             return Task.FromResult(result);
         }
+        public Task<CommonActionResult> PlayInfo()
+        {
+            //playGroup
+            var pmb = DB.CreateQuery<blast_played>().ToList();
+            var mb = DB.CreateQuery<blast_lhc_antecode>().ToList();
+            var q =from b in mb
+                   group b by b.playid into g
+                    select g;
 
+            List<playGroup> pgroupList = new List<playGroup>();
+            int pid = 0;
+            var pp = new blast_played();
+            var antecodeList = new List<blast_lhc_antecode>();
+            foreach (var item in q)
+            {
+                pid = item.Key;
+                pp = pmb.Where(b => b.playId == pid).FirstOrDefault();
+                antecodeList = item.ToList<blast_lhc_antecode>().OrderBy(b => b.sort).ToList();
+                switch (pp.name.Trim())
+                {
+                    case "正肖":
+                    case "特肖":
+                    case "一肖":
+                        foreach (var item1 in antecodeList)
+                        {
+                            item1.CodeContent =string.Join(",", SXHelper.ScodeArr(int.Parse(item1.AnteCode)));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                playGroup pg = new playGroup()
+                {
+                    CodeList = antecodeList,
+                    Key = item.Key + "",
+                    Name = pp.name
+                };
+                pgroupList.Add(pg);
+            }
+
+
+            result.ReturnObj = pgroupList;
+            result.IsSuccess = false;
+
+            return Task.FromResult(result);
+        }
         /// <summary>
         /// 获取订单信息
         /// </summary>

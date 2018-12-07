@@ -1,22 +1,4 @@
 {
-  "userId": 10005,
-  "lotteryId": 28,
-  "issueNo": 2018140,
-  "winStop": true,
-  "orderList": [
-    {
-      "playId": 39,
-      "content": "01",
 
-      "unitPrice": 2,
-      "totalPrice": 2
-    },
-    {
-      "playId": 39,
-      "content": "02",
-      "unitPrice": 2,
-      "totalPrice": 2
-    }
-  ],
-  "planList": []
+  "UserToken": "K7GZHuyxw7nYkxq3oWPZr8NwsXxbp4O98bv/bolh56yJrwE+TK/vuSI7mH97L7uT"
 }
