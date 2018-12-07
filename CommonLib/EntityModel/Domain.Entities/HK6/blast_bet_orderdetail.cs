@@ -32,7 +32,7 @@ namespace EntityModel
         public string SchemeId { get; set; }
 
         [Field("userId")]
-        public int userId { get; set; }
+        public string userId { get; set; }
 
 
         /// <summary>
@@ -57,26 +57,26 @@ namespace EntityModel
         [Field("anteCodeNum")]
         public int anteCodeNum { get; set; }
         [Field("BeiSu")]
-        public int BeiSu { get; set; }
+        public int BeiSu { get; set; } = 1;
 
         /// <summary>
         // 投注号
         ///</summary>
-        [ProtoMember(7)]
+      
         [Field("AnteCodes")]
         public string AnteCodes { get; set; }
         /// <summary>
         // 赔率
         ///</summary>
-        [ProtoMember(8)]
-        [Field("Odds")]
-        public decimal Odds { get; set; }
+        //[ProtoMember(8)]
+        //[Field("Odds")]
+        //public decimal Odds { get; set; }
         /// <summary>
         // BonusStatus 改为2中奖,3不中奖为期号过,4和局
         ///</summary>
         [ProtoMember(9)]
         [Field("BonusStatus")]
-        public int BonusStatus { get; set; }
+        public int BonusStatus { get; set; } = 0;
 
         /// <summary>
         // 中奖金额
@@ -131,11 +131,13 @@ namespace EntityModel
         [Field("issueDate")]
         public string issueDate { get; set; }
 
-  
+        [Field("anteSchemeId")]
+        public string anteSchemeId { get; set; }
 
         /// <summary>
         /// 每个码对应的赔率
         /// </summary>
+        [Field("OddsArr")]
         public string OddsArr { get; set; }
 
     }

@@ -22,7 +22,7 @@ namespace KaSon.FrameWork.Analyzer.Hk6Model
             foreach (var item in info.orderList)
             {
 
-                var played = playedList.Where(b => b.id == item.playedId).FirstOrDefault();
+                var played = playedList.Where(b => b.id == item.playId).FirstOrDefault();
                 if (played != null)
                 {
                     //每一种玩法检查最小金额

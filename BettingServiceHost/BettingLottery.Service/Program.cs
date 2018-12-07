@@ -32,6 +32,7 @@ using KaSon.FrameWork.ORM.Provider;
 using KaSon.FrameWork.ORM.Helper;
 using KaSon.FrameWork.ORM.Helper.AutoTask;
 using KaSon.FrameWork.Common.KaSon;
+using kason.Sg.Core.Dbbase;
 
 namespace BettingLottery.Service.Host
 {
@@ -58,6 +59,7 @@ namespace BettingLottery.Service.Host
                     builder.AddMicroService(option =>
                     {
                         option.AddServiceRuntime()
+                         .UseDbBase()
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
@@ -130,10 +132,12 @@ namespace BettingLottery.Service.Host
 
             //清空打印
 
-            ConsoleHelper.Clear();
+            //ConsoleHelper.Clear();
 
             //这个要保留，认主线程一直运行
-            Console.ReadLine();
+
+            string msg= Console.ReadLine();
+            
 
 
         }

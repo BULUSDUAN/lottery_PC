@@ -2,29 +2,30 @@
 <ArrayOfOrmConfigInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <OrmConfigInfo>
     <DbKey>SqlServer.Default</DbKey>
-    <ConnectionString>Data Source=10.0.3.6;Initial Catalog=ECP_Core_New;User ID=sa;Password=x123456789;Connection Timeout=20;Pooling=true;Max Pool Size=40000;Min Pool Size=1000;</ConnectionString>
+    <ConnectionString>Data Source=10.0.3.6;Initial Catalog=ECP_Core_New;User ID=sa;Password=x123456789;Connection Timeout=10;</ConnectionString>
     <Provider>SqlServer</Provider>
     <CommandTimeout>300</CommandTimeout>
     <FactoryType>KaSon.ORM.Factory.SQLServerFactory</FactoryType>
-    <OpenMinLink>true</OpenMinLink>
-  
+    <smstemplate>
+      <Reg>115541377</Reg>
+      <ForGet>115541377</ForGet>
+      <Other>115556353</Other>
+    </smstemplate>
   </OrmConfigInfo>
   <OrmConfigInfo>
     <DbKey>SqlServer.ECP_LottertData</DbKey>
-    <ConnectionString>Data Source=10.0.3.6;Initial Catalog=ECP_LotteryData;User ID=sa;Password=x123456789;Connection Timeout=20;Pooling=true;Max Pool Size=40000;Min Pool Size=1000;</ConnectionString>
+    <ConnectionString>Data Source=10.0.3.6;Initial Catalog=ECP_LotteryData;User ID=sa;Password=x123456789;Connection Timeout=10;</ConnectionString>
     <Provider>SqlServer</Provider>
     <CommandTimeout>300</CommandTimeout>
     <FactoryType>KaSon.ORM.Factory.SQLServerFactory</FactoryType>
-    <OpenMinLink>true</OpenMinLink>
     <smstemplate>
     </smstemplate>
   </OrmConfigInfo>
   <OrmConfigInfo>
-	<DbKey>MySql.Default</DbKey>
-	<ConnectionString>server=10.0.3.27;user=root;database=testdb;port=3306;password=a123456;SSL Mode=none</ConnectionString>
-	<Provider>MySql</Provider>
-	<CommandTimeout>300</CommandTimeout>
-	<FactoryType>KaSon.ORM.Factory.MySqlFactory</FactoryType>
-    <OpenMinLink>true</OpenMinLink>
-</OrmConfigInfo>
+    <DbKey>MySql.Default</DbKey>
+    <ConnectionString>server=10.0.3.6;user=root;database=ecp_newcai;port=3306;password=!@#123456abc;SSL Mode=none</ConnectionString>
+    <Provider>MySql</Provider>
+    <CommandTimeout>300</CommandTimeout>
+    <FactoryType>KaSon.ORM.Factory.MySqlFactory</FactoryType>
+  </OrmConfigInfo>
 </ArrayOfOrmConfigInfo>

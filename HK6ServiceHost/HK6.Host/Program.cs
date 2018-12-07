@@ -11,7 +11,7 @@ using Kason.Sg.Core.CPlatform.Utilities;
 using Kason.Sg.Core.DotNetty;
 
 //using Kason.Sg.Core.EventBusKafka;
-using Kason.Sg.Core.EventBusRabbitMQ;
+
 using Kason.Sg.Core.Log4net;
 using Kason.Sg.Core.Nlog;
 using Kason.Sg.Core.ProxyGenerator;
@@ -19,7 +19,7 @@ using Kason.Sg.Core.ServiceHosting;
 using Kason.Sg.Core.ServiceHosting.Internal.Implementation;
 using System;
 using System.Text;
-using Kason.Sg.Core.EventBusRabbitMQ.Configurations;
+
 using KaSon.FrameWork.Common;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration.Memory;
@@ -37,6 +37,7 @@ using MongoDB.Driver;
 using System.Threading.Tasks;
 using System.Threading;
 using kason.Sg.Core.Dbbase;
+using KaSon.FrameWork.ORM;
 
 namespace SystemManage.Host
 {
@@ -85,11 +86,7 @@ namespace SystemManage.Host
                         .AddRelateService()
                         .AddConfigurationWatch()
                         //option.UseZooKeeperManager(new ConfigInfo("127.0.0.1:2181"));
-                        .UseConsulManager(new Kason.Sg.Core.Consul.Configurations.ConfigInfo(consul,
-                    "HK6Ser/serviceRoutes/",
-                    "HK6Ser/serviceSubscribers/",
-                    "HK6Ser/serviceCommands/",
-                    "HK6Ser/serviceCaches/")
+                        .UseConsulManager(new Kason.Sg.Core.Consul.Configurations.ConfigInfo(consul )
                         { ReloadOnChange = true })
                         .UseDotNettyTransport()
                         //.UseRabbitMQTransport()
@@ -134,7 +131,7 @@ namespace SystemManage.Host
                 //build.AddCacheFile("cacheSettings.json", optional: false, reloadOnChange: true))
                   .Configure(build =>
                 build.AddCPlatformJSON(HostSettings))
-                .UseProxy()
+                //.UseProxy()
                 .UseStartup<Startup>()
                 .Build();
 
@@ -153,12 +150,19 @@ namespace SystemManage.Host
                 KaSon.FrameWork.Common.InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
                 // AutoTaskServices.AutoCaheData(int.Parse(Sports_SchemeJobSeconds));
             }
+           //var gdb= ServiceLocator.GetService<IDbProvider>();
+
+           // var db = gdb.Init("MySql.Default", true);
+           // DataInserterHelper dh = new DataInserterHelper(db);
+           // dh.ADDDATA();
+
+
             //初始化内存期号 k_todo，可用彩种类型,执行一次
             // LotteryGameManager lotGm = new LotteryGameManager();
             // lotGm.StartInitData();
             //new Sports_Business().Test();
-           
-          
+
+
             //Task.Factory.StartNew(async delegate
             //{
             //    var obj = await Start_ConfigGameType(Auto_CollectSettings);

@@ -18,17 +18,12 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 玩法标签
         /// </summary>
-        public string playedTag { get; set; }
+
 
         /// <summary>
-        /// 玩法编号
+        /// 玩法编号playId
         /// </summary>
-        public int playedId { get; set; }
-
-        /// <summary>
-        /// 投注号码
-        /// </summary>
-        public string betingCode { get; set; }
+        public int playId { get; set; }
 
         /// <summary>
         /// 每一注总价
@@ -48,7 +43,7 @@ namespace EntityModel.CoreModel
         /// <summary>
         /// 倍数
         /// </summary>
-        public int multiple { get; set; }
+        public int multiple { get; set; } = 1;
 
         /// <summary>
         /// 期号

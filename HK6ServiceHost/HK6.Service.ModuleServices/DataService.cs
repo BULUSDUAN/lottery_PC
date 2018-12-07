@@ -1,0 +1,308 @@
+﻿using Kason.Sg.Core.CPlatform.Ioc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using EntityModel.Enum;
+using EntityModel.CoreModel;
+using KaSon.FrameWork.Common;
+
+using EntityModel.Communication;
+using KaSon.FrameWork.ORM.Helper;
+using KaSon.FrameWork.Common.Sport;
+using System.Threading.Tasks;
+
+using System.IO;
+using System.Text;
+using EntityModel.ExceptionExtend;
+
+using System.Linq;
+using Kason.Sg.Core.ProxyGenerator;
+using Microsoft.Extensions.Logging;
+using KaSon.FrameWork.ORM;
+using EntityModel;
+using KaSon.FrameWork.Analyzer.Hk6Model;
+using KaSon.FrameWork.Common.Utilities;
+using KaSon.FrameWork.Common.Hk6;
+
+namespace HK6.ModuleBaseServices
+{
+    /// <summary>
+    /// 管理系统服务
+    /// </summary>
+    [ModuleName("Data")]
+    public class DataService : KgBaseService, IDataService
+    {
+
+        //IKgLog log = null;
+        //public BettingService()
+        //{
+        //    log = new Log4Log();
+        //}
+        ILogger<BettingService> _Log;
+        private readonly Repository _rep;
+        private IDbProvider DB = null;
+        private IDbProvider LettoryDB = null;
+        CommonActionResult result = new CommonActionResult();
+        public DataService(Repository repository)
+        {
+           // _Log = log;
+            this._rep = repository;
+            DB = _rep.LDB.Init("MySql.Default",true);
+            LettoryDB = _rep.DB.Init("SqlServer.Default", true);
+        }
+
+        public Task<CommonActionResult> ReCharge(string userId, string userDisplayName, decimal Money)
+        {
+          //  CommonActionResult result = new CommonActionResult();
+            // var omb = DB.CreateQuery<C_User_Balance>().Where(b => b.UserId == userId).FirstOrDefault();
+
+            //if (omb.FillMoneyBalance < Money)
+            //{
+            //    result.Message = "余额不知请充值";
+            //    result.IsSuccess = false;
+            //    return Task.FromResult(result);
+            //}
+            var orderId = BettingHelper.GetGameTransferId();
+            var msg = string.Format("游戏充值订单号{0}", orderId);
+            var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
+            DB.Begin();
+            LettoryDB.Begin();
+
+          
+
+            try
+            {
+                BusinessHelper.Payout_To_FrozenByDB(LettoryDB, BusinessHelper.FundCategory_GameRecharge, userId, orderId, Money, msg, "GameTransfer", "");
+                if (mb == null)
+                {
+                    //创建一个用户
+                    blast_member tmb = new blast_member()
+                    {
+                        createTime = DateTime.Now,
+                        updateTime = DateTime.Now,
+                        gameMoney = Money,
+                        userId = userId,
+                         
+
+
+                    };
+
+                    DB.GetDal<blast_member>().Add(tmb);
+                }
+                else {
+                    DB.GetDal<blast_member>().Update(b=>new blast_member
+                    {
+                         gameMoney=b.gameMoney+Money,
+                         updateTime=DateTime.Now
+                    },b=>b.userId==userId);
+
+                }
+               
+                
+                C_Game_Transfer ctransfer = new C_Game_Transfer()
+                {
+                    TransferType = (int)GameTransferType.Recharge,
+                    GameType = (int)MGGameType.LHC,
+                    Status = (int)FillMoneyStatus.Success,
+                    UserId = userId,
+                    RequestTime = DateTime.Now,
+                    UpdateTime = DateTime.Now,
+                    OrderId = orderId,
+                    UserDisplayName = userDisplayName,
+                    RequestMoney = Money
+
+                };
+                LettoryDB.GetDal<C_Game_Transfer>().Add(ctransfer);
+
+                LettoryDB.Commit();
+                DB.Commit();
+                result.Message = "充值成功";
+                result.IsSuccess = true;
+              
+
+            }
+            catch (Exception ex)
+            {
+                LettoryDB.Rollback();
+                DB.Rollback();
+                result.Message = "系统错误";
+                result.IsSuccess = false;
+                result.ReturnValue = ex.ToString();
+            }
+            finally {
+                DB.Dispose();
+                LettoryDB.Dispose();
+
+            }
+
+            return Task.FromResult(result);
+        }
+        public Task<CommonActionResult> GameWithdraw(string userId, string userDisplayName, decimal Money)
+        {
+          
+            // var omb = DB.CreateQuery<C_User_Balance>().Where(b => b.UserId == userId).FirstOrDefault();
+
+           
+
+            var orderId = BettingHelper.GetGameTransferId();
+            var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
+            if (mb.gameMoney < Money)
+            {
+                result.Message = $"提款金币不足金额：{Money}";
+                result.IsSuccess = false;
+                return Task.FromResult(result);
+            }
+            DB.Begin();
+            LettoryDB.Begin();
+
+
+
+            try
+            {
+                BusinessHelper.Payin_To_BalanceByDB(LettoryDB, AccountType.Bonus, BusinessHelper.FundCategory_GameWithdraw, userId, orderId, Money,
+               string.Format("游戏提款成功，金额：{0:N2}元存入账号", Money));
+                if (mb == null)
+                {
+                    //创建一个用户
+                    result.Message = $"系统错误,用户不存在{userId}";
+                    result.IsSuccess = false;
+                    return Task.FromResult(result);
+                }
+                else
+                {
+                    DB.GetDal<blast_member>().Update(b => new blast_member
+                    {
+                        gameMoney = b.gameMoney - Money,
+                        updateTime = DateTime.Now
+                    }, b => b.userId == userId);
+
+                }
+              
+
+                C_Game_Transfer ctransfer = new C_Game_Transfer()
+                {
+                    OrderId = orderId,
+                    RequestMoney = Money,
+                    RequestTime = DateTime.Now,
+                    Status = (int)FillMoneyStatus.Success,
+                    UserId = userId,
+                    TransferType = (int)GameTransferType.Withdraw,
+                    UserDisplayName = userDisplayName,
+                    GameType = (int)MGGameType.LHC
+                };
+                LettoryDB.GetDal<C_Game_Transfer>().Add(ctransfer);
+
+                LettoryDB.Commit();
+                DB.Commit();
+                result.Message = "提款金币成功";
+                result.IsSuccess = true;
+
+
+            }
+            catch (Exception ex)
+            {
+                LettoryDB.Rollback();
+                DB.Rollback();
+                result.Message = "系统错误";
+                result.IsSuccess = false;
+                result.ReturnValue = ex.ToString();
+            }
+            finally
+            {
+                DB.Dispose();
+                LettoryDB.Dispose();
+
+            }
+
+            return Task.FromResult(result);
+        }
+
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> UserInfo(string userId) {
+
+            var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
+            result.ReturnObj = mb;
+            result.IsSuccess = false;
+            if (mb==null)
+            {
+                result.IsSuccess = false;
+                result.ReturnObj = new blast_member();
+            }
+
+            return Task.FromResult(result);
+        }
+        public Task<CommonActionResult> PlayInfo()
+        {
+            //playGroup
+            var pmb = DB.CreateQuery<blast_played>().ToList();
+            var mb = DB.CreateQuery<blast_lhc_antecode>().ToList();
+            var q =from b in mb
+                   group b by b.playid into g
+                    select g;
+
+            List<playGroup> pgroupList = new List<playGroup>();
+            int pid = 0;
+            var pp = new blast_played();
+            var antecodeList = new List<blast_lhc_antecode>();
+            foreach (var item in q)
+            {
+                pid = item.Key;
+                pp = pmb.Where(b => b.playId == pid).FirstOrDefault();
+                antecodeList = item.ToList<blast_lhc_antecode>().OrderBy(b => b.sort).ToList();
+                switch (pp.name.Trim())
+                {
+                    case "正肖":
+                    case "特肖":
+                    case "一肖":
+                        foreach (var item1 in antecodeList)
+                        {
+                            item1.CodeContent =string.Join(",", SXHelper.ScodeArr(int.Parse(item1.AnteCode)));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                playGroup pg = new playGroup()
+                {
+                    CodeList = antecodeList,
+                    Key = item.Key + "",
+                    Name = pp.name
+                };
+                pgroupList.Add(pg);
+            }
+
+
+            result.ReturnObj = pgroupList;
+            result.IsSuccess = false;
+
+            return Task.FromResult(result);
+        }
+        /// <summary>
+        /// 获取订单信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> OrderInfo(string userId)
+        {
+
+            var list = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.userId == userId).ToList();
+            result.ReturnObj = list;
+            result.IsSuccess = true;
+            if (list.Count<=0)
+            {
+                result.IsSuccess = false;
+            }
+            //if (list)
+            //{
+            //    result.ReturnObj = new blast_member();
+            //}
+
+
+            return Task.FromResult(result);
+        }
+    }
+}

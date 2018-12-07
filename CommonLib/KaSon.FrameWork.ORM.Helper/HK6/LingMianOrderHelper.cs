@@ -10,14 +10,15 @@ namespace KaSon.FrameWork.ORM.Helper
     /// <summary>
     /// 生肖正肖 liangmian
     /// </summary>
-   public class LingMianOrderHelper : IOrderHelper
+   public class LingMianOrderHelper : BaseOrderHelper
     {
         private IDbProvider DB = null;
        
-        public LingMianOrderHelper(IDbProvider _DB) {
+        public LingMianOrderHelper(IDbProvider _DB) 
+        {
             DB = _DB;
         }
-        public void WinMoney(blast_bet_orderdetail orderdetail, string winNum) {
+        public override void WinMoney(blast_bet_orderdetail orderdetail, string winNum) {
             string tm = winNum.Split('|')[1];
             string zm = winNum.Split('|')[0];
             string antuCode = orderdetail.AnteCodes;
@@ -59,8 +60,32 @@ namespace KaSon.FrameWork.ORM.Helper
                         isWin = true;
                     }
                     break;
-                case "HDa"://和大
-                   arr=  tm.ToCharArray();
+                case "THDan"://特合单
+                    arr = tm.ToCharArray();
+                    sum = 0;
+                    foreach (var item in arr)
+                    {
+                        sum += int.Parse(item + "");
+                    }
+                    if (sum %2!=0 )
+                    {
+                        isWin = true;
+                    }
+                    break;
+                case "THShuang"://特合双
+                    arr = tm.ToCharArray();
+                    sum = 0;
+                    foreach (var item in arr)
+                    {
+                        sum += int.Parse(item + "");
+                    }
+                    if (sum % 2 == 0 )
+                    {
+                        isWin = true;
+                    }
+                    break;
+                case "THDa"://特合大
+                    arr =  tm.ToCharArray();
                      sum = 0;
                     foreach (var item in arr)
                     {
@@ -71,8 +96,8 @@ namespace KaSon.FrameWork.ORM.Helper
                         isWin = true;
                     }
                     break;
-                case "HXiao"://和小
-                     arr = tm.ToCharArray();
+                case "THX"://特合小
+                    arr = tm.ToCharArray();
                     sum = 0;
                     foreach (var item in arr)
                     {
@@ -83,7 +108,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         isWin = true;
                     }
                     break;
-                case "WDa"://尾大
+                case "TWDa"://尾大
                      arr = tm.ToCharArray();
                     sum = 0;
                       sum = int.Parse(arr[1] + "");
@@ -92,7 +117,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         isWin = true;
                     }
                     break;
-                case "WXiao"://尾小
+                case "TWXiao"://尾小
                     arr = tm.ToCharArray();
                     sum = 0;
                     sum = int.Parse(arr[1] + "");
@@ -128,7 +153,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     break;
-                case "TQXiao"://特地肖
+                case "TQXiao"://特前肖
                               //鼠（11 23 35 47）、虎（09 21 33 45）、蛇（06 18 30 42）、羊（04 16 28 40）、鸡（02 14 26 38）、狗（01 13 25 37 49）
 
 
@@ -141,7 +166,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     break;
-                case "THXiao"://特地肖
+                case "THXiao"://特后肖
                               //鼠（11 23 35 47）、虎（09 21 33 45）、蛇（06 18 30 42）、羊（04 16 28 40）、鸡（02 14 26 38）、狗（01 13 25 37 49）
 
 
@@ -167,8 +192,8 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     break;
-                case "TYeXiao"://特地肖
-                                //鼠（11 23 35 47）、虎（09 21 33 45）、蛇（06 18 30 42）、羊（04 16 28 40）、鸡（02 14 26 38）、狗（01 13 25 37 49）
+                case "TYXiao"://特野肖
+                              //鼠（11 23 35 47）、虎（09 21 33 45）、蛇（06 18 30 42）、羊（04 16 28 40）、鸡（02 14 26 38）、狗（01 13 25 37 49）
 
 
                     xiaoList = (from b in xm.YeShou
@@ -207,7 +232,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     }
 
                     break;
-                case "ZongSuan"://总单
+                case "ZongShuan"://总单
                                //鼠（11 23 35 47）、虎（09 21 33 45）、蛇（06 18 30 42）、羊（04 16 28 40）、鸡（02 14 26 38）、狗（01 13 25 37 49）
 
                     if (sum % 2 == 0)
@@ -220,7 +245,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
             }
 
-            int userId = orderdetail.userId;
+            string userId = orderdetail.userId;
            
             decimal winMoney =0;
             int orderDetailId = orderdetail.id;
@@ -230,7 +255,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (isWin)
             {
                 decimal Odds = decimal.Parse(orderdetail.OddsArr);
-                 winMoney = orderdetail.unitPrice * Odds;
+                 winMoney = orderdetail.unitPrice * Odds * orderdetail.BeiSu;
                 BonusStatus = 2;
             }
            
@@ -246,7 +271,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
             if (tm.Trim() == orderdetail.AnteCodes.Trim()) {
-                DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
+                DB.GetDal<blast_member>().Update(b => new blast_member
                 {
                     gameMoney = b.gameMoney + winMoney
                 }, b => b.userId == userId.ToString());
@@ -255,6 +280,10 @@ namespace KaSon.FrameWork.ORM.Helper
              
 
 
+        }
+        public override string BuildCodes(string content)
+        {
+            return content;
         }
     }
 }

@@ -27,6 +27,7 @@ using KaSon.FrameWork.Common.ExceptionEx;
 using System.Diagnostics;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Expansion;
+using System.Text.Encodings.Web;
 
 namespace Lottery.Api.Controllers
 {
@@ -89,7 +90,7 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId,
                     Value = new
                     {
-                        UserToken = loginInfo.UserToken,
+                        UserToken =loginInfo.UserToken.UrlEncode(),
                         DisplayName = loginInfo.DisplayName,
                         LoginName = loginInfo.LoginName,
                         UserId = loginInfo.UserId,
@@ -515,7 +516,7 @@ namespace Lottery.Api.Controllers
                             MsgId = entity.MsgId,
                             Value = new
                             {
-                                UserToken = loginInfo.UserToken,
+                                UserToken = loginInfo.UserToken.UrlEncode(),
                                 DisplayName = loginInfo.DisplayName,
                                 LoginName = loginInfo.LoginName,
                                 UserId = loginInfo.UserId,
@@ -1412,7 +1413,7 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId,
                     Value = new
                     {
-                        UserToken = userToken,
+                        UserToken = userToken.UrlEncode(),
                         DisplayName = bindInfo.DisplayName,
                         LoginName = bindInfo.DisplayName,
                         UserId = bindInfo.UserId,

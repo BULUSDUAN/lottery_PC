@@ -8,18 +8,19 @@ namespace KaSon.FrameWork.ORM.Helper
     /// <summary>
     /// 生肖正肖
     /// </summary>
-   public class YiXiaoOrderHelper : IOrderHelper
+   public class YiXiaoOrderHelper : BaseOrderHelper
     {
         private IDbProvider DB = null;
        
-        public YiXiaoOrderHelper(IDbProvider _DB) {
+        public YiXiaoOrderHelper(IDbProvider _DB) 
+        {
             DB = _DB;
         }
-        public void WinMoney(blast_bet_orderdetail orderdetail, string winNum) {
+        public override void WinMoney(blast_bet_orderdetail orderdetail, string winNum) {
             string tm = winNum.Split('|')[1];
             string zm = winNum.Split('|')[0];
             var codeArr = orderdetail.AnteCodes.Trim().Split(',');
-            int userId = orderdetail.userId;
+            string userId = orderdetail.userId;
             int winCount = 0;
             List<string> winCodeList = new List<string>();
             foreach (var code in codeArr)
@@ -36,7 +37,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //计算中奖号码
             decimal Odds = decimal.Parse(orderdetail.OddsArr);
             winCount = 1;
-            decimal winMoney = orderdetail.unitPrice * (Odds-1)* winCount+ orderdetail.unitPrice;
+            decimal winMoney = (orderdetail.unitPrice * (Odds-1)* winCount+ orderdetail.unitPrice) * orderdetail.BeiSu;
 
             int orderDetailId = orderdetail.id;
 
@@ -70,10 +71,10 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
 
-            //添加用户金币 加钱  blast_lhc_member
+            //添加用户金币 加钱  blast_member
             if (winCount > 0)
             {
-                DB.GetDal<blast_lhc_member>().Update(b => new blast_lhc_member
+                DB.GetDal<blast_member>().Update(b => new blast_member
                 {
                     gameMoney = b.gameMoney + winMoney
                 }, b => b.userId== userId.ToString());
@@ -81,5 +82,6 @@ namespace KaSon.FrameWork.ORM.Helper
               
 
         }
+       
     }
 }

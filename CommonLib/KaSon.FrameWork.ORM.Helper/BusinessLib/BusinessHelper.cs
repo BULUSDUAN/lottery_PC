@@ -1445,6 +1445,57 @@ namespace KaSon.FrameWork.ORM.Helper
             Console.WriteLine("result:" + result);
         }
 
+        public static void PayToUserBalanceByDB(IDbProvider DB, string userId, params PayDetail[] array)
+        {
+            if (array.Length <= 0)
+                return;
+
+            var setList = new List<string>();
+          
+          //  where = b => b.UserId == userId;
+            foreach (var item in array)
+            {
+                switch (item.AccountType)
+                {
+                    case AccountType.Bonus:
+                        setList.Add(string.Format(" [BonusBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        //update = b => new C_User_Balance {
+                        //    BonusBalance= GetOperFun(item.PayType),                            item.PayMoney)
+                        //};
+
+                        break;
+                    case AccountType.Freeze:
+                        setList.Add(string.Format(" [FreezeBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.Commission:
+                        setList.Add(string.Format(" [CommissionBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.FillMoney:
+                        setList.Add(string.Format(" [FillMoneyBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.Experts:
+                        setList.Add(string.Format(" [ExpertsBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.RedBag:
+                        setList.Add(string.Format(" [RedBagBalance]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.UserGrowth:
+                        setList.Add(string.Format(" [UserGrowth]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    case AccountType.DouDou:
+                        setList.Add(string.Format(" [CurrentDouDou]{0}{1}", GetOperFun(item.PayType), item.PayMoney));
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            var sql = string.Format("update [C_User_Balance] set {0},[Version]+=1 where userid='{1}'", string.Join(",", setList), userId);
+            // DB.CreateSQLExc();
+            var result = DB.CreateSQLQuery(sql).Excute();
+            Console.WriteLine("result:" + result);
+        }
+
         private static string GetOperFun(EntityModel.Enum.PayType p)
         {
             switch (p)
@@ -1549,6 +1600,104 @@ namespace KaSon.FrameWork.ORM.Helper
             fundManager.AddFundDetail(FundDetail);
             //balanceManager.UpdateUserBalance(userBalance);
             PayToUserBalance(userId, payDetailList.ToArray());
+        }
+
+
+        public static void Payin_To_BalanceByDB(IDbProvider DB, AccountType accountType, string category, string userId, string orderId, decimal payMoney, string summary, RedBagCategory redBag = RedBagCategory.FillMoney, string operatorId = "")
+        {
+            //if (accountType == AccountType.Freeze)
+            //    throw new LogicException("退款账户不能为冻结账户");
+
+            if (payMoney <= 0M)
+                return;
+            //throw new LogicException("转入金额不能小于0.");
+
+            var balanceManager = new LocalLoginBusiness();
+           // var fundManager = new FundManager();
+            //查询帐户余额
+
+            var userBalance = DB.CreateQuery<C_User_Balance>().Where(p => p.UserId == userId).FirstOrDefault();
+           // balanceManager.QueryUserBalanceInfo(userId);
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
+
+            var payDetailList = new List<PayDetail>();
+            payDetailList.Add(new PayDetail
+            {
+                AccountType = accountType,
+                PayMoney = payMoney,
+                PayType = EntityModel.Enum.PayType.Payin,
+            });
+            var before = 0M;
+            var after = 0M;
+            switch (accountType)
+            {
+                case AccountType.Bonus:
+                    before = userBalance.BonusBalance;
+                    after = userBalance.BonusBalance + payMoney;
+                    //userBalance.BonusBalance = after;
+                    break;
+                case AccountType.Commission:
+                    before = userBalance.CommissionBalance;
+                    after = userBalance.CommissionBalance + payMoney;
+                    //userBalance.CommissionBalance = after;
+                    break;
+                case AccountType.FillMoney:
+                    before = userBalance.FillMoneyBalance;
+                    after = userBalance.FillMoneyBalance + payMoney;
+                    //userBalance.FillMoneyBalance = after;
+                    break;
+                case AccountType.Experts:
+                    before = userBalance.ExpertsBalance;
+                    after = userBalance.ExpertsBalance + payMoney;
+                    //userBalance.ExpertsBalance = after;
+                    break;
+                case AccountType.RedBag:
+                    before = userBalance.RedBagBalance;
+                    after = userBalance.RedBagBalance + payMoney;
+                    //userBalance.RedBagBalance = after;
+                    var RedBagDetail = new C_Fund_RedBagDetail
+                    {
+                        CreateTime = DateTime.Now,
+                        OrderId = orderId,
+                        RedBagCategory = (int)redBag,
+                        RedBagMoney = payMoney,
+                        UserId = userId,
+                    };
+                    DB.GetDal<C_Fund_RedBagDetail>().Add(RedBagDetail);
+                   // fundManager.AddRedBagDetail(RedBagDetail);
+                    break;
+                case AccountType.Freeze:
+                    before = userBalance.FreezeBalance;
+                    after = userBalance.FreezeBalance + payMoney;
+                    //userBalance.FreezeBalance = after;
+                    break;
+                case AccountType.CPS:
+                    before = userBalance.CPSBalance;
+                    after = userBalance.CPSBalance + payMoney;
+                    //userBalance.CPSBalance = after;
+                    break;
+                default:
+                    throw new LogicException("不支持的账户类型 - " + accountType);
+            }
+            var FundDetail = new C_Fund_Detail
+            {
+                Category = category,
+                CreateTime = DateTime.Now,
+                KeyLine = orderId,
+                OrderId = orderId,
+                AccountType = (int)accountType,
+                PayMoney = payMoney,
+                PayType = (int)EntityModel.Enum.PayType.Payin,
+                Summary = summary,
+                UserId = userId,
+                BeforeBalance = before,
+                AfterBalance = after,
+                OperatorId = string.IsNullOrEmpty(operatorId) ? userId : operatorId,
+            };
+            DB.GetDal<C_Fund_Detail>().Add(FundDetail);
+            // fundManager.AddFundDetail(FundDetail);
+            //balanceManager.UpdateUserBalance(userBalance);
+            PayToUserBalanceByDB(DB,userId, payDetailList.ToArray());
         }
 
         /// <summary>
@@ -2150,6 +2299,182 @@ namespace KaSon.FrameWork.ORM.Helper
 
             //balanceManager.UpdateUserBalance(userBalance);
             balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
+        }
+
+        public static void Payout_To_FrozenByDB(IDbProvider DB,  string category, string userId, string orderId, decimal payoutMoney, string summary, string place, string password)
+        {
+            if (payoutMoney <= 0M)
+                throw new LogicException("消费金额不能小于0.");
+            //查询帐户余额
+           var balanceManager = new UserBalanceManager();
+           // var fundManager = new FundManager();
+            //资金密码判断
+            var userBalance = DB.CreateQuery<C_User_Balance>().Where(p => p.UserId == userId).FirstOrDefault();// balanceManager.QueryUserBalance(userId);
+            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
+            if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
+            {
+                if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
+                {
+                    password = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
+                    if (!userBalance.Password.ToUpper().Equals(password))
+                    {
+                        throw new LogicException("资金密码输入错误");
+                    }
+                }
+            }
+            var totalMoney = userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance + userBalance.RedBagBalance;
+            if (totalMoney < payoutMoney)
+                throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
+
+            var payDetailList = new List<PayDetail>();
+            payDetailList.Add(new PayDetail
+            {
+                AccountType = AccountType.Freeze,
+                PayType = PayType.Payin,
+                PayMoney = payoutMoney,
+            });
+            //冻结资金明细
+       
+            DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+            {
+                Category = category,
+                CreateTime = DateTime.Now,
+                KeyLine = orderId,
+                OrderId = orderId,
+                AccountType = (int)AccountType.Freeze,
+                PayMoney = payoutMoney,
+                PayType = (int)PayType.Payin,
+                Summary = summary,
+                UserId = userId,
+                BeforeBalance = userBalance.FreezeBalance,
+                AfterBalance = userBalance.FreezeBalance + payoutMoney,
+                OperatorId = userId,
+            });
+
+            //userBalance.FreezeBalance += payoutMoney;
+
+            #region 按顺序消费用户余额
+
+            var currentPayout = 0M;
+            if (userBalance.FillMoneyBalance > 0M && payoutMoney > 0M)
+            {
+                //充值金额参与支出
+                currentPayout = userBalance.FillMoneyBalance >= payoutMoney ? payoutMoney : userBalance.FillMoneyBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.FillMoney,
+                    PayMoney = currentPayout,
+                    PayType = PayType.Payout,
+                });
+                DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.FillMoney,
+                    PayMoney = currentPayout,
+                    PayType = (int)PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.FillMoneyBalance,
+                    AfterBalance = userBalance.FillMoneyBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.FillMoneyBalance -= currentPayout;
+            }
+            if (userBalance.BonusBalance > 0M && payoutMoney > 0M)
+            {
+                //奖金参与支付
+                currentPayout = userBalance.BonusBalance >= payoutMoney ? payoutMoney : userBalance.BonusBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Bonus,
+                    PayMoney = currentPayout,
+                    PayType = PayType.Payout,
+                });
+                DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Bonus,
+                    PayMoney = currentPayout,
+                    PayType = (int)PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.BonusBalance,
+                    AfterBalance = userBalance.BonusBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.BonusBalance -= currentPayout;
+            }
+            if (userBalance.CommissionBalance > 0M && payoutMoney > 0M)
+            {
+                //佣金参与支付
+                currentPayout = userBalance.CommissionBalance >= payoutMoney ? payoutMoney : userBalance.CommissionBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Commission,
+                    PayMoney = currentPayout,
+                    PayType = PayType.Payout,
+                });
+                DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Commission,
+                    PayMoney = currentPayout,
+                    PayType = (int)PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.CommissionBalance,
+                    AfterBalance = userBalance.CommissionBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.CommissionBalance -= currentPayout;
+            }
+            if (userBalance.ExpertsBalance > 0M && payoutMoney > 0M)
+            {
+                //名家参与支付
+                currentPayout = userBalance.ExpertsBalance >= payoutMoney ? payoutMoney : userBalance.ExpertsBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Experts,
+                    PayMoney = currentPayout,
+                    PayType = PayType.Payout,
+                });
+                DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Experts,
+                    PayMoney = currentPayout,
+                    PayType = (int)PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.ExpertsBalance,
+                    AfterBalance = userBalance.ExpertsBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.ExpertsBalance -= currentPayout;
+            }
+            if (payoutMoney > 0M)
+                throw new LogicException("用户余额不足");
+
+            #endregion
+
+            //balanceManager.UpdateUserBalance(userBalance);
+            balanceManager.PayToUserBalanceByDB(DB,userId, payDetailList.ToArray());
         }
 
         public static void CheckDisableGame(string gameCode, string gameType)

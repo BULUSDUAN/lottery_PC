@@ -52,7 +52,7 @@ namespace Lottery.Api.Controllers.CommonFilterActtribute
                     //   Microsoft.AspNetCore.Mvc.JsonResult 
                     // context.Result
                 }
-                else if (resp.Code == ResponseCode.失败 && !resp.Message.Contains(cxin))
+                else if (resp != null && resp.Code == ResponseCode.失败 && !resp.Message.Contains(cxin))
                 {
                     var temp = resp.Message.Split(cyuan);
                     //  string url = context.HttpContext.Request.Path;
