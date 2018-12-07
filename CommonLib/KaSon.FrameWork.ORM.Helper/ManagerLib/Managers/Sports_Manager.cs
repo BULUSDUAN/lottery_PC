@@ -948,22 +948,29 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.GetDal<C_SingleScheme_AnteCode>().Add(entity);
         }
 
-        public List<UserCurrentOrderInfo> QueryUserCurrentOrderList(string userId, string gameCode, int pageIndex, int pageSize)
+        public UserCurrentOrderInfoCollection QueryUserCurrentOrderList(string userId, string gameCode, int pageIndex, int pageSize)
         {
-          
-            var list = new List<UserCurrentOrderInfo>();
-         
+
+            var listCount = new UserCurrentOrderInfoCollection();
+
             var query = SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "P_Order_QueryUserCurrentOrderList").SQL;
-            list=DB.CreateSQLQuery(query).SetString("UserId", userId)
+            listCount.List = DB.CreateSQLQuery(query).SetString("UserId", userId)
                 .SetString("GameCode", gameCode)
                 .SetInt("PageIndex", pageIndex)
                 .SetInt("PageSize", pageSize)
                 .List<UserCurrentOrderInfo>().ToList();
-                   //.AddInParameter("UserId", userId)
-                   //.AddInParameter("GameCode", gameCode)
-                   //.AddInParameter("PageIndex", pageIndex)
-                   //.AddInParameter("PageSize", pageSize)
-                   //.AddOutParameter("TotalCount", "Int32");
+        
+
+            var queryCount= SqlModule.UserSystemModule.FirstOrDefault(x => x.Key == "P_Order_QueryUserCurrentOrderListCount").SQL;
+            listCount.TotalCount = DB.CreateSQLQuery(queryCount).SetString("UserId", userId)
+                .SetString("GameCode", gameCode)
+                .Excute();
+
+            //.AddInParameter("UserId", userId)
+            //.AddInParameter("GameCode", gameCode)
+            //.AddInParameter("PageIndex", pageIndex)
+            //.AddInParameter("PageSize", pageSize)
+            //.AddOutParameter("TotalCount", "Int32");
 
             //var dt = query.GetDataTable(out outputs);
             //totalCount = (int)outputs["TotalCount"];
@@ -985,7 +992,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //        JoinType = TogetherJoinType.Join,
             //    });
             //}
-            return list;
+            return listCount;
         }
 
         public C_Sports_AnteCode QueryAnteCode(string schemeId, string macthId, string gameType)

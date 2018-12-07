@@ -12,6 +12,7 @@
       "Key": "P_JCLQ_GetLastOddsByMatchId_RFSF",
       "Desc": "查询竞彩篮球赔率",
       "ParamDesc": "@MatchId",
+      "P_Order_QueryUserCurrentOrderList": null,
       "Director": "kason",
       "SQL": "SELECT * FROM T_JCLQ_Odds_RFSF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCLQ_Odds_RFSF WHERE [MatchId] = @MatchId ) T ON O.[Id]=T.[MaxId]",
       "Remark": "备注"
@@ -341,9 +342,19 @@
       "Desc": "用户订单",
       "ParamDesc": "@UserId:UserId,@GameCode:GameCode,@PageIndex:PageIndex,@PageSize:PageSize;",
       "Director": "renjun",
-      "SQL": "SELECT FROM C_OrderDetail o LEFT JOIN C_User_Register u ON o.UserId=u.UserId LEFT JOIN C_Sports_Together t ON o.SchemeId=t.SchemeId WHERE o.ProgressStatus=10 AND o.TicketStatus=90 AND o.UserId=@UserId AND  (@GameCode='' OR o.GameCode=@GameCode) AND o.SchemeType=3 SELECT t.UserId,t.DisplayName,t.HideDisplayNameCount,t.SchemeId,t.CurrentIssuseNumber,t.GameCode,t.GameTypeName,t.SchemeType,t.TotalMoney,t.Progress FROM(SELECT ROW_NUMBER() OVER(ORDER BY o.CreateTime DESC) AS [RowNumber], u.UserId,u.DisplayName,u.HideDisplayNameCount,o.SchemeId,o.CurrentIssuseNumber,o.GameCode,o.GameTypeName,o.SchemeType,o.TotalMoney,t.Progress FROM C_OrderDetail o LEFT JOIN C_User_Register u ON o.UserId=u.UserId LEFT JOIN C_Sports_Together t ON o.SchemeId=t.SchemeId WHERE o.ProgressStatus=10 AND o.TicketStatus=90 AND o.UserId=@UserId AND (@GameCode='' OR o.GameCode=@GameCode) AND o.SchemeType=3 )as t WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "SQL": "SELECT t.UserId,t.DisplayName,t.HideDisplayNameCount,t.SchemeId,t.CurrentIssuseNumber,t.GameCode,t.GameTypeName,t.SchemeType,t.TotalMoney,t.Progress FROM(SELECT ROW_NUMBER() OVER(ORDER BY o.CreateTime DESC) AS [RowNumber], u.UserId,u.DisplayName,u.HideDisplayNameCount,o.SchemeId,o.CurrentIssuseNumber,o.GameCode,o.GameTypeName,o.SchemeType,o.TotalMoney,t.Progress FROM C_OrderDetail o LEFT JOIN C_User_Register u ON o.UserId=u.UserId LEFT JOIN C_Sports_Together t ON o.SchemeId=t.SchemeId WHERE o.ProgressStatus=10 AND o.TicketStatus=90 AND o.UserId=@UserId AND (@GameCode='' OR o.GameCode=@GameCode) AND o.SchemeType=3 )as t WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
       "Remark": ""
     },
+
+    {
+      "key": "P_Order_QueryUserCurrentOrderListCount",
+      "Desc": "用户订单",
+      "ParamDesc": "@UserId:UserId,@GameCode:GameCode",
+      "Director": "renjun",
+      "SQL": "SELECT COUNT(1) FROM C_OrderDetail o LEFT JOIN C_User_Register u ON o.UserId=u.UserId LEFT JOIN C_Sports_Together t ON o.SchemeId=t.SchemeId WHERE o.ProgressStatus=10 AND o.TicketStatus=90 AND o.UserId=@UserId AND  (@GameCode='' OR o.GameCode=@GameCode) AND o.SchemeType=3",
+      "Remark": ""
+    },
+
     {
       "key": "P_Report_GuoGuanTongJi_Sport",
       "Desc": "过关统计",

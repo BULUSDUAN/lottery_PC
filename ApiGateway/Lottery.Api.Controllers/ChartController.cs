@@ -39,7 +39,7 @@ namespace Lottery.Api.Controllers
                         result.Value = await _serviceProxyProvider.Invoke<List<SSQ_C3_Info>>(param, "api/Data/QueryCache_SSQ_C3_Info");
                         break;
                     case "hezhi":
-                        result.Value = await _serviceProxyProvider.Invoke<SSQ_HeZhi_InfoCollection>(param, "api/Data/QueryCache_SSQ_HeZhi_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_HeZhi_Info>>(param, "api/Data/QueryCache_SSQ_HeZhi_Info");
                         break;
                     case "jiou":
                         result.Value = await _serviceProxyProvider.Invoke<List<SSQ_JiOu_Info>>(param, "api/Data/QueryCache_SSQ_JiOu_Info");
@@ -63,7 +63,7 @@ namespace Lottery.Api.Controllers
                         result.Value = await _serviceProxyProvider.Invoke<List<SSQ_KuaDu_SW_Info>>(param, "api/Data/QueryCache_SSQ_KuaDu_SW_Info");
                         break;
                     case "zhihe":
-                        result.Value = await _serviceProxyProvider.Invoke<SSQ_ZhiHe_InfoCollection>(param, "api/Data/QueryCache_SSQ_ZhiHe_Info");
+                        result.Value = await _serviceProxyProvider.Invoke<List<SSQ_ZhiHe_Info>>(param, "api/Data/QueryCache_SSQ_ZhiHe_Info");
                         break;
                     default:
                         break;
@@ -258,7 +258,7 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("length", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "hz" : (string)p.id;
                 switch (id)
                 {
@@ -518,7 +518,7 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("length", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
                 switch (id)
                 {
@@ -579,7 +579,7 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("index", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("length", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "jbzs" : (string)p.id;
                 switch (id)
                 {
@@ -895,7 +895,7 @@ namespace Lottery.Api.Controllers
             {
                 var param = new Dictionary<string, object>();
                 var p = JsonHelper.Decode(entity.Param);
-                param.Add("pageSize", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
+                param.Add("length", string.IsNullOrEmpty((string)p.pageSize) ? 0 : int.Parse((string)p.pageSize));
                 var id = string.IsNullOrEmpty((string)p.id) ? "rxjbzs" : (string)p.id;
                 switch (id)
                 {

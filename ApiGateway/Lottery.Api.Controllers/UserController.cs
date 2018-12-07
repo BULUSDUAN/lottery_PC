@@ -2277,11 +2277,11 @@ namespace Lottery.Api.Controllers
                 string id = p.id;
                 var pageIndex = 0;
                 var pageSize = 30;
-                var gameCode = string.IsNullOrEmpty((string)p.gameCode) ? "SZC" : (string)p.gameCode.ToUpper();
-                var gameType = string.IsNullOrEmpty((string)p.gameType) ? "SSQ" : (string)p.gameType.ToUpper();
-                if (string.IsNullOrEmpty(gameType))
+                var gameCode = string.IsNullOrEmpty((string)p.gameCode) ? "SZC" : (string)p.gameCode;
+                var gameType = string.IsNullOrEmpty((string)p.gameType) ? "SSQ" : (string)p.gameType;
+                if (string.IsNullOrEmpty(gameType.ToUpper()))
                 {
-                    switch (gameCode)
+                    switch (gameCode.ToUpper())
                     {
                         case "JCZQ":
                             gameType = "BRQSPF";
