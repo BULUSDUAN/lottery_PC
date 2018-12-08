@@ -86,7 +86,10 @@ namespace KaSon.FrameWork.Common
             foreach (var item in match)
             {
                 var res = matchresult.FirstOrDefault(p => p.Id == item.Id);
-
+                if (res != null && (res.MatchState == "Late" || res.MatchState == "Cancel"))
+                {
+                    continue;
+                }
                 #region 队伍基础信息
                 var info = new BJDC_MatchInfo_WEB()
                 {
