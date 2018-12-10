@@ -42,7 +42,7 @@ namespace HK6.ModuleBaseServices
         private readonly Repository _rep;
         private IDbProvider DB = null;
         private IDbProvider LettoryDB = null;
-        CommonActionResult result = new CommonActionResult();
+      
         public DataService(Repository repository)
         {
            // _Log = log;
@@ -53,7 +53,7 @@ namespace HK6.ModuleBaseServices
 
         public Task<CommonActionResult> ReCharge(string userId, string userDisplayName, decimal Money)
         {
-          //  CommonActionResult result = new CommonActionResult();
+            //  CommonActionResult result = new CommonActionResult();
             // var omb = DB.CreateQuery<C_User_Balance>().Where(b => b.UserId == userId).FirstOrDefault();
 
             //if (omb.FillMoneyBalance < Money)
@@ -62,6 +62,7 @@ namespace HK6.ModuleBaseServices
             //    result.IsSuccess = false;
             //    return Task.FromResult(result);
             //}
+            CommonActionResult result = new CommonActionResult();
             var orderId = BettingHelper.GetGameTransferId();
             var msg = string.Format("游戏充值订单号{0}", orderId);
             var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
@@ -127,6 +128,9 @@ namespace HK6.ModuleBaseServices
                 DB.Rollback();
                 result.Message = "系统错误";
                 result.IsSuccess = false;
+               
+                result.Code = 500;
+                result.StatuCode = 500;
                 result.ReturnValue = ex.ToString();
             }
             finally {
@@ -139,10 +143,10 @@ namespace HK6.ModuleBaseServices
         }
         public Task<CommonActionResult> GameWithdraw(string userId, string userDisplayName, decimal Money)
         {
-          
+
             // var omb = DB.CreateQuery<C_User_Balance>().Where(b => b.UserId == userId).FirstOrDefault();
 
-           
+            CommonActionResult result = new CommonActionResult();
 
             var orderId = BettingHelper.GetGameTransferId();
             var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
@@ -150,6 +154,9 @@ namespace HK6.ModuleBaseServices
             {
                 result.Message = $"提款金币不足金额：{Money}";
                 result.IsSuccess = false;
+               
+                result.Code = 300;
+                result.StatuCode = 300;
                 return Task.FromResult(result);
             }
             DB.Begin();
@@ -166,6 +173,10 @@ namespace HK6.ModuleBaseServices
                     //创建一个用户
                     result.Message = $"系统错误,用户不存在{userId}";
                     result.IsSuccess = false;
+                    //result.Message = "系统错误";
+                    //result.IsSuccess = false;
+                    result.Code = 300;
+                    result.StatuCode = 300;
                     return Task.FromResult(result);
                 }
                 else
@@ -205,6 +216,8 @@ namespace HK6.ModuleBaseServices
                 DB.Rollback();
                 result.Message = "系统错误";
                 result.IsSuccess = false;
+                result.Code = 500;
+                result.StatuCode = 500;
                 result.ReturnValue = ex.ToString();
             }
             finally
@@ -217,26 +230,36 @@ namespace HK6.ModuleBaseServices
             return Task.FromResult(result);
         }
 
-        /// <summary>
-        /// 获取用户信息
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public Task<CommonActionResult> UserInfo(string userId) {
+        public Task<CommonActionResult> GetCurrentIssuseNo()
+        {
+            CommonActionResult result = new CommonActionResult();
+            result.IsSuccess = true;
+            var mb = new DataServiceHelper(DB).GetissueNo();
+            result.Value = mb;
+            return Task.FromResult(result);
+        }
 
+            /// <summary>
+            /// 获取用户信息
+            /// </summary>
+            /// <param name="userId"></param>
+            /// <returns></returns>
+            public Task<CommonActionResult> UserInfo(string userId) {
+            CommonActionResult result = new CommonActionResult();
             var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
-            result.ReturnObj = mb;
-            result.IsSuccess = false;
+            result.Value = mb;
+            result.IsSuccess = true;
             if (mb==null)
             {
-                result.IsSuccess = false;
-                result.ReturnObj = new blast_member();
+                //result.IsSuccess = true;
+                result.Value = new blast_member();
             }
 
             return Task.FromResult(result);
         }
         public Task<CommonActionResult> PlayInfo()
         {
+            CommonActionResult result = new CommonActionResult();
             //playGroup
             var pmb = DB.CreateQuery<blast_played>().ToList();
             var mb = DB.CreateQuery<blast_lhc_antecode>().ToList();
@@ -276,8 +299,8 @@ namespace HK6.ModuleBaseServices
             }
 
 
-            result.ReturnObj = pgroupList;
-            result.IsSuccess = false;
+            result.Value = pgroupList;
+            result.IsSuccess = true;
 
             return Task.FromResult(result);
         }
@@ -288,13 +311,16 @@ namespace HK6.ModuleBaseServices
         /// <returns></returns>
         public Task<CommonActionResult> OrderInfo(string userId)
         {
+            CommonActionResult result = new CommonActionResult();
 
             var list = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.userId == userId).ToList();
-            result.ReturnObj = list;
+            result.Value = list;
             result.IsSuccess = true;
             if (list.Count<=0)
             {
                 result.IsSuccess = false;
+                result.Code = 500;
+                result.StatuCode = 500;
             }
             //if (list)
             //{

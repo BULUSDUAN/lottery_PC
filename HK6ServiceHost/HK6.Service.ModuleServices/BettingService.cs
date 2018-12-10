@@ -61,7 +61,7 @@ namespace HK6.ModuleBaseServices
         /// <param name="redBagMoney"></param>
         /// <param name="userid"></param>
         /// <returns></returns>
-        
+
         public Task<CommonActionResult> Betting(HK6Sports_BetingInfo info)
         {
             CommonActionResult cresult = new CommonActionResult();
@@ -71,94 +71,123 @@ namespace HK6.ModuleBaseServices
             try
             {
 
-          
-            #region 校验是否重复购买，
-            HK6Sports_BetingInfo betinfo = null;
-            _bettingListInfo.TryGetValue(info.userId, out betinfo);
-            if (betinfo != null)
-            {
-                if (info.TotalMoney == betinfo.TotalMoney
-                    && info.issueNo == betinfo.issueNo
 
-                    )
+                #region 校验是否重复购买，
+                HK6Sports_BetingInfo betinfo = null;
+                _bettingListInfo.TryGetValue(info.userId, out betinfo);
+                if (betinfo != null)
                 {
-                    var isRePeat = true;
-                    foreach (var item in info.orderList)
+                    var tf = DateTime.Now - betinfo.CurrentBetTime;
+                    if (info.TotalMoney == betinfo.TotalMoney
+                        && info.issueNo == betinfo.issueNo
+                        && tf.Minutes<15
+                        )
                     {
-                        var p = (from b in betinfo.orderList
-                                 where b.content == item.content
-                                         && b.unitPrice == item.unitPrice
-                                 select b).ToList();
-                        if (p.Count == 0)
+                        var isRePeat = true;
+                        foreach (var item in info.orderList)
                         {
-                            isRePeat = false;
-                            break;
+                            var p = (from b in betinfo.orderList
+                                     where b.content == item.content
+                                             && b.unitPrice == item.unitPrice
+                                     select b).ToList();
+                            if (p.Count == 0)
+                            {
+                                isRePeat = false;
+                                break;
+                            }
                         }
+
+                        if (isRePeat)
+                        {
+                            cresult.IsSuccess = false;
+                            cresult.Code = 300;
+                            cresult.StatuCode = 300;
+                            cresult.Message = "重复购买";
+                            return Task.FromResult(cresult);
+                        }
+
                     }
 
-                    if (isRePeat)
+                }
+                #endregion
+
+                #region 校验追期期号是否合法，加倍是否合法
+
+                var issue = DB.CreateQuery<blast_data_time>().Where(b => b.actionNo == info.issueNo).FirstOrDefault();
+
+               
+                if (issue == null || DateTime.Parse(issue.actionTime.ToShortDateString()).AddHours(21).AddMonths(20) < DateTime.Now)
+                {
+                    cresult.IsSuccess = false;
+                    cresult.Code = 300;
+                    cresult.StatuCode = 300;
+                    cresult.Message = "期号无效无法购买";
+                    return Task.FromResult(cresult);
+                }
+
+
+                var mb = new DataServiceHelper(DB).GetissueNo();
+
+                if (mb == null)
+                {
+                    cresult.IsSuccess = false;
+                    cresult.Code = 300;
+                    cresult.StatuCode = 300;
+                    cresult.Message = "期号无效无法购买";
+                    return Task.FromResult(cresult);
+                }
+                else if (mb.actionNo != info.issueNo)
+                {
+                    cresult.IsSuccess = false;
+                    cresult.Code = 300;
+                    cresult.StatuCode = 300;
+                    cresult.Message = "期号无效无法购买";
+                    return Task.FromResult(cresult);
+                } 
+                //追号期号 无效 请重新下注
+                foreach (var item in info.planList)
+                {
+
+                    if (item.issueNo < issue.actionNo)
                     {
                         cresult.IsSuccess = false;
-                        cresult.Message = "重复购买";
+                        cresult.Code = 300;
+                        cresult.StatuCode = 300;
+                        cresult.Message = "期号错误无法购买";
                         return Task.FromResult(cresult);
                     }
 
                 }
+                //期号是否连续校验
 
-            }
-            #endregion
 
-            #region 校验追期期号是否合法，加倍是否合法
+                #endregion
 
-            var issue = DB.CreateQuery<blast_data_time>().Where(b => b.actionNo == info.issueNo).FirstOrDefault();
+                #region 校验金额是否足够
 
-            string sdate = issue.actionTime.ToShortDateString();
-            if (issue == null || DateTime.Parse(sdate).AddHours(21).AddMonths(20) < DateTime.Now)
-            {
-                cresult.IsSuccess = false;
-                cresult.Message = "期号错误无法购买";
-                return Task.FromResult(cresult);
-            }
-            //追号期号 无效 请重新下注
-            foreach (var item in info.planList)
-            {
+                foreach (var item in info.orderList)
+                {
+                    basemoney = basemoney + item.unitPrice;
+                }
+                //追号期号
+                foreach (var item in info.planList)
+                {
+                    totalmoney = totalmoney + basemoney * (item.multiple == 0 ? 1 : item.multiple);
+                }
+                if (info.planList.Count <= 0)
+                {
+                    totalmoney = basemoney;
+                }
+                LoginUser = DB.CreateQuery<blast_member>().Where(b => b.userId == info.userId).FirstOrDefault();
 
-                if (item.issueNo < issue.actionNo)
+                if (LoginUser == null || LoginUser.gameMoney < totalmoney)
                 {
                     cresult.IsSuccess = false;
-                    cresult.Message = "期号错误无法购买";
+                    cresult.Message = "金额不足，请充值";
+                    cresult.Code = 300;
+                    cresult.StatuCode = 300;
                     return Task.FromResult(cresult);
                 }
-
-            }
-            //期号是否连续校验
-
-
-            #endregion
-
-            #region 校验金额是否足够
-           
-            foreach (var item in info.orderList)
-            {
-                basemoney = basemoney + item.unitPrice;
-            }
-            //追号期号
-            foreach (var item in info.planList)
-            {
-                totalmoney = totalmoney + basemoney * (item.multiple == 0 ? 1 : item.multiple);
-            }
-            if (info.planList.Count <= 0)
-            {
-                totalmoney = basemoney;
-            }
-             LoginUser = DB.CreateQuery<blast_member>().Where(b => b.userId == info.userId).FirstOrDefault();
-
-            if (LoginUser == null || LoginUser.gameMoney < totalmoney)
-            {
-                cresult.IsSuccess = false;
-                cresult.Message = "金额不足，请充值";
-                return Task.FromResult(cresult);
-            }
 
 
                 //   var LoginUser = DB.LettoryDB<E_Login_Local>();
@@ -166,25 +195,29 @@ namespace HK6.ModuleBaseServices
             }
             catch (Exception ex)
             {
-                cresult.Message = ex.ToString();
+                cresult.ReturnValue = ex.ToString();
                 cresult.IsSuccess = false;
                 cresult.Message = "不存在该玩法";
+
+                cresult.Code = 500;
+                cresult.StatuCode = 500;
+
                 return Task.FromResult(cresult);
-                throw;
+
             }
             try
             {
                 var playedList = DB.CreateQuery<blast_played>().ToList();
                 var codeList = DB.CreateQuery<blast_lhc_antecode>().ToList();
                 //校验投注订单合法信息，包括金额 玩法，号码，
-              
-              
 
-               
+
+
+
                 DB.Begin();
                 #region 创建订单
                 string prefix = "CHASE" + "HK6";
-                var keyLine = prefix + UsefullHelper.UUID() + info.issueNo.ToString() ;// UsefullHelper.ConvertDateTimeToInt(DateTime.Now);
+                var keyLine = prefix + UsefullHelper.UUID() + info.issueNo.ToString();// UsefullHelper.ConvertDateTimeToInt(DateTime.Now);
 
                 //  string keyLine = info.IssuseNumberList.Count > 1 ? BusinessHelper.GetChaseLotterySchemeKeyLine(info.GameCode) : string.Empty;
                 blast_bet_order border = new blast_bet_order()
@@ -198,44 +231,50 @@ namespace HK6.ModuleBaseServices
                     CreateTime = DateTime.Now,
                     totalMoney = totalmoney,
                     userId = info.userId,
-                    
-                    displayName  = LoginUser.displayName,
-                    winAnteCodeStop=info.winStop
-                  
+                    SchemeSource = info.SchemeSource,
+                    displayName = LoginUser.displayName,
+                    winAnteCodeStop = info.winStop
+
 
 
                 };
                 List<blast_bet_orderdetail> orderDetailList = new List<blast_bet_orderdetail>();
                 int pindex = 0;
-                HK6Sports_PlanInfo plan = new HK6Sports_PlanInfo() {
-                    multiple=1
+                HK6Sports_PlanInfo plan = new HK6Sports_PlanInfo()
+                {
+                    multiple = 1
                 };
                 foreach (var item in info.orderList)
                 {
-                   
-                    if (info.planList.Count>0)
+
+                    if (info.planList.Count > 0)
                     {
                         plan = info.planList[pindex];
                     }
-                  
+
                     pindex++;
                     blast_played p = playedList.Where(b => b.playId == item.playId).FirstOrDefault();
-                    if (p==null)
+                    if (p == null)
                     {
                         DB.Rollback();
                         cresult.IsSuccess = false;
                         cresult.Message = "不存在该玩法";
-                       
+                        cresult.Code = 300;
+                        cresult.StatuCode = 300;
                         return Task.FromResult(cresult);
                     }
                     var tempp = codeList.Where(b => item.content == (b.AnteCode) && b.playid == item.playId).FirstOrDefault();
-                    string OddsArr = tempp.odds+ "";
+                    string OddsArr = tempp.odds + "";
+                    string codeName = tempp.displayName + "";
                     //是否包含多个号码
                     if (item.content.Contains("|"))
                     {
                         var arr = item.content.Split('|');
-                        var oddslist = codeList.Where(b => arr.Contains(b.AnteCode) && b.playid == item.playId).Select(b => b.odds).ToArray();
-                        OddsArr = String.Join("|", oddslist);
+                        var t = codeList.Where(b => arr.Contains(b.AnteCode) && b.playid == item.playId);
+                        // var oddslist = t.Select(b => b.odds).ToArray();
+                        OddsArr = String.Join("|", t.Select(b => b.odds).ToArray());
+
+                        codeName = String.Join(",", t.Select(b => b.displayName).ToArray());
                     }
 
 
@@ -244,25 +283,29 @@ namespace HK6.ModuleBaseServices
                         SchemeId = keyLine,
                         AnteCodes = item.content,
                         playId = item.playId,
-                       // Odds = p.Odds,
+                        playName = p.name,
+                        AnteCodesName = codeName,
+                        SchemeSource = info.SchemeSource,
+                        // Odds = p.Odds,
+                        userId = info.userId,
                         issueNo = info.issueNo.ToString(),
                         OddsArr = OddsArr,
-                        ProgressStatus =0,
-                        BeiSu= plan.multiple,
-                        unitPrice =item.unitPrice,
+                        ProgressStatus = 0,
+                        BeiSu = plan.multiple,
+                        unitPrice = item.unitPrice,
                         CreateTime = DateTime.Now,
-                        anteSchemeId = "CDHK6" + UsefullHelper.UUID() +"_" + info.issueNo.ToString() + "_" + item.playId
+                        anteSchemeId = "CDHK6" + UsefullHelper.UUID() + "_" + info.issueNo.ToString() + "_" + item.playId
 
                     };
                     BaseOrderHelper winHelper = BaseOrderHelper.GetOrderHelper(orderDetail, DB);
                     orderDetail.AnteCodes = winHelper.BuildCodes(item.content);
-                    
+
                     orderDetailList.Add(orderDetail);
 
                 }
                 DB.GetDal<blast_bet_order>().Add(border);
 
-               
+
                 foreach (var orderdetail in orderDetailList)
                 {
                     DB.GetDal<blast_bet_orderdetail>().Add(orderdetail);
@@ -271,10 +314,10 @@ namespace HK6.ModuleBaseServices
 
                 #region 扣款
 
-               // decimal gameMoney = (LoginUser.gameMoney - totalmoney);
+                // decimal gameMoney = (LoginUser.gameMoney - totalmoney);
                 DB.GetDal<blast_member>().Update(b => new blast_member()
                 {
-                    gameMoney = b.gameMoney- totalmoney
+                    gameMoney = b.gameMoney - totalmoney
                 }, b => b.userId == info.userId);
 
                 #endregion
@@ -290,15 +333,19 @@ namespace HK6.ModuleBaseServices
                 cresult.Message = "投注成功";
                 cresult.ReturnValue = keyLine;
                 //清空重复验证缓存数据
-                _bettingListInfo[info.userId]= info;
+                _bettingListInfo[info.userId] = info;
             }
             catch (Exception ex)
             {
-             
+                cresult.Code = 500;
+                cresult.Message = "系统错误";
+                cresult.StatuCode = 500;
+                cresult.ReturnValue = ex.ToString();
                 DB.Rollback();
-                throw new Exception("订单投注异常，请重试 ", ex);
+                // throw new Exception("订单投注异常，请重试 ", ex);
             }
-            finally {
+            finally
+            {
                 //释放资源
                 DB.Dispose();
                 LettoryDB.Dispose();

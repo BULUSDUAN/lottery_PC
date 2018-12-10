@@ -132,14 +132,22 @@ namespace BettingLottery.Service.Host
 
             //清空打印
 
-            //ConsoleHelper.Clear();
+            ConsoleHelper.Clear();
 
             //这个要保留，认主线程一直运行
 
-            string msg= Console.ReadLine();
-            
+            Clear();
 
 
+
+        }
+
+        static void Clear()
+        {
+
+            Console.ReadKey(true);
+            Console.Clear();
+            Clear();
         }
     }
 

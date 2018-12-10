@@ -15,6 +15,7 @@ namespace EntityModel.CoreModel
     {
         public string content { get; set; }
 
+      //  public string contentName { get; set; }
         /// <summary>
         /// 玩法标签
         /// </summary>
@@ -24,6 +25,8 @@ namespace EntityModel.CoreModel
         /// 玩法编号playId
         /// </summary>
         public int playId { get; set; }
+
+       // public string playName { get; set; }
 
         /// <summary>
         /// 每一注总价
@@ -58,7 +61,9 @@ namespace EntityModel.CoreModel
     {
         public string UserToken { get; set; }
 
-       
+        public int SchemeSource { get; set; }
+        //public string UserToken { get; set; }
+
         /// <summary>
         /// 使用红包
         /// </summary>
@@ -85,7 +90,7 @@ namespace EntityModel.CoreModel
         /// </summary>
         public bool winStop { get; set; } = true;
 
-        public DateTime CurrentBetTime { get; set; }
+        public DateTime CurrentBetTime { get; set; } = DateTime.Now;
     }
 
         /// <summary>

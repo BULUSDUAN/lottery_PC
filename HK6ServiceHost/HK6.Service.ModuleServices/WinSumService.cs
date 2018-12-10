@@ -45,8 +45,8 @@ namespace HK6.ModuleBaseServices
         {
             _Log = log;
             this._rep = repository;
-            DB = _rep.DB.Init("MySql.Default",true);
-            LettoryDB = _rep.DB.Init("SQL SERVER.Default", true);
+            DB = _rep.LDB.Init("MySql.Default", true);
+            LettoryDB = _rep.DB.Init("SqlServer.Default", true);
         }
         /// <summary>
         /// 普通订单缓存数据
@@ -59,13 +59,47 @@ namespace HK6.ModuleBaseServices
         /// <param name="winDate"></param>
         /// <param name="winNum"></param>
         /// <returns></returns>
-       public Task<CommonActionResult> Sum(string winDate, string winNum) {
+       public Task<CommonActionResult> Sum(string userId, string IssueNo, string winNum) {
+            CommonActionResult result = new CommonActionResult();
 
+            #region 校验token 权限校验
+           // string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(tokens);
+            //C_Auth_UserRole
+            var UserRole = LettoryDB.CreateQuery<C_Auth_UserRole>().Where(b => b.UserId == userId).FirstOrDefault();
+            if (UserRole==null)
+            {
+               // result.ReturnValue = ex.ToString();
+                result.Message = "没有权限操作";
+                result.IsSuccess = false;
+                result.Code = 300;
+                result.StatuCode = 300;
+                return Task.FromResult(result);
+            }
+            string roleid = UserRole.RoleId;
+            var Auth_Roles = LettoryDB.CreateQuery<C_Auth_Roles>().Where(b => b.RoleId == roleid).FirstOrDefault();
+            if (Auth_Roles != null && Auth_Roles.IsAdmin)
+            {
+
+            }
+            else {
+                var Auth_RoleFunction = LettoryDB.CreateQuery<C_Auth_RoleFunction>().Where(b => b.RoleId == roleid).FirstOrDefault();
+                if (Auth_RoleFunction==null || Auth_RoleFunction.FunctionId.Trim() != "GLHKJ100")
+                {
+                    result.Message = "没有权限操作";
+                    result.IsSuccess = false;
+                    result.Code = 300;
+                    result.StatuCode = 300;
+                    return Task.FromResult(result);
+
+                }
+
+            }
+            #endregion
             //
             try
             {
                 var playedlist = DB.CreateQuery<blast_played>().ToList();
-              var list=  DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.issueDate == winDate).ToList<blast_bet_orderdetail>();
+              var list=  DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.issueNo == IssueNo && b.BonusStatus==0).ToList<blast_bet_orderdetail>();
 
                 DB.Begin();
              
@@ -83,21 +117,26 @@ namespace HK6.ModuleBaseServices
 
                 }
                 DB.Commit();
-
-
+                result.Message = "开奖成功";
+                result.IsSuccess = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                result.ReturnValue = ex.ToString();
+                result.Message = "系统错误";
+                result.IsSuccess = false;
+                result.Code = 500;
+                result.StatuCode = 500;
+                //throw;
+                DB.Rollback();
             }
             finally {
-
+                LettoryDB.Dispose();
                 DB.Dispose();
             }
 
 
-           return Task.FromResult(new CommonActionResult());
+           return Task.FromResult(result);
         }
     }
 }

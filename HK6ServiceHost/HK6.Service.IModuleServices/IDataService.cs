@@ -45,5 +45,7 @@ namespace HK6.ModuleBaseServices
         Task<CommonActionResult> OrderInfo(string userId);
         [Service(Date = "2018-9-3", Director = "kason", Name = "玩法")]
         Task<CommonActionResult> PlayInfo();
+        [Service(Date = "2018-9-3", Director = "kason", Name = "获取期号")]
+        Task<CommonActionResult> GetCurrentIssuseNo();
         }
 }

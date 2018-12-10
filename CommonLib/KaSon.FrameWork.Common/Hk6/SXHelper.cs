@@ -82,7 +82,7 @@ namespace KaSon.FrameWork.Common.Hk6
                     };
         private static string  shuxiang()
         {
-            string[] shuxiang = { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
+           // string[] shuxiang = { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
             string[] shuCode =  { "1",  "2",  "3",   "4",  "5",  "6",  "7",  "8",  "9", "10", "11", "12" };
             int tmp =DateTime.Now.Year - 2008;
             if (DateTime.Now.Year < 2008)

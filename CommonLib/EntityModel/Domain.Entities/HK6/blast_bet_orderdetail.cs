@@ -65,6 +65,13 @@ namespace EntityModel
       
         [Field("AnteCodes")]
         public string AnteCodes { get; set; }
+
+        [Field("AnteCodesName")]
+        public string AnteCodesName { get; set; }
+
+        [Field("playName")]
+        public string playName { get; set; }
+
         /// <summary>
         // ≈‚¬ 
         ///</summary>
@@ -139,6 +146,7 @@ namespace EntityModel
         /// </summary>
         [Field("OddsArr")]
         public string OddsArr { get; set; }
-
+        [Field("SchemeSource")]
+        public int SchemeSource { get; set; }
     }
 }
