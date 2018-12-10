@@ -110,7 +110,7 @@ namespace Lottery.Api.Controllers
         /// 胜负彩 加奖15% (红包)
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> GameInfoIndex([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        public async Task<IActionResult> GameInfoIndex([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             //var APP_Advertising_Key = "APP_Advertising_V2";
             //var APP_Advertising_Value = await GetAppConfigByKey(_serviceProxyProvider, APP_Advertising_Key);

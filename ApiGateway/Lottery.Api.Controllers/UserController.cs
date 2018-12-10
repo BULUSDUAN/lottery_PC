@@ -1796,7 +1796,7 @@ namespace Lottery.Api.Controllers
         }
 
 
-        public async Task<IActionResult> TestConfig([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        public async Task<IActionResult> TestConfig([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {

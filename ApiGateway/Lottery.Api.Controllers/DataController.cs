@@ -2941,7 +2941,7 @@ namespace Lottery.Api.Controllers
         }
 
 
-        public async Task<IActionResult> GetMinWithdraw([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        public async Task<IActionResult> GetMinWithdraw([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
@@ -3014,7 +3014,7 @@ namespace Lottery.Api.Controllers
 
 
         #region 查找首页可单关的竞彩足球比赛（最多20场）
-        public async Task<IActionResult> QueryQuickBuyJCZQ([FromServices]IServiceProxyProvider _serviceProxyProvider)
+        public async Task<IActionResult> QueryQuickBuyJCZQ([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
             try
             {
