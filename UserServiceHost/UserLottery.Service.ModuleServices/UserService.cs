@@ -2033,9 +2033,9 @@ namespace UserLottery.Service.ModuleServices
                 blog.CreateTime = DateTime.Now;
                 return Task.FromResult(blog);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Task.FromResult(new BlogEntity());
+                throw new Exception(ex.Message);
             }
         }
 

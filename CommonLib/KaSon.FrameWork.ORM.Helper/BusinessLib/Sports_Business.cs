@@ -7228,7 +7228,7 @@ namespace KaSon.FrameWork.ORM.Helper
             var list = sportsManager.QueryUserCurrentOrderList(userId, gameCode, pageIndex, pageSize);
             var result = new UserCurrentOrderInfoCollection();
             result.TotalCount = totalCount;
-            result.List.AddRange(list);
+            result.List.AddRange(list.List);
             return result;
         }
 

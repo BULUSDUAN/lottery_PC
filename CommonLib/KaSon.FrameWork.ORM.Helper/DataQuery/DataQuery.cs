@@ -1094,28 +1094,14 @@ namespace KaSon.FrameWork.ORM.Helper
             var result = new BonusOrderInfoCollection();
             pageIndex = pageIndex < 0 ? 0 : pageIndex;
             pageSize = pageSize > BusinessHelper.MaxPageSize ? BusinessHelper.MaxPageSize : pageSize;
-            string QueryBonusInfo_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryBonusInfoList").SQL;
-            var BonusOrderList = DB.CreateSQLQuery(QueryBonusInfo_sql)
-              .SetString("@userId", userId)
-              .SetString("@gameCode", gameCode)
-              .SetString("@gameType", gameType)
-              .SetString("@issuseNumber", issuseNumber)
-              .SetString("@completeData", completeData)
-              .SetString("@key", key)
-              .SetInt("@pageIndex", pageIndex)
-              .SetInt("@pageSize", pageSize).List<BonusOrderInfo>().ToList();
-
-            string QueryBonusInfoTotal_sql = SqlModule.DataModule.FirstOrDefault(x => x.Key == "Data_QueryBonusInfoList_Total").SQL;
-            var total = DB.CreateSQLQuery(QueryBonusInfoTotal_sql)
-               .SetString("@userId", userId)
-              .SetString("@gameCode", gameCode)
-              .SetString("@gameType", gameType)
-              .SetString("@issuseNumber", issuseNumber)
-              .SetString("@completeData", completeData)
-              .SetString("@key", key)
-             .First<int>();
-            result.BonusOrderList = BonusOrderList;
-            result.TotalCount = total;
+            string sql = SqlModule.UserSystemModule.FirstOrDefault(p => p.Key == "P_Order_QueryBonusOrderList").SQL;
+            result.BonusOrderList = DB.CreateSQLQuery(sql)
+                .SetString("@UserId", userId ?? "")
+                .SetString("@GameCode", gameCode)
+                .SetInt("@PageIndex", pageIndex)
+                .SetInt("@PageSize", pageSize)
+                .List<BonusOrderInfo>().ToList();
+            result.TotalCount = result.BonusOrderList.Count();
             return result;
 
         }
