@@ -3021,7 +3021,7 @@ namespace Lottery.Api.Controllers
 
 
         #region 查找首页可单关的竞彩足球比赛（最多20场）
-        public async Task<IActionResult> QueryQuickBuyJCZQ([FromServices]IServiceProxyProvider _serviceProxyProvider，LotteryServiceRequest entity)
+        public async Task<IActionResult> QueryQuickBuyJCZQ([FromServices]IServiceProxyProvider _serviceProxyProvider,LotteryServiceRequest entity)
         {
             try
             {
@@ -3958,7 +3958,7 @@ namespace Lottery.Api.Controllers
         #endregion
 
         #region 推广链接
-        public IActionResult SpreadLinks(LotteryServiceRequest entity, LotteryServiceRequest entity)
+        public IActionResult SpreadLinks(LotteryServiceRequest entity)
         {
             try
             {
