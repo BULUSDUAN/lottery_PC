@@ -43,7 +43,7 @@ namespace EntityModel
         ///</summary>
         [ProtoMember(3)]
         [Field("enable")]
-        public int enable { get; set; }
+        public bool enable { get; set; }
         /// <summary>
         // 
         ///</summary>

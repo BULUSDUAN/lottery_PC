@@ -142,5 +142,10 @@ namespace KaSon.FrameWork.ORM.Helper
               
 
         }
+
+        public override string BuildCodes(string content)
+        {
+            return content;
+        }
     }
 }

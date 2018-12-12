@@ -67,12 +67,13 @@ namespace HK6.ModuleBaseServices
             CommonActionResult cresult = new CommonActionResult();
             decimal totalmoney = 0M;
             decimal basemoney = 0M;
+            List<blast_bet_orderdetail> orderDetailList = new List<blast_bet_orderdetail>();
             blast_member LoginUser = new blast_member();
             try
             {
 
 
-                #region 校验是否重复购买，
+                #region 校验是否重复购买
                 HK6Sports_BetingInfo betinfo = null;
                 _bettingListInfo.TryGetValue(info.userId, out betinfo);
                 if (betinfo != null)
@@ -192,28 +193,10 @@ namespace HK6.ModuleBaseServices
 
                 //   var LoginUser = DB.LettoryDB<E_Login_Local>();
                 #endregion
-            }
-            catch (Exception ex)
-            {
-                cresult.ReturnValue = ex.ToString();
-                cresult.IsSuccess = false;
-                cresult.Message = "不存在该玩法";
-
-                cresult.Code = 500;
-                cresult.StatuCode = 500;
-
-                return Task.FromResult(cresult);
-
-            }
-            try
-            {
+           
                 var playedList = DB.CreateQuery<blast_played>().ToList();
                 var codeList = DB.CreateQuery<blast_lhc_antecode>().ToList();
                 //校验投注订单合法信息，包括金额 玩法，号码，
-
-
-
-
                 DB.Begin();
                 #region 创建订单
                 string prefix = "CHASE" + "HK6";
@@ -238,7 +221,7 @@ namespace HK6.ModuleBaseServices
 
 
                 };
-                List<blast_bet_orderdetail> orderDetailList = new List<blast_bet_orderdetail>();
+              
                 int pindex = 0;
                 HK6Sports_PlanInfo plan = new HK6Sports_PlanInfo()
                 {
@@ -254,7 +237,8 @@ namespace HK6.ModuleBaseServices
 
                     pindex++;
                     blast_played p = playedList.Where(b => b.playId == item.playId).FirstOrDefault();
-                    if (p == null)
+                    var tempp = codeList.Where(b => b.AnteCode == item.content && b.playid == item.playId).FirstOrDefault();
+                    if (p == null || tempp==null)
                     {
                         DB.Rollback();
                         cresult.IsSuccess = false;
@@ -263,7 +247,7 @@ namespace HK6.ModuleBaseServices
                         cresult.StatuCode = 300;
                         return Task.FromResult(cresult);
                     }
-                    var tempp = codeList.Where(b => item.content == (b.AnteCode) && b.playid == item.playId).FirstOrDefault();
+                  
                     string OddsArr = tempp.odds + "";
                     string codeName = tempp.displayName + "";
                     //是否包含多个号码
@@ -332,6 +316,8 @@ namespace HK6.ModuleBaseServices
                 cresult.IsSuccess = true;
                 cresult.Message = "投注成功";
                 cresult.ReturnValue = keyLine;
+                cresult.Value = orderDetailList.OrderByDescending(b => b.CreateTime).Select(b => b.anteSchemeId).ToList();
+
                 //清空重复验证缓存数据
                 _bettingListInfo[info.userId] = info;
             }
@@ -341,6 +327,9 @@ namespace HK6.ModuleBaseServices
                 cresult.Message = "系统错误";
                 cresult.StatuCode = 500;
                 cresult.ReturnValue = ex.ToString();
+             
+
+
                 DB.Rollback();
                 // throw new Exception("订单投注异常，请重试 ", ex);
             }
@@ -352,29 +341,6 @@ namespace HK6.ModuleBaseServices
             }
 
 
-            //校验追号是否合法，加倍是否合法
-
-
-
-            //校验是否重复投注
-
-
-            //获取用户信息
-
-            //校验金额是否足够
-
-            //生成订单
-
-            //扣款
-
-
-            //using (DB)
-            //{
-            //数据库处理
-            //重复投注保护
-
-
-            //}
 
             return Task.FromResult(cresult);
         }
