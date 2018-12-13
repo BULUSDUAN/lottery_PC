@@ -92,11 +92,12 @@ namespace Lottery.ApiGateway
             var registerConfig = ApiGateWayConfig.Register;
             string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
             string Token = ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"] != null ? ConfigHelper.AllConfigInfo["ConsulSettings"]["Token"].ToString() : "";
+            string WatchInterval = ConfigHelper.AllConfigInfo["ConsulSettings"]["WatchInterval"] != null ? ConfigHelper.AllConfigInfo["ConsulSettings"]["WatchInterval"].ToString() : "3600";
 
 
             var config = new ConfigInfo(consul, reloadOnChange: true);
             config.Token = Token;
-
+            config.WatchInterval = int.Parse(WatchInterval);
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(CustomExceptionFilterAttribute));

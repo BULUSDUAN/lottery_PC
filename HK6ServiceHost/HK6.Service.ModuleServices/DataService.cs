@@ -23,6 +23,8 @@ using EntityModel;
 using KaSon.FrameWork.Analyzer.Hk6Model;
 using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.Common.Hk6;
+using KaSon.FrameWork.Services.ORM;
+using KaSon.FrameWork.Services.Enum;
 
 namespace HK6.ModuleBaseServices
 {
@@ -42,15 +44,94 @@ namespace HK6.ModuleBaseServices
         private readonly Repository _rep;
         private IDbProvider DB = null;
         private IDbProvider LettoryDB = null;
-      
+
         public DataService(Repository repository)
         {
-           // _Log = log;
+            // _Log = log;
             this._rep = repository;
-            DB = _rep.LDB.Init("MySql.Default",true);
+            DB = _rep.LDB.Init("MySql.Default", true);
             LettoryDB = _rep.DB.Init("SqlServer.Default", true);
         }
 
+        public Task<CommonActionResult> PlayCategory()
+        {
+            CommonActionResult result = new CommonActionResult();
+            
+            try
+            {
+                var mblist = DB.CreateQuery<blast_played_group>().Where(b => b.enable == true).ToList();
+                var mPlayedList = DB.CreateQuery<blast_played>().Where(b => b.enable == true).ToList();
+
+                foreach ( var item in mblist)
+                {
+                    item.PlayedList = mPlayedList.Where(b => b.groupId == item.groupId).ToList();
+                }
+                result.IsSuccess = true;
+                result.Value = mblist;
+            }
+            catch (Exception ex)
+            {
+                LettoryDB.Rollback();
+                DB.Rollback();
+                result.Message = "系统错误";
+                result.IsSuccess = false;
+
+                result.Code = 500;
+                result.StatuCode = 500;
+                result.ReturnValue = ex.ToString();
+            }
+            finally
+            {
+                DB.Dispose();
+                LettoryDB.Dispose();
+
+            }
+
+            // LettoryDB.GetDal<C_Game_Transfer>().Add(ctransfer);
+
+            return Task.FromResult(result);
+
+
+        }
+            public Task<CommonActionResult> ReChargeRecord(string userId, int sType)
+        {
+            CommonActionResult result = new CommonActionResult();
+            int lhc = (int)MGGameType.LHC;
+            int status = (int)FillMoneyStatus.Success;
+            int Recharge = (int)GameTransferType.Recharge;
+            if (sType != 0)
+            {
+                Recharge = (int)GameTransferType.Withdraw;
+            }
+            try
+            {
+                var mb = LettoryDB.CreateQuery<C_Game_Transfer>().Where(b => b.UserId == userId
+           && b.GameType == lhc && b.Status == status && b.TransferType == Recharge).ToList();
+                result.Value = mb.OrderByDescending(b=>b.UpdateTime).ToList();
+                result.IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                LettoryDB.Rollback();
+                DB.Rollback();
+                result.Message = "系统错误";
+                result.IsSuccess = false;
+
+                result.Code = 500;
+                result.StatuCode = 500;
+                result.ReturnValue = ex.ToString();
+            }
+            finally
+            {
+                DB.Dispose();
+                LettoryDB.Dispose();
+
+            }
+
+            // LettoryDB.GetDal<C_Game_Transfer>().Add(ctransfer);
+
+            return Task.FromResult(result);
+        }
         public Task<CommonActionResult> ReCharge(string userId, string userDisplayName, decimal Money)
         {
             //  CommonActionResult result = new CommonActionResult();
@@ -69,7 +150,7 @@ namespace HK6.ModuleBaseServices
             DB.Begin();
             LettoryDB.Begin();
 
-          
+
 
             try
             {
@@ -83,23 +164,24 @@ namespace HK6.ModuleBaseServices
                         updateTime = DateTime.Now,
                         gameMoney = Money,
                         userId = userId,
-                         
+
 
 
                     };
 
                     DB.GetDal<blast_member>().Add(tmb);
                 }
-                else {
-                    DB.GetDal<blast_member>().Update(b=>new blast_member
+                else
+                {
+                    DB.GetDal<blast_member>().Update(b => new blast_member
                     {
-                         gameMoney=b.gameMoney+Money,
-                         updateTime=DateTime.Now
-                    },b=>b.userId==userId);
+                        gameMoney = b.gameMoney + Money,
+                        updateTime = DateTime.Now
+                    }, b => b.userId == userId);
 
                 }
-               
-                
+
+
                 C_Game_Transfer ctransfer = new C_Game_Transfer()
                 {
                     TransferType = (int)GameTransferType.Recharge,
@@ -119,7 +201,7 @@ namespace HK6.ModuleBaseServices
                 DB.Commit();
                 result.Message = "充值成功";
                 result.IsSuccess = true;
-              
+
 
             }
             catch (Exception ex)
@@ -128,12 +210,13 @@ namespace HK6.ModuleBaseServices
                 DB.Rollback();
                 result.Message = "系统错误";
                 result.IsSuccess = false;
-               
+
                 result.Code = 500;
                 result.StatuCode = 500;
                 result.ReturnValue = ex.ToString();
             }
-            finally {
+            finally
+            {
                 DB.Dispose();
                 LettoryDB.Dispose();
 
@@ -154,7 +237,7 @@ namespace HK6.ModuleBaseServices
             {
                 result.Message = $"提款金币不足金额：{Money}";
                 result.IsSuccess = false;
-               
+
                 result.Code = 300;
                 result.StatuCode = 300;
                 return Task.FromResult(result);
@@ -188,7 +271,7 @@ namespace HK6.ModuleBaseServices
                     }, b => b.userId == userId);
 
                 }
-              
+
 
                 C_Game_Transfer ctransfer = new C_Game_Transfer()
                 {
@@ -239,17 +322,18 @@ namespace HK6.ModuleBaseServices
             return Task.FromResult(result);
         }
 
-            /// <summary>
-            /// 获取用户信息
-            /// </summary>
-            /// <param name="userId"></param>
-            /// <returns></returns>
-            public Task<CommonActionResult> UserInfo(string userId) {
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public Task<CommonActionResult> UserInfo(string userId)
+        {
             CommonActionResult result = new CommonActionResult();
             var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
             result.Value = mb;
             result.IsSuccess = true;
-            if (mb==null)
+            if (mb == null)
             {
                 //result.IsSuccess = true;
                 result.Value = new blast_member();
@@ -263,8 +347,8 @@ namespace HK6.ModuleBaseServices
             //playGroup
             var pmb = DB.CreateQuery<blast_played>().ToList();
             var mb = DB.CreateQuery<blast_lhc_antecode>().ToList();
-            var q =from b in mb
-                   group b by b.playid into g
+            var q = from b in mb
+                    group b by b.playid into g
                     select g;
 
             List<playGroup> pgroupList = new List<playGroup>();
@@ -283,7 +367,7 @@ namespace HK6.ModuleBaseServices
                     case "一肖":
                         foreach (var item1 in antecodeList)
                         {
-                            item1.CodeContent =string.Join(",", SXHelper.ScodeArr(int.Parse(item1.AnteCode)));
+                            item1.CodeContent = string.Join(",", SXHelper.ScodeArr(int.Parse(item1.AnteCode)));
                         }
                         break;
                     default:
@@ -309,19 +393,69 @@ namespace HK6.ModuleBaseServices
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public Task<CommonActionResult> OrderInfo(string userId)
+        public Task<CommonActionResult> OrderInfo(string userId, int PageIndex)
         {
             CommonActionResult result = new CommonActionResult();
+            //PageIndex
+            var query = DB.CreateQuery<blast_bet_orderdetail>();
 
-            var list = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.userId == userId).ToList();
-            result.Value = list;
+            var wlist = new List<WhereField>();
+            wlist.Add(new WhereField()
+            {
+                Field = "userId",
+                Value = userId,
+                WhereType = WhereType.Equal
+
+            });
+
+            var slist = new List<SortField>();
+            slist.Add(new SortField()
+            {
+                Field = "Id",
+                IsASC = false
+
+            });
+            QueryArgs qargs = new QueryArgs()
+            {
+                PageIndex = PageIndex,
+                PageSize = 20,
+                WhereFields = wlist,
+                SortFields = slist
+
+            };
+
+            var data = DB.CreateComQuery().Query<blast_bet_orderdetail>(query, qargs);
+
+            // var list = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.userId == userId).ToList();
+            result.Value = data.Data;
             result.IsSuccess = true;
-            if (list.Count<=0)
+            if (data.RowCount <= 0)
             {
                 result.IsSuccess = false;
                 result.Code = 500;
                 result.StatuCode = 500;
             }
+            //if (list)
+            //{
+            //    result.ReturnObj = new blast_member();
+            //}
+
+
+            return Task.FromResult(result);
+        }
+
+
+        public Task<CommonActionResult> OrderDetail(string oId)
+        {
+            CommonActionResult result = new CommonActionResult();
+            //PageIndex
+            var orderdetail = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.anteSchemeId == oId).FirstOrDefault();
+
+
+            // var list = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.userId == userId).ToList();
+            result.Value = orderdetail;
+            result.IsSuccess = true;
+
             //if (list)
             //{
             //    result.ReturnObj = new blast_member();
