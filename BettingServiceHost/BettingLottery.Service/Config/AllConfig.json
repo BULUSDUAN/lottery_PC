@@ -71,7 +71,7 @@
     "RequestCacheEnabled": false
   },
   //±ÿ–Î≈‰÷√  RebbitMq ∆Ù∂Øµÿ÷∑
-
+  "AutoTask": "true",
   "Token": "16c5413b-276c-45ab-9b0e-9664126f1163",
   "GameApi": {
     "OperatorCode": "3D6A71F4AFB44EB0AAC28832666197CA",

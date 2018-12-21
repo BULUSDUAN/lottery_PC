@@ -60,7 +60,7 @@
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.CPlatform.dll</HintPath>
     </Reference>
     <Reference Include="kason.Sg.Core.Dbbase">
-      <HintPath>..\..\..\..\Lottery_02\FramWorkDLL\HK6DLL\kason.Sg.Core.Dbbase.dll</HintPath>
+      <HintPath>..\..\FramWorkDLL\HK6DLL\kason.Sg.Core.Dbbase.dll</HintPath>
     </Reference>
     <Reference Include="Kason.Sg.Core.DotNetty">
       <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.DotNetty.dll</HintPath>
