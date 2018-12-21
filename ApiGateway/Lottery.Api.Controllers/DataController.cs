@@ -3273,7 +3273,7 @@ namespace Lottery.Api.Controllers
                         operatorcode = OperatorCode,
                         password = pwd,
                         gamecode = gameCode,
-                        isfreegame = "true",
+                        isfreegame = "false",
                         ismobile = "true",
                         language = "CN",
                         extraparameter = new
