@@ -48,5 +48,12 @@ namespace EntityModel
             [ProtoMember(5)]
             [Field("stopTime")]
             public DateTime stopTime { get; set; }
+
+        [Field("isOpen")]
+        public bool isOpen { get; set; }
+        [Field("winNum")]
+        public string winNum { get; set; }
+
+        public blast_data PreData { get; set; }
     }
 }

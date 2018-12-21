@@ -25,8 +25,10 @@ using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.Common.Hk6;
 using KaSon.FrameWork.Services.ORM;
 using KaSon.FrameWork.Services.Enum;
+using PK.Service.IModuleServices;
+using HK6.ModuleBaseServices;
 
-namespace HK6.ModuleBaseServices
+namespace PK.Service.ModuleServices
 {
     /// <summary>
     /// 管理系统服务
@@ -56,13 +58,13 @@ namespace HK6.ModuleBaseServices
         public Task<CommonActionResult> PlayCategory()
         {
             CommonActionResult result = new CommonActionResult();
-
+            
             try
             {
                 var mblist = DB.CreateQuery<blast_played_group>().Where(b => b.enable == true).ToList();
                 var mPlayedList = DB.CreateQuery<blast_played>().Where(b => b.enable == true).ToList();
 
-                foreach (var item in mblist)
+                foreach ( var item in mblist)
                 {
                     item.PlayedList = mPlayedList.Where(b => b.groupId == item.groupId).ToList();
                 }
@@ -93,10 +95,10 @@ namespace HK6.ModuleBaseServices
 
 
         }
-        public Task<CommonActionResult> ReChargeRecord(string userId, int sType)
+            public Task<CommonActionResult> ReChargeRecord(string userId, int sType)
         {
             CommonActionResult result = new CommonActionResult();
-            int lhc = (int)MGGameType.LHC;
+            int lhc = (int)MGGameType.BJPK;
             int status = (int)FillMoneyStatus.Success;
             int Recharge = (int)GameTransferType.Recharge;
             if (sType != 0)
@@ -107,7 +109,7 @@ namespace HK6.ModuleBaseServices
             {
                 var mb = LettoryDB.CreateQuery<C_Game_Transfer>().Where(b => b.UserId == userId
            && b.GameType == lhc && b.Status == status && b.TransferType == Recharge).ToList();
-                result.Value = mb.OrderByDescending(b => b.UpdateTime).ToList();
+                result.Value = mb.OrderByDescending(b=>b.UpdateTime).ToList();
                 result.IsSuccess = true;
             }
             catch (Exception ex)
@@ -157,7 +159,7 @@ namespace HK6.ModuleBaseServices
 
             try
             {
-                result = BusinessHelper.Payout_To_FrozenByDB(LettoryDB, BusinessHelper.FundCategory_GameRecharge, userId, orderId, Money, msg, "GameTransfer", "");
+                result= BusinessHelper.Payout_To_FrozenByDB(LettoryDB, BusinessHelper.FundCategory_GameRecharge, userId, orderId, Money, msg, "GameTransfer", "");
                 if (!result.IsSuccess)
                 {
                     LettoryDB.Rollback();
@@ -176,7 +178,7 @@ namespace HK6.ModuleBaseServices
                         gameMoney = Money,
                         userId = userId,
 
-                        displayName = userRegister.DisplayName,
+                        displayName= userRegister.DisplayName,
 
 
                     };
@@ -187,7 +189,7 @@ namespace HK6.ModuleBaseServices
                 {
                     DB.GetDal<blast_member>().Update(b => new blast_member
                     {
-                        displayName = userRegister.DisplayName,
+                        displayName= userRegister.DisplayName,
                         gameMoney = b.gameMoney + Money,
                         updateTime = DateTime.Now
                     }, b => b.userId == userId);
@@ -198,7 +200,7 @@ namespace HK6.ModuleBaseServices
                 C_Game_Transfer ctransfer = new C_Game_Transfer()
                 {
                     TransferType = (int)GameTransferType.Recharge,
-                    GameType = (int)MGGameType.LHC,
+                    GameType = (int)MGGameType.BJPK,
                     Status = (int)FillMoneyStatus.Success,
                     UserId = userId,
                     RequestTime = DateTime.Now,
@@ -262,7 +264,7 @@ namespace HK6.ModuleBaseServices
 
             try
             {
-                result = BusinessHelper.Payin_To_BalanceByDB(LettoryDB, AccountType.Bonus, BusinessHelper.FundCategory_GameWithdraw, userId, orderId, Money,
+                result= BusinessHelper.Payin_To_BalanceByDB(LettoryDB, AccountType.Bonus, BusinessHelper.FundCategory_GameWithdraw, userId, orderId, Money,
                 string.Format("游戏提款成功，金额：{0:N2}元存入账号", Money));
                 if (!result.IsSuccess)
                 {
@@ -303,7 +305,7 @@ namespace HK6.ModuleBaseServices
                     UserId = userId,
                     TransferType = (int)GameTransferType.Withdraw,
                     UserDisplayName = userDisplayName,
-                    GameType = (int)MGGameType.LHC
+                    GameType = (int)MGGameType.BJPK
                 };
                 LettoryDB.GetDal<C_Game_Transfer>().Add(ctransfer);
 
@@ -333,11 +335,11 @@ namespace HK6.ModuleBaseServices
 
             return Task.FromResult(result);
         }
-        public Task<CommonActionResult> GameTransfer(string userId, int PageIndex)
+        public Task<CommonActionResult> GameTransfer(string userId,int PageIndex)
         {
             CommonActionResult result = new CommonActionResult();
-            int lhc = (int)MGGameType.LHC;
-
+           // int lhc = (int)MGGameType.LHC;
+           
             //PageIndex
             var query = LettoryDB.CreateQuery<C_Game_Transfer>();
 
@@ -356,7 +358,7 @@ namespace HK6.ModuleBaseServices
             //    WhereType = WhereType.Equal
 
             //});
-
+            
             var slist = new List<SortField>();
             slist.Add(new SortField()
             {
@@ -384,10 +386,10 @@ namespace HK6.ModuleBaseServices
                 result.Code = 500;
                 result.StatuCode = 500;
             }
-
+          
 
             return Task.FromResult(result);
-
+           
         }
 
         public Task<CommonActionResult> GetCurrentIssuseNo()
@@ -541,13 +543,14 @@ namespace HK6.ModuleBaseServices
 
             return Task.FromResult(result);
         }
+
         public Task<CommonActionResult> HostoryData(string userId, int PageIndex)
         {
             CommonActionResult result = new CommonActionResult();
             int lhc = (int)MGGameType.LHC;
 
             //PageIndex
-            var query = DB.CreateQuery<blast_data>();
+            var query = LettoryDB.CreateQuery<blast_data>();
 
             var wlist = new List<WhereField>();
             //wlist.Add(new WhereField()
@@ -581,7 +584,7 @@ namespace HK6.ModuleBaseServices
 
             };
 
-            var data = DB.CreateComQuery().Query<blast_data>(query, qargs);
+            var data = LettoryDB.CreateComQuery().Query<blast_data>(query, qargs);
 
             // var list = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.userId == userId).ToList();
             result.Value = data.Data;
@@ -592,15 +595,7 @@ namespace HK6.ModuleBaseServices
                 result.Code = 500;
                 result.StatuCode = 500;
             }
-            else
-            {
-                //生肖 
-                List<blast_data> LIST = data.Data as List<blast_data>; ;
-                foreach (var item in LIST)
-                {
-                    item.NameList = SXHelper.SCodeNameArr(item.kjdata);
-                }
-            }
+            
 
 
             return Task.FromResult(result);

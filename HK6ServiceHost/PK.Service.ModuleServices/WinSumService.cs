@@ -22,8 +22,10 @@ using KaSon.FrameWork.ORM;
 using EntityModel;
 using KaSon.FrameWork.Analyzer.Hk6Model;
 using KaSon.FrameWork.Common.Hk6;
+using HK6.ModuleBaseServices;
+using PK.Service.IModuleServices;
 
-namespace HK6.ModuleBaseServices
+namespace PK.Service.ModuleServices
 {
     /// <summary>
     /// 管理系统服务

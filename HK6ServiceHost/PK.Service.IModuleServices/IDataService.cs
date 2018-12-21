@@ -20,12 +20,12 @@ using System.Threading.Tasks;
 using EntityModel.Communication;
 using EntityModel.CoreModel;
 
-namespace HK6.ModuleBaseServices
+namespace PK.Service.IModuleServices
 {
     /// <summary>
     /// 管理系统服务
     /// </summary>
-    [ServiceBundle("HK6DataService/{Service}")]
+    [ServiceBundle("PKDataService/{Service}")]
     public interface IDataService : IServiceKey
     {
         /// <summary>
@@ -57,8 +57,9 @@ namespace HK6.ModuleBaseServices
         Task<CommonActionResult> OrderDetail(string oId);
         [Service(Date = "2018-9-3", Director = "kason", Name = "获取期号")]
         Task<CommonActionResult> GameTransfer(string userId, int PageIndex);
+
         [Service(Date = "2018-9-3", Director = "kason", Name = "历史记录")]
         Task<CommonActionResult> HostoryData(string userId, int PageIndex);
 
-    }
+        }
 }

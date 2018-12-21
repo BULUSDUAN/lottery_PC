@@ -148,5 +148,7 @@ namespace EntityModel
         public string OddsArr { get; set; }
         [Field("SchemeSource")]
         public int SchemeSource { get; set; }
+        [Field("typeid")]
+        public int typeid { get; set; }
     }
 }

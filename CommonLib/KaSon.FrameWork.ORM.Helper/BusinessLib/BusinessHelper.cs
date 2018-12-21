@@ -18,6 +18,7 @@ using EntityModel.CoreModel;
 using System.Threading.Tasks;
 using EntityModel.Redis;
 using KaSon.FrameWork.Common.SMS;
+using EntityModel.Communication;
 
 namespace KaSon.FrameWork.ORM.Helper
 {
@@ -1603,13 +1604,21 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
 
-        public static void Payin_To_BalanceByDB(IDbProvider DB, AccountType accountType, string category, string userId, string orderId, decimal payMoney, string summary, RedBagCategory redBag = RedBagCategory.FillMoney, string operatorId = "")
+        public static CommonActionResult Payin_To_BalanceByDB(IDbProvider DB, AccountType accountType, string category, string userId, string orderId, decimal payMoney, string summary, RedBagCategory redBag = RedBagCategory.FillMoney, string operatorId = "")
         {
             //if (accountType == AccountType.Freeze)
             //    throw new LogicException("退款账户不能为冻结账户");
-
-            if (payMoney <= 0M)
-                return;
+            CommonActionResult result = new CommonActionResult();
+            result.IsSuccess = true;
+            if (payMoney <= 0M) {
+                result.IsSuccess = false;
+                result.Message = "转入金额不能小于0";
+                result.StatuCode = 300;
+                result.Code = 300;
+                 
+                return result;
+            }
+                
             //throw new LogicException("转入金额不能小于0.");
 
             var balanceManager = new LocalLoginBusiness();
@@ -1618,7 +1627,15 @@ namespace KaSon.FrameWork.ORM.Helper
 
             var userBalance = DB.CreateQuery<C_User_Balance>().Where(p => p.UserId == userId).FirstOrDefault();
            // balanceManager.QueryUserBalanceInfo(userId);
-            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
+            if (userBalance == null) {
+               // throw new LogicException("用户帐户不存在 - " + userId);
+                result.IsSuccess = false;
+                result.Message = "用户帐户不存在 - " + userId;
+                result.StatuCode = 300;
+                result.Code = 300;
+
+                return result;
+            }
 
             var payDetailList = new List<PayDetail>();
             payDetailList.Add(new PayDetail
@@ -1677,7 +1694,12 @@ namespace KaSon.FrameWork.ORM.Helper
                     //userBalance.CPSBalance = after;
                     break;
                 default:
-                    throw new LogicException("不支持的账户类型 - " + accountType);
+                    result.IsSuccess = false;
+                    result.Message = "不支持的账户类型 - " + accountType;
+                    result.StatuCode = 300;
+                    result.Code = 300;
+                    return result;
+                   
             }
             var FundDetail = new C_Fund_Detail
             {
@@ -1698,6 +1720,7 @@ namespace KaSon.FrameWork.ORM.Helper
             // fundManager.AddFundDetail(FundDetail);
             //balanceManager.UpdateUserBalance(userBalance);
             PayToUserBalanceByDB(DB,userId, payDetailList.ToArray());
+            return result;
         }
 
         /// <summary>
@@ -2301,16 +2324,30 @@ namespace KaSon.FrameWork.ORM.Helper
             balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
         }
 
-        public static void Payout_To_FrozenByDB(IDbProvider DB,  string category, string userId, string orderId, decimal payoutMoney, string summary, string place, string password)
+        public static CommonActionResult Payout_To_FrozenByDB(IDbProvider DB,  string category, string userId, string orderId, decimal payoutMoney, string summary, string place, string password)
         {
-            if (payoutMoney <= 0M)
-                throw new LogicException("消费金额不能小于0.");
+            CommonActionResult result = new CommonActionResult();
+            result.IsSuccess = true;
+            if (payoutMoney <= 0M) {
+                result.Code = 300;
+                result.StatuCode = 300;
+                result.IsSuccess = false;
+                result.Message = "消费金额不能小于0";
+                return result;
+            }
+             //   throw new LogicException("消费金额不能小于0.");
             //查询帐户余额
            var balanceManager = new UserBalanceManager();
            // var fundManager = new FundManager();
             //资金密码判断
             var userBalance = DB.CreateQuery<C_User_Balance>().Where(p => p.UserId == userId).FirstOrDefault();// balanceManager.QueryUserBalance(userId);
-            if (userBalance == null) { throw new LogicException("用户帐户不存在 - " + userId); }
+            if (userBalance == null) {
+                result.Code = 300;
+                result.StatuCode = 300;
+                result.IsSuccess = false;
+                result.Message = "用户帐户不存在";
+                return result;
+            }
             if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
             {
                 if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
@@ -2318,13 +2355,24 @@ namespace KaSon.FrameWork.ORM.Helper
                     password = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
                     if (!userBalance.Password.ToUpper().Equals(password))
                     {
-                        throw new LogicException("资金密码输入错误");
+                        result.Code = 300;
+                        result.StatuCode = 300;
+                        result.IsSuccess = false;
+                        result.Message = "资金密码输入错误";
+                        return result;
+                        //throw new LogicException("资金密码输入错误");
                     }
                 }
             }
             var totalMoney = userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance + userBalance.RedBagBalance;
-            if (totalMoney < payoutMoney)
-                throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
+            if (totalMoney < payoutMoney) {
+                result.Code = 300;
+                result.StatuCode = 300;
+                result.IsSuccess = false;
+                result.Message = string.Format("用户总金额小于 {0:N2}元。", payoutMoney);
+                return result;
+            }
+                //throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
 
             var payDetailList = new List<PayDetail>();
             payDetailList.Add(new PayDetail
@@ -2468,13 +2516,22 @@ namespace KaSon.FrameWork.ORM.Helper
                 });
                 //userBalance.ExpertsBalance -= currentPayout;
             }
+            //if (payoutMoney > 0M)
+            //    throw new LogicException("用户余额不足");
             if (payoutMoney > 0M)
-                throw new LogicException("用户余额不足");
-
+            {
+                result.Code = 300;
+                result.StatuCode = 300;
+                result.IsSuccess = false;
+                result.Message = "用户余额不足";
+                return result;
+            }
             #endregion
 
             //balanceManager.UpdateUserBalance(userBalance);
             balanceManager.PayToUserBalanceByDB(DB,userId, payDetailList.ToArray());
+
+            return result;
         }
 
         public static void CheckDisableGame(string gameCode, string gameType)

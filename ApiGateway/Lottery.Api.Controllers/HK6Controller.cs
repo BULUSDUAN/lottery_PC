@@ -384,6 +384,60 @@ namespace Lottery.Api.Controllers
 
             return Json(result);
         }
+        public async Task<IActionResult> TransferRecord([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            CommonActionResult result = new CommonActionResult();
+            //Sum(string tokens, string IssueNo, string winNum)
+
+            var p = JsonHelper.Decode(entity.Param);
+            string UserToken = p.UserToken;
+            string PageIndex = p.PageIndex;
+
+            if (string.IsNullOrEmpty(UserToken))
+            {
+                result.Message = "token 不能为空";
+                result.Code = 300;
+                result.StatuCode = 300;
+                return Json(result);
+            }
+            if (string.IsNullOrEmpty(PageIndex))
+            {
+                result.Message = "PageIndex 不能为空";
+                result.Code = 300;
+                result.StatuCode = 300;
+                return Json(result);
+            }
+            if (int.Parse(PageIndex) <= 0)
+            {
+                result.Message = "PageIndex 页数必须大于0";
+                result.Code = 300;
+                result.StatuCode = 300;
+                return Json(result);
+            }
+            try
+            {
+               
+               
+
+                string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(UserToken);
+                var param = new Dictionary<string, object>();
+                param.Add("userId", userid);//laofan
+                param.Add("PageIndex", int.Parse(PageIndex));
+                //  Console.WriteLine("param2222222");
+                result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "hk6dataservice/data/GameTransfer");
+
+            }
+            catch (Exception ex)
+            {
+                result.Code = 500;
+                result.StatuCode = 500;
+                result.Message = "系统错误";
+                result.Value = entity;
+                result.ReturnValue = ex.ToString();
+            }
+
+            return Json(result);
+        }
 
         public async Task<IActionResult> CurrentIssuseNo([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
         {
@@ -462,6 +516,46 @@ namespace Lottery.Api.Controllers
                 result.Value = entity;
                 result.ReturnValue = ex.ToString();
             }
+
+
+            return Json(result);
+        }
+
+        public async Task<IActionResult> HostoryData([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            CommonActionResult result = new CommonActionResult();
+
+            var p = JsonHelper.Decode(entity.Param);
+            string userToken = p.UserToken;
+            string PageIndex = p.PageIndex;
+
+            if (string.IsNullOrEmpty(userToken))
+            {
+                result.Message = "token 不能为空";
+                result.Code = 300;
+                result.StatuCode = 300;
+                return Json(result);
+            }
+            if (string.IsNullOrEmpty(PageIndex))
+            {
+                result.Message = "PageIndex 不能为空";
+                result.Code = 300;
+                result.StatuCode = 300;
+                return Json(result);
+            }
+            if (int.Parse(PageIndex) <= 0)
+            {
+                result.Message = "PageIndex 页数必须大于0";
+                result.Code = 300;
+                result.StatuCode = 300;
+                return Json(result);
+            }
+            string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
+            var param = new Dictionary<string, object>();
+            param.Add("userId", userid);//laofan
+            param.Add("PageIndex", int.Parse(PageIndex));//laofan
+            result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "hk6dataservice/data/HostoryData");
+            //hk6dataservice/data/recharge
 
 
             return Json(result);

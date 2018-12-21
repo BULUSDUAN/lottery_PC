@@ -110,6 +110,51 @@ namespace KaSon.FrameWork.Common.Hk6
             }
             return scode;
         }
+        private static string SCodeName(int code)
+        {
+            int t = int.Parse(shuxiang());
+            int tt = t + code;
+            int value = tt;
+            if (code > 12)
+            {
+                int temp = code % 12;
+                temp--;
+                value = temp + t;
+                if (value > 12)
+                {
+                    value = value % 12;
+                }
+                value--;
+                
+            }
+            else {
+                value = code-1 + t;
+                if (value > 12)
+                {
+                    value = value % 12;
+                }
+                value--;
+            }
+            
+            
+            string[] shuxiangarr = {
+                "鼠", "牛", "虎", "兔", "龙",
+                "蛇", "马", "羊", "猴", "鸡",
+                "狗", "猪" };
+          
+            return shuxiangarr[value];
+        }
+        public static List<string> SCodeNameArr(string code)
+        {
+            List<string> list = new List<string>();
+            code = code.Replace("+", ",");
+            var codearr = code.Split(',');
+            foreach (var item in codearr)
+            {
+                list.Add(SCodeName(int.Parse(item)));
+            }
+            return list;
+        }
 
         public static List<string> ScodeArr(int code) {
            int scode= SCode(code);

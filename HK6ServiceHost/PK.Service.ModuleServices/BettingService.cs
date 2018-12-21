@@ -22,8 +22,10 @@ using KaSon.FrameWork.ORM;
 using EntityModel;
 using KaSon.FrameWork.Analyzer.Hk6Model;
 using KaSon.FrameWork.Common.Utilities;
+using PK.Service.IModuleServices;
+using HK6.ModuleBaseServices;
 
-namespace HK6.ModuleBaseServices
+namespace PK.Service.ModuleServices
 {
     /// <summary>
     /// 管理系统服务
@@ -213,7 +215,6 @@ namespace HK6.ModuleBaseServices
                     betTime = DateTime.Now,
                     CreateTime = DateTime.Now,
                     totalMoney = totalmoney,
-                    typeid=1,
                     userId = info.userId,
                     SchemeSource = info.SchemeSource,
                     displayName = LoginUser.displayName,
@@ -271,7 +272,6 @@ namespace HK6.ModuleBaseServices
                         playName = p.name,
                         AnteCodesName = codeName,
                         SchemeSource = info.SchemeSource,
-                        typeid=1,
                         // Odds = p.Odds,
                         GameType="HK6",
                         userId = info.userId,
