@@ -1,10 +1,9 @@
 {
   "RedisConfig": {
     "EnableRedis": true,
-    "RedisHost": "10.0.3.6",
-    "RedisPost": 6379,
-    "RedisPassword": "redis123"
-
+    "RedisHost": "10.0.3.27",
+    "RedisPost": 9370,
+    "RedisPassword": "a123456"
   },
 
   "compilerOptions": {
@@ -31,7 +30,7 @@
   "PL3_StopTicketing": "19:40-21:00",
   "JCGJ_StopTicketing": "19:40-21:00",
   //Mongo 数据库配置
-  "CrawDataBaseIsMongo":true,
+  "CrawDataBaseIsMongo": true,
   "MongoSettings": {
     "connectionString": "mongodb://10.0.3.6:27017",
     "IpAddr": "10.0.3.6",
@@ -53,33 +52,33 @@
     "IpAddrs": "127.0.0.1:8500",
     "Token": "16c5413b-276c-45ab-9b0e-9664126f1163"
   },
-    "SelfDomain": "http://localhost:729",
-    "MobileDomain": "http://localhost:729",
-    "ResSiteUrl": "http://10.0.3.6:888",
-    "Max_BetListCount": 6, //投注队列最大个数
-    "Max_PrizeListCount": 11, //派奖队列最大个数
-    "WaitingOrderListCount": 10, //早上自动拆票最大队列
+  "SelfDomain": "http://localhost:729",
+  "MobileDomain": "http://localhost:729",
+  "ResSiteUrl": "http://10.0.3.6:888",
+  "Max_BetListCount": 6, //投注队列最大个数
+  "Max_PrizeListCount": 11, //派奖队列最大个数
+  "WaitingOrderListCount": 10, //早上自动拆票最大队列
 
-    "QueryUserFundDetailFromCache": false,
-    //缓存配置文件，暂时没用到默认
+  "QueryUserFundDetailFromCache": false,
+  //缓存配置文件，暂时没用到默认
 
-    //必须配置
-    "HostSettings": {
-      "Ip": "127.0.0.1", //服务启动IP
-      "WatchInterval": 30,
-      "Port": 10108, //服务启动端口
-      "Token": "true",
-      "RequestCacheEnabled": false
-    },
-    //必须配置  RebbitMq 启动地址
-   
-    "Token": "16c5413b-276c-45ab-9b0e-9664126f1163",
-    "GameApi": {
-      "OperatorCode": "3D6A71F4AFB44EB0AAC28832666197CA",
-      "SecretKey": "5A25DDBC66964BD7BFFB59A30635C2F3",
-      "PreName": "DJW",
-      "URL": "http://api.mtechgame.com/generic"
-    }
+  //必须配置
+  "HostSettings": {
+    "Ip": "127.0.0.1", //服务启动IP
+    "WatchInterval": 30,
+    "Port": 10108, //服务启动端口
+    "Token": "true",
+    "RequestCacheEnabled": false
+  },
+  //必须配置  RebbitMq 启动地址
 
+  "Token": "16c5413b-276c-45ab-9b0e-9664126f1163",
+  "GameApi": {
+    "OperatorCode": "3D6A71F4AFB44EB0AAC28832666197CA",
+    "SecretKey": "5A25DDBC66964BD7BFFB59A30635C2F3",
+    "PreName": "DJW",
+    "URL": "http://api.mtechgame.com/generic"
   }
+
+}
 
