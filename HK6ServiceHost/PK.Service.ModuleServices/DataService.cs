@@ -27,6 +27,7 @@ using KaSon.FrameWork.Services.ORM;
 using KaSon.FrameWork.Services.Enum;
 using PK.Service.IModuleServices;
 using HK6.ModuleBaseServices;
+using KaSon.FrameWork.ORM.Helper.BJPK;
 
 namespace PK.Service.ModuleServices
 {
@@ -95,45 +96,7 @@ namespace PK.Service.ModuleServices
 
 
         }
-            public Task<CommonActionResult> ReChargeRecord(string userId, int sType)
-        {
-            CommonActionResult result = new CommonActionResult();
-            int lhc = (int)MGGameType.BJPK;
-            int status = (int)FillMoneyStatus.Success;
-            int Recharge = (int)GameTransferType.Recharge;
-            if (sType != 0)
-            {
-                Recharge = (int)GameTransferType.Withdraw;
-            }
-            try
-            {
-                var mb = LettoryDB.CreateQuery<C_Game_Transfer>().Where(b => b.UserId == userId
-           && b.GameType == lhc && b.Status == status && b.TransferType == Recharge).ToList();
-                result.Value = mb.OrderByDescending(b=>b.UpdateTime).ToList();
-                result.IsSuccess = true;
-            }
-            catch (Exception ex)
-            {
-                LettoryDB.Rollback();
-                DB.Rollback();
-                result.Message = "系统错误";
-                result.IsSuccess = false;
-
-                result.Code = 500;
-                result.StatuCode = 500;
-                result.ReturnValue = ex.ToString();
-            }
-            finally
-            {
-                DB.Dispose();
-                LettoryDB.Dispose();
-
-            }
-
-            // LettoryDB.GetDal<C_Game_Transfer>().Add(ctransfer);
-
-            return Task.FromResult(result);
-        }
+        
         public Task<CommonActionResult> ReCharge(string userId, string userDisplayName, decimal Money)
         {
             //  CommonActionResult result = new CommonActionResult();
@@ -335,91 +298,19 @@ namespace PK.Service.ModuleServices
 
             return Task.FromResult(result);
         }
-        public Task<CommonActionResult> GameTransfer(string userId,int PageIndex)
-        {
-            CommonActionResult result = new CommonActionResult();
-           // int lhc = (int)MGGameType.LHC;
-           
-            //PageIndex
-            var query = LettoryDB.CreateQuery<C_Game_Transfer>();
-
-            var wlist = new List<WhereField>();
-            wlist.Add(new WhereField()
-            {
-                Field = "UserId",
-                Value = userId,
-                WhereType = WhereType.Equal
-
-            });
-            //wlist.Add(new WhereField()
-            //{
-            //    Field = "GameType",
-            //    Value = lhc.ToString(),
-            //    WhereType = WhereType.Equal
-
-            //});
-            
-            var slist = new List<SortField>();
-            slist.Add(new SortField()
-            {
-                Field = "UpdateTime",
-                IsASC = false
-
-            });
-            QueryArgs qargs = new QueryArgs()
-            {
-                PageIndex = PageIndex,
-                PageSize = 20,
-                WhereFields = wlist,
-                SortFields = slist
-
-            };
-
-            var data = LettoryDB.CreateComQuery().Query<C_Game_Transfer>(query, qargs);
-
-            // var list = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.userId == userId).ToList();
-            result.Value = data.Data;
-            result.IsSuccess = true;
-            if (data.RowCount <= 0)
-            {
-                result.IsSuccess = false;
-                result.Code = 500;
-                result.StatuCode = 500;
-            }
-          
-
-            return Task.FromResult(result);
-           
-        }
+     
 
         public Task<CommonActionResult> GetCurrentIssuseNo()
         {
-            CommonActionResult result = new CommonActionResult();
-            result.IsSuccess = true;
-            var mb = new DataServiceHelper(DB).GetissueNo();
-            result.Value = mb;
+            //CommonActionResult result = new CommonActionResult();
+            //result.IsSuccess = true;
+            //var mb = new DataServiceHelper(DB).GetissueNo();
+            CommonActionResult result = new DataHelper(DB).GetGames(20);
+            //result.Value = mb;
             return Task.FromResult(result);
         }
 
-        /// <summary>
-        /// 获取用户信息
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public Task<CommonActionResult> UserInfo(string userId)
-        {
-            CommonActionResult result = new CommonActionResult();
-            var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
-            result.Value = mb;
-            result.IsSuccess = true;
-            if (mb == null)
-            {
-                //result.IsSuccess = true;
-                result.Value = new blast_member();
-            }
-
-            return Task.FromResult(result);
-        }
+        
         public Task<CommonActionResult> PlayInfo()
         {
             CommonActionResult result = new CommonActionResult();
@@ -486,7 +377,15 @@ namespace PK.Service.ModuleServices
                 WhereType = WhereType.Equal
 
             });
+            wlist.Add(new WhereField()
+            {
+                Field = "typeid",
+                Value = 20+"",
+                WhereType = WhereType.Equal
 
+            });
+
+            
             var slist = new List<SortField>();
             slist.Add(new SortField()
             {

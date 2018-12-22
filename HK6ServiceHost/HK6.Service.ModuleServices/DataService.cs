@@ -25,6 +25,7 @@ using KaSon.FrameWork.Common.Utilities;
 using KaSon.FrameWork.Common.Hk6;
 using KaSon.FrameWork.Services.ORM;
 using KaSon.FrameWork.Services.Enum;
+using KaSon.FrameWork.ORM.Helper.BJPK;
 
 namespace HK6.ModuleBaseServices
 {
@@ -395,6 +396,7 @@ namespace HK6.ModuleBaseServices
             CommonActionResult result = new CommonActionResult();
             result.IsSuccess = true;
             var mb = new DataServiceHelper(DB).GetissueNo();
+           // CommonActionResult result = new DataHelper(DB).GetGames(20);
             result.Value = mb;
             return Task.FromResult(result);
         }

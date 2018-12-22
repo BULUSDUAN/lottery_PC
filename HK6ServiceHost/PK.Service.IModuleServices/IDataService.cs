@@ -33,20 +33,18 @@ namespace PK.Service.IModuleServices
         /// </summary>
         /// <param name="winNum"></param>
         /// <returns></returns>
-        [Service(Date = "2018-9-3", Director = "kason", Name = "充值")]
+        [Service(Date = "2018-9-3", Director = "kason", Name = "pk充值")]
          Task<CommonActionResult> ReCharge(string userId, string userDisplayName, decimal Money);
 
-        [Service(Date = "2018-9-3", Director = "kason", Name = "玩法分组")]
+        [Service(Date = "2018-9-3", Director = "kason", Name = "pk玩法分组")]
         Task<CommonActionResult> PlayCategory();
 
-        [Service(Date = "2018-9-3", Director = "kason", Name = "充值记录")]
-        Task<CommonActionResult> ReChargeRecord(string userId, int sType);
+      
 
-        [Service(Date = "2018-9-3", Director = "kason", Name = "提现")]
+        [Service(Date = "2018-9-3", Director = "kason", Name = "pk提现")]
         Task<CommonActionResult> GameWithdraw(string userId, string userDisplayName, decimal Money);
 
-        [Service(Date = "2018-9-3", Director = "kason", Name = "用户信息")]
-         Task<CommonActionResult> UserInfo(string userId);
+        
         [Service(Date = "2018-9-3", Director = "kason", Name = "订单信息")]
         Task<CommonActionResult> OrderInfo(string userId, int PageIndex);
         [Service(Date = "2018-9-3", Director = "kason", Name = "玩法")]
@@ -55,8 +53,7 @@ namespace PK.Service.IModuleServices
         Task<CommonActionResult> GetCurrentIssuseNo();
         [Service(Date = "2018-9-3", Director = "kason", Name = "获取期号")]
         Task<CommonActionResult> OrderDetail(string oId);
-        [Service(Date = "2018-9-3", Director = "kason", Name = "获取期号")]
-        Task<CommonActionResult> GameTransfer(string userId, int PageIndex);
+       
 
         [Service(Date = "2018-9-3", Director = "kason", Name = "历史记录")]
         Task<CommonActionResult> HostoryData(string userId, int PageIndex);

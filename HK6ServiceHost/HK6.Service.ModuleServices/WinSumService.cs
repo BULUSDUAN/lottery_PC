@@ -122,7 +122,7 @@ namespace HK6.ModuleBaseServices
                 {
                     isOpen = true,
                     winNum = winNum,
-                }, b => b.actionNo == atcNo);
+                }, b => b.actionNo == IssueNo);
                 DB.Commit();
                 result.Message = "开奖成功";
                 result.IsSuccess = true;

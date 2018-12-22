@@ -34,6 +34,8 @@
     <ProjectReference Include="..\HK6.ModuleBaseServices\HK6.ModuleBaseServices.csproj" />
     <ProjectReference Include="..\HK6.Service.IModuleServices\HK6.Service.IModuleServices.csproj" />
     <ProjectReference Include="..\HK6.Service.ModuleServices\HK6.Service.ModuleServices.csproj" />
+    <ProjectReference Include="..\PK.Service.IModuleServices\PK.Service.IModuleServices.csproj" />
+    <ProjectReference Include="..\PK.Service.ModuleServices\PK.Service.ModuleServices.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,11 +13,45 @@ namespace KaSon.FrameWork.ORM.Helper
    public class DataInserterHelper 
     {
         private IDbProvider DB = null;
-       
-        public DataInserterHelper(IDbProvider _DB) {
+        private IDbProvider nDB = null;
+        private IDbProvider xDB = null;
+        public DataInserterHelper(IDbProvider _DB, IDbProvider _D) {
             DB = _DB;
+            nDB = _DB;
+            xDB = _D;
         }
 
+        public   void DataAddPK期号() {
+            //var xDB = DB.Init("MySql.Default1");
+            //var nDB = DB.Init("MySql.Default");
+            var list= xDB.CreateQuery<xingblast_data_time>().Where(b=>b.typeid==20).ToList();
+            IList<blast_data_time> list2 = new List<blast_data_time>();
+            foreach (var item in list)
+            {
+                blast_data_time bt = new blast_data_time() {
+                     actionNo=item.actionNo,
+                      actionhours=item.actionTime,
+                       stophours=item.stopTime,
+                        typeid=item.typeid,
+                         isOpen=false,
+                          winNum=""
+
+
+                };
+                list2.Add(bt);
+
+            }
+            foreach (var item in list2)
+            {
+                string value = item.actionhours;
+               var p= nDB.CreateQuery<blast_data_time>().Where(b=>b.actionhours== value).FirstOrDefault();
+                if (p==null)
+                {
+                    nDB.GetDal<blast_data_time>().Add(item);
+
+                }
+            }
+        }
 
         private void DataAdd两面(int playid) {
             //   519 1.98    特双  02  318 两面  1   2       TS
