@@ -1299,5 +1299,10 @@ where f.status=3
                         };
             return query.ToList();
         }
+
+        public List<E_A20150919_加奖配置> GetAddMoneyList()
+        {
+            return DB.CreateQuery<E_A20150919_加奖配置>().ToList();
+        }
     }
 }

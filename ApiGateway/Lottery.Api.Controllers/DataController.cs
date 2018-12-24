@@ -4464,7 +4464,122 @@ namespace Lottery.Api.Controllers
                 });
             }
         }
-        
+
         #endregion
+
+
+        /// <summary>
+        /// 获取加奖百分比
+        /// </summary>
+        /// <param name="_serviceProxyProvider"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> GetAddMoneyWay([FromServices]IServiceProxyProvider _serviceProxyProvider, LotteryServiceRequest entity)
+        {
+            try
+            {
+                var p = JsonHelper.Decode(entity.Param);
+                string gameCode = p.gameCode;
+                string gameType = p.gameType;
+                Dictionary<string, object> param = new Dictionary<string, object>();
+                //var configList = activityManager.QueryA20150919_加奖配置(order.GameCode);
+                var list = await _serviceProxyProvider.Invoke<List<E_A20150919_加奖配置>>(param, "api/data/GetAddMoneyList");
+                if (list != null && list.Count > 0)
+                {
+                    var item = FindConfig(list, gameCode, gameType);
+                    if (item != null)
+                    {
+                        return Json(new LotteryServiceResponse
+                        {
+                            Code = ResponseCode.成功,
+                            Message = "查询成功",
+                            MsgId = "",
+                            Value = new
+                            {
+                                AddBonusMoneyPercent = item.AddBonusMoneyPercent
+                            }
+                        });
+                    }
+                }
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.成功,
+                    Message = "查询成功",
+                    MsgId = "",
+                    Value = new
+                    {
+                        AddBonusMoneyPercent = 0
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new LotteryServiceResponse
+                {
+                    Code = ResponseCode.失败,
+                    Message = ex.ToGetMessage() + "●" + ex.ToString(),
+                    MsgId = "",
+                    Value = ex.ToGetMessage(),
+                });
+            }
+        }
+
+        private E_A20150919_加奖配置 FindConfig(List<E_A20150919_加奖配置> configList,string GameCode, string GameType,string PlayType="")
+        {
+            foreach (var config in configList.OrderBy(p => p.OrderIndex).ToArray())
+            {
+                if (new string[] { "JCZQ", "JCLQ", "BJDC" }.Contains(GameCode.ToUpper()))
+                {
+                    //竞彩
+                    if (config.GameType.ToUpper() == GameType.ToUpper())
+                    {
+                        //指定玩法
+                        if (PlayType.ToUpper() == "P1_1" && PlayType.ToUpper() == config.PlayType.ToUpper())
+                        {
+                            //单关
+                            return config;
+                        }
+                        if (PlayType.ToUpper() != "P1_1" && config.PlayType.ToUpper() == "PM_1")
+                        {
+                            //过关
+                            return config;
+                        }
+                        if (PlayType.ToUpper() == "ALL")
+                        {
+                            //全部
+                            return config;
+                        }
+                    }
+                    if (config.GameType.ToUpper() == "ALL")
+                    {
+                        //全部玩法
+                        if (PlayType.ToUpper() == "P1_1" && PlayType.ToUpper() == config.PlayType.ToUpper())
+                        {
+                            //单关
+                            return config;
+                        }
+                        if (PlayType.ToUpper() != "P1_1" && config.PlayType.ToUpper() == "PM_1")
+                        {
+                            //过关
+                            return config;
+                        }
+                        if (PlayType.ToUpper() == "ALL")
+                        {
+                            //全部
+                            return config;
+                        }
+                    }
+                }
+                else
+                {
+                    //传统足球和数字彩
+                    if (config.GameCode.ToUpper() == GameCode.ToUpper()&& config.GameType.ToUpper() == GameType.ToUpper())
+                        return config;
+                    if (config.GameCode.ToUpper() == GameCode.ToUpper() && config.GameType.ToUpper() == "ALL")
+                        return config;
+                }
+            }
+            return null;
+        }
     }
 }

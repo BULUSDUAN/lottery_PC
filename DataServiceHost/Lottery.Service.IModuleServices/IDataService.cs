@@ -876,7 +876,10 @@ namespace Lottery.Service.IModuleServices
 
         #region 获取合买名人列表
         [Service(Date = "2018-11-16", Director = "lili", Name = "获取合买名人列表")]
-        Task<List<TogetherHotUserInfo>> QueryHotTogetherUserListFromRedis(); 
+        Task<List<TogetherHotUserInfo>> QueryHotTogetherUserListFromRedis();
         #endregion
+
+        [Service(Date = "2018-12-24", Director = "lidi", Name = "获取所有加奖配置")]
+        Task<List<E_A20150919_加奖配置>> GetAddMoneyList();
     }
 }

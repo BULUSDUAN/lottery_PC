@@ -4735,6 +4735,29 @@ namespace Lottery.Service.ModuleServices
         }
 
         #endregion
+
+        public Task<List<E_A20150919_加奖配置>> GetAddMoneyList()
+        {
+            try
+            {
+                var key = RedisKeys.AddMoneyList;
+                var obj = RedisHelperEx.DB_Other.Get(key);
+                if (obj != null)
+                {
+                    return Task.FromResult(JsonHelper.Deserialize<List<E_A20150919_加奖配置>>(obj));
+                }
+                var result = new DataQuery().GetAddMoneyList();
+                if (result.Count > 0)
+                {
+                    RedisHelperEx.DB_Other.Set(key, JsonHelper.Serialize(result), 60 * 60);
+                }
+                return Task.FromResult(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("获取出错", ex);
+            }
+        }
     }
 
 
