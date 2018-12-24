@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace KaSon.FrameWork.Common.CheckToken
@@ -31,6 +32,8 @@ namespace KaSon.FrameWork.Common.CheckToken
         /// <returns></returns>
         public static string ValidateAuthentication(string userToken)
         {
+            string str2 = WebUtility.UrlDecode(userToken);
+            userToken = str2.Replace(" ", "+");
             try
             {
                 var rlt = UserTokenHelper.AnalyzeUserToken(userToken);

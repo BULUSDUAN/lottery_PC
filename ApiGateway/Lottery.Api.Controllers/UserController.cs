@@ -84,7 +84,7 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId,
                     Value = new
                     {
-                        UserToken = loginInfo.UserToken,
+                        UserToken = loginInfo.UserToken.UrlEncode(),
                         DisplayName = loginInfo.DisplayName,
                         LoginName = loginInfo.LoginName,
                         UserId = loginInfo.UserId,
@@ -462,7 +462,7 @@ namespace Lottery.Api.Controllers
                             MsgId = entity.MsgId,
                             Value = new
                             {
-                                UserToken = loginInfo.UserToken,
+                                UserToken = loginInfo.UserToken.UrlEncode(),
                                 DisplayName = loginInfo.DisplayName,
                                 LoginName = loginInfo.LoginName,
                                 UserId = loginInfo.UserId,
@@ -1359,7 +1359,7 @@ namespace Lottery.Api.Controllers
                     MsgId = entity.MsgId,
                     Value = new
                     {
-                        UserToken = userToken,
+                        UserToken = userToken.UrlEncode(),
                         DisplayName = bindInfo.DisplayName,
                         LoginName = bindInfo.DisplayName,
                         UserId = bindInfo.UserId,

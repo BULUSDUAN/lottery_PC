@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace KaSon.FrameWork.Common.Expansion
@@ -41,6 +42,14 @@ namespace KaSon.FrameWork.Common.Expansion
         {
             if (string.IsNullOrWhiteSpace(str)) return false;
             return bool.Parse(str.Trim());
+        }
+
+        public static string UrlEncode(this string str)
+        {
+            if (string.IsNullOrWhiteSpace(str)) return string.Empty;
+            string str2 = WebUtility.UrlEncode(str.Trim());
+
+            return str.Trim();
         }
 
     }
