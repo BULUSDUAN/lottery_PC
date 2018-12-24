@@ -36,7 +36,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
         private blast_data GetWinData(blast_data_time btime) {
-            int issueNo = btime.actionNo;
+            int issueNo =int.Parse( btime.actionNo);
             if (issueNo<2000)
             {
                 issueNo = int.Parse(btime.actionTime.Year + "" + issueNo);
@@ -63,16 +63,16 @@ namespace KaSon.FrameWork.ORM.Helper
                                 where b.actionTime > sdate && b.actionTime < edate
                                 orderby b.actionTime descending
                                 select b).FirstOrDefault();
-                        data=   new blast_data() { issueNo = datatime.actionNo, kjdata = "", typeid = 1, kjnumber = "", kjtime = datatime.actionTime };
+                        data=   new blast_data() { issueNo = datatime.actionNo+"", kjdata = "", typeid = 1, kjnumber = "", kjtime = datatime.actionTime };
                     }
                 }
                 else {
-                    int nissueNo = issueNo - 1;
+                    string nissueNo = (issueNo - 1)+"";
                     data = query.Where(b => b.issueNo == nissueNo).FirstOrDefault();
                     if (data == null)
                     {
                         blast_data_time datatime = DB.CreateQuery<blast_data_time>().Where(b => b.actionNo == nissueNo).FirstOrDefault();
-                        data = new blast_data() { issueNo = datatime.actionNo, kjdata = "", typeid = 1, kjnumber = "", kjtime = datatime.actionTime };
+                        data = new blast_data() { issueNo = datatime.actionNo + "", kjdata = "", typeid = 1, kjnumber = "", kjtime = datatime.actionTime };
                     }
                 }
                

@@ -28,4 +28,11 @@
 	<CommandTimeout>300</CommandTimeout>
 	<FactoryType>KaSon.ORM.Factory.MySqlFactory</FactoryType>
 </OrmConfigInfo>
+  <OrmConfigInfo>
+    <DbKey>MySql.Default1</DbKey>
+    <ConnectionString>server=10.0.3.6;user=root;database=xingcai;port=3306;password=!@#123456abc;SSL Mode=none</ConnectionString>
+    <Provider>MySql</Provider>
+    <CommandTimeout>300</CommandTimeout>
+    <FactoryType>KaSon.ORM.Factory.MySqlFactory</FactoryType>
+  </OrmConfigInfo>
 </ArrayOfOrmConfigInfo>

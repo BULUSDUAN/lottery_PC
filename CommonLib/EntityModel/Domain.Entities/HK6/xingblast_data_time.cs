@@ -12,9 +12,9 @@ namespace EntityModel
     ///</summary>
     [ProtoContract]
     [Entity("blast_data_time",Type = EntityType.Table)]
-    public class blast_data_time
+    public class xingblast_data_time
     { 
-        public blast_data_time()
+        public xingblast_data_time()
         {
         
         }
@@ -28,7 +28,7 @@ namespace EntityModel
             // 
             ///</summary>
             [ProtoMember(2)]
-            [Field("typeid")]
+            [Field("type")]
             public sbyte typeid{ get; set; }
             /// <summary>
             // 
@@ -41,23 +41,14 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(4)]
             [Field("actionTime")]
-            public DateTime actionTime{ get; set; }
+            public string actionTime { get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(5)]
             [Field("stopTime")]
-            public DateTime stopTime { get; set; }
+            public string stopTime { get; set; }
 
-        [Field("isOpen")]
-        public bool isOpen { get; set; }
-        [Field("winNum")]
-        public string winNum { get; set; }
-
-        public blast_data PreData { get; set; }
-        [Field("actionhours")]
-        public string actionhours { get; set; }
-        [Field("stophours")]
-        public string stophours { get; set; }
+    
     }
 }

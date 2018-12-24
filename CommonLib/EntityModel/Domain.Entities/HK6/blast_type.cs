@@ -23,7 +23,7 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(1)]
             [Field("id", IsIdenty = true, IsPrimaryKey = true)]
-            public uint id{ get; set; }
+            public int id{ get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -35,19 +35,19 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(3)]
             [Field("enable")]
-            public sbyte enable{ get; set; }
+            public int enable{ get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(4)]
             [Field("isDelete")]
-            public sbyte isDelete{ get; set; }
+            public int isDelete { get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(5)]
             [Field("sort")]
-            public sbyte sort{ get; set; }
+            public int sort { get; set; }
             /// <summary>
             // 
             ///</summary>
@@ -89,13 +89,13 @@ namespace EntityModel
             ///</summary>
             [ProtoMember(12)]
             [Field("data_ftime")]
-            public uint data_ftime{ get; set; }
+            public int data_ftime { get; set; }
             /// <summary>
             // 
             ///</summary>
             [ProtoMember(13)]
             [Field("defaultViewGroup")]
-            public short defaultViewGroup{ get; set; }
+            public int defaultViewGroup { get; set; }
             /// <summary>
             // 
             ///</summary>

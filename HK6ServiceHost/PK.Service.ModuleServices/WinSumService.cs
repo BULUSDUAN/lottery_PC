@@ -120,11 +120,11 @@ namespace PK.Service.ModuleServices
                 }
                 //添加记录
                 int atcNo = int.Parse(IssueNo);
-                DB.GetDal<blast_data_time>().Update(b => new blast_data_time()
-                {
-                    isOpen = true,
-                    winNum = winNum,
-                }, b => b.actionNo == atcNo);
+                //DB.GetDal<blast_data_time>().Update(b => new blast_data_time()
+                //{
+                //    isOpen = true,
+                //    winNum = winNum,
+                //}, b => b.actionNo == atcNo);
                 DB.Commit();
                 result.Message = "开奖成功";
                 result.IsSuccess = true;
