@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using MongoDB.Driver;
 using EntityModel;
+using EntityModel.Communication;
 
 namespace Lottery.CrawGetters.Auto
 {
@@ -19,19 +20,21 @@ namespace Lottery.CrawGetters.Auto
     public class Service_AutoCollectIssuse : BaseAutoCollect
     {
         private long BeStop = 0;
+
+
         ILogger<Service_AutoCollectWinNumber> _log = null;
         private TimeSpan sleep;
-      
+
         private IMongoDatabase mDB;
         private string gameName = "";
-        public Service_AutoCollectIssuse(IMongoDatabase _mDB,string _gameName):base(_gameName,_mDB)
+        public Service_AutoCollectIssuse(IMongoDatabase _mDB, string _gameName) : base(_gameName, _mDB)
         {
             _log = InitConfigInfo.logFactory.CreateLogger<Service_AutoCollectWinNumber>();
             mDB = _mDB;
-          
+
             this.gameName = _gameName;
         }
-     
+
         //if (fatellogger == null) {
         //       fatellogger = ;//.Fatal(message, exception);
         //   }
@@ -115,7 +118,7 @@ namespace Lottery.CrawGetters.Auto
         //private ConcurrentDictionary<string, string> all = new ConcurrentDictionary<string, string>();//<string, Dictionary<string, string>>();
         private List<string> Process()
         {
-         return   WinNumberGetter_1680660.GetIssuseNum();
+            return WinNumberGetter_1680660.GetIssuseNum();
 
         }
         //private static Dictionary<string, string> CheckIssuseNumber(string gameCode, Dictionary<string, string> dict)
@@ -137,22 +140,24 @@ namespace Lottery.CrawGetters.Auto
         //// private readonly ConcurrentDictionary<string, string> succeedWinNumber = new ConcurrentDictionary<string, string>();
         //private Thread thread = null;
 
-        public string Key="";
+        public string Key = "";
 
-        private Task thread=null;
-        
-        public void Start( Func<List<string>,  bool> fn)
+        private Task thread = null;
+
+        public void Start(Func<List<string>, bool> fn)
         {
-            if (thread != null)
-            {
-                throw new LogicException("已经运行");
-            }
+            //if (thread != null)
+            //{
+            //    throw new LogicException("已经运行");
+            //}
             gameName = gameName.ToUpper();
             BeStop = 0;
-           // fn("",null);
-            thread =Task.Factory.StartNew ((Fn) =>
+            string tempStr = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings["HK6"].ToString();
+            int initTimeData = int.Parse(tempStr);
+            int sleep = initTimeData;
+            thread = Task.Factory.StartNew((Fn) =>
             {
-                List <string> all = new List<string>();
+                List<string> all = new List<string>();
                 List<string> dic = null;
                 while (Interlocked.Read(ref BeStop) == 0)
                 {
@@ -164,11 +169,12 @@ namespace Lottery.CrawGetters.Auto
                         System.DayOfWeek w = DateTime.Now.DayOfWeek;
                         //if (System.DayOfWeek.Sunday==w && DateTime.Now.Hour==10 && DateTime.Now.Minute==30)
                         //{
-                            dic = Process();
+                        dic = Process();
+                        if (dic.Count > 0)
+                        {
+                            WriteLog("采集到数据期号数据" + string.Join(Environment.NewLine, dic));
 
-                        WriteLog("采集到数据");
-                        WriteLog(string.Join(Environment.NewLine,dic));
-                        var Nfn = Fn as Func<List<string>, bool>;
+                            var Nfn = Fn as Func<List<string>, bool>;
 
                             var bol = Nfn(dic);
                             if (bol)
@@ -182,78 +188,16 @@ namespace Lottery.CrawGetters.Auto
                                     }
                                 }
 
-                                WriteLog("成功同步到数据库");
+                                WriteLog("六合彩期号记录成功同步到数据库");
                             }
-                            Thread.Sleep(1000 * 61);
-
-                      //  }
-                       
-                        
-                       // return false;
-                      // WriteLog(gameName,)
-                    }
-                    catch (Exception ex)
-                    {
-                        WriteError("处理:" + ex.Message);
-                    }
-                    finally
-                    {
-                        Thread.Sleep(sleep);
-                    }
-                }
-            },fn);
-          //  thread.Start();
-
-
-        }
-        /// <summary>
-        /// 开奖记录 
-        /// </summary>
-        /// <param name="fn"></param>
-        public void StartHostory(Func<List<blast_data>, bool> fn)
-        {
-            if (thread != null)
-            {
-                throw new LogicException("已经运行");
-            }
-            gameName = gameName.ToUpper();
-            BeStop = 0;
-            // fn("",null);
-            thread = Task.Factory.StartNew((Fn) =>
-            {
-                List<blast_data> all = new List<blast_data>();
-                List<blast_data> dic = null;
-                while (Interlocked.Read(ref BeStop) == 0)
-                {
-                    ////TODO：销售期间，暂停采集
-                    WriteLogAll();
-                    try
-                    {
-                        //每周天执行一次
-                        System.DayOfWeek w = DateTime.Now.DayOfWeek;
-                        //if (System.DayOfWeek.Sunday==w && DateTime.Now.Hour==10 && DateTime.Now.Minute==30)
-                        //{
-                        dic = WinNumberGetter_1680660.winNum();
-
-                        WriteLog("采集到数据");
-                        WriteLog(string.Join(Environment.NewLine, dic));
-                        var Nfn = Fn as Func<List<blast_data>, bool>;
-
-                        var bol = Nfn(dic);
-                        if (bol)
-                        {
-                            foreach (var item in dic)
-                            {
-                                var one = all.Where(b => b == item).FirstOrDefault();
-                                if (one == null)
-                                {
-                                    all.Add(item);
-                                }
-                            }
-
-                            WriteLog("成功同步到数据库");
+                            Thread.Sleep(initTimeData);
                         }
-                        Thread.Sleep(1000 * 61);
+                        else
+                        {
+                            WriteLog("六合彩期号记录采集没有数据");
+                        }
+
+
 
                         //  }
 
@@ -267,10 +211,169 @@ namespace Lottery.CrawGetters.Auto
                     }
                     finally
                     {
-                        Thread.Sleep(sleep);
+                        Thread.Sleep(1000 * 61);
                     }
                 }
             }, fn);
+            //  thread.Start();
+
+
+        }
+        /// <summary>
+        /// 开奖记录 
+        /// </summary>
+        /// <param name="fn"></param>
+        public void StartHostory(Func<List<blast_data>, bool> fn)
+        {
+            //if (thread != null)
+            //{
+            //    throw new LogicException("已经运行");
+            //}
+            gameName = gameName.ToUpper();
+            BeStop = 0;
+
+            //int sleep = initTimeData;
+            // fn("",null);
+            //thread = Task.Factory.StartNew((Fn) =>
+            //{
+            List<blast_data> all = new List<blast_data>();
+            List<blast_data> dic = null;
+            int Count = 0;
+            while (true)
+            {
+                ////TODO：销售期间，暂停采集
+                Count++;
+                if (Count >= 10)
+                {
+                    break;
+                }
+                try
+                {
+                    //每周天执行一次
+                    System.DayOfWeek w = DateTime.Now.DayOfWeek;
+                    //if (System.DayOfWeek.Sunday==w && DateTime.Now.Hour==10 && DateTime.Now.Minute==30)
+                    //{
+                    dic = WinNumberGetter_1680660.HostoryWinNum();
+                    if (dic.Count > 0)
+                    {
+                        WriteLog("六合彩历史记录采集到数据" + dic.Count + "条");
+                        //  WriteLog(string.Join(Environment.NewLine, dic));
+                        //var Nfn = Fn as Func<List<blast_data>, bool>;
+
+                        var bol = fn(dic);
+                        if (bol)
+                        {
+                            foreach (var item in dic)
+                            {
+                                var one = all.Where(b => b == item).FirstOrDefault();
+                                if (one == null)
+                                {
+                                    all.Add(item);
+                                }
+                            }
+
+                            WriteLog("六合彩历史记录采集成功同步到数据库");
+                           
+                           
+                        }
+                        WriteLogAll();
+                        break;
+                        // Thread.Sleep(initTimeData);
+                    }
+                    else
+                    {
+                        WriteLog("六合彩历史记录采集没有数据");
+                    }
+
+                    WriteLogAll();
+
+                    //  }
+
+
+                    // return false;
+                    // WriteLog(gameName,)
+                }
+                catch (Exception ex)
+                {
+                    WriteError("处理:" + ex.Message);
+                }
+                finally
+                {
+                    Thread.Sleep(60 * 1000);
+                }
+            }
+            // }, fn);
+            //  thread.Start();
+
+
+        }
+
+        public void StartOpenWinNum(Func<List<blast_data_time>, CommonActionResult> fn)
+        {
+            //if (thread != null)
+            //{
+            //    throw new LogicException("已经运行");
+            //}
+            gameName = gameName.ToUpper();
+            BeStop = 0;
+            // fn("",null);
+            //string tempStr = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings["HK6"].ToString();
+            //int initTimeData = int.Parse(tempStr);
+            int sleep = 1000 * 60;
+            //thread = Task.Factory.StartNew((Fn) =>
+            //{
+            List<blast_data_time> all = new List<blast_data_time>();
+            List<blast_data_time> dic = null;
+            int Count = 0;
+            while (true)
+            {
+                ////TODO：销售期间，暂停采集
+                Count++;
+                if (Count >= 10)
+                {
+                    break;
+                }
+                ////TODO：销售期间，暂停采集
+
+                try
+                {
+                    //每周天执行一次
+                    System.DayOfWeek w = DateTime.Now.DayOfWeek;
+                    //if (System.DayOfWeek.Sunday==w && DateTime.Now.Hour==10 && DateTime.Now.Minute==30)
+                    //{
+                    dic = WinNumberGetter_1680660.OpenWinNum();
+                    if (dic.Count > 0)
+                    {
+                        WriteLog("采集到数据");
+                        WriteLog(string.Join(Environment.NewLine, dic));
+                        //   var Nfn = Fn as Func<List<blast_data_time>, CommonActionResult>;
+
+                        CommonActionResult result = fn(dic);
+                        if (result.IsSuccess)
+                        {
+
+                            WriteLog("成功同步到数据库");
+                        }
+                        WriteLogAll();
+                        break;
+                    }
+                    else
+                    {
+                        WriteLog("六合彩开奖结算没有踩到数据");
+                        // sleep = 1000 * 5;
+                    }
+                    WriteLogAll();
+                }
+                catch (Exception ex)
+                {
+                    WriteError("处理:" + ex.Message);
+                }
+                finally
+                {
+                    Thread.Sleep(sleep);
+                }
+            }
+            // }, fn);
             //  thread.Start();
 
 
@@ -282,12 +385,14 @@ namespace Lottery.CrawGetters.Auto
 
             if (thread != null)
             {
-               
+
                 thread = null;
             }
 
 
         }
+
+        //OpenWinNum
         //private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         //public void WriteLog(string log)

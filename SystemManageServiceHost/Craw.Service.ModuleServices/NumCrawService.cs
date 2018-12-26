@@ -19,6 +19,7 @@ using System.Threading;
 using System.Collections.Concurrent;
 using Lottery.CrawGetters.Auto;
 using Newtonsoft.Json.Linq;
+using Lottery.CrawGetters;
 
 namespace Craw.Service.ModuleServices
 {
@@ -35,6 +36,8 @@ namespace Craw.Service.ModuleServices
         private static IList<Service_AutoCollectWinNumber> aotoCollectList = new List<Service_AutoCollectWinNumber>();
         private static IList<Service_AutoCollectIssuse> aotoIssuseCollectList = new List<Service_AutoCollectIssuse>();
         private static IList<Service_AutoCollectBonusPool> aotoPoolCollectList = new List<Service_AutoCollectBonusPool>();
+
+        private static Dictionary<string, System.Timers.Timer> timerList = new Dictionary<string, System.Timers.Timer>();
         private readonly CrawRepository rep;
         public NumCrawService( ILogger<NumCrawService> log, CrawRepository _rep)
         {
@@ -231,15 +234,50 @@ namespace Craw.Service.ModuleServices
                         break;
                     case "HostoryHK6":
 
-                        var p1 = aotoIssuseCollectList.Where(b => b.Key == gameName).FirstOrDefault();
+                        var p1 = timerList.GetValueOrDefault(gameName);
                         if (p1 == null)
                         {
-                            Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
-                            //执行任务
-                            //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
-                            auto.Key = gameName;
-                            auto.StartHostory(new CrawORMService(rep.MDB).HK6winNum);
-                            aotoIssuseCollectList.Add(auto);
+                            string tempStr = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings["HK6"].ToString();
+                            int initTimeData = int.Parse(tempStr);
+                            System.Timers.Timer timer = ServiceHelper.ExcuteByTimer(initTimeData, () =>
+                            {
+                                Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+
+                                auto.Key = gameName;
+                                auto.StartHostory(new CrawORMService(rep.MDB).HK6HostoryNum);
+                            });
+
+
+                            timerList.Add(gameName, timer);
+                        }
+                        break;
+                    case "OpenWinHK6":
+
+                        //var p2 = aotoIssuseCollectList.Where(b => b.Key == gameName).FirstOrDefault();
+                        //if (p2 == null)
+                        //{
+                        //    Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+                        //    //执行任务 StartOpenWinNum
+                        //    //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
+                        //    auto.Key = gameName;
+                        //    auto.StartOpenWinNum(new CrawORMService(rep.MDB).HK6OpenwinNum);
+                        //    aotoIssuseCollectList.Add(auto);
+                        //}
+                        var p2 = timerList.GetValueOrDefault(gameName);
+                        if (p2 == null)
+                        {
+                            string tempStr = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings["HK6"].ToString();
+                            int initTimeData = int.Parse(tempStr);
+                            System.Timers.Timer timer = ServiceHelper.ExcuteByTimer(initTimeData, () =>
+                            {
+                                Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+
+                                auto.Key = gameName;
+                                auto.StartOpenWinNum(new CrawORMService(rep.MDB).HK6OpenwinNum);
+                            });
+
+
+                            timerList.Add(gameName, timer);
                         }
                         break;
                     default:

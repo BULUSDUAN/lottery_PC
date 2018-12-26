@@ -106,6 +106,9 @@
     <None Update="Config\ConfigSettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Config\jsons.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Config\KaSon.FrameWork.ORM.Config.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

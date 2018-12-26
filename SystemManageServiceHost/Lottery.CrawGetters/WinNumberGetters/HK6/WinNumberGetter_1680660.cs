@@ -8,6 +8,8 @@ using System.Xml;
 using System.Linq;
 using System.Net;
 using EntityModel;
+using System.IO;
+using KaSon.FrameWork.Common.FileOperate;
 
 namespace Lottery.CrawGetters
 {
@@ -17,6 +19,7 @@ namespace Lottery.CrawGetters
 
         public static readonly string Url = "https://1680660.com/smallSix/queryLotteryDate.do?ym={0}";
         public static readonly string HostoryUrl = "https://1680660.com/smallSix/findSmallSixHistory.do";
+        private static readonly string API_URL_HK6 = InitConfigInfo.SZC_OPEN_URL_HK6;
         static WinNumberGetter_1680660()
         {
             //http://kaijiang.500.com/ssq.shtml
@@ -33,7 +36,7 @@ namespace Lottery.CrawGetters
 
             DateTime currentYesr = DateTime.Now;
             string temp = "";
-            for (int i = 1; i <= 12; i++)
+            for (int i = 7; i <= 12; i++)
             {
                 temp = (currentYesr.Year ) + "-0" + i;
                 if (i >= 10)
@@ -127,7 +130,198 @@ namespace Lottery.CrawGetters
             return list;
         }
 
-        public static List<blast_data> winNum()
+        public static List<blast_data_time> OpenWinNum(string code="hk6") {
+            string jsonstr =  GetWinNum(code);
+            List<blast_data_time> list = new List<blast_data_time>();
+
+           
+            
+
+            try
+            {
+
+                if (jsonstr=="404")
+                {
+                    return list;
+                }
+
+                var djson = JsonHelper.Decode(jsonstr);
+                string temp = "";
+                string expect = "";
+                foreach (var item in djson)
+                {
+
+                    try
+                    {
+                        if (item.Name == "data")
+                        {
+                            Console.WriteLine("");
+                            var data = item.Value;
+                            foreach (var item1 in data)
+                            {
+                               // DateTime.Now.ToShortDateString
+                                temp = DateTime.Parse(item1.opentime.Value + "").ToShortDateString();
+                                expect = item1.expect.Value;
+                                
+                                int exp = int.Parse(expect);
+                                if (exp < 2000)
+                                {
+                                    exp = int.Parse(DateTime.Parse(temp).Year + "" + exp);
+                                }
+                                
+                                blast_data_time bdata = new blast_data_time()
+                                {
+                                    actionNo = exp,
+                                    actionTime = DateTime.Parse(temp),
+                                    stopTime = DateTime.Parse(temp).AddHours(21).AddMonths(30),
+                                     winNum = (item1.opencode.Value+"").Replace("+", "|"),
+                                    typeid=1
+
+                                };
+                                list.Add(bdata);
+
+
+                                //"[\r\n  0,\r\n  0\r\n]"
+                                //                                issue: 134
+                                //nanairo: 0
+                                //preDrawCode: "25,34,3,30,13,8,32"
+                                //preDrawDate: "2018-11-24"
+                                //seventhBigSmall: 0
+                                //seventhCompositeBig: 1
+                                //seventhCompositeDouble: 0
+                                //seventhMantissaBig: 1
+                                //seventhSingleDouble: 1
+                                //sumTotal: 145
+                                //totalBigSmall: 1
+                                //totalSingleDouble: 0
+
+
+
+                                Console.WriteLine("");
+                            }
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        continue;
+                    }
+
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+            Console.WriteLine(string.Join(Environment.NewLine, list));
+
+
+            return list;
+
+        }
+
+        public static List<blast_data_time> BJPKOpenWinNum(string code = "bjhk6")
+        {
+            string jsonstr = GetWinNum(code);
+            List<blast_data_time> list = new List<blast_data_time>();
+
+
+
+
+            try
+            {
+
+                if (jsonstr == "404")
+                {
+                    return list;
+                }
+
+                var djson = JsonHelper.Decode(jsonstr);
+                string temp = "";
+                string expect = "";
+                foreach (var item in djson)
+                {
+
+                    try
+                    {
+                        if (item.Name == "data")
+                        {
+                            Console.WriteLine("");
+                            var data = item.Value;
+                            foreach (var item1 in data)
+                            {
+                                // DateTime.Now.ToShortDateString
+                                temp = DateTime.Parse(item1.opentime.Value + "").ToShortDateString();
+                                expect = item1.expect.Value;
+
+                                int exp = int.Parse(expect);
+                                if (exp < 2000)
+                                {
+                                    exp = int.Parse(DateTime.Parse(temp).Year + "" + exp);
+                                }
+
+                                blast_data_time bdata = new blast_data_time()
+                                {
+                                    actionNo = exp,
+                                    actionTime = DateTime.Parse(temp),
+                                    stopTime = DateTime.Parse(temp).AddHours(21).AddMonths(30),
+                                    winNum = (item1.opencode.Value + "").Replace("+", "|"),
+                                    typeid = 1
+
+                                };
+                                list.Add(bdata);
+
+
+                                //"[\r\n  0,\r\n  0\r\n]"
+                                //                                issue: 134
+                                //nanairo: 0
+                                //preDrawCode: "25,34,3,30,13,8,32"
+                                //preDrawDate: "2018-11-24"
+                                //seventhBigSmall: 0
+                                //seventhCompositeBig: 1
+                                //seventhCompositeDouble: 0
+                                //seventhMantissaBig: 1
+                                //seventhSingleDouble: 1
+                                //sumTotal: 145
+                                //totalBigSmall: 1
+                                //totalSingleDouble: 0
+
+
+
+                                Console.WriteLine("");
+                            }
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                        continue;
+                    }
+
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+            Console.WriteLine(string.Join(Environment.NewLine, list));
+
+
+            return list;
+
+        }
+
+        public static List<blast_data> HostoryWinNum()
         {
            string jsonstr = GetHostoryNum();
             List<blast_data> list = new List<blast_data>();
@@ -137,6 +331,7 @@ namespace Lottery.CrawGetters
               
 
                 var djson = JsonHelper.Decode(jsonstr);
+                string issue = "";
                 foreach (var item in djson)
                 {
 
@@ -148,12 +343,12 @@ namespace Lottery.CrawGetters
                             var data = item.Value.data.bodyList;
                             foreach (var item1 in data)
                             {
-
+                                issue = item1.issue.Value+"";
                                 blast_data bdata = new blast_data() {
                                     createTime = DateTime.Now,
                                     updateTime = DateTime.Now,
-                                    issueNo = (int)item1.issue.Value,
-                                      kjtime = (item1.preDrawDate.Value + "").Replace("-","/"),
+                                    issueNo = int.Parse(issue),
+                                      kjtime =DateTime.Parse( (item1.preDrawDate.Value + "").Replace("-","/")),
                                      kjdata = item1.preDrawCode.Value
 
 
@@ -182,16 +377,16 @@ namespace Lottery.CrawGetters
                         }
 
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-
+                        Console.WriteLine(ex.ToString());
                         continue;
                     }
 
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
@@ -251,15 +446,26 @@ namespace Lottery.CrawGetters
             Head["Origin"] = "https://6hch.com";
             var json = PostManagerWithProxy.Post_Head(HostoryUrl, "year="+ year + "&type=1", System.Text.Encoding.UTF8,
                 "application/x-www-form-urlencoded", "https://6hch.com/html/kaihistory.html", Head);
+            return json;
+        }
+        private static string GetWinNum(string code= "hk6")
+        {
+           
+            var json = PostManagerWithProxy.Get(string.Format(API_URL_HK6, code, DateTime.Now.ToString()),  System.Text.Encoding.UTF8);
 
-
-
+          
 
             return json;
         }
 
-       
+        private static string GetWinNumReadFile()
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), @"Config\jsons.json");
+            string jsonText = FileHelper.txtReader(path);
 
+
+            return jsonText;
+        }
         /// <summary>
         ///     500万采集号码
         /// </summary>

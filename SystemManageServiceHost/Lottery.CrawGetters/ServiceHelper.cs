@@ -16,6 +16,21 @@ namespace Lottery.CrawGetters
     public class ServiceHelper
     {
         public static JToken MatchSettings { get; set; }
+        public static System.Timers.Timer ExcuteByTimer(double interval, Action callBack)
+        {
+            System.Timers.Timer timer = new System.Timers.Timer(interval);
+            timer.AutoReset = true;
+            timer.Enabled = true;
+            timer.Elapsed += new System.Timers.ElapsedEventHandler((object sender, System.Timers.ElapsedEventArgs e) =>
+            {
+                //timer.Close();
+                //timer.Dispose();
+
+                //回调
+                callBack();
+            });
+            return timer;
+        }
         public static void AddAndSendNotification(string text, string param, string innerKey, NoticeType noticeType)
         {
             var urlArray = GetSystemConfig("Wcf.GameBiz.Core.Many").Split('|');

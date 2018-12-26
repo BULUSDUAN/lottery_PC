@@ -22,7 +22,7 @@ namespace Lottery.CrawGetters
     }
    public class BaseAutoCollect
     {
-        ILogger<object> _Log;
+        ILogger<BaseAutoCollect> _Log;
         string tableName;
        
         private IMongoDatabase mDB;
@@ -32,6 +32,7 @@ namespace Lottery.CrawGetters
         public BaseAutoCollect(string Catetory, IMongoDatabase _mDB)
         {
          string temp=   Lottery.CrawGetters.InitConfigInfo.MongoSettings["IsStartLog"].ToString();
+            _Log = InitConfigInfo.logFactory.CreateLogger<BaseAutoCollect>();
             IsStartLog = bool.Parse(temp);
             tableName = "LOG_"+ Catetory + "_LOG";
             mDB = _mDB;
@@ -77,24 +78,37 @@ namespace Lottery.CrawGetters
             Console.WriteLine("采集完成"+ tableName);
             //tableName = Catetory + "_LOG";
             // Console.WriteLine(log);
+            list.Add(DateTime.Now.ToShortTimeString());
+           string Content = string.Join(Environment.NewLine, list.ToArray()); ;
+            this._Log.LogInformation(Content);
+
+
             if (!IsStartLog)
             {
                 return;
             }
-
-            var coll = mDB.GetCollection<LogModel>(tableName);
-
-            LogModel mlog = new LogModel();
-            if (isError)
+            try
             {
-                mlog.LogLevel = "Error";
-                isError = false;
+                var coll = mDB.GetCollection<LogModel>(tableName);
+
+                LogModel mlog = new LogModel();
+                if (isError)
+                {
+                    mlog.LogLevel = "Error";
+                    isError = false;
+                }
+                mlog.Content = string.Join(Environment.NewLine, list.ToArray()); ;
+                coll.InsertOne(mlog);
+
+
+                list.Clear();
             }
-            mlog.Content = string.Join(Environment.NewLine, list.ToArray()); ;
-            coll.InsertOne(mlog);
+            catch 
+            {
 
-
-            list.Clear();
+                Console.WriteLine("mogodb 日志存储错误");
+            }
+         
             //if (_logWriter != null)
             //    _logWriter.Write(logErrorCategory, logErrorSource, LogType.Error, "自动采集北京单场数据异常", log);
         }

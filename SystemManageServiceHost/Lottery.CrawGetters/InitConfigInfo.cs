@@ -52,7 +52,7 @@ namespace Lottery.CrawGetters
             SZC_OPEN_URL=cf["SZC_OPEN_URL"] == null ? "" : cf["SZC_OPEN_URL"].ToString();
             SZC_OPEN_URL_DAY = cf["SZC_OPEN_URL_DAY"] == null ? "" : cf["SZC_OPEN_URL_DAY"].ToString();
 
-            SZC_OPEN_URL = cf["SZC_OPEN_URL_HK6"] == null ? "" : cf["SZC_OPEN_URL_HK6"].ToString();
+            SZC_OPEN_URL_HK6 = cf["SZC_OPEN_URL_HK6"] == null ? "" : cf["SZC_OPEN_URL_HK6"].ToString();
             SZC_OPEN_URL_DAY = cf["SZC_OPEN_URL_DAY_HK6"] == null ? "" : cf["SZC_OPEN_URL_DAY_HK6"].ToString();
 
 

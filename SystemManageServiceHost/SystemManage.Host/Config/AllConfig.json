@@ -93,7 +93,7 @@
       "PL3": 10,
       "SSQ": 10,
       "DLT": 10,
-      "HK6": 10,
+      "HK6":3600 ,
       "JCLQ": 10,
       "T14C": 10,
       "TR9": 10,
@@ -316,14 +316,21 @@
     },
     {
       "Key": "HK6Issuse",
-      "IsStart": true,
+      "IsStart": false,
       "Desc": "六合彩期号采集",
       "Param": "gameName|HK6",
       "Path": "creawSer/numcraw/NumLettory_HK6Issuse"
     },
     {
-      "Key": "HostoryHK6",
+      "Key": "OpenWinHK6",
       "IsStart": false,
+      "Desc": "六合彩采集开奖并且结算",
+      "Param": "gameName|OpenWinHK6",
+      "Path": "creawSer/numcraw/NumLettory_HK6Issuse"
+    },
+    {
+      "Key": "HostoryHK6",
+      "IsStart": true,
       "Desc": "六合彩 奖号采集",
       "Param": "gameName|HostoryHK6",
       "Path": "creawSer/numcraw/NumLettory_HK6Issuse"
