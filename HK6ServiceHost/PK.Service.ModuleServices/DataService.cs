@@ -316,7 +316,7 @@ namespace PK.Service.ModuleServices
             CommonActionResult result = new CommonActionResult();
             //playGroup
             var pmb = DB.CreateQuery<blast_played>().Where(b=>b.typeid==2).ToList();
-            var mb = DB.CreateQuery<blast_lhc_antecode>().Where(b => b.typeid == 2).ToList();
+            var mb = DB.CreateQuery<blast_antecode>().Where(b => b.typeid == 2).ToList();
             var q = from b in mb
                     group b by b.playid into g
                     select g;
@@ -324,12 +324,12 @@ namespace PK.Service.ModuleServices
             List<playGroup> pgroupList = new List<playGroup>();
             int pid = 0;
             var pp = new blast_played();
-            var antecodeList = new List<blast_lhc_antecode>();
+            var antecodeList = new List<blast_antecode>();
             foreach (var item in q)
             {
                 pid = item.Key;
                 pp = pmb.Where(b => b.playId == pid).FirstOrDefault();
-                antecodeList = item.ToList<blast_lhc_antecode>().OrderBy(b => b.sort).ToList();
+                antecodeList = item.ToList<blast_antecode>().OrderBy(b => b.sort).ToList();
                 playGroup pg = new playGroup();
                 switch (item.Key)
                 {   

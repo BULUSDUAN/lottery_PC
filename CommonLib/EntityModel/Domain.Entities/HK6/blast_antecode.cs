@@ -11,10 +11,10 @@ namespace EntityModel
     // ºÅÂë±í
     ///</summary>
     [ProtoContract]
-    [Entity("blast_lhc_antecode", Type = EntityType.Table)]
-    public class blast_lhc_antecode
+    [Entity("blast_antecode", Type = EntityType.Table)]
+    public class blast_antecode
     {
-        public blast_lhc_antecode()
+        public blast_antecode()
         {
 
         }

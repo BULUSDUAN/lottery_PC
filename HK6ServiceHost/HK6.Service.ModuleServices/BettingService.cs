@@ -196,7 +196,7 @@ namespace HK6.ModuleBaseServices
                 #endregion
            
                 var playedList = DB.CreateQuery<blast_played>().ToList();
-                var codeList = DB.CreateQuery<blast_lhc_antecode>().ToList();
+                var codeList = DB.CreateQuery<blast_antecode>().ToList();
                 //校验投注订单合法信息，包括金额 玩法，号码，
                 DB.Begin();
                 #region 创建订单

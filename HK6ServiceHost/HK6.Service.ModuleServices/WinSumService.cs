@@ -59,16 +59,17 @@ namespace HK6.ModuleBaseServices
         /// <param name="winDate"></param>
         /// <param name="winNum"></param>
         /// <returns></returns>
-       public Task<CommonActionResult> Sum(string userId,string date, string IssueNo, string winNum) {
+        public Task<CommonActionResult> Sum(string userId, string IssueNo, string winNum)
+        {
             CommonActionResult result = new CommonActionResult();
 
             #region 校验token 权限校验
-           // string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(tokens);
+            // string userid = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(tokens);
             //C_Auth_UserRole
             var UserRole = LettoryDB.CreateQuery<C_Auth_UserRole>().Where(b => b.UserId == userId).FirstOrDefault();
-            if (UserRole==null)
+            if (UserRole == null)
             {
-               // result.ReturnValue = ex.ToString();
+                // result.ReturnValue = ex.ToString();
                 result.Message = "没有权限操作";
                 result.IsSuccess = false;
                 result.Code = 300;
@@ -81,9 +82,10 @@ namespace HK6.ModuleBaseServices
             {
 
             }
-            else {
+            else
+            {
                 var Auth_RoleFunction = LettoryDB.CreateQuery<C_Auth_RoleFunction>().Where(b => b.RoleId == roleid).FirstOrDefault();
-                if (Auth_RoleFunction==null || Auth_RoleFunction.FunctionId.Trim() != "GLHKJ100")
+                if (Auth_RoleFunction == null || Auth_RoleFunction.FunctionId.Trim() != "GLHKJ100")
                 {
                     result.Message = "没有权限操作";
                     result.IsSuccess = false;
@@ -99,45 +101,50 @@ namespace HK6.ModuleBaseServices
             try
             {
                 var playedlist = DB.CreateQuery<blast_played>().ToList();
-              var list=  DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.issueNo == IssueNo && b.BonusStatus==0).ToList<blast_bet_orderdetail>();
+                var list = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.issueNo == IssueNo && b.BonusStatus == 0).ToList<blast_bet_orderdetail>();
 
                 DB.Begin();
-             
-               // BaseOrderHelper bh = new BaseOrderHelper();
+
+                // BaseOrderHelper bh = new BaseOrderHelper();
                 foreach (blast_bet_orderdetail item in list)
                 {
                     //开始结算
-                    
+
                     string tm = winNum.Split('|')[1];
                     string zm = winNum.Split('|')[0];
-                    var p = playedlist.Where(b=>b.playId==item.playId).FirstOrDefault();
+                    var p = playedlist.Where(b => b.playId == item.playId).FirstOrDefault();
 
                     BaseOrderHelper winHelper = BaseOrderHelper.GetOrderHelper(item, DB);
                     winHelper.WinMoney(item, winNum);
-                    
+
                 }
                 //添加记录
                 int atcNo = int.Parse(IssueNo);
-                var data = DB.CreateQuery<blast_data>().Where(b=>b.issueNo==atcNo).FirstOrDefault();
+                var data = DB.CreateQuery<blast_data>().Where(b => b.issueNo == atcNo).FirstOrDefault();
                 if (data == null)
                 {
-                    data = new blast_data() {
-                        isOpen=1,
-                         issueNo= atcNo,
-                          kjdata= winNum.Replace("|","+"),
-                           kjtime=DateTime.Parse(date)
-                            
+                    var datatime = DB.CreateQuery<blast_lhc_time>().Where(b => b.actionNo == atcNo).FirstOrDefault();
+                    data = new blast_data()
+                    {
+                       
+                        issueNo = atcNo,
+                        kjdata = winNum.Replace("|", "+"),
+                        kjtime = datatime.actionTime,
+                        typeid = 1
+
+
                     };
                     DB.GetDal<blast_data>().Add(data);
                 }
-                else {
-                    DB.GetDal<blast_data>().Update(b => new blast_data()
-                    {
-                        isOpen = 1,
-                        // winNum = winNum,
-                    }, b => b.issueNo == atcNo);
+                else
+                {
+                    //DB.GetDal<blast_data>().Update(b => new blast_data()
+                    //{
+                    //    isOpen = 1,
+                    //    // winNum = winNum,
+                    //}, b => b.issueNo == atcNo);
                 }
-               
+
                 DB.Commit();
                 result.Message = "开奖成功";
                 result.IsSuccess = true;
@@ -152,13 +159,14 @@ namespace HK6.ModuleBaseServices
                 //throw;
                 DB.Rollback();
             }
-            finally {
+            finally
+            {
                 LettoryDB.Dispose();
                 DB.Dispose();
             }
 
 
-           return Task.FromResult(result);
+            return Task.FromResult(result);
         }
     }
 }

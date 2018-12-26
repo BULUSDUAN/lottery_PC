@@ -155,7 +155,7 @@ namespace KaSon.FrameWork.ORM.Helper
         private void DataAddPK前() {
 
             List<int> list = new List<int>();
-            blast_lhc_antecode antecode1 = new blast_lhc_antecode() {
+            blast_antecode antecode1 = new blast_antecode() {
                 remark = "前一",
                 odds = 9.8m,
                 playid = 58
@@ -163,7 +163,7 @@ namespace KaSon.FrameWork.ORM.Helper
             //list.Add(1);
             //DataAddPKAnteCode前2(list, antecode1);
 
-            antecode1 = new blast_lhc_antecode()
+            antecode1 = new blast_antecode()
             {
                 remark = "前二",
                 odds = 88.2M,
@@ -175,7 +175,7 @@ namespace KaSon.FrameWork.ORM.Helper
             DataAddPKAnteCode前2(list, antecode1);
 
 
-             antecode1 = new blast_lhc_antecode()
+             antecode1 = new blast_antecode()
             {
                 remark = "前三",
                 odds = 705.6M,
@@ -189,7 +189,7 @@ namespace KaSon.FrameWork.ORM.Helper
             DataAddPKAnteCode前2(list, antecode1);
 
 
-            antecode1 = new blast_lhc_antecode()
+            antecode1 = new blast_antecode()
             {
                 remark = "第1~5名",
                 odds = 9.8M,
@@ -206,7 +206,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
 
-            antecode1 = new blast_lhc_antecode()
+            antecode1 = new blast_antecode()
             {
                 remark = "第6~10名",
                 odds = 9.8M,
@@ -222,7 +222,7 @@ namespace KaSon.FrameWork.ORM.Helper
             DataAddPKAnteCode前2(list, antecode1);
 
 
-            antecode1 = new blast_lhc_antecode()
+            antecode1 = new blast_antecode()
             {
                 remark = "定位胆",
                 odds = 9.8M,
@@ -244,7 +244,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
         }
-        private void DataAddPKAnteCode前(blast_lhc_antecode antecode)
+        private void DataAddPKAnteCode前(blast_antecode antecode)
         {
             var nDB = DB.Init("MySql.Default");
             try
@@ -256,7 +256,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         temp = i + "";
                     }
-                    var P = new blast_lhc_antecode()
+                    var P = new blast_antecode()
                     {
                         AnteCode = temp,
                         displayName = temp,
@@ -269,7 +269,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = antecode.remark
 
                     };
-                    nDB.GetDal<blast_lhc_antecode>().Add(P);
+                    nDB.GetDal<blast_antecode>().Add(P);
                 }
               
                 nDB.Commit();
@@ -283,7 +283,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
-        private void DataAddPKAnteCode前2(List<int> list,blast_lhc_antecode antecode)
+        private void DataAddPKAnteCode前2(List<int> list,blast_antecode antecode)
         {
             var nDB = DB.Init("MySql.Default");
             try
@@ -298,7 +298,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         {
                             temp = i + "";
                         }
-                        var P = new blast_lhc_antecode()
+                        var P = new blast_antecode()
                         {
                             AnteCode = item+"_" + temp,
                             displayName = temp,
@@ -313,7 +313,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             remark = antecode.remark
 
                         };
-                        nDB.GetDal<blast_lhc_antecode>().Add(P);
+                        nDB.GetDal<blast_antecode>().Add(P);
                     }
                 }
               
@@ -345,7 +345,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     {
                         string temp = "0" + i;
                      
-                        var P = new blast_lhc_antecode()
+                        var P = new blast_antecode()
                         {
                             AnteCode = temp,
                             displayName = temp,
@@ -359,7 +359,7 @@ namespace KaSon.FrameWork.ORM.Helper
                             remark = "冠亚和"
 
                         };
-                        nDB.GetDal<blast_lhc_antecode>().Add(P);
+                        nDB.GetDal<blast_antecode>().Add(P);
                     }
               //  }
 
@@ -392,7 +392,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 foreach (var item in list0)
                 {
-                    var P = new blast_lhc_antecode()
+                    var P = new blast_antecode()
                     {
                         AnteCode = "01",
                         displayName = "龙",
@@ -406,7 +406,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    var P1 = new blast_lhc_antecode()
+                    var P1 = new blast_antecode()
                     {
                         AnteCode = "02",
                         displayName = "虎",
@@ -420,8 +420,8 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    nDB.GetDal<blast_lhc_antecode>().Add(P);
-                    nDB.GetDal<blast_lhc_antecode>().Add(P1);
+                    nDB.GetDal<blast_antecode>().Add(P);
+                    nDB.GetDal<blast_antecode>().Add(P1);
                 }
 
 
@@ -450,7 +450,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 nDB.Begin();
                 foreach (var item in list0)
                 {
-                    var P = new blast_lhc_antecode()
+                    var P = new blast_antecode()
                     {
                         AnteCode = "01",
                         displayName = "金",
@@ -464,7 +464,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    var P1 = new blast_lhc_antecode()
+                    var P1 = new blast_antecode()
                     {
                         AnteCode = "02",
                         displayName = "木",
@@ -478,7 +478,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    var P2 = new blast_lhc_antecode()
+                    var P2 = new blast_antecode()
                     {
                         AnteCode = "03",
                         displayName = "水",
@@ -492,7 +492,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    var P3 = new blast_lhc_antecode()
+                    var P3 = new blast_antecode()
                     {
                         AnteCode = "04",
                         displayName = "火",
@@ -506,7 +506,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    var P4 = new blast_lhc_antecode()
+                    var P4 = new blast_antecode()
                     {
                         AnteCode = "05",
                         displayName = "土",
@@ -520,11 +520,11 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    nDB.GetDal<blast_lhc_antecode>().Add(P);
-                    nDB.GetDal<blast_lhc_antecode>().Add(P1);
-                    nDB.GetDal<blast_lhc_antecode>().Add(P2);
-                    nDB.GetDal<blast_lhc_antecode>().Add(P3);
-                    nDB.GetDal<blast_lhc_antecode>().Add(P4);
+                    nDB.GetDal<blast_antecode>().Add(P);
+                    nDB.GetDal<blast_antecode>().Add(P1);
+                    nDB.GetDal<blast_antecode>().Add(P2);
+                    nDB.GetDal<blast_antecode>().Add(P3);
+                    nDB.GetDal<blast_antecode>().Add(P4);
                 }
 
 
@@ -560,7 +560,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 nDB.Begin();
                 foreach (var item in list0)
                 {
-                    var P = new blast_lhc_antecode()
+                    var P = new blast_antecode()
                     {
                         AnteCode = "01",
                         displayName = "大",
@@ -574,7 +574,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    var P1 = new blast_lhc_antecode()
+                    var P1 = new blast_antecode()
                     {
                         AnteCode = "02",
                         displayName = "小",
@@ -588,12 +588,12 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    nDB.GetDal<blast_lhc_antecode>().Add(P);
-                    nDB.GetDal<blast_lhc_antecode>().Add(P1);
+                    nDB.GetDal<blast_antecode>().Add(P);
+                    nDB.GetDal<blast_antecode>().Add(P1);
                 }
                 foreach (var item in list1)
                 {
-                    var P = new blast_lhc_antecode()
+                    var P = new blast_antecode()
                     {
                         AnteCode = "01",
                         displayName = "单",
@@ -607,7 +607,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    var P1 = new blast_lhc_antecode()
+                    var P1 = new blast_antecode()
                     {
                         AnteCode = "02",
                         displayName = "双",
@@ -621,8 +621,8 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    nDB.GetDal<blast_lhc_antecode>().Add(P);
-                    nDB.GetDal<blast_lhc_antecode>().Add(P1);
+                    nDB.GetDal<blast_antecode>().Add(P);
+                    nDB.GetDal<blast_antecode>().Add(P1);
                 }
 
 
@@ -651,7 +651,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 nDB.Begin();
                 foreach (var item in list0)
                 {
-                    var P = new blast_lhc_antecode()
+                    var P = new blast_antecode()
                     {
                         AnteCode = "01",
                         displayName = "大",
@@ -665,7 +665,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    var P1 = new blast_lhc_antecode()
+                    var P1 = new blast_antecode()
                     {
                         AnteCode = "02",
                         displayName = "小",
@@ -679,7 +679,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    var P2 = new blast_lhc_antecode()
+                    var P2 = new blast_antecode()
                     {
                         AnteCode = "03",
                         displayName = "单",
@@ -693,7 +693,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    var P3 = new blast_lhc_antecode()
+                    var P3 = new blast_antecode()
                     {
                         AnteCode = "04",
                         displayName = "双",
@@ -707,10 +707,10 @@ namespace KaSon.FrameWork.ORM.Helper
                         remark = item.name
 
                     };
-                    nDB.GetDal<blast_lhc_antecode>().Add(P);
-                    nDB.GetDal<blast_lhc_antecode>().Add(P1);
-                    nDB.GetDal<blast_lhc_antecode>().Add(P2);
-                    nDB.GetDal<blast_lhc_antecode>().Add(P3);
+                    nDB.GetDal<blast_antecode>().Add(P);
+                    nDB.GetDal<blast_antecode>().Add(P1);
+                    nDB.GetDal<blast_antecode>().Add(P2);
+                    nDB.GetDal<blast_antecode>().Add(P3);
                 }
 
 
@@ -755,11 +755,11 @@ namespace KaSon.FrameWork.ORM.Helper
             list.Add(new { fag = "ZongShuan", Name = "总双" });
 
 
-            IList<blast_lhc_antecode> antList = new List<blast_lhc_antecode>();
+            IList<blast_antecode> antList = new List<blast_antecode>();
             foreach (var item in list)
             {
                 index++;
-                blast_lhc_antecode ant = new blast_lhc_antecode()
+                blast_antecode ant = new blast_antecode()
                 {
                     sort = index,
                     enable = true,
@@ -784,7 +784,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             //   519 1.98    特双  02  318 两面  1   2       TS
             string code = "";
-            IList<blast_lhc_antecode> antList = new List<blast_lhc_antecode>();
+            IList<blast_antecode> antList = new List<blast_antecode>();
             for (int i = 1; i < 50; i++)
             {
                 if (i<10)
@@ -796,7 +796,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     code = i + "";
                 }
               
-                blast_lhc_antecode ant = new blast_lhc_antecode()
+                blast_antecode ant = new blast_antecode()
                 {
                     sort = i,
                     enable = true,
@@ -825,7 +825,7 @@ namespace KaSon.FrameWork.ORM.Helper
         private void DataAdd正肖特肖一肖(int payid, decimal odds = 48.8M, string mark = "正肖")
         {
             string[] shuxiang = { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
-            IList<blast_lhc_antecode> antList = new List<blast_lhc_antecode>();
+            IList<blast_antecode> antList = new List<blast_antecode>();
             string code = "";
             int i = 0;
             foreach (var item in shuxiang)
@@ -839,7 +839,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     code = i + "";
                 }
-                blast_lhc_antecode ant = new blast_lhc_antecode()
+                blast_antecode ant = new blast_antecode()
                 {
                     sort = i,
                     enable = true,
@@ -862,7 +862,7 @@ namespace KaSon.FrameWork.ORM.Helper
             string[] shuxiang = { "234肖", "5肖", "6肖", "7肖", "总肖单", "总肖双" };
             string[] oddsarr = { "15", "3.07", "1.96", "5.4", "1.98", "1.85" };
             string[] fagsarr = { "234X", "5X", "6X", "7X", "DX", "SX" };
-            IList<blast_lhc_antecode> antList = new List<blast_lhc_antecode>();
+            IList<blast_antecode> antList = new List<blast_antecode>();
             string code = "";
             int i = 0;
             var index = 0;
@@ -877,7 +877,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     code = i + "";
                 }
-                blast_lhc_antecode ant = new blast_lhc_antecode()
+                blast_antecode ant = new blast_antecode()
                 {
                     sort = i,
                     enable = true,
@@ -899,13 +899,13 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
-        private void Add(IList<blast_lhc_antecode> antList) {
+        private void Add(IList<blast_antecode> antList) {
             DB.Begin();
             try
             {
                 foreach (var item in antList)
                 {
-                    DB.GetDal<blast_lhc_antecode>().Add(item);
+                    DB.GetDal<blast_antecode>().Add(item);
                 }
                 DB.Commit();
             }
@@ -922,7 +922,7 @@ namespace KaSon.FrameWork.ORM.Helper
             string[] shuxiang = { "红波", "蓝波", "绿波" };
             string[] oddsarr = { "2.76", "2.86", "2.86" };
             string[] fagsarr = { "Red", "Blu", "Green" };
-            IList<blast_lhc_antecode> antList = new List<blast_lhc_antecode>();
+            IList<blast_antecode> antList = new List<blast_antecode>();
             string code = "";
             int i = 0;
             var index = 0;
@@ -937,7 +937,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     code = i + "";
                 }
-                blast_lhc_antecode ant = new blast_lhc_antecode()
+                blast_antecode ant = new blast_antecode()
                 {
                     sort = i,
                     enable =true,
@@ -978,7 +978,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         "GreenDa", "GreenXiao", "BluDan",
                         "BluSua", "BluDa", "BluXiao",
             };
-            IList<blast_lhc_antecode> antList = new List<blast_lhc_antecode>();
+            IList<blast_antecode> antList = new List<blast_antecode>();
             string code = "";
             int i = 0;
             var index = 0;
@@ -993,7 +993,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     code = i + "";
                 }
-                blast_lhc_antecode ant = new blast_lhc_antecode()
+                blast_antecode ant = new blast_antecode()
                 {
                     sort = i,
                     enable = true,
@@ -1035,7 +1035,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         "GreenXiaoDan", "GreenXiaoSua", "BluDaDan",
                         "BluDaSua", "BluXiaoDan", "BluXiaoSua",
             };
-            IList<blast_lhc_antecode> antList = new List<blast_lhc_antecode>();
+            IList<blast_antecode> antList = new List<blast_antecode>();
             string code = "";
             int i = 0;
             var index = 0;
@@ -1050,7 +1050,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     code = i + "";
                 }
-                blast_lhc_antecode ant = new blast_lhc_antecode()
+                blast_antecode ant = new blast_antecode()
                 {
                     sort = i,
                     enable = true,
@@ -1086,7 +1086,7 @@ namespace KaSon.FrameWork.ORM.Helper
                         "Red", "Blu", "Green",
                         "HeJu"
             };
-            IList<blast_lhc_antecode> antList = new List<blast_lhc_antecode>();
+            IList<blast_antecode> antList = new List<blast_antecode>();
             string code = "";
             int i = 0;
             var index = 0;
@@ -1101,7 +1101,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     code = i + "";
                 }
-                blast_lhc_antecode ant = new blast_lhc_antecode()
+                blast_antecode ant = new blast_antecode()
                 {
                     sort = i,
                     enable = true,

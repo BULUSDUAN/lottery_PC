@@ -197,7 +197,7 @@ namespace PK.Service.ModuleServices
                 #endregion
            
                 var playedList = DB.CreateQuery<blast_played>().ToList();
-                var codeList = DB.CreateQuery<blast_lhc_antecode>().ToList();
+                var codeList = DB.CreateQuery<blast_antecode>().ToList();
                 //校验投注订单合法信息，包括金额 玩法，号码，
                 DB.Begin();
                 #region 创建订单
@@ -240,7 +240,7 @@ namespace PK.Service.ModuleServices
                     pindex++;
                     blast_played p = playedList.Where(b => b.playId == item.playId).FirstOrDefault();
                     var tempp = codeList.Where(b => b.AnteCode == item.content && b.playid == item.playId).FirstOrDefault();
-                    if (p == null || tempp==null)
+                    if (p == null || tempp==null || !p.enable)
                     {
                         DB.Rollback();
                         cresult.IsSuccess = false;
@@ -273,6 +273,7 @@ namespace PK.Service.ModuleServices
                         AnteCodesName = codeName,
                         SchemeSource = info.SchemeSource,
                         // Odds = p.Odds,
+                        typeid=1,
                         GameType="HK6",
                         userId = info.userId,
                         issueNo = info.issueNo.ToString(),

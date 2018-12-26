@@ -52,8 +52,8 @@ namespace EntityModel
         public int issueNo { get; set; }
 
         public List<string> NameList { get; set; }
-        [Field("isOpen")]
-        public int isOpen { get; set; }
+        //[Field("isOpen")]
+        //public int isOpen { get; set; }
 
     }
 }

@@ -34,7 +34,7 @@ namespace HK6.ModuleBaseServices
         /// <param name="winNum"></param>
         /// <returns></returns>
         [Service(Date = "2018-9-3", Director = "kason", Name = "管理登陆")]
-        Task<CommonActionResult> Sum(string userId, string date, string IssueNo, string winNum);
+        Task<CommonActionResult> Sum(string userId,  string IssueNo, string winNum);
 
 
     }
