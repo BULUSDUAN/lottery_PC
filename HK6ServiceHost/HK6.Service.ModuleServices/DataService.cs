@@ -60,8 +60,8 @@ namespace HK6.ModuleBaseServices
 
             try
             {
-                var mblist = DB.CreateQuery<blast_played_group>().Where(b => b.enable == true).ToList();
-                var mPlayedList = DB.CreateQuery<blast_played>().Where(b => b.enable == true).ToList();
+                var mblist = DB.CreateQuery<blast_played_group>().Where(b => b.enable == true && b.typeid==1).ToList();
+                var mPlayedList = DB.CreateQuery<blast_played>().Where(b => b.enable == true && b.typeid == 1).ToList();
 
                 foreach (var item in mblist)
                 {
@@ -424,8 +424,8 @@ namespace HK6.ModuleBaseServices
         {
             CommonActionResult result = new CommonActionResult();
             //playGroup
-            var pmb = DB.CreateQuery<blast_played>().ToList();
-            var mb = DB.CreateQuery<blast_lhc_antecode>().ToList();
+            var pmb = DB.CreateQuery<blast_played>().Where(b => b.typeid ==1).ToList();
+            var mb = DB.CreateQuery<blast_lhc_antecode>().Where(b => b.typeid == 1).ToList();
             var q = from b in mb
                     group b by b.playid into g
                     select g;

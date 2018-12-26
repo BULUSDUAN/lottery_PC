@@ -241,7 +241,7 @@ namespace Lottery.Api.Controllers
                 var param = new Dictionary<string, object>();
                 //  param.Add("userId", userid);//laofan
                 // Console.WriteLine("param2222222");
-                result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "hk6dataservice/data/PlayInfo");
+                result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "PKDataService/data/PlayInfo");
                 //hk6dataservice/data/recharge
             }
             catch (Exception ex)
@@ -313,7 +313,7 @@ namespace Lottery.Api.Controllers
                 //param.Add("userId", userid);//laofan
               
                 //  Console.WriteLine("param2222222");
-                result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "hk6dataservice/data/PlayCategory");
+                result = await _serviceProxyProvider.Invoke<CommonActionResult>(param, "PKDataService/data/PlayCategory");
 
             }
             catch (Exception ex)

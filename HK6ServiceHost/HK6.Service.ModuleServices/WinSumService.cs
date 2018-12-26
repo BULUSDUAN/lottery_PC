@@ -59,7 +59,7 @@ namespace HK6.ModuleBaseServices
         /// <param name="winDate"></param>
         /// <param name="winNum"></param>
         /// <returns></returns>
-       public Task<CommonActionResult> Sum(string userId, string IssueNo, string winNum) {
+       public Task<CommonActionResult> Sum(string userId,string date, string IssueNo, string winNum) {
             CommonActionResult result = new CommonActionResult();
 
             #region 校验token 权限校验
@@ -118,11 +118,26 @@ namespace HK6.ModuleBaseServices
                 }
                 //添加记录
                 int atcNo = int.Parse(IssueNo);
-                DB.GetDal<blast_data_time>().Update(b => new blast_data_time()
+                var data = DB.CreateQuery<blast_data>().Where(b=>b.issueNo==atcNo).FirstOrDefault();
+                if (data == null)
                 {
-                    isOpen = true,
-                    winNum = winNum,
-                }, b => b.actionNo == IssueNo);
+                    data = new blast_data() {
+                        isOpen=1,
+                         issueNo= atcNo,
+                          kjdata= winNum.Replace("|","+"),
+                           kjtime=DateTime.Parse(date)
+                            
+                    };
+                    DB.GetDal<blast_data>().Add(data);
+                }
+                else {
+                    DB.GetDal<blast_data>().Update(b => new blast_data()
+                    {
+                        isOpen = 1,
+                        // winNum = winNum,
+                    }, b => b.issueNo == atcNo);
+                }
+               
                 DB.Commit();
                 result.Message = "开奖成功";
                 result.IsSuccess = true;

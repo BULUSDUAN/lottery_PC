@@ -159,8 +159,8 @@ namespace SystemManage.Host
             var xdb = gdb1.Init("MySql.Default1", true);
             // DataInserterHelper dh = new DataInserterHelper(db);
             // dh.ADDDATA();
-            //DataInserterHelper dh = new DataInserterHelper(db, xdb);
-            //dh.DataAddPK期号();
+            DataInserterHelper dh = new DataInserterHelper(db, xdb);
+            dh.PKAnteCodeData();
 
 
             //初始化内存期号 k_todo，可用彩种类型,执行一次

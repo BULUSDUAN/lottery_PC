@@ -70,6 +70,10 @@ namespace EntityModel
 
         [Field("updateTime")]
         public DateTime updateTime { get; set; }
+        [Field("cateNum")]
+        public int cateNum { get; set; }
+        [Field("typeid")]
+        public int typeid { get; set; }
 
         public string CodeContent { get; set; }
 

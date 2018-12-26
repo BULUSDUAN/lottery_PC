@@ -114,8 +114,8 @@ namespace HK6.ModuleBaseServices
 
                 #region 校验追期期号是否合法，加倍是否合法
 
-                string issueNo=info.issueNo + "";
-                var issue = DB.CreateQuery<blast_data_time>().Where(b => b.actionNo == issueNo).FirstOrDefault();
+                int issueNo=info.issueNo ;
+                var issue = DB.CreateQuery<blast_lhc_time>().Where(b => b.actionNo == issueNo).FirstOrDefault();
 
                
                 if (issue == null || DateTime.Parse(issue.actionTime.ToShortDateString()).AddHours(21).AddMonths(20) < DateTime.Now)
@@ -138,7 +138,7 @@ namespace HK6.ModuleBaseServices
                     cresult.Message = "期号无效无法购买";
                     return Task.FromResult(cresult);
                 }
-                else if (mb.actionNo != info.issueNo+"")
+                else if (mb.actionNo != info.issueNo)
                 {
                     cresult.IsSuccess = false;
                     cresult.Code = 300;
@@ -150,7 +150,7 @@ namespace HK6.ModuleBaseServices
                 foreach (var item in info.planList)
                 {
 
-                    if (item.issueNo < int.Parse(issue.actionNo))
+                    if (item.issueNo < int.Parse(issue.actionNo+""))
                     {
                         cresult.IsSuccess = false;
                         cresult.Code = 300;

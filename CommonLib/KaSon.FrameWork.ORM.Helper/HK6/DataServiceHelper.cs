@@ -18,14 +18,14 @@ namespace KaSon.FrameWork.ORM.Helper
             DB = _DB;
         }
 
-        public blast_data_time GetissueNo() {
+        public blast_lhc_time GetissueNo() {
            // result.IsSuccess = true;
             DateTime date = DateTime.Parse(DateTime.Now.ToShortDateString());
             if (DateTime.Now.Hour > 21)
             {
                 date = DateTime.Parse(DateTime.Now.AddDays(1).ToShortDateString());
             }
-            var tquery = DB.CreateQuery<blast_data_time>();
+            var tquery = DB.CreateQuery<blast_lhc_time>();
             var mb = (from b in tquery
                       where b.actionTime >= date
                       orderby b.actionTime ascending
@@ -35,8 +35,8 @@ namespace KaSon.FrameWork.ORM.Helper
             return mb;
 
         }
-        private blast_data GetWinData(blast_data_time btime) {
-            int issueNo =int.Parse( btime.actionNo);
+        private blast_data GetWinData(blast_lhc_time btime) {
+            int issueNo =int.Parse( btime.actionNo+"");
             if (issueNo<2000)
             {
                 issueNo = int.Parse(btime.actionTime.Year + "" + issueNo);
@@ -59,20 +59,20 @@ namespace KaSon.FrameWork.ORM.Helper
                             select b).FirstOrDefault();
                     if (data == null)
                     {
-                        blast_data_time datatime = (from b in DB.CreateQuery<blast_data_time>()
+                        blast_lhc_time datatime = (from b in DB.CreateQuery<blast_lhc_time>()
                                 where b.actionTime > sdate && b.actionTime < edate
                                 orderby b.actionTime descending
                                 select b).FirstOrDefault();
-                        data=   new blast_data() { issueNo = datatime.actionNo+"", kjdata = "", typeid = 1, kjnumber = "", kjtime = datatime.actionTime };
+                        data=   new blast_data() { issueNo = datatime.actionNo, kjdata = "", typeid = 1, kjnumber = "", kjtime = datatime.actionTime };
                     }
                 }
                 else {
-                    string nissueNo = (issueNo - 1)+"";
+                    int nissueNo = (issueNo - 1);
                     data = query.Where(b => b.issueNo == nissueNo).FirstOrDefault();
                     if (data == null)
                     {
-                        blast_data_time datatime = DB.CreateQuery<blast_data_time>().Where(b => b.actionNo == nissueNo).FirstOrDefault();
-                        data = new blast_data() { issueNo = datatime.actionNo + "", kjdata = "", typeid = 1, kjnumber = "", kjtime = datatime.actionTime };
+                        blast_lhc_time datatime = DB.CreateQuery<blast_lhc_time>().Where(b => b.actionNo == nissueNo).FirstOrDefault();
+                        data = new blast_data() { issueNo = datatime.actionNo , kjdata = "", typeid = 1, kjnumber = "", kjtime = datatime.actionTime };
                     }
                 }
                

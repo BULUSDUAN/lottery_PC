@@ -49,11 +49,11 @@ namespace EntityModel
         [Field("kjdata")]
         public string kjdata { get; set; }
         [Field("issueNo")]
-        public string issueNo { get; set; }
+        public int issueNo { get; set; }
 
         public List<string> NameList { get; set; }
-
-
+        [Field("isOpen")]
+        public int isOpen { get; set; }
 
     }
 }

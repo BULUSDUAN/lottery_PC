@@ -62,8 +62,8 @@ namespace PK.Service.ModuleServices
             
             try
             {
-                var mblist = DB.CreateQuery<blast_played_group>().Where(b => b.enable == true).ToList();
-                var mPlayedList = DB.CreateQuery<blast_played>().Where(b => b.enable == true).ToList();
+                var mblist = DB.CreateQuery<blast_played_group>().Where(b => b.enable == true && b.typeid==2).ToList();
+                var mPlayedList = DB.CreateQuery<blast_played>().Where(b => b.enable == true && b.typeid == 2).ToList();
 
                 foreach ( var item in mblist)
                 {
@@ -305,7 +305,7 @@ namespace PK.Service.ModuleServices
             //CommonActionResult result = new CommonActionResult();
             //result.IsSuccess = true;
             //var mb = new DataServiceHelper(DB).GetissueNo();
-            CommonActionResult result = new DataHelper(DB).GetGames(20);
+            CommonActionResult result = new DataHelper(DB).GetGames(2);
             //result.Value = mb;
             return Task.FromResult(result);
         }
@@ -315,8 +315,8 @@ namespace PK.Service.ModuleServices
         {
             CommonActionResult result = new CommonActionResult();
             //playGroup
-            var pmb = DB.CreateQuery<blast_played>().ToList();
-            var mb = DB.CreateQuery<blast_lhc_antecode>().ToList();
+            var pmb = DB.CreateQuery<blast_played>().Where(b=>b.typeid==2).ToList();
+            var mb = DB.CreateQuery<blast_lhc_antecode>().Where(b => b.typeid == 2).ToList();
             var q = from b in mb
                     group b by b.playid into g
                     select g;
@@ -330,25 +330,40 @@ namespace PK.Service.ModuleServices
                 pid = item.Key;
                 pp = pmb.Where(b => b.playId == pid).FirstOrDefault();
                 antecodeList = item.ToList<blast_lhc_antecode>().OrderBy(b => b.sort).ToList();
-                switch (pp.name.Trim())
-                {
-                    case "正肖":
-                    case "特肖":
-                    case "一肖":
-                        foreach (var item1 in antecodeList)
+                playGroup pg = new playGroup();
+                switch (item.Key)
+                {   
+                    case 59://前2
+                    case 60:
+                    case 61:
+                    case 62:
+                    case 63:
+                        pg = new playGroup()
                         {
-                            item1.CodeContent = string.Join(",", SXHelper.ScodeArr(int.Parse(item1.AnteCode)));
-                        }
+                            CodeList = antecodeList.Where(b=>b.cateNum==1).ToList(),
+                            CodeList1 = antecodeList.Where(b => b.cateNum == 2).ToList(),
+                            CodeList2 = antecodeList.Where(b => b.cateNum == 3).ToList(),
+                            CodeList3 = antecodeList.Where(b => b.cateNum == 4).ToList(),
+                            CodeList4 = antecodeList.Where(b => b.cateNum == 5).ToList(),
+                            CodeList5 = antecodeList.Where(b => b.cateNum == 6).ToList(),
+                            CodeList6 = antecodeList.Where(b => b.cateNum == 7).ToList(),
+                            CodeList7 = antecodeList.Where(b => b.cateNum == 8).ToList(),
+                            CodeList8 = antecodeList.Where(b => b.cateNum == 9).ToList(),
+                            CodeList9 = antecodeList.Where(b => b.cateNum == 10).ToList(),
+                            Key = item.Key + "",
+                            Name = pp.name
+                        };
                         break;
                     default:
+                         pg = new playGroup()
+                        {
+                            CodeList = antecodeList,
+                            Key = item.Key + "",
+                            Name = pp.name
+                        };
                         break;
                 }
-                playGroup pg = new playGroup()
-                {
-                    CodeList = antecodeList,
-                    Key = item.Key + "",
-                    Name = pp.name
-                };
+                
                 pgroupList.Add(pg);
             }
 

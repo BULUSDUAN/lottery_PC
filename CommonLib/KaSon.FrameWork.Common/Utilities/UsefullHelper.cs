@@ -133,7 +133,7 @@ namespace KaSon.FrameWork.Common.Utilities
             {
                 number = string.Format("{0}-{1}", date, actionNo.ToString("#00"));
             }
-            else if (type == 20)////北京PK10
+            else if (type == 2)////北京PK10
             {
                 number = (179 * (bagintime - DateTimeHelper.LocalDateTimeToUnixTimeStamp(Convert.ToDateTime("2007-11-11"))) / 3600 / 24 + (ulong)actionNo - 3793).ToString();
             }

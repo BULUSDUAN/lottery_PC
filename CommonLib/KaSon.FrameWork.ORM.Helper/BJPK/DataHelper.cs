@@ -27,7 +27,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 //{
                 //    result = await db.QueryFirstOrDefaultAsync<blast_type>("select id,type,sort,name,title,shortName,info,data_ftime,enable from blast_type where isDelete=0 and id=@id order by sort", new { id = type });
                 //});
-                result = DB.CreateQuery<blast_type>().Where(b => b.id == type).FirstOrDefault();
+                result = DB.CreateQuery<blast_type>().Where(b => b.typeid == type).FirstOrDefault();
 
                 if (result == null)
                     throw new ArgumentException("未有该彩种ID，请传正确的彩种ID");
@@ -44,7 +44,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 //    sqltalbe = "blast_lhc_time";
                 //    actionTime = DateTime.Now.AddSeconds(result.data_ftime).ToString();
                 //}
-                int gameid = result.id;
+                int gameid = result.typeid;
                 blast_data_time nextgameno = null;
                 blast_data_time lastgameno = null;
                 //string kjhao = "";
@@ -54,8 +54,8 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 //             select b).FirstOrDefault();
 
                 nextgameno = DB.CreateSQLQuery($"select * from " +
-                    $"{sqltalbe} where typeid=@type and actionhours>@actionTime " +
-                    $"order by actionhours limit 1")
+                    $"{sqltalbe} where typeid=@type and actionTime>@actionTime " +
+                    $"order by actionTime limit 1")
                     .SetString("@type", type + "")
                     .SetString("@actionTime", actionTime + "").First<blast_data_time>();
 
@@ -66,7 +66,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                     //              orderby b.actionhours
                     //              select b).FirstOrDefault();
                     nextgameno = DB.CreateSQLQuery($"select * from {sqltalbe} " +
-                        $"where typeid=@type  order by actionhours limit 1")
+                        $"where typeid=@type  order by actionTime limit 1")
                          .SetString("@type", type + "").First<blast_data_time>();
                     thistime = thistime.AddDays(1);
                 }
@@ -76,14 +76,14 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 //              select b).FirstOrDefault();
                 //new { type = gameid, actionTime = actionTime }
                 lastgameno = DB.CreateSQLQuery($"select * from {sqltalbe} " +
-                    $"where typeid=@type and actionhours<=@actionTime order by actionhours desc limit 1")
+                    $"where typeid=@type and actionTime<=@actionTime order by actionTime desc limit 1")
                .SetString("@type", gameid + "")
                     .SetString("@actionTime", actionTime + "").First<blast_data_time>();
                 if (lastgameno == null)
                 {
                     lastgameno = (from b in DB.CreateQuery<blast_data_time>()
                                   where b.typeid == type
-                                  orderby b.actionhours
+                                  orderby b.actionTime
                                   select b).FirstOrDefault();
 
                     //  lastgameno = await db.QueryFirstOrDefaultAsync($"select actionNo, actionTime from {sqltalbe} where type=@type order by actionNo desc limit 1", new { type = gameid });
@@ -97,7 +97,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 //}
                 //else
                 {
-                    string ts = nextgameno.actionhours;
+                    string ts = nextgameno.actionTime;
 
 
                     Console.WriteLine($"TimeSpan: {ts.ToString()}");
@@ -107,9 +107,9 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 }
                 thistime = Convert.ToDateTime(actionTime);
                 var bagintime = DateTimeHelper.LocalDateTimeToUnixTimeStamp(thistime.Date);
-                string actionNo = nextgameno.actionNo;
+                int actionNo = nextgameno.actionNo;
                 string date = thistime.ToString("yyyyMMdd");
-                string number = UsefullHelper.NumberFormat(gameid, date, thistime, int.Parse(actionNo), bagintime);
+                string number = UsefullHelper.NumberFormat(gameid, date, thistime, int.Parse(actionNo+""), bagintime);
                 var thistimenow = DateTimeHelper.LocalDateTimeToUnixTimeStamp(thistime);
                 var kjDiffTime = thistimenow - now;
                 var diffTime = kjDiffTime - (ulong)result.data_ftime;
@@ -124,17 +124,17 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 }
                 else
                 {
-                    string ts = lastgameno.actionhours;
+                    string ts = lastgameno.actionTime;
                     lastactionTime = $"{lasttime.ToString("yyyy-MM-dd")} {ts}";
                 }
                 var lastbagintime = DateTimeHelper.LocalDateTimeToUnixTimeStamp(lasttime.Date);
-                string lastactionNo = lastgameno.actionNo;
+                string lastactionNo = lastgameno.actionNo+"";
                 string lastdate = lasttime.ToString("yyyyMMdd");
                 string lastnumber = UsefullHelper.NumberFormat(gameid, lastdate, lasttime, int.Parse(lastactionNo), lastbagintime);
                 #endregion
                 int lastnum = int.Parse(lastnumber);
                 //kjhao = await db.QueryFirstOrDefaultAsync<string>($"select data from blast_data where type=@type and number=@number", new { type = gameid, number = lastnumber });
-                var kjhao = DB.CreateQuery<blast_data>().Where(b => b.typeid == gameid && b.issueNo == lastnumber).FirstOrDefault();
+                var kjhao = DB.CreateQuery<blast_data>().Where(b => b.typeid == gameid && b.issueNo == lastnum).FirstOrDefault();
                 //await this.data_manager.UseConnectionAsync(async db =>
                 //{
 
@@ -148,7 +148,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                     lastactionNum = lastactionNo,//上一期期号
                     lastactionNo = lastnumber,//期号
                     id = result.id,
-                    type = result.id,
+                    type = result.typeid,
                     gamecode = result.name,
                     sort = result.sort,
                     title = result.title,
