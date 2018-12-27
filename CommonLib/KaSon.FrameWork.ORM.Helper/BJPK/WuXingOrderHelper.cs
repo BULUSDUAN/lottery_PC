@@ -110,12 +110,7 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 isWin = true;
             }
-            if (int.Parse(winarr[0]) < int.Parse(winarr[9])
-               && antuCode.Contains("02"))
-            {
-
-                isWin = true;
-            }
+           
 
 
 
@@ -129,7 +124,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (isWin)
             {
                 decimal Odds = decimal.Parse(orderdetail.OddsArr);
-                 winMoney = orderdetail.unitPrice * Odds * orderdetail.BeiSu * 0;
+                 winMoney = decimal.Parse(orderdetail.unitPrices) * Odds * orderdetail.BeiSu ;
                 BonusStatus = 2;
             }
            
@@ -157,7 +152,55 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public override string BuildCodes(string content)
         {
-            return content;
+            List<string> codeList = new List<string>();
+            codeList.Add(content);
+            if (content.Contains(","))
+            {
+                codeList = content.Split(',').ToList();
+             
+            }
+            IList<string> nameList = new List<string>();
+            foreach (var item in codeList)
+            {
+                switch (item)
+                {
+                    case "01":
+                        nameList.Add("金");
+                        break;
+                    case "02":
+                        nameList.Add("木");
+                        break;
+                    case "03":
+                        nameList.Add("水");
+                        break;
+                    case "04":
+                        nameList.Add("火");
+                        break;
+                    case "05":
+                        nameList.Add("土");
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return string.Join(",", nameList);
+        }
+
+        public bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 70)
+        {
+            bool result = true;
+
+            List<string> clistCode = new List<string>();
+
+
+            clistCode.Add(content);
+            if (content.Contains(","))
+            {
+                clistCode = content.Split(',').ToList();
+
+            }
+            result = base.CheckCode(clistCode, listCode, _playId);
+            return result;
         }
     }
 }

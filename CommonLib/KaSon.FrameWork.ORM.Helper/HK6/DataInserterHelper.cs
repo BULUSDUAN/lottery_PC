@@ -137,20 +137,20 @@ namespace KaSon.FrameWork.ORM.Helper
         }
 
         public void PKAnteCodeData() {
-          //  DataAddPK玩法();
+            //  DataAddPK玩法();
             //前-定位胆
-          //  DataAddPK前();
+            DataAddPK前();
 
-           // DataAddPKAnteCode冠亚和();
+            DataAddPKAnteCode冠亚和();
 
-            //DataAddPKAnteCode龙虎();
+            DataAddPKAnteCode龙虎();
 
-           // DataAddPKAnteCode五行();
+            DataAddPKAnteCode五行();
 
-           // DataAddPKAnteCode大小单双();
+            DataAddPKAnteCode大小单双();
 
 
-          //  DataAddPKAnteCode冠亚和1();
+            DataAddPKAnteCode冠亚和1();
         }
         private void DataAddPK前() {
 
@@ -160,8 +160,8 @@ namespace KaSon.FrameWork.ORM.Helper
                 odds = 9.8m,
                 playid = 58
             };
-            //list.Add(1);
-            //DataAddPKAnteCode前2(list, antecode1);
+            list.Add(1);
+            DataAddPKAnteCode前2(list, antecode1);
 
             antecode1 = new blast_antecode()
             {
@@ -343,7 +343,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 //{
                 for (int i = 3; i <= 19; i++)
                     {
-                        string temp = "0" + i;
+                        string temp =  i+"";
                      
                         var P = new blast_antecode()
                         {
@@ -404,7 +404,6 @@ namespace KaSon.FrameWork.ORM.Helper
                         cateNum = 0,
                         enable = true,
                         remark = item.name
-
                     };
                     var P1 = new blast_antecode()
                     {
@@ -595,7 +594,7 @@ namespace KaSon.FrameWork.ORM.Helper
                 {
                     var P = new blast_antecode()
                     {
-                        AnteCode = "01",
+                        AnteCode = "03",
                         displayName = "单",
                         odds = 1.96M,
                         playid = item.playId,
@@ -609,7 +608,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     };
                     var P1 = new blast_antecode()
                     {
-                        AnteCode = "02",
+                        AnteCode = "04",
                         displayName = "双",
                         odds = 1.96M,
                         playid = item.playId,

@@ -13,7 +13,7 @@ namespace KaSon.FrameWork.ORM.Helper
     public class QianErOrderHelper : BaseOrderHelper
     {
         private IDbProvider DB = null;
-
+        private int playId = 59;
         public QianErOrderHelper(IDbProvider _DB)
         {
             DB = _DB;
@@ -88,7 +88,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (isWin)
             {
                 decimal Odds = decimal.Parse(orderdetail.OddsArr);
-                winMoney = orderdetail.unitPrice * Odds * orderdetail.BeiSu * winCount;
+                winMoney = decimal.Parse(orderdetail.unitPrices) * Odds * orderdetail.BeiSu * winCount;
                 BonusStatus = 2;
             }
 
@@ -117,7 +117,41 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public override string BuildCodes(string content)
         {
-            return content;
+            return content.Replace("1_", "").Replace("2_", "");//.Replace("3_", "");
+        }
+
+        public bool CheckCode(string content, List<blast_antecode> listCode,int _playId= 59)
+        {
+            bool result = true;
+            if (!content.Contains("|"))
+            {
+                return false;
+            }
+            List<string> clistCode = new List<string>();
+            string one = content.Split('|')[0];
+            string two = content.Split('|')[1];
+
+            clistCode.Add(one);
+            if (one.Contains(","))
+            {
+                clistCode = one.Split(',').ToList();
+               
+            }
+            result = base.CheckCode(clistCode, listCode, _playId);
+            if (!result)
+            {
+                return result;
+            }
+
+            clistCode.Clear();
+
+            clistCode.Add(two);
+            if (two.Contains(","))
+            {
+                clistCode = two.Split(',').ToList();
+            }
+            result = base.CheckCode(clistCode, listCode, _playId);
+            return result;
         }
     }
 }

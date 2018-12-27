@@ -5,17 +5,26 @@ using System.Text;
 namespace KaSon.FrameWork.Common.Hk6
 {
 
-    public class XiaoModel {
+    public class XiaoModel
+    {
         public int Index { get; set; }
         public string DisPlayName { get; set; }
         public string Name { get; set; }
         public List<string> CodeList { get; set; }
 
 
-      
+
 
     }
+    //string[] shuxiang = { "鼠", "牛", "虎", "兔", "龙", "蛇",
+    //"马", "羊", "猴", "鸡", "狗", "猪" };
 
+    //猪-12  "牛"-2
+    //"狗" 11 "猪"12  "牛"10 
+    //
+
+    //"猪"-12
+    //"鸡" 10  "猪"11
     public class XiaoCollectionModel
     {
         /// <summary>
@@ -31,11 +40,11 @@ namespace KaSon.FrameWork.Common.Hk6
     /// <summary>
     /// 生肖计算
     /// </summary>
-    public  class SXHelper
+    public class SXHelper
     {//
 
-       // 红波 :01、02、07、08、12、13、18、19、23、24、29、30、34、35、40、45、46
-            
+        // 红波 :01、02、07、08、12、13、18、19、23、24、29、30、34、35、40、45、46
+
         public static string[] RedBox = new string[] {
                       "01","02","07","08","12","13",
                       "18","19","23","24","29","30",
@@ -43,7 +52,7 @@ namespace KaSon.FrameWork.Common.Hk6
                     };
 
         //蓝波 :03、04、09、10、14、15、20、25、26、31、36、37、41、42、47、48
-            
+
         public static string[] BluBox = new string[] {
                      "03","04","09","10","14",
                     "15","20","25","26","31",
@@ -80,11 +89,11 @@ namespace KaSon.FrameWork.Common.Hk6
                         02,14 ,26, 38,
                         01 ,13, 25, 37 ,49
                     };
-        private static string  shuxiang()
+        private static string shuxiang()
         {
-           // string[] shuxiang = { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
-            string[] shuCode =  { "1",  "2",  "3",   "4",  "5",  "6",  "7",  "8",  "9", "10", "11", "12" };
-            int tmp =DateTime.Now.Year - 2008;
+            // string[] shuxiang = { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
+            string[] shuCode = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
+            int tmp = DateTime.Now.Year - 2008;
             if (DateTime.Now.Year < 2008)
             {
                 // Console.WriteLine(shuxiang[tmp % 12 + 12]);
@@ -98,50 +107,52 @@ namespace KaSon.FrameWork.Common.Hk6
         }
         private static int SCode(int code)
         {
-           int t=int.Parse( shuxiang());
-            int scode = 1; 
-            if (code > t)
+
+
+            int t = int.Parse(shuxiang());
+            int scode = 1;
+            if (code <= t)
             {
-                 scode = (code - t + 1);
+                scode = t - code;
             }
-            else if (code < t)
+            else if (code > t)
             {
-                  scode = 12 - t+code+1;
+                scode = t + (12 - code);//12-10
             }
+            scode++;
             return scode;
         }
         private static string SCodeName(int code)
         {
+
             int t = int.Parse(shuxiang());
+
             int tt = t + code;
             int value = tt;
-            if (code > 12)
+            int temp = code;
+            if (code < 12)
             {
-                int temp = code % 12;
-                temp--;
-                value = temp + t;
-                if (value > 12)
-                {
-                    value = value % 12;
-                }
-                value--;
-                
+
+                temp = code % 12;
             }
-            else {
-                value = code-1 + t;
-                if (value > 12)
-                {
-                    value = value % 12;
-                }
-                value--;
+            temp = code % 12;
+
+            if (t >= temp) //11>8
+            {
+                value = t - temp;
             }
-            
-            
+            else
+            {
+                value = t + (12 - temp);
+
+            }
+
+
             string[] shuxiangarr = {
                 "鼠", "牛", "虎", "兔", "龙",
                 "蛇", "马", "羊", "猴", "鸡",
                 "狗", "猪" };
-          
+
             return shuxiangarr[value];
         }
         public static List<string> SCodeNameArr(string code)
@@ -156,18 +167,20 @@ namespace KaSon.FrameWork.Common.Hk6
             return list;
         }
 
-        public static List<string> ScodeArr(int code) {
-           int scode= SCode(code);
+        public static List<string> ScodeArr(int code)
+        {
+            int scode = SCode(code);
             List<string> list = new List<string>();
             if (scode >= 10)
             {
                 list.Add(scode.ToString());
             }
-            else {
-                list.Add("0"+scode.ToString());
+            else
+            {
+                list.Add("0" + scode.ToString());
             }
-           
-            int temp =scode;
+
+            int temp = scode;
             while (true)
             {
                 temp = temp + 12;
@@ -175,7 +188,8 @@ namespace KaSon.FrameWork.Common.Hk6
                 {
                     list.Add(temp.ToString());
                 }
-                else {
+                else
+                {
                     break;
                 }
             }
@@ -183,16 +197,17 @@ namespace KaSon.FrameWork.Common.Hk6
             while (true)
             {
                 temp = temp - 12;
-                if (temp >=1)
+                if (temp >= 1)
                 {
                     if (temp >= 10)
                     {
                         list.Add(temp.ToString());
                     }
-                    else {
+                    else
+                    {
                         list.Add("0" + temp.ToString());
                     }
-                   
+
                 }
                 else
                 {
@@ -209,14 +224,15 @@ namespace KaSon.FrameWork.Common.Hk6
             List<XiaoModel> XM = new List<XiaoModel>();
             for (int i = 1; i < 13; i++)
             {
-                XiaoModel xl= new XiaoModel();
+                XiaoModel xl = new XiaoModel();
                 xl.Index = i;
-                xl.CodeList=ScodeArr(i);
+                xl.CodeList = ScodeArr(i);
                 XM.Add(xl);
             }
             return XM;
         }
-            public static XiaoCollectionModel XiaoCollection() {
+        public static XiaoCollectionModel XiaoCollection()
+        {
 
             XiaoCollectionModel m = new XiaoCollectionModel();
             //天肖 牛02,兔04,05龙,马07,猴09,猪12
@@ -224,14 +240,15 @@ namespace KaSon.FrameWork.Common.Hk6
 
             var tlist = new List<XiaoModel>();
             var dlist = new List<XiaoModel>();
-            var yshou=new List<XiaoModel>();
+            var yshou = new List<XiaoModel>();
             var jialist = new List<XiaoModel>();
             var qianlist = new List<XiaoModel>();
             var houlist = new List<XiaoModel>();
             #region txiao
-            tlist.Add(new XiaoModel() {
+            tlist.Add(new XiaoModel()
+            {
                 Name = "02",
-                DisPlayName= "牛",
+                DisPlayName = "牛",
                 CodeList = ScodeArr(2)
             });
             tlist.Add(new XiaoModel()
@@ -448,7 +465,7 @@ namespace KaSon.FrameWork.Common.Hk6
                 DisPlayName = "猴09",
                 CodeList = ScodeArr(9)
             });
-           
+
             houlist.Add(new XiaoModel()
             {
                 Name = "鸡10",

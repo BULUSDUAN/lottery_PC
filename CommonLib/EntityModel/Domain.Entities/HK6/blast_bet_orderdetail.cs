@@ -135,6 +135,9 @@ namespace EntityModel
         [Field("unitPrice")]
         public decimal unitPrice { get; set; }
 
+        [Field("unitPrices")]
+        public string unitPrices { get; set; }
+
         [Field("issueDate")]
         public string issueDate { get; set; }
 

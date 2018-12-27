@@ -24,6 +24,7 @@ using KaSon.FrameWork.Analyzer.Hk6Model;
 using KaSon.FrameWork.Common.Utilities;
 using PK.Service.IModuleServices;
 using HK6.ModuleBaseServices;
+using KaSon.FrameWork.ORM.Helper.BJPK;
 
 namespace PK.Service.ModuleServices
 {
@@ -116,10 +117,8 @@ namespace PK.Service.ModuleServices
 
                 #region 校验追期期号是否合法，加倍是否合法
                 int issueNo = info.issueNo ;
-                var issue = DB.CreateQuery<blast_lhc_time>().Where(b => b.actionNo == issueNo).FirstOrDefault();
-
-               
-                if (issue == null || DateTime.Parse(issue.actionTime.ToShortDateString()).AddHours(21).AddMonths(20) < DateTime.Now)
+                CommonActionResult result = new DataHelper(DB).GetGames(2);
+                if (!result.IsSuccess)
                 {
                     cresult.IsSuccess = false;
                     cresult.Code = 300;
@@ -127,44 +126,25 @@ namespace PK.Service.ModuleServices
                     cresult.Message = "期号无效无法购买";
                     return Task.FromResult(cresult);
                 }
-
+                string  iNo = (result.Value as dynamic).lastactionNo + "";
+                if (iNo !=issueNo+"")
+                {
+                    cresult.IsSuccess = false;
+                    cresult.Code = 300;
+                    cresult.StatuCode = 300;
+                    cresult.Message = "期号无效无法购买";
+                    return Task.FromResult(cresult);
+                }
 
                 var mb = new DataServiceHelper(DB).GetissueNo();
 
-                if (mb == null)
-                {
-                    cresult.IsSuccess = false;
-                    cresult.Code = 300;
-                    cresult.StatuCode = 300;
-                    cresult.Message = "期号无效无法购买";
-                    return Task.FromResult(cresult);
-                }
-                else if (mb.actionNo != info.issueNo)
-                {
-                    cresult.IsSuccess = false;
-                    cresult.Code = 300;
-                    cresult.StatuCode = 300;
-                    cresult.Message = "期号无效无法购买";
-                    return Task.FromResult(cresult);
-                } 
-                //追号期号 无效 请重新下注
-                foreach (var item in info.planList)
-                {
-
-                    if (item.issueNo <int.Parse( issue.actionNo+""))
-                    {
-                        cresult.IsSuccess = false;
-                        cresult.Code = 300;
-                        cresult.StatuCode = 300;
-                        cresult.Message = "期号错误无法购买";
-                        return Task.FromResult(cresult);
-                    }
-
-                }
-                //期号是否连续校验
+              
 
 
                 #endregion
+
+                
+
 
                 #region 校验金额是否足够
 

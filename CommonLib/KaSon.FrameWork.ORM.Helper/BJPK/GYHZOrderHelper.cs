@@ -13,7 +13,9 @@ namespace KaSon.FrameWork.ORM.Helper
    public class DingWeiLiuOrderHelper : BaseOrderHelper
     {
         private IDbProvider DB = null;
-       
+
+        public int playId { get; private set; } = 64;
+
         public DingWeiLiuOrderHelper(IDbProvider _DB) 
         {
             DB = _DB;
@@ -29,27 +31,22 @@ namespace KaSon.FrameWork.ORM.Helper
                 //  string tempcode=  arr[0];
                 return; 
             }
+            string one = winarr[0];
+            string two = winarr[1];
+            int sum = int.Parse(one) + int.Parse(two);
 
-            string[] weiCodes = antuCode.Split('|');
-            int wincount = 0;
-            int index =5;
-            foreach (var item in weiCodes)
+            string[] antuArr = antuCode.Split(',');
+            int index = 0;
+            foreach (var item in antuArr)
             {
-                string[] codeList = item.Split(',');
-
-                string code = winarr[index];
-                foreach (var item1 in codeList)
+                if (int.Parse(item)==sum)
                 {
-                    if (item1.Trim()==code)
-                    {
-                        wincount++;
-                    }
-                    
+                    isWin = true;
+
+                    break;
                 }
                 index++;
             }
-
-
 
 
             string userId = orderdetail.userId;
@@ -61,8 +58,10 @@ namespace KaSon.FrameWork.ORM.Helper
 
             if (isWin)
             {
-                decimal Odds = decimal.Parse(orderdetail.OddsArr);
-                 winMoney = orderdetail.unitPrice * Odds * orderdetail.BeiSu * wincount;
+               
+
+                decimal Odds = decimal.Parse(orderdetail.OddsArr.Split(',')[index]);
+                 winMoney = decimal.Parse(orderdetail.unitPrices) * Odds * orderdetail.BeiSu ;
                 BonusStatus = 2;
             }
            
@@ -91,6 +90,21 @@ namespace KaSon.FrameWork.ORM.Helper
         public override string BuildCodes(string content)
         {
             return content;
+        }
+        public bool CheckCode(string content, List<blast_antecode> listCode,int _playId= 64) {
+            bool result = true;
+           
+            List<string> clistCode = new List<string>();
+           
+
+            clistCode.Add(content);
+            if (content.Contains(","))
+            {
+                clistCode = content.Split(',').ToList();
+
+            }
+            result = base.CheckCode(clistCode, listCode, _playId);
+            return result;
         }
     }
 }

@@ -49,7 +49,7 @@ namespace KaSon.FrameWork.ORM.Helper
             if (isWin)
             {
                 decimal Odds = decimal.Parse(orderdetail.OddsArr);
-                 winMoney = orderdetail.unitPrice * Odds * orderdetail.BeiSu;
+                 winMoney =decimal.Parse(orderdetail.unitPrices) * Odds * orderdetail.BeiSu;
                 BonusStatus = 2;
             }
            
@@ -77,7 +77,20 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public override string BuildCodes(string content)
         {
-            return content;
+            return content.Replace("1_", "");//.Replace("2_", "").Replace("3_", "");
+        }
+        public bool CheckCode(string content,List<blast_antecode> listCode, int playId = 58) {
+            bool result = true;
+            List<string> list = new List<string>();
+            list.Add(content);
+            if (content.Contains(","))
+            {
+                list = content.Split(',').ToList();
+                
+            }
+            result = base.CheckCode(list, listCode, playId);
+
+            return result;
         }
     }
 }

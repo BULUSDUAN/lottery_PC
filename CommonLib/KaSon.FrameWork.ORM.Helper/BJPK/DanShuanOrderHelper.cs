@@ -8,13 +8,13 @@ using System.Text;
 namespace KaSon.FrameWork.ORM.Helper
 {
     /// <summary>
-    /// 定位
+    /// 大小
     /// </summary>
-   public class DingWeiWuOrderHelper : BaseOrderHelper
+   public class DanShuanOrderHelper : BaseOrderHelper
     {
         private IDbProvider DB = null;
-        private int playId = 61;
-        public DingWeiWuOrderHelper(IDbProvider _DB) 
+       
+        public DanShuanOrderHelper(IDbProvider _DB) 
         {
             DB = _DB;
         }
@@ -29,27 +29,41 @@ namespace KaSon.FrameWork.ORM.Helper
                 //  string tempcode=  arr[0];
                 return; 
             }
-
-            string[] weiCodes = antuCode.Split('|');
-            int wincount = 0;
-            int index = 0;
-            foreach (var item in weiCodes)
+            string codes = winarr[0];
+            switch (orderdetail.playId)
             {
-                string[] codeList = item.Split(',');
-
-                string code = winarr[index];
-                foreach (var item1 in codeList)
-                {
-                    if (item1.Trim()==code)
-                    {
-                        wincount++;
-                    }
-                    
-                }
-                index++;
+                case 76:
+                    codes = winarr[0];
+                    break;
+                case 77:
+                    codes = winarr[1];
+                    break;
+                case 78:
+                    codes = winarr[2];
+                    break;
+               
             }
-
-
+            if (antuCode.Contains(","))
+            {
+                var antuArr = antuCode.Split(',');
+                foreach (var item in antuArr)
+                {
+                    if (item=="03")
+                    {
+                        if (int.Parse(codes) %2 !=0)
+                        {
+                            isWin = true;
+                        }
+                    }
+                    else if (item == "04")
+                    {
+                        if (int.Parse(codes) % 2 == 0)
+                        {
+                            isWin = true;
+                        }
+                    }
+                }
+            }
 
 
             string userId = orderdetail.userId;
@@ -61,8 +75,10 @@ namespace KaSon.FrameWork.ORM.Helper
 
             if (isWin)
             {
+               
+
                 decimal Odds = decimal.Parse(orderdetail.OddsArr);
-                 winMoney = decimal.Parse(orderdetail.unitPrices) * Odds * orderdetail.BeiSu * wincount;
+                 winMoney = decimal.Parse(orderdetail.unitPrices) * Odds * orderdetail.BeiSu ;
                 BonusStatus = 2;
             }
            
@@ -88,39 +104,25 @@ namespace KaSon.FrameWork.ORM.Helper
 
 
         }
-
         public override string BuildCodes(string content)
         {
-            return content.Replace("1_", "").Replace("2_", "")
-                .Replace("3_", "").Replace("4_", "").Replace("5_", "").Replace("6_", "")
-                 .Replace("7_", "").Replace("8_", "").Replace("9_", "").Replace("10_", "");
+            return content.Replace("01", "大").Replace("02", "小")
+                .Replace("03", "单").Replace("04", "双");
         }
-
-        public bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 63)
+        public bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 73)
         {
             bool result = true;
-            if (!content.Contains("|"))
-            {
-                return false;
-            }
+
             List<string> clistCode = new List<string>();
-            string[] arr = content.Split('|');
-            foreach (var item in arr)
+
+
+            clistCode.Add(content);
+            if (content.Contains(","))
             {
-                clistCode.Add(item);
-                if (item.Contains(","))
-                {
-                    clistCode = item.Split(',').ToList();
+                clistCode = content.Split(',').ToList();
 
-                }
-                result = base.CheckCode(clistCode, listCode, _playId);
-                clistCode.Clear();
-                if (!result)
-                {
-                    return result;
-                }
             }
-
+            result = base.CheckCode(clistCode, listCode, _playId);
             return result;
         }
     }
