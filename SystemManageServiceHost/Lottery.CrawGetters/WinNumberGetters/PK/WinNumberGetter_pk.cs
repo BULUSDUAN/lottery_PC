@@ -13,18 +13,18 @@ using KaSon.FrameWork.Common.FileOperate;
 
 namespace Lottery.CrawGetters
 {
-    public class WinNumberGetter_1680660 : WinNumberGetter
+    public class WinNumberGetter_pk : WinNumberGetter
     {
         private static readonly Dictionary<string, string> UrlMapping;
 
-        public static readonly string Url = "https://1680660.com/smallSix/queryLotteryDate.do?ym={0}";
-        public static readonly string HostoryUrl = "https://1680660.com/smallSix/findSmallSixHistory.do";
+        //public static readonly string Url = "https://1680660.com/smallSix/queryLotteryDate.do?ym={0}";
+       // public static readonly string HostoryUrl = "https://1680660.com/smallSix/findSmallSixHistory.do";
         private static readonly string API_URL_HK6 = InitConfigInfo.SZC_OPEN_URL_HK6;
-        static WinNumberGetter_1680660()
+        static WinNumberGetter_pk()
         {
-            //http://kaijiang.500.com/ssq.shtml
-            UrlMapping = new Dictionary<string, string>();
-            UrlMapping.Add("HK6", "https://1680660.com/smallSix/queryLotteryDate.do?ym={0}"); //2019-04重庆时时彩
+            ////http://kaijiang.500.com/ssq.shtml
+            //UrlMapping = new Dictionary<string, string>();
+            //UrlMapping.Add("HK6", "https://1680660.com/smallSix/queryLotteryDate.do?ym={0}"); //2019-04重庆时时彩
 
             //UrlMapping.Add("GD11X5", "24");
         }
@@ -60,77 +60,77 @@ namespace Lottery.CrawGetters
 
             return list;
         }
-        private static IList<string> IssuseNum(string date)
-        {
-            List<string> list = new List<string>();
-            try
-            {
+        //private static IList<string> IssuseNum(string date)
+        //{
+        //    List<string> list = new List<string>();
+        //    try
+        //    {
                 
-                string nurl = string.Format(Url, date);
-                var json = PostManagerWithProxy.Get(nurl, Encoding.Default);
+        //        string nurl = string.Format(Url, date);
+        //        var json = PostManagerWithProxy.Get(nurl, Encoding.Default);
 
-                var djson = JsonHelper.Decode(json);
-                foreach (var item in djson)
-                {
+        //        var djson = JsonHelper.Decode(json);
+        //        foreach (var item in djson)
+        //        {
 
-                    try
-                    {
-                        if (item.Name== "result")
-                        {
-                            Console.WriteLine("");
-                            var data = item.Value.data.kjDate;
-                            foreach (var item1 in data)
-                            {
+        //            try
+        //            {
+        //                if (item.Name== "result")
+        //                {
+        //                    Console.WriteLine("");
+        //                    var data = item.Value.data.kjDate;
+        //                    foreach (var item1 in data)
+        //                    {
 
-                                //"[\r\n  0,\r\n  0\r\n]"
-                                string value = (item1 + "").Replace("\r\n", "")
-                                    .Replace(" ", "").Replace("[", "").Replace("]", "");
-                                var arr = value.Split(',');
-                                if (arr.Length>1)
-                                {
-                                    if (arr[1]=="1")
-                                    {
-                                        //开奖日期
-                                        int day = int.Parse(arr[0]);
-                                        string sday = date +"-0" + day;
-                                        if (day>=10)
-                                        {
-                                            sday = date + "-" + day; 
-                                        }
-                                        list.Add(sday.Replace("-", "/"));
+        //                        //"[\r\n  0,\r\n  0\r\n]"
+        //                        string value = (item1 + "").Replace("\r\n", "")
+        //                            .Replace(" ", "").Replace("[", "").Replace("]", "");
+        //                        var arr = value.Split(',');
+        //                        if (arr.Length>1)
+        //                        {
+        //                            if (arr[1]=="1")
+        //                            {
+        //                                //开奖日期
+        //                                int day = int.Parse(arr[0]);
+        //                                string sday = date +"-0" + day;
+        //                                if (day>=10)
+        //                                {
+        //                                    sday = date + "-" + day; 
+        //                                }
+        //                                list.Add(sday.Replace("-", "/"));
 
-                                    }
+        //                            }
 
-                                }
+        //                        }
 
-                                Console.WriteLine("");
-                            }
-                        }
+        //                        Console.WriteLine("");
+        //                    }
+        //                }
 
-                    }
-                    catch (Exception)
-                    {
+        //            }
+        //            catch (Exception)
+        //            {
 
-                        continue;
-                    }
+        //                continue;
+        //            }
 
-                }
+        //        }
               
-            }
-            catch (Exception)
-            {
+        //    }
+        //    catch (Exception)
+        //    {
 
-                throw;
-            }
-
-
-           // Console.WriteLine(string.Join(Environment.NewLine, list));
+        //        throw;
+        //    }
 
 
-            return list;
-        }
+        //   // Console.WriteLine(string.Join(Environment.NewLine, list));
 
-        public static List<blast_data> OpenWinNum(string code="hk6") {
+
+        //    return list;
+        //}
+
+        public static List<blast_data> OpenWinNum(string code="bjpk10") {
             string jsonstr =  GetWinNum(code);
             List<blast_data> list = new List<blast_data>();
 
@@ -177,7 +177,7 @@ namespace Lottery.CrawGetters
                                     kjtime = DateTime.Parse(temp),
                                    // stopTime = DateTime.Parse(temp).AddHours(21).AddMonths(30),
                                     kjdata = (item1.opencode.Value+""),
-                                    typeid=1
+                                    typeid=2
 
                                 };
                                 list.Add(bdata);
@@ -401,40 +401,40 @@ namespace Lottery.CrawGetters
             return list;
         }
 
-        public static List<string> GetIssuseNum() {
-            List<string> ListDate = new List<string>();
-            var list = GetRequestDate();
-            foreach (var item in list)
-            {
-                var mouthList = IssuseNum(item);
-                Thread.Sleep(5 * 1000);
-                if (mouthList.Count > 0)
-                {
+        //public static List<string> GetIssuseNum() {
+        //    List<string> ListDate = new List<string>();
+        //    var list = GetRequestDate();
+        //    foreach (var item in list)
+        //    {
+        //        var mouthList = IssuseNum(item);
+        //        Thread.Sleep(5 * 1000);
+        //        if (mouthList.Count > 0)
+        //        {
 
 
 
-                }
-                else {
-                     mouthList = IssuseNum(item);
+        //        }
+        //        else {
+        //             mouthList = IssuseNum(item);
 
-                    if (mouthList.Count<=0)
-                    {
-                        return ListDate;
-                    }
-                }
-                ListDate= ListDate.Concat(mouthList).ToList();
+        //            if (mouthList.Count<=0)
+        //            {
+        //                return ListDate;
+        //            }
+        //        }
+        //        ListDate= ListDate.Concat(mouthList).ToList();
 
-               // WriteLog("成功同步到数据库");
-            }
+        //       // WriteLog("成功同步到数据库");
+        //    }
 
-            foreach (var item in ListDate)
-            {
-                //录入数据库
+        //    foreach (var item in ListDate)
+        //    {
+        //        //录入数据库
 
-            }
+        //    }
 
-            return ListDate;
-        }
+        //    return ListDate;
+        //}
 
         private static string GetHostoryNum()
         {
@@ -446,11 +446,11 @@ namespace Lottery.CrawGetters
             int year = DateTime.Now.Year;
 
             Head["Origin"] = "https://6hch.com";
-            var json = PostManagerWithProxy.Post_Head(HostoryUrl, "year="+ year + "&type=1", System.Text.Encoding.UTF8,
+            var json = PostManagerWithProxy.Post_Head("", "year="+ year + "&type=1", System.Text.Encoding.UTF8,
                 "application/x-www-form-urlencoded", "https://6hch.com/html/kaihistory.html", Head);
             return json;
         }
-        private static string GetWinNum(string code= "hk6")
+        private static string GetWinNum(string code= "bjpk10")
         {
 
             Console.WriteLine("结算地址：" + string.Format(API_URL_HK6, code, DateTime.Now.ToString()));

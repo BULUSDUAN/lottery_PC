@@ -24,16 +24,28 @@ namespace EntityModel.Communication
         /// 是否操作成功
         /// </summary>
         [ProtoMember(1)]
-        public bool IsSuccess { get; set; }
+        public bool IsSuccess { get; set; } = true;
         /// <summary>
         /// 返回消息
         /// </summary>
         [ProtoMember(2)]
-        public string Message { get; set; }
+        public string Message { get; set; } = "";
         /// <summary>
         /// 返回值
         /// </summary>
         [ProtoMember(3)]
-        public string ReturnValue { get; set; }
+        public string ReturnValue { get; set; } = "";
+
+        public object Value { get; set; }
+
+        /// <summary>
+        /// 200 正确，502 系统错误，403
+        /// </summary>
+        public int StatuCode { get; set; } = 200;
+        public int Code { get; set; } = 101;
+        public string MsgId { get; set; } = "";
+
+        public string Sign { get; set; } = "";
     }
+    
 }

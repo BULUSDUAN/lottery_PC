@@ -135,6 +135,9 @@ namespace EntityModel
         [Field("unitPrice")]
         public decimal unitPrice { get; set; }
 
+        [Field("unitPrices")]
+        public string unitPrices { get; set; }
+
         [Field("issueDate")]
         public string issueDate { get; set; }
 
@@ -148,5 +151,7 @@ namespace EntityModel
         public string OddsArr { get; set; }
         [Field("SchemeSource")]
         public int SchemeSource { get; set; }
+        [Field("typeid")]
+        public int typeid { get; set; }
     }
 }

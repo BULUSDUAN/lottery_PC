@@ -37,7 +37,7 @@ namespace KaSon.FrameWork.ORM.Helper
             DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
             {
                 winNumber = winNum,
-                BonusAwardsMoney = 0,
+                BonusAwardsMoney = winMoney,
                 updateTime = DateTime.Now,
                 BonusStatus = BonusStatus  //为中奖状态
 

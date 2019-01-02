@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Text.RegularExpressions;
 using KaSon.FrameWork.Common.Algorithms;
 using System.IO;
+using KaSon.FrameWork.Common.BJPK;
 
 namespace KaSon.FrameWork.Common.Utilities
 {
@@ -66,6 +67,108 @@ namespace KaSon.FrameWork.Common.Utilities
         }
         private static bool _AppLogEnabled = true;
         private static object LockObj = new object();
+        /// <summary>
+        /// 格式化期号
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="date"></param>
+        /// <param name="now"></param>
+        /// <param name="actionNo"></param>
+        /// <param name="bagintime"></param>
+        /// <returns></returns>
+        public static string NumberFormat(int type, string date, DateTime now, int actionNo, ulong bagintime)
+        {
+            string number = string.Empty;
+            if (type == 1)//重庆时时彩
+            {
+                number = string.Format("{0}-{1}", date, actionNo.ToString("#000"));
+            }
+            else if (type == 12)//新疆时时彩
+            {
+                number = string.Format("{0}-{1}", date, actionNo.ToString("#00"));
+            }
+            else if (type == 60) //天津时时彩
+            {
+                //number = string.Format("{0}{1}", now.ToString("yyMMdd"), actionNo.ToString("#000"));
+                number = string.Format("{0}-{1}", date, actionNo.ToString("#000"));
+            }
+            else if (type == 61 || type == 62)//澳门时时彩 台湾时时彩
+            {
+                number = string.Format("{0}-{1}", date, actionNo.ToString("#000"));
+            }
+            else if (type == 7 || type == 15 || type == 6 || type == 16 || type == 68 || type == 67)//7山东11选5  6广东11X5  15上海11选5  16江西11选5  68台湾11X5 67  澳门11X5
+            {
+                number = string.Format("{0}{1}", now.ToString("yyyyMMdd"), actionNo.ToString("#00"));
+            }
+
+
+            else if (type == 5)// 分分彩特殊处理
+            {
+                number = string.Format("{0}-{1}", date, actionNo.ToString("#0000"));
+            }
+
+            else if (type == 75 || type == 77 || type == 76)//澳门时时彩 台湾时时彩 巴西快乐彩   巴西1.5分彩
+            {
+                number = string.Format("{0}-{1}", date, actionNo.ToString("#000"));
+            }
+            else if (type == 16 || type == 15)//江西11选5 山东11选5 上海11选5
+            {
+                number = string.Format("{0}-{1}", date, actionNo.ToString("#00"));
+            }
+
+
+            else if (type == 9 || type == 10)// 福彩3D 排列3 获取天数
+            {
+                number = string.Format("{0}{1}", now.Year, now.DayOfYear - 7);
+            }
+            else if (type == 79)//江苏快3  20171020048
+            {
+                number = string.Format("{0}{1}", date, actionNo.ToString("#000"));
+            }
+            else if (type == 71 || type == 72)//幸运农场
+            {
+                number = string.Format("{0}{1}", now.ToString("yyyyMMdd"), actionNo.ToString("#000"));
+            }
+            else if (type == 11)// 时时乐
+            {
+                number = string.Format("{0}-{1}", date, actionNo.ToString("#00"));
+            }
+            else if (type == 2)////北京PK10
+            {
+                number = (179 * (bagintime - DateTimeHelper.LocalDateTimeToUnixTimeStamp(Convert.ToDateTime("2007-11-11"))) / 3600 / 24 + (ulong)actionNo - 3793).ToString();
+            }
+            else if (type == 65)//澳门PK10
+            {
+                number = (288 * (bagintime - DateTimeHelper.LocalDateTimeToUnixTimeStamp(Convert.ToDateTime("2007-11-11"))) / 3600 / 24 + (ulong)actionNo - 6789).ToString();
+            }
+            else if (type == 66)//台湾PK10
+            {
+                number = (288 * (bagintime - DateTimeHelper.LocalDateTimeToUnixTimeStamp(Convert.ToDateTime("2007-11-11"))) / 3600 / 24 + (ulong)actionNo - 4321).ToString();
+            }
+            else if (type == 78)//北京快乐8
+            {
+                number = (179 * (bagintime - DateTimeHelper.LocalDateTimeToUnixTimeStamp(Convert.ToDateTime("2004-09-19"))) / 3600 / 24 + (ulong)actionNo - 3857).ToString();
+            }
+            else if (type == 73)//澳门快乐8
+            {
+                number = (288 * (bagintime - DateTimeHelper.LocalDateTimeToUnixTimeStamp(Convert.ToDateTime("2004-09-19"))) / 3600 / 24 + (ulong)actionNo - 1234).ToString();
+            }
+            else if (type == 74)// 韩国快乐8
+            {
+                number = (288 * (bagintime - DateTimeHelper.LocalDateTimeToUnixTimeStamp(Convert.ToDateTime("2004-09-19"))) / 3600 / 24 + (ulong)actionNo - 4567).ToString();
+            }
+            else if (type == 34)
+            {
+                number = $"{now.Year}-{actionNo.ToString("#000")}";
+            }
+            else
+            {
+                number = string.Format("{0}-{1}", date, actionNo.ToString("#000"));
+            }
+            return number;
+        }
+
+
         private static void WriteLog(string msg, string logfile = "")
         {
             lock (LockObj)
@@ -164,6 +267,17 @@ namespace KaSon.FrameWork.Common.Utilities
                 source = ReplaceHtmlTag(source, tag);
             }
             return source;
+        }
+        /// <summary>
+        /// 将c# DateTime时间格式转换为Unix时间戳格式  
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public static long ConvertDateTimeToInt(System.DateTime time)
+        {
+            System.DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1, 0, 0, 0, 0));
+            long t = (time.Ticks - startTime.Ticks) / 10000;   //除10000调整为13位      
+            return t;
         }
         public static string UUID(int length = 10)
         {

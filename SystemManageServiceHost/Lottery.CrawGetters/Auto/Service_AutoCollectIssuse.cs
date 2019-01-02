@@ -10,6 +10,7 @@ using System.Threading;
 using MongoDB.Driver;
 using EntityModel;
 using EntityModel.Communication;
+using KaSon.FrameWork.Common.JSON;
 
 namespace Lottery.CrawGetters.Auto
 {
@@ -308,7 +309,7 @@ namespace Lottery.CrawGetters.Auto
 
         }
 
-        public void StartOpenWinNum(Func<List<blast_data_time>, CommonActionResult> fn)
+        public void StartOpenWinNum(Func<List<blast_data>, CommonActionResult> fn)
         {
             //if (thread != null)
             //{
@@ -322,17 +323,17 @@ namespace Lottery.CrawGetters.Auto
             int sleep = 1000 * 60;
             //thread = Task.Factory.StartNew((Fn) =>
             //{
-            List<blast_data_time> all = new List<blast_data_time>();
-            List<blast_data_time> dic = null;
+            List<blast_lhc_time> all = new List<blast_lhc_time>();
+            List<blast_data> dic = null;
             int Count = 0;
-            while (true)
-            {
+            //while (true)
+            //{
                 ////TODO：销售期间，暂停采集
-                Count++;
-                if (Count >= 10)
-                {
-                    break;
-                }
+                //Count++;
+                //if (Count >= 10)
+                //{
+                //    break;
+                //}
                 ////TODO：销售期间，暂停采集
 
                 try
@@ -345,7 +346,7 @@ namespace Lottery.CrawGetters.Auto
                     if (dic.Count > 0)
                     {
                         WriteLog("采集到数据");
-                        WriteLog(string.Join(Environment.NewLine, dic));
+                      //  WriteLog(JsonHelper.Serialize(dic));
                         //   var Nfn = Fn as Func<List<blast_data_time>, CommonActionResult>;
 
                         CommonActionResult result = fn(dic);
@@ -354,8 +355,9 @@ namespace Lottery.CrawGetters.Auto
 
                             WriteLog("成功同步到数据库");
                         }
-                        WriteLogAll();
-                        break;
+                    WriteLog(result.Message+ result.ReturnValue);
+                    WriteLogAll();
+                        //break;
                     }
                     else
                     {
@@ -372,7 +374,80 @@ namespace Lottery.CrawGetters.Auto
                 {
                     Thread.Sleep(sleep);
                 }
+            //}
+            // }, fn);
+            //  thread.Start();
+
+
+        }
+
+
+        public void StartOpenWinNumBJPK(Func<List<blast_data>, CommonActionResult> fn)
+        {
+            //if (thread != null)
+            //{
+            //    throw new LogicException("已经运行");
+            //}
+            gameName = gameName.ToUpper();
+            BeStop = 0;
+            // fn("",null);
+            //string tempStr = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings["HK6"].ToString();
+            //int initTimeData = int.Parse(tempStr);
+            int sleep = 1000 * 60;
+            //thread = Task.Factory.StartNew((Fn) =>
+            //{
+            List<blast_lhc_time> all = new List<blast_lhc_time>();
+            List<blast_data> dic = null;
+            int Count = 0;
+            //while (true)
+            //{
+            ////TODO：销售期间，暂停采集
+            //Count++;
+            //if (Count >= 10)
+            //{
+            //    break;
+            //}
+            ////TODO：销售期间，暂停采集
+
+            try
+            {
+                //每周天执行一次
+                System.DayOfWeek w = DateTime.Now.DayOfWeek;
+                //if (System.DayOfWeek.Sunday==w && DateTime.Now.Hour==10 && DateTime.Now.Minute==30)
+                //{
+                dic = WinNumberGetter_pk.OpenWinNum();
+                if (dic.Count > 0)
+                {
+                    WriteLog("采集到数据");
+                    //  WriteLog(JsonHelper.Serialize(dic));
+                    //   var Nfn = Fn as Func<List<blast_data_time>, CommonActionResult>;
+
+                    CommonActionResult result = fn(dic);
+                    if (result.IsSuccess)
+                    {
+
+                        WriteLog("成功同步到数据库");
+                    }
+                    WriteLog(result.Message + result.ReturnValue);
+                    WriteLogAll();
+                    //break;
+                }
+                else
+                {
+                    WriteLog("六合彩开奖结算没有踩到数据");
+                    // sleep = 1000 * 5;
+                }
+                WriteLogAll();
             }
+            catch (Exception ex)
+            {
+                WriteError("处理:" + ex.Message);
+            }
+            finally
+            {
+                Thread.Sleep(sleep);
+            }
+            //}
             // }, fn);
             //  thread.Start();
 

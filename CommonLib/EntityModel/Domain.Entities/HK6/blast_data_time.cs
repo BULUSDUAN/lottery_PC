@@ -11,48 +11,44 @@ namespace EntityModel
     // 
     ///</summary>
     [ProtoContract]
-    [Entity("blast_data_time",Type = EntityType.Table)]
+    [Entity("blast_data_time", Type = EntityType.Table)]
     public class blast_data_time
-    { 
+    {
         public blast_data_time()
         {
-        
+
         }
-            /// <summary>
-            // 
-            ///</summary>
-            [ProtoMember(1)]
-            [Field("id", IsIdenty = true, IsPrimaryKey = true)]
-            public int id{ get; set; }
-            /// <summary>
-            // 
-            ///</summary>
-            [ProtoMember(2)]
-            [Field("typeid")]
-            public sbyte typeid{ get; set; }
-            /// <summary>
-            // 
-            ///</summary>
-            [ProtoMember(3)]
-            [Field("actionNo")]
-            public int actionNo{ get; set; }
-            /// <summary>
-            // 
-            ///</summary>
-            [ProtoMember(4)]
-            [Field("actionTime")]
-            public DateTime actionTime{ get; set; }
-            /// <summary>
-            // 
-            ///</summary>
-            [ProtoMember(5)]
-            [Field("stopTime")]
-            public DateTime stopTime { get; set; }
-        [Field("isOpen")]
-        public int isOpen { get; set; }
-        [Field("winNum")]
-        public string winNum { get; set; }
-        [Field("actionDate")]
-        public string actionDate { get; set; }
+        /// <summary>
+        // 
+        ///</summary>
+        [ProtoMember(1)]
+        [Field("id", IsIdenty = true, IsPrimaryKey = true)]
+        public int id { get; set; }
+        /// <summary>
+        // 
+        ///</summary>
+        [ProtoMember(2)]
+        [Field("typeid")]
+        public sbyte typeid { get; set; }
+        /// <summary>
+        // 
+        ///</summary>
+        [ProtoMember(3)]
+        [Field("actionNo")]
+        public int actionNo { get; set; }
+        /// <summary>
+        // 
+        ///</summary>
+        [ProtoMember(4)]
+        [Field("actionTime")]
+        public string actionTime { get; set; }
+
+
+
+        [Field("stopTime")]
+        public string stopTime { get; set; }
+
+
+
     }
 }

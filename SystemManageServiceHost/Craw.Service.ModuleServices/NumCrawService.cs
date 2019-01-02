@@ -39,12 +39,12 @@ namespace Craw.Service.ModuleServices
 
         private static Dictionary<string, System.Timers.Timer> timerList = new Dictionary<string, System.Timers.Timer>();
         private readonly CrawRepository rep;
-        public NumCrawService( ILogger<NumCrawService> log, CrawRepository _rep)
+        public NumCrawService(ILogger<NumCrawService> log, CrawRepository _rep)
         {
             _Log = log;
-           this.rep = _rep;
+            this.rep = _rep;
         }
-       
+
         /// <summary>
         /// 数字彩采集开奖号-开始服务
         /// </summary>
@@ -53,7 +53,8 @@ namespace Craw.Service.ModuleServices
         public Task<string> NumLettory_WinNumber_Start(string gameName)
         {
             JToken sleeptimes = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings;
-            lock (aotoCollectList) {
+            lock (aotoCollectList)
+            {
                 bool bol = false;
                 //停留时间
                 TimeSpan stopTime = TimeSpan.FromSeconds(20);
@@ -84,16 +85,16 @@ namespace Craw.Service.ModuleServices
                     if (p == null)
                     {
                         //执行任务
-                        Service_AutoCollectWinNumber auto = new Service_AutoCollectWinNumber(rep.MDB,gameName,stopTime);
+                        Service_AutoCollectWinNumber auto = new Service_AutoCollectWinNumber(rep.MDB, gameName, stopTime);
                         auto.Key = gameName;
-                        auto.Start( new CrawORMService(rep.MDB).Start);
+                        auto.Start(new CrawORMService(rep.MDB).Start);
                         aotoCollectList.Add(auto);
                     }
                 }
             }
 
 
-            return Task.FromResult( "数字彩采集开奖号-开始服务");
+            return Task.FromResult("数字彩采集开奖号-开始服务");
         }
         /// <summary>
         /// 停止服务
@@ -154,7 +155,7 @@ namespace Craw.Service.ModuleServices
                     case "SSQ":
                     case "DLT":
                         bol = true;
-                     
+
                         break;
                     default:
                         break;
@@ -170,7 +171,7 @@ namespace Craw.Service.ModuleServices
                         stopTime = TimeSpan.FromSeconds(int.Parse(sleeptimes[gameName].ToString()));
                         Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool(rep.MDB, gameName, stopTime);
                         //执行任务
-                    //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
+                        //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
                         auto.Key = gameName;
                         auto.Start(gameName, new CrawORMService(rep.MDB).BonusPoolStart);
                         aotoPoolCollectList.Add(auto);
@@ -209,27 +210,43 @@ namespace Craw.Service.ModuleServices
             }
 
 
-            return Task.FromResult("成功停止服务"+ gameName);
+            return Task.FromResult("成功停止服务" + gameName);
         }
 
-        public Task<string> NumLettory_HK6Issuse(string gameName= "HK6")
+        public Task<string> NumLettory_HK6Issuse(string gameName = "HK6")
         {
-           // string gameName = "HK6";
+            // string gameName = "HK6";
             lock (aotoPoolCollectList)
             {
                 switch (gameName)
                 {
                     case "HK6":
 
-                        var p = aotoIssuseCollectList.Where(b => b.Key == gameName).FirstOrDefault();
+                        var p = timerList.GetValueOrDefault(gameName); ;
                         if (p == null)
                         {
-                            Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
-                            //执行任务
-                            //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
-                            auto.Key = gameName;
-                            auto.Start( new CrawORMService(rep.MDB).HK6IssuseStart);
-                            aotoIssuseCollectList.Add(auto);
+                            string tempStr = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings["HK6"].ToString();
+                            int initTimeData = int.Parse(tempStr);
+                            System.Timers.Timer timer = ServiceHelper.ExcuteByTimer(initTimeData, () =>
+                            {
+                                try
+                                {
+
+
+                                    Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+                                    //执行任务
+                                    //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
+                                    auto.Key = gameName;
+                                    auto.Start(new CrawORMService(rep.MDB).HK6IssuseStart);
+                                   
+                                }
+                                catch (Exception)
+                                {
+
+
+                                }
+                            });
+                            timerList.Add(gameName, timer);
                         }
                         break;
                     case "HostoryHK6":
@@ -241,10 +258,20 @@ namespace Craw.Service.ModuleServices
                             int initTimeData = int.Parse(tempStr);
                             System.Timers.Timer timer = ServiceHelper.ExcuteByTimer(initTimeData, () =>
                             {
-                                Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+                                try
+                                {
 
-                                auto.Key = gameName;
-                                auto.StartHostory(new CrawORMService(rep.MDB).HK6HostoryNum);
+
+                                    Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+
+                                    auto.Key = gameName;
+                                    auto.StartHostory(new CrawORMService(rep.MDB).HK6HostoryNum);
+                                }
+                                catch (Exception)
+                                {
+
+
+                                }
                             });
 
 
@@ -270,10 +297,22 @@ namespace Craw.Service.ModuleServices
                             int initTimeData = int.Parse(tempStr);
                             System.Timers.Timer timer = ServiceHelper.ExcuteByTimer(initTimeData, () =>
                             {
-                                Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+                                var _log = InitConfigInfo.logFactory.CreateLogger<Service_AutoCollectIssuse>();
+                                try
+                                {
+                                   
+                                    Console.WriteLine("1结算timer 启动");
+                                    _log.LogTrace("1结算timer 启动");
+                                    Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
 
-                                auto.Key = gameName;
-                                auto.StartOpenWinNum(new CrawORMService(rep.MDB).HK6OpenwinNum);
+                                    auto.Key = gameName;
+                                    auto.StartOpenWinNum(new CrawORMService(rep.MDB).HK6OpenwinNum);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine("结算出错："+ex.ToString());
+                                    _log.LogError("结算出错：" + ex.ToString());
+                                }
                             });
 
 
@@ -289,6 +328,63 @@ namespace Craw.Service.ModuleServices
             return Task.FromResult("成功停止服务" + gameName);
         }
 
+
+        public Task<string> NumLettory_BJPK(string gameName = "BJPK") {
+
+            lock (aotoPoolCollectList)
+            {
+                switch (gameName)
+                {
+
+                    case "OpenWinPK10":
+
+                        //var p2 = aotoIssuseCollectList.Where(b => b.Key == gameName).FirstOrDefault();
+                        //if (p2 == null)
+                        //{
+                        //    Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+                        //    //执行任务 StartOpenWinNum
+                        //    //    Service_AutoCollectBonusPool auto = new Service_AutoCollectBonusPool();
+                        //    auto.Key = gameName;
+                        //    auto.StartOpenWinNum(new CrawORMService(rep.MDB).HK6OpenwinNum);
+                        //    aotoIssuseCollectList.Add(auto);
+                        //}
+                        var p2 = timerList.GetValueOrDefault(gameName);
+                        if (p2 == null)
+                        {
+                            string tempStr = Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings["HK6"].ToString();
+                            int initTimeData = int.Parse(tempStr);
+                            System.Timers.Timer timer = ServiceHelper.ExcuteByTimer(initTimeData, () =>
+                            {
+                                var _log = InitConfigInfo.logFactory.CreateLogger<Service_AutoCollectIssuse>();
+                                try
+                                {
+
+                                    Console.WriteLine("PK10结算timer 启动");
+                                    _log.LogTrace("PK10结算timer 启动");
+                                    Service_AutoCollectIssuse auto = new Service_AutoCollectIssuse(rep.MDB, gameName);
+
+                                    auto.Key = gameName;
+                                    auto.StartOpenWinNumBJPK(new CrawORMService(rep.MDB).BJPKOpenwinNum);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine("结算出错：" + ex.ToString());
+                                    _log.LogError("结算出错：" + ex.ToString());
+                                }
+                            });
+
+
+                            timerList.Add(gameName, timer);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+
+            return Task.FromResult("成功停止服务" + gameName);
+        }
         //WinNumber
     }
 }

@@ -199,7 +199,7 @@ namespace SystemManage.Host
                 {
                     Dictionary<string, object> model = new Dictionary<string, object>();
                     string path = item.Path;
-                    Console.WriteLine(path);
+                   // Console.WriteLine(path);
                     if (bool.Parse(item.IsStart.ToString()))//是否启动
                     {
 
@@ -216,7 +216,7 @@ namespace SystemManage.Host
                         {
 
 
-                            Console.WriteLine(path);
+                           // Console.WriteLine(path);
 
                             //model["gameName"] = "SSQ";
 
@@ -224,7 +224,7 @@ namespace SystemManage.Host
                             //byte[] byteArray = System.Text.Encoding.GetEncoding("gb2312").GetBytes(item["Desc"].ToString());
 
                             ///  string aaa2 = System.Text.Encoding.GetEncoding("gb2312").GetString(byteArray);
-                            Console.WriteLine(string.Format("{0}{1}", item.Desc.ToString(), " 启动了"));
+                           // Console.WriteLine(string.Format("{0}{1}", item.Desc.ToString(), " 启动了"));
                         }
                         catch (Exception ex)
                         {

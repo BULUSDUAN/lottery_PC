@@ -31,6 +31,8 @@ namespace EntityModel
         [Field("userid")]
         public string userId { get; set; }
 
+        [Field("typeid")]
+        public int typeid { get; set; }
 
         /// <summary>
         // 
@@ -146,8 +148,8 @@ namespace EntityModel
         [ProtoMember(23)]
         [Field("SchemeId")]
         public string SchemeId { get; set; }
-        [Field("typeid")]
-        public int typeid { get; set; } =1;
+        //[Field("typeid")]
+        //public int typeid { get; set; } =1;
 
         [Field("SchemeSource")]
         public int SchemeSource { get; set; }

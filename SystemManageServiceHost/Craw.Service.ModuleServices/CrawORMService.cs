@@ -194,18 +194,19 @@ namespace Craw.Service.ModuleServices
                 string Year = oneDate.Year + "";
                 string atcNo = "";
                 int index = 73;
-                var timelist = db.CreateQuery<blast_data_time>().ToList(); ;
+                var timelist = db.CreateQuery<blast_lhc_time>().ToList(); ;
                 foreach (var item in list)
                 {
-                    if (index>142)
+                    if (index > 142)
                     {
                         Console.WriteLine(item);
                     }
 
-                    if (DateTime.Parse(item).Year > oneDate.Year)
+                    if (DateTime.Parse(item).Year != oneDate.Year)
                     {
                         index = 1;
                         Year = DateTime.Parse(item).Year + "";
+                        oneDate = DateTime.Parse(item);
                     }
                     atcNo = index + "";
                     atcNo = Year + "" + index;
@@ -221,24 +222,27 @@ namespace Craw.Service.ModuleServices
                     //{
                     //    atcNo = Year + "" + index;
                     //}
-                    var one = timelist.Where(b => b.actionDate == item).FirstOrDefault();
+                    DateTime actionTime = DateTime.Parse(item);
+                    var one = timelist.Where(b => b.actionTime == actionTime).FirstOrDefault();
                     if (one == null)
                     {
-                        blast_data_time b = new blast_data_time()
+                        blast_lhc_time b = new blast_lhc_time()
                         {
-                            actionDate = item,
+                            // actionDate = item,
+                            typeid=1,
                             actionNo = int.Parse(atcNo),
                             actionTime = DateTime.Parse(item),
                             stopTime = DateTime.Parse(DateTime.Parse(item).ToShortDateString()).AddHours(21).AddMinutes(30)
 
                         };
-                        db.GetDal<blast_data_time>().Add(b);
+                        db.GetDal<blast_lhc_time>().Add(b);
                     }
                     else
                     {
-                        db.GetDal<blast_data_time>().Update(b => new blast_data_time {
-                             actionNo = int.Parse(atcNo)
-                        }, b => b.actionDate == item);
+                        //db.GetDal<blast_lhc_time>().Update(b => new blast_lhc_time
+                        //{
+                        //    actionNo = int.Parse(atcNo)
+                        //}, b => b.actionTime == actionTime);
                     }
 
                     index++;
@@ -281,11 +285,11 @@ namespace Craw.Service.ModuleServices
                     }
                     var one = datalist.Where(b => b.issueNo == item.issueNo).FirstOrDefault();
 
-                   
+
 
                     if (one == null)
                     {
-                       
+
                         string str = item.kjdata;
                         if (str.Contains(",") && !str.Contains("+"))
                         {
@@ -306,6 +310,77 @@ namespace Craw.Service.ModuleServices
 
                     // index++;
                 }
+                if (list.Count>0)
+                {
+                    var one = list[0];
+                    DateTime kjtime = one.kjtime;
+                    var p = (from b in db.CreateQuery<blast_lhc_time>()
+                            where b.actionTime >= kjtime
+                            orderby b.actionTime ascending
+                            select b).ToList();
+
+                    var pone = p.Where(b=>b.actionTime==one.kjtime).FirstOrDefault();
+                    if (pone != null)
+                    {
+                        int index = one.issueNo;
+                        if (index>2000)
+                        {
+                            index = int.Parse(index.ToString().Substring(4));
+                        }
+                        DateTime dt = one.kjtime;
+                        var bol = true;
+                        int action = 0;
+                        foreach (var item in p)
+                        {
+                            if (item.actionTime.Year != dt.Year)
+                            {
+                                index = 1;
+                                dt = item.actionTime;
+                            }
+                             action = int.Parse(item.actionTime.Year + "" + index);
+                            if (item.actionNo == action)
+                            {
+                                //正确
+                                
+                            }
+                            else
+                            {
+                                // 校正
+                                bol = false;
+
+                                break;
+                            }
+                            index++;
+                        }
+                        if (!bol)
+                        {
+                            index = one.issueNo;
+                            if (index > 2000)
+                            {
+                                index = int.Parse(index.ToString().Substring(4));
+                            }
+                            dt = pone.actionTime;
+                            DateTime temp =DateTime.Now;
+                            foreach (var item in p)
+                            {
+                                
+                                if (item.actionTime.Year != dt.Year)
+                                {
+                                    index =1;
+                                    dt = item.actionTime;
+                                }
+                                 temp = item.actionTime;
+                                action = int.Parse(dt.Year + "" + index);
+                                db.GetDal<blast_lhc_time>().Update(b=>new blast_lhc_time() {
+                                     actionNo= action
+                                }, b =>b.actionTime== temp && b.typeid==1);
+
+                                index++;
+                            }
+                        }
+                        
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -325,7 +400,7 @@ namespace Craw.Service.ModuleServices
             return true;
         }
 
-        public CommonActionResult HK6OpenwinNum(List<blast_data_time> list)
+        public CommonActionResult HK6OpenwinNum(List<blast_data> list)
         {
             CommonActionResult result = new CommonActionResult();
             var db = new DbProvider();
@@ -335,10 +410,10 @@ namespace Craw.Service.ModuleServices
                 int actionNo = 0;
                 string winNum = "";
                 db.Init("MySql.Default", true);
-                
-                var datalist = db.CreateQuery<blast_data_time>().Where(b => b.isOpen != 1 || b.isOpen==null).ToList();
-                var orderdetail = db.CreateQuery<blast_bet_orderdetail>().Where(b => b.BonusStatus == 0).ToList<blast_bet_orderdetail>();
-                var playedlist = db.CreateQuery<blast_played>().ToList();
+
+                var datalist = db.CreateQuery<blast_data>().Where(b =>  b.typeid == 1).ToList();
+                var orderdetail = db.CreateQuery<blast_bet_orderdetail>().Where(b => b.BonusStatus == 0 && b.typeid==1).ToList<blast_bet_orderdetail>();
+                var playedlist = db.CreateQuery<blast_played>().Where(b => b.typeid == 1).ToList();
                 db.Begin();
                 try
                 {
@@ -346,31 +421,38 @@ namespace Craw.Service.ModuleServices
                     string act = "";
                     string tm = "";
                     string zm = "";
-                    foreach (var item in datalist)
+                    foreach (var item in list)
                     {
-                        actionNo = item.actionNo;
+                        actionNo = item.issueNo;
 
-                        var one = list.Where(b => b.actionNo == actionNo).FirstOrDefault();
+                        var one = datalist.Where(b => b.issueNo == actionNo && b.typeid==1).FirstOrDefault();
 
 
                         if (one == null)
                         {
-
-                            // db.GetDal<blast_data>().Add(item);
+                            item.typeid = 1;
+                           // item.isOpen = 1;
+                            db.GetDal<blast_data>().Add(item);
+                            one = item;
                         }
                         else
                         {
-                            winNum = one.winNum;
+                            int did = item.id;
+                            //db.GetDal<blast_data>().Update(b => new blast_data
+                            //{
+
+                            //    isOpen = 1
+                            //}, b => b.id == did);
+                        }
+
+
+                        {
+                            winNum = one.kjdata.Replace("+", "|");
 
                             //结算
                             act = actionNo + "";
                             var orderdetailList = orderdetail.Where(b => b.issueNo == act).ToList();
 
-                            db.GetDal<blast_data_time>().Update(b => new blast_data_time
-                            {
-                                winNum = winNum,
-                                isOpen = 1
-                            }, b => b.actionNo == actionNo);
                             // BaseOrderHelper bh = new BaseOrderHelper();
                             foreach (blast_bet_orderdetail oritem in orderdetailList)
                             {
@@ -387,20 +469,7 @@ namespace Craw.Service.ModuleServices
 
                             }
 
-                            var bdata = db.CreateQuery<blast_data>().Where(b => b.issueNo == item.actionNo).FirstOrDefault();
-                            if (bdata == null)
-                            {
-                                bdata = new blast_data()
-                                {
-                                    createTime = DateTime.Now,
-                                    issueNo = item.actionNo,
-                                    kjdata = item.winNum.Replace("|", "+"),
-                                    kjtime = item.stopTime,
-                                    typeid = 1,
-                                    kjnumber = item.winNum.Replace("|", "+"),
-                                };
-                                db.GetDal<blast_data>().Add(bdata);
-                            }
+
                         }
                     }
 
@@ -411,12 +480,12 @@ namespace Craw.Service.ModuleServices
                 catch (Exception ex)
                 {
                     result.ReturnValue = ex.ToString();
-                    result.Message = "开奖成功";
+                    result.Message = "失败";
                     result.IsSuccess = false;
                     //throw;
                     db.Rollback();
                 }
-                
+
                 // index++;
 
 
@@ -425,7 +494,118 @@ namespace Craw.Service.ModuleServices
 
 
 
-               
+
+            }
+            catch (Exception ex)
+            {
+                result.ReturnValue = ex.ToString();
+                result.Message = "开奖成功";
+                result.IsSuccess = false;
+            }
+            finally
+            {
+
+                db.Dispose();
+            }
+            return result;
+        }
+
+
+        public CommonActionResult BJPKOpenwinNum(List<blast_data> list)
+        {
+            CommonActionResult result = new CommonActionResult();
+            var db = new DbProvider();
+            //// db.Init("Default");
+            try
+            {
+                int actionNo = 0;
+                string winNum = "";
+                db.Init("MySql.Default", true);
+
+                var datalist = db.CreateQuery<blast_data>().Where(b => b.typeid == 2).ToList();
+                var orderdetail = db.CreateQuery<blast_bet_orderdetail>().Where(b => b.BonusStatus == 0 && b.typeid == 2).ToList<blast_bet_orderdetail>();
+                var playedlist = db.CreateQuery<blast_played>().Where(b => b.typeid == 2).ToList();
+                db.Begin();
+                try
+                {
+
+                    string act = "";
+                    string tm = "";
+                    string zm = "";
+                    foreach (var item in list)
+                    {
+                        actionNo = item.issueNo;
+
+                        var one = datalist.Where(b => b.issueNo == actionNo && b.typeid == 2).FirstOrDefault();
+
+
+                        if (one == null)
+                        {
+                            item.typeid = 2;
+                            // item.isOpen = 1;
+                            db.GetDal<blast_data>().Add(item);
+                            one = item;
+                        }
+                        else
+                        {
+                            int did = item.id;
+                            //db.GetDal<blast_data>().Update(b => new blast_data
+                            //{
+
+                            //    isOpen = 1
+                            //}, b => b.id == did);
+                        }
+
+
+                        {
+                            winNum = one.kjdata;//.Replace("+", "|");
+
+                            //结算
+                            act = actionNo + "";
+                            var orderdetailList = orderdetail.Where(b => b.issueNo == act).ToList();
+
+                            // BaseOrderHelper bh = new BaseOrderHelper();
+                            foreach (blast_bet_orderdetail oritem in orderdetailList)
+                            {
+                                //开始结算
+
+                               // tm = winNum.Split('|')[1];
+                                //zm = winNum.Split('|')[0];
+
+
+
+                                BaseOrderHelper winHelper = BaseOrderHelper.GetOrderHelper(oritem, db);
+                                winHelper.WinMoney(oritem, winNum);
+
+
+                            }
+
+
+                        }
+                    }
+
+                    db.Commit();
+                    result.Message = "成功结算";
+                    result.IsSuccess = true;
+                }
+                catch (Exception ex)
+                {
+                    result.ReturnValue = ex.ToString();
+                    result.Message = "失败";
+                    result.IsSuccess = false;
+                    //throw;
+                    db.Rollback();
+                }
+
+                // index++;
+
+
+
+
+
+
+
+
             }
             catch (Exception ex)
             {
