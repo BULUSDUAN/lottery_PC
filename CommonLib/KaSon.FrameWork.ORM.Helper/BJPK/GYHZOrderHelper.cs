@@ -10,13 +10,13 @@ namespace KaSon.FrameWork.ORM.Helper
     /// <summary>
     /// 定位 6-10
     /// </summary>
-   public class DingWeiLiuOrderHelper : BaseOrderHelper
+   public class GYHZOrderHelper : BaseOrderHelper
     {
         private IDbProvider DB = null;
 
         public int playId { get; private set; } = 64;
-
-        public DingWeiLiuOrderHelper(IDbProvider _DB) 
+        //DingWeiLiuOrderHelper
+        public GYHZOrderHelper(IDbProvider _DB) 
         {
             DB = _DB;
         }
@@ -54,7 +54,7 @@ namespace KaSon.FrameWork.ORM.Helper
             decimal winMoney =0;
             int orderDetailId = orderdetail.id;
 
-            int BonusStatus = 3;
+          //  int BonusStatus = 3;
 
             if (isWin)
             {
@@ -62,28 +62,19 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 decimal Odds = decimal.Parse(orderdetail.OddsArr.Split(',')[index]);
                  winMoney = decimal.Parse(orderdetail.unitPrices) * Odds * orderdetail.BeiSu ;
-                BonusStatus = 2;
+               // BonusStatus = 2;
             }
-           
-            DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+
+            BaseOrderModel bmodel = new BaseOrderModel()
             {
-                winNumber = winNum,
-                BonusAwardsMoney = winMoney,
-                updateTime = DateTime.Now,
-                BonusStatus = BonusStatus  //为中奖状态
+                isWin = isWin,
+                winMoney = winMoney,
+                orderDetailId = orderDetailId,
+                userId = userId
+            };
+            base.buildOrder(this.DB, bmodel);
 
 
-            }, b => b.id == orderDetailId);
-
-
-            if (isWin) {
-                DB.GetDal<blast_member>().Update(b => new blast_member
-                {
-                    gameMoney = b.gameMoney + winMoney
-                }, b => b.userId == userId.ToString());
-            }
-
-             
 
 
         }
@@ -91,7 +82,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return content;
         }
-        public bool CheckCode(string content, List<blast_antecode> listCode,int _playId= 64) {
+        public override bool CheckCode(string content, List<blast_antecode> listCode,int _playId= 64) {
             bool result = true;
            
             List<string> clistCode = new List<string>();

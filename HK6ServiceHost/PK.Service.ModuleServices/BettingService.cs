@@ -92,7 +92,7 @@ namespace PK.Service.ModuleServices
                         {
                             var p = (from b in betinfo.orderList
                                      where b.content == item.content
-                                             && b.unitPrice == item.unitPrice
+                                             && b.unitPrices == item.unitPrices
                                      select b).ToList();
                             if (p.Count == 0)
                             {
@@ -115,7 +115,7 @@ namespace PK.Service.ModuleServices
                 }
                 #endregion
 
-                #region 校验追期期号是否合法，加倍是否合法
+                #region 校验追期期号是否合法，号码格式是否正确，号码是否合法，玩法是否可用
                 int issueNo = info.issueNo ;
                 CommonActionResult result = new DataHelper(DB).GetGames(2);
                 if (!result.IsSuccess)
@@ -135,32 +135,76 @@ namespace PK.Service.ModuleServices
                     cresult.Message = "期号无效无法购买";
                     return Task.FromResult(cresult);
                 }
-
-                var mb = new DataServiceHelper(DB).GetissueNo();
-
-              
+                var codeList = DB.CreateQuery<blast_antecode>().Where(b=>b.typeid==2).ToList();
+                foreach (var item in info.orderList)
+                {
+                    blast_bet_orderdetail orderdetail = new blast_bet_orderdetail()
+                    {
+                        playId = item.playId
+                    };
+                    BaseOrderHelper winHelper = BaseOrderHelper.GetOrderHelper(orderdetail, DB);
+                    var bol = winHelper.CheckCode(item.content, codeList, item.playId);
+                    if (!bol)
+                    {
+                        cresult.IsSuccess = false;
+                        cresult.Code = 300;
+                        cresult.StatuCode = 300;
+                        cresult.Message = "投注号码不正确";
+                        return Task.FromResult(cresult);
+                    }
+                    
+                }
 
 
                 #endregion
 
-                
+
 
 
                 #region 校验金额是否足够
-
+               // decimal unitPrice = 0M;
                 foreach (var item in info.orderList)
                 {
-                    basemoney = basemoney + item.unitPrice;
+                    if (item.playId == 79 || item.playId == 64)
+                    {
+                        if (item.unitPrices.Contains(","))
+                        {
+                            var p = item.unitPrices.Split(',').ToList();
+                            var p1 = item.content.Split(',').ToList();
+                            if (p.Count !=p1.Count)
+                            {
+                                cresult.IsSuccess = false;
+                                cresult.Message = "投注号码不正确";
+                                cresult.Code = 300;
+                                cresult.StatuCode = 300;
+                                return Task.FromResult(cresult);
+                            }
+                            foreach (var item1 in p)
+                            {
+                                totalmoney = totalmoney + decimal.Parse(item1);
+                            }
+                        }
+                        else
+                        {
+                            totalmoney = totalmoney + decimal.Parse(item.unitPrices);
+                        }
+                    }
+                    else {
+                        totalmoney = totalmoney + decimal.Parse(item.unitPrices);
+                    }
+                    
+
+                   
                 }
                 //追号期号
-                foreach (var item in info.planList)
-                {
-                    totalmoney = totalmoney + basemoney * (item.multiple == 0 ? 1 : item.multiple);
-                }
-                if (info.planList.Count <= 0)
-                {
-                    totalmoney = basemoney;
-                }
+                //foreach (var item in info.planList)
+                //{
+                //    totalmoney = totalmoney + basemoney * (item.multiple == 0 ? 1 : item.multiple);
+                //}
+                //if (info.planList.Count <= 0)
+                //{
+                //    totalmoney = basemoney;
+                //}
                 LoginUser = DB.CreateQuery<blast_member>().Where(b => b.userId == info.userId).FirstOrDefault();
 
                 if (LoginUser == null || LoginUser.gameMoney < totalmoney)
@@ -177,7 +221,7 @@ namespace PK.Service.ModuleServices
                 #endregion
            
                 var playedList = DB.CreateQuery<blast_played>().ToList();
-                var codeList = DB.CreateQuery<blast_antecode>().ToList();
+               
                 //校验投注订单合法信息，包括金额 玩法，号码，
                 DB.Begin();
                 #region 创建订单
@@ -198,8 +242,9 @@ namespace PK.Service.ModuleServices
                     userId = info.userId,
                     SchemeSource = info.SchemeSource,
                     displayName = LoginUser.displayName,
-                    winAnteCodeStop = info.winStop
-
+                    winAnteCodeStop = info.winStop,
+                    typeid=1
+                    
 
 
                 };
@@ -212,37 +257,18 @@ namespace PK.Service.ModuleServices
                 foreach (var item in info.orderList)
                 {
 
-                    if (info.planList.Count > 0)
-                    {
-                        plan = info.planList[pindex];
-                    }
-
-                    pindex++;
-                    blast_played p = playedList.Where(b => b.playId == item.playId).FirstOrDefault();
-                    var tempp = codeList.Where(b => b.AnteCode == item.content && b.playid == item.playId).FirstOrDefault();
-                    if (p == null || tempp==null || !p.enable)
-                    {
-                        DB.Rollback();
-                        cresult.IsSuccess = false;
-                        cresult.Message = "不存在该玩法";
-                        cresult.Code = 300;
-                        cresult.StatuCode = 300;
-                        return Task.FromResult(cresult);
-                    }
-                  
-                    string OddsArr = tempp.odds + "";
-                    string codeName = tempp.displayName + "";
                     //是否包含多个号码
-                    if (item.content.Contains("|"))
-                    {
-                        var arr = item.content.Split('|');
-                        var t = codeList.Where(b => arr.Contains(b.AnteCode) && b.playid == item.playId);
-                        // var oddslist = t.Select(b => b.odds).ToArray();
-                        OddsArr = String.Join("|", t.Select(b => b.odds).ToArray());
+                    //if (item.content.Contains("|"))
+                    //{
+                    //    var arr = item.content.Split('|');
+                    //    var t = codeList.Where(b => arr.Contains(b.AnteCode) && b.playid == item.playId);
+                    //    // var oddslist = t.Select(b => b.odds).ToArray();
+                    //   // OddsArr = String.Join("|", t.Select(b => b.odds).ToArray());
 
-                        codeName = String.Join(",", t.Select(b => b.displayName).ToArray());
-                    }
+                    //   // codeName = String.Join(",", t.Select(b => b.displayName).ToArray());
+                    //}
 
+                    blast_played p = playedList.Where(b => b.playId == item.playId).FirstOrDefault();
 
                     blast_bet_orderdetail orderDetail = new blast_bet_orderdetail()
                     {
@@ -250,24 +276,25 @@ namespace PK.Service.ModuleServices
                         AnteCodes = item.content,
                         playId = item.playId,
                         playName = p.name,
-                        AnteCodesName = codeName,
+                      //  AnteCodesName = codeName,
                         SchemeSource = info.SchemeSource,
                         // Odds = p.Odds,
-                        typeid=1,
-                        GameType="HK6",
+                        typeid=2,
+                        GameType="BJPK10",
                         userId = info.userId,
                         issueNo = info.issueNo.ToString(),
-                        OddsArr = OddsArr,
+                      //  OddsArr = OddsArr,
                         ProgressStatus = 0,
                         BeiSu = plan.multiple,
+                        unitPrices=item.unitPrices,
                         unitPrice = item.unitPrice,
                         CreateTime = DateTime.Now,
                         anteSchemeId = "CDHK6" + UsefullHelper.UUID() + "_" + info.issueNo.ToString() + "_" + item.playId
 
                     };
                     BaseOrderHelper winHelper = BaseOrderHelper.GetOrderHelper(orderDetail, DB);
-                    orderDetail.AnteCodes = winHelper.BuildCodes(item.content);
-
+                    orderDetail.AnteCodesName = winHelper.BuildCodes(item.content);
+                    orderDetail.OddsArr = winHelper.GetOddsArr(item.content, codeList, item.playId);
                     orderDetailList.Add(orderDetail);
 
                 }

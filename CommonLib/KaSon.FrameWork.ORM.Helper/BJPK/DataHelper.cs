@@ -133,8 +133,17 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 string lastnumber = UsefullHelper.NumberFormat(gameid, lastdate, lasttime, int.Parse(lastactionNo), lastbagintime);
                 #endregion
                 int lastnum = int.Parse(lastnumber);
-                //kjhao = await db.QueryFirstOrDefaultAsync<string>($"select data from blast_data where type=@type and number=@number", new { type = gameid, number = lastnumber });
+                //new { type = gameid, number = lastnumber }
+                //string kjhao =  DB.CreateSQLQuery($"select kjdata from blast_data where type=@type and issueNo=@number")
+                //     .SetString("@number", lastnumber + "")
+                //    .SetString("@type", gameid+"").First<string>();
+                string kjhaonum = "";
                 var kjhao = DB.CreateQuery<blast_data>().Where(b => b.typeid == gameid && b.issueNo == lastnum).FirstOrDefault();
+
+                if (kjhao !=null)
+                {
+                    kjhaonum = kjhao.kjdata;
+                }
                 //await this.data_manager.UseConnectionAsync(async db =>
                 //{
 
@@ -143,6 +152,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
 
 
                 sresult.IsSuccess = true;
+               
                 sresult.Value = new
                 {
                     lastactionNum = lastactionNo,//上一期期号
@@ -161,7 +171,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                     diffTime = diffTime,//下注截至倒计时
                     dataftime = result.data_ftime,//开奖前停止下注时间差
                     kjDiffTime = kjDiffTime, //离开奖时间还剩多少秒
-                    kjdata = kjhao,
+                    kjdata = kjhaonum,
                     actionTime1 = actionTime,
                     actionTime2 = nextgameno.actionTime,
                     enable = result.enable

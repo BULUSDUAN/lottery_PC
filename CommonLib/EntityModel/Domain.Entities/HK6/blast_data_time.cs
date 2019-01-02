@@ -42,10 +42,12 @@ namespace EntityModel
         [ProtoMember(4)]
         [Field("actionTime")]
         public string actionTime { get; set; }
-       
 
 
-      
+
+        [Field("stopTime")]
+        public string stopTime { get; set; }
+
 
 
     }

@@ -21,11 +21,16 @@ namespace KaSon.FrameWork.ORM.Helper
         public override void WinMoney(blast_bet_orderdetail orderdetail, string winNum)
         {
             string[] arr = winNum.Split(',');
+            string antuCode =this.BuildCodes( orderdetail.AnteCodes);
             if (arr.Length != 10)
             {
                 return;
             }
-            string antuCode = orderdetail.AnteCodes;
+            if (!antuCode.Contains("|"))
+            {
+                return;
+            }
+              
             string one = "";
             string two = "";
             string three = "";
@@ -44,11 +49,11 @@ namespace KaSon.FrameWork.ORM.Helper
                 two = antuCode.Split('|')[1];
                 winthree = antuCode.Split('|')[2];
             }
-            else {
-                one = antuCode.Split(',')[0];
-                two = antuCode.Split(',')[1];
-                three = antuCode.Split(',')[2];
-            }
+            //else {
+            //    one = antuCode.Split(',')[0];
+            //    two = antuCode.Split(',')[1];
+            //    three = antuCode.Split(',')[2];
+            //}
             onelist.Add(one);
             if (one.Contains(","))
             {
@@ -101,33 +106,23 @@ namespace KaSon.FrameWork.ORM.Helper
             decimal winMoney = 0;
             int orderDetailId = orderdetail.id;
 
-            int BonusStatus = 3;
+          //  int BonusStatus = 3;
 
             if (isWin)
             {
                 decimal Odds = decimal.Parse(orderdetail.OddsArr);
                 winMoney = decimal.Parse(orderdetail.unitPrices) * Odds * orderdetail.BeiSu * winCount;
-                BonusStatus = 2;
+               // BonusStatus = 2;
             }
 
-            DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+            BaseOrderModel bmodel = new BaseOrderModel()
             {
-                winNumber = winNum,
-                BonusAwardsMoney = winMoney,
-                updateTime = DateTime.Now,
-                BonusStatus = BonusStatus  //为中奖状态
-
-
-            }, b => b.id == orderDetailId);
-
-
-            if (isWin)
-            {
-                DB.GetDal<blast_member>().Update(b => new blast_member
-                {
-                    gameMoney = b.gameMoney + winMoney
-                }, b => b.userId == userId.ToString());
-            }
+                isWin = isWin,
+                winMoney = winMoney,
+                orderDetailId = orderDetailId,
+                userId = userId
+            };
+            base.buildOrder(this.DB, bmodel);
 
 
 
@@ -137,7 +132,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             return content.Replace("1_","").Replace("2_", "").Replace("3_", "");
         }
-        public bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 60)
+        public override bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 60)
         {
             bool result = true;
             if (!content.Contains("|"))
@@ -148,6 +143,12 @@ namespace KaSon.FrameWork.ORM.Helper
             string one = content.Split('|')[0];
             string two = content.Split('|')[1];
             string three = content.Split('|')[2];
+
+            if (one=="" || two == "" || three == "")
+            {
+                return false;
+            }
+
             clistCode.Add(one);
             if (one.Contains(","))
             {

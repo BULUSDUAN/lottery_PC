@@ -395,7 +395,7 @@ namespace PK.Service.ModuleServices
             wlist.Add(new WhereField()
             {
                 Field = "typeid",
-                Value = 20+"",
+                Value = 2+"",
                 WhereType = WhereType.Equal
 
             });
@@ -442,7 +442,7 @@ namespace PK.Service.ModuleServices
         {
             CommonActionResult result = new CommonActionResult();
             //PageIndex
-            var orderdetail = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.anteSchemeId == oId).FirstOrDefault();
+            var orderdetail = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.anteSchemeId == oId && b.typeid==2).FirstOrDefault();
 
 
             // var list = DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.userId == userId).ToList();
@@ -477,7 +477,7 @@ namespace PK.Service.ModuleServices
             wlist.Add(new WhereField()
             {
                 Field = "typeid",
-                Value = "1",
+                Value = "2",
                 WhereType = WhereType.Equal
 
             });

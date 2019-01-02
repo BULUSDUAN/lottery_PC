@@ -20,7 +20,7 @@ namespace KaSon.FrameWork.ORM.Helper
         }
         public override void WinMoney(blast_bet_orderdetail orderdetail, string winNum) {
           
-            string antuCode = orderdetail.AnteCodes;
+            string antuCode =this.BuildCodes( orderdetail.AnteCodes);
             bool isWin = false;
            
             string[] winarr = winNum.Split(',');
@@ -43,6 +43,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     if (item1.Trim()==code)
                     {
                         wincount++;
+                        break;
                     }
                     
                 }
@@ -65,26 +66,17 @@ namespace KaSon.FrameWork.ORM.Helper
                  winMoney = decimal.Parse(orderdetail.unitPrices) * Odds * orderdetail.BeiSu * wincount;
                 BonusStatus = 2;
             }
-           
-            DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+
+            BaseOrderModel bmodel = new BaseOrderModel()
             {
-                winNumber = winNum,
-                BonusAwardsMoney = winMoney,
-                updateTime = DateTime.Now,
-                BonusStatus = BonusStatus  //为中奖状态
+                isWin = isWin,
+                winMoney = winMoney,
+                orderDetailId = orderDetailId,
+                userId = userId
+            };
+            base.buildOrder(this.DB, bmodel);
 
 
-            }, b => b.id == orderDetailId);
-
-
-            if (isWin) {
-                DB.GetDal<blast_member>().Update(b => new blast_member
-                {
-                    gameMoney = b.gameMoney + winMoney
-                }, b => b.userId == userId.ToString());
-            }
-
-             
 
 
         }
@@ -96,7 +88,7 @@ namespace KaSon.FrameWork.ORM.Helper
                  .Replace("7_", "").Replace("8_", "").Replace("9_", "").Replace("10_", "");
         }
 
-        public bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 63)
+        public override bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 63)
         {
             bool result = true;
             if (!content.Contains("|"))

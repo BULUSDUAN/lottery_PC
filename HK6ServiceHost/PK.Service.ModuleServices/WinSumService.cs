@@ -100,8 +100,8 @@ namespace PK.Service.ModuleServices
             //
             try
             {
-                var playedlist = DB.CreateQuery<blast_played>().ToList();
-              var list=  DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.issueNo == IssueNo && b.BonusStatus==0).ToList<blast_bet_orderdetail>();
+                var playedlist = DB.CreateQuery<blast_played>().Where(b=> b.typeid == 2).ToList();
+              var list=  DB.CreateQuery<blast_bet_orderdetail>().Where(b => b.issueNo == IssueNo && b.BonusStatus==0 && b.typeid==2).ToList<blast_bet_orderdetail>();
 
                 DB.Begin();
              
@@ -110,8 +110,8 @@ namespace PK.Service.ModuleServices
                 {
                     //开始结算
                     
-                    string tm = winNum.Split('|')[1];
-                    string zm = winNum.Split('|')[0];
+                   // string tm = winNum.Split('|')[1];
+                   // string zm = winNum.Split('|')[0];
                     var p = playedlist.Where(b=>b.playId==item.playId).FirstOrDefault();
 
                     BaseOrderHelper winHelper = BaseOrderHelper.GetOrderHelper(item, DB);

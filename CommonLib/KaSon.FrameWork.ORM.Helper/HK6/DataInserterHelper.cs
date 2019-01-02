@@ -29,12 +29,12 @@ namespace KaSon.FrameWork.ORM.Helper
             foreach (var item in list)
             {
                 blast_data_time bt = new blast_data_time() {
-                     //actionNo=item.actionNo,
-                     // actionhours=item.actionTime,
-                     //  stophours=item.stopTime,
-                     //   typeid=item.typeid,
-                     //    isOpen=false,
-                     //     winNum=""
+                    actionNo = int.Parse(item.actionNo),
+
+                    actionTime = item.actionTime,
+                    stopTime = item.stopTime,
+                    typeid = item.typeid,
+                  
 
 
                 };

@@ -145,7 +145,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return content.Replace("01", "大").Replace("02", "小")
                 .Replace("03", "单").Replace("04", "双");
         }
-        public bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 73)
+        public override bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 73)
         {
             bool result = true;
 

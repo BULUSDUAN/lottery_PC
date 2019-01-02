@@ -72,8 +72,11 @@ namespace SystemManage.Host
             //Lottery.CrawGetters.InitConfigInfo.MatchSettings = CrawSettings["MatchSettings"];
             //ServiceHelper.MatchSettings = CrawSettings["MatchSettings"];
             //Lottery.CrawGetters.InitConfigInfo.NumLettory_SleepTimeSpanSettings = CrawSettings["NumLettory_SleepTimeSpanSettings"];
-            
+
             //JToken ORMSettings = ConfigHelper.AllConfigInfo["ORMSettings"];
+
+            string devid = Guid.NewGuid().ToString("N");
+
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var host = new ServiceHostBuilder()
                 .RegisterServices(builder =>
@@ -159,8 +162,8 @@ namespace SystemManage.Host
             var xdb = gdb1.Init("MySql.Default1", true);
             // DataInserterHelper dh = new DataInserterHelper(db);
             // dh.ADDDATA();
-            DataInserterHelper dh = new DataInserterHelper(db, xdb);
-            dh.PKAnteCodeData();
+          //  DataInserterHelper dh = new DataInserterHelper(db, xdb);
+          //  dh.DataAddPK期号();
 
 
             //初始化内存期号 k_todo，可用彩种类型,执行一次

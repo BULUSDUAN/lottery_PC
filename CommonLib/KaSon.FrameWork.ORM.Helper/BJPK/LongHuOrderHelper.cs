@@ -19,7 +19,7 @@ namespace KaSon.FrameWork.ORM.Helper
         {
             DB = _DB;
         }
-        public override void WinMoney(blast_bet_orderdetail orderdetail, string winNum)
+        public override  void WinMoney(blast_bet_orderdetail orderdetail, string winNum)
         {
 
             string antuCode = orderdetail.AnteCodes;
@@ -81,24 +81,14 @@ namespace KaSon.FrameWork.ORM.Helper
                 BonusStatus = 2;
             }
 
-            DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+            BaseOrderModel bmodel = new BaseOrderModel()
             {
-                winNumber = winNum,
-                BonusAwardsMoney = winMoney,
-                updateTime = DateTime.Now,
-                BonusStatus = BonusStatus  //为中奖状态
-
-
-            }, b => b.id == orderDetailId);
-
-
-            if (isWin)
-            {
-                DB.GetDal<blast_member>().Update(b => new blast_member
-                {
-                    gameMoney = b.gameMoney + winMoney
-                }, b => b.userId == userId.ToString());
-            }
+                isWin = isWin,
+                winMoney = winMoney,
+                orderDetailId = orderDetailId,
+                userId = userId
+            };
+            base.buildOrder(this.DB, bmodel);
 
 
 

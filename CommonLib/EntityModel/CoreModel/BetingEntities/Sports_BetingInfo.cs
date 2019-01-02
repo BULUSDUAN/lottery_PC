@@ -35,6 +35,8 @@ namespace EntityModel.CoreModel
 
         public decimal unitPrice { get; set; }
 
+        public string unitPrices { get; set; }
+
     }
     
     /// <summary>

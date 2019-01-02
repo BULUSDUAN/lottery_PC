@@ -71,7 +71,7 @@ namespace KaSon.FrameWork.ORM.Helper
             decimal winMoney =0;
             int orderDetailId = orderdetail.id;
 
-            int BonusStatus = 3;
+          //  int BonusStatus = 3;
 
             if (isWin)
             {
@@ -79,28 +79,17 @@ namespace KaSon.FrameWork.ORM.Helper
 
                 decimal Odds = decimal.Parse(orderdetail.OddsArr);
                  winMoney = decimal.Parse(orderdetail.unitPrices) * Odds * orderdetail.BeiSu ;
-                BonusStatus = 2;
+              //  BonusStatus = 2;
             }
-           
-            DB.GetDal<blast_bet_orderdetail>().Update(b => new blast_bet_orderdetail
+            BaseOrderModel bmodel = new BaseOrderModel()
             {
-                winNumber = winNum,
-                BonusAwardsMoney = winMoney,
-                updateTime = DateTime.Now,
-                BonusStatus = BonusStatus  //为中奖状态
+                isWin = isWin,
+                winMoney = winMoney,
+                orderDetailId = orderDetailId,
+                userId = userId
+            };
+            base.buildOrder(this.DB, bmodel);
 
-
-            }, b => b.id == orderDetailId);
-
-
-            if (isWin) {
-                DB.GetDal<blast_member>().Update(b => new blast_member
-                {
-                    gameMoney = b.gameMoney + winMoney
-                }, b => b.userId == userId.ToString());
-            }
-
-             
 
 
         }
@@ -109,7 +98,7 @@ namespace KaSon.FrameWork.ORM.Helper
             return content.Replace("01", "大").Replace("02", "小")
                 .Replace("03", "单").Replace("04", "双");
         }
-        public bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 73)
+        public override bool CheckCode(string content, List<blast_antecode> listCode, int _playId = 73)
         {
             bool result = true;
 
