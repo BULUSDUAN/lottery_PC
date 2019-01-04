@@ -30,8 +30,9 @@
   "PL3_StopTicketing": "19:40-21:00",
   "JCGJ_StopTicketing": "19:40-21:00",
   //Mongo  ˝æ›ø‚≈‰÷√
-  "CrawDataBaseIsMongo": true,
+  //"CrawDataBaseIsMongo": false,
   "MongoSettings": {
+    "CrawDataBaseIsMongo": false,
     "connectionString": "mongodb://10.0.3.6:27017",
     "IpAddr": "10.0.3.6",
     "Post": "27017",
