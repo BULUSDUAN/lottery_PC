@@ -127,6 +127,10 @@ namespace KaSon.FrameWork.Common.Hk6
 
             int t = int.Parse(shuxiang());
 
+            if (code==48)
+            {
+                Console.WriteLine("");
+            }
             int tt = t + code;
             int value = tt;
             int temp = code;
@@ -146,7 +150,7 @@ namespace KaSon.FrameWork.Common.Hk6
                 value = t + (12 - temp);
 
             }
-
+            value--;
 
             string[] shuxiangarr = {
                 "鼠", "牛", "虎", "兔", "龙",
@@ -159,6 +163,7 @@ namespace KaSon.FrameWork.Common.Hk6
         {
             List<string> list = new List<string>();
             code = code.Replace("+", ",");
+            code = code.Replace("|", ",");
             var codearr = code.Split(',');
             foreach (var item in codearr)
             {

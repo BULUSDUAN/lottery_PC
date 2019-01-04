@@ -28,23 +28,11 @@ namespace PK.Service.IModuleServices
     [ServiceBundle("PKDataService/{Service}")]
     public interface IDataService : IServiceKey
     {
-        /// <summary>
-        /// 结算
-        /// </summary>
-        /// <param name="winNum"></param>
-        /// <returns></returns>
-        [Service(Date = "2018-9-3", Director = "kason", Name = "pk充值")]
-         Task<CommonActionResult> ReCharge(string userId, string userDisplayName, decimal Money);
-
         [Service(Date = "2018-9-3", Director = "kason", Name = "pk玩法分组")]
         Task<CommonActionResult> PlayCategory();
 
       
-
-        [Service(Date = "2018-9-3", Director = "kason", Name = "pk提现")]
-        Task<CommonActionResult> GameWithdraw(string userId, string userDisplayName, decimal Money);
-
-        
+  
         [Service(Date = "2018-9-3", Director = "kason", Name = "订单信息")]
         Task<CommonActionResult> OrderInfo(string userId, int PageIndex);
         [Service(Date = "2018-9-3", Director = "kason", Name = "玩法")]
