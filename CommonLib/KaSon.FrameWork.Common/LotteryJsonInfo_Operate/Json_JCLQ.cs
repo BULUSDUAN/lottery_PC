@@ -372,21 +372,7 @@ namespace KaSon.FrameWork.Common
         public static List<JCLQ_MatchInfo_WEB> GetJCLQHHDGList()
         {
             BettingHelper bizHelper = new BettingHelper();
-
-            var match = new List<JCLQ_Match_HHDG>();
-            if (ConfigHelper.CrawDataBaseIsMongo)
-            {
-                 match = MgMatchDataHelper.JCLQ_Match_HHDG_List();
-            }
-            else
-            {
-                 match = bizHelper.GetMatchInfoList<JCLQ_Match_HHDG>(Match_HHDG_List());
-            }
-
-
-
-           
-
+            var match = bizHelper.GetMatchInfoList<JCLQHHDGBase>(GetFilePath("New/Match_HHDG_List"));
             var list = new List<JCLQ_MatchInfo_WEB>();
             match = match.Where(t => long.Parse(Convert.ToDateTime(t.FSStopBettingTime).ToString("yyyyMMddHHmmss")) > long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss"))).ToList();
             if (match != null && match.Count > 0)
@@ -424,7 +410,7 @@ namespace KaSon.FrameWork.Common
                         PrivilegesType = item.PrivilegesType == null ? string.Empty : item.PrivilegesType,
                     };
 
-#region 附加胜负sp数据
+                    #region 附加胜负sp数据
 
                     if (item.SF != null)
                     {
@@ -435,10 +421,10 @@ namespace KaSon.FrameWork.Common
                             info.SF_LoseSP = sfcjson.LoseSP;
                         }
                     }
-#endregion
+                    #endregion
 
 
-#region 附加让分胜负sp数据
+                    #region 附加让分胜负sp数据
                     if (item.RFSF != null)
                     {
                         var json = JsonHelper.Deserialize<JCLQ_RFSF_SPInfo>(item.RFSF);
@@ -449,9 +435,9 @@ namespace KaSon.FrameWork.Common
                             info.RF_WinSP = json.WinSP;
                         }
                     }
-#endregion
+                    #endregion
 
-#region 附加胜分差sp数据
+                    #region 附加胜分差sp数据
 
                     if (item.SFC != null)
                     {
@@ -474,9 +460,9 @@ namespace KaSon.FrameWork.Common
                         }
                     }
 
-#endregion
+                    #endregion
 
-#region 附加大小分sp数据
+                    #region 附加大小分sp数据
 
                     if (item.DXF != null)
                     {
@@ -489,14 +475,13 @@ namespace KaSon.FrameWork.Common
                         }
                     }
 
-#endregion
+                    #endregion
 
                     list.Add(info);
                 }
             }
             return list;
         }
-
 
         /*
          [12:10:06] ios app: 索引7位是1111，1标识未开玩法，0表示开售玩法，第18位，1000表示是否开单关。0标识开单关
