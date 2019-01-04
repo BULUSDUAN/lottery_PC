@@ -122,7 +122,7 @@ namespace KaSon.FrameWork.Common.Hk6
             scode++;
             return scode;
         }
-        private static string SCodeName(int code)
+        public static string SCodeName(int code)
         {
 
             int t = int.Parse(shuxiang());
