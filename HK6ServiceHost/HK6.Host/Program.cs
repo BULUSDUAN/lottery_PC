@@ -38,6 +38,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using kason.Sg.Core.Dbbase;
 using KaSon.FrameWork.ORM;
+using KaSon.FrameWork.Common.Hk6;
 
 namespace SystemManage.Host
 {
@@ -47,6 +48,12 @@ namespace SystemManage.Host
         public IMongoDatabase MDB { get; set; }
         static void Main(string[] args)
         {
+            for (int i = 1; i < 50; i++)
+            {
+              string name=  SXHelper.SCodeName(i);
+                Console.Write(name+",");
+            }
+            
 
             string consul = ConfigHelper.AllConfigInfo["ConsulSettings"]["IpAddrs"].ToString();
 
