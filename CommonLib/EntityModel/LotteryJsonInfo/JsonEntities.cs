@@ -1363,7 +1363,19 @@ namespace EntityModel.LotteryJsonInfo
         public decimal SH_P_Odds { get; set; }
         public decimal SH_SH_Odds { get; set; }
         public string State { get; set; }
-        public string State_HHDG { get; set; }
+        public string State_HHDG
+        {
+            get
+            {
+                return _state_HHDG;
+            }
+            set
+            {
+                this._state_HHDG = value;
+            }
+        }
+
+        private string _state_HHDG = "";
         public string NoSaleState_BQC { get; set; }
 
     }

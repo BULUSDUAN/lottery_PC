@@ -2361,7 +2361,7 @@ namespace Lottery.Api.Controllers
                         //var issuse = RedisHelperEx.DB_Match.GetObjs<CtzqIssuesWeb>(key);
                         param.Add("Key", key);
                         var issuse = await _serviceProxyProvider.Invoke<List<CtzqIssuesWeb>>(param, "api/Data/GetCTZQIssuseList_ByRedis");
-                        if (issuse == null||issuse.Count==0)
+                        if (issuse == null)
                         {
                             issuse = Json_CTZQ.IssuseList(gameType);
                         }
@@ -2397,7 +2397,7 @@ namespace Lottery.Api.Controllers
                         param.Add("Key", key);
                         //var oddlist_bjdc = RedisHelperEx.DB_Match.GetObjs<BJDC_MatchInfo_WEB>(key);
                         var oddlist_bjdc = await _serviceProxyProvider.Invoke<List<BJDC_MatchInfo_WEB>>(param, "api/Data/GetBJDCMatchOddsLis_ByRedis");
-                        if (oddlist_bjdc == null || oddlist_bjdc.Count == 0)
+                        if (oddlist_bjdc == null)
                         {
                             oddlist_bjdc = Json_BJDC.MatchList_WEB(issuseNumber, gameType);
                         }
@@ -2410,7 +2410,7 @@ namespace Lottery.Api.Controllers
                         param.Add("Key", reidskey);
                         var oddlist_jczq = await _serviceProxyProvider.Invoke<List<JCZQ_MatchInfo_WEB>>(param, "api/Data/GetJCZQMatchOddsList_ByRedis");
                         //var oddlist_jczq = RedisHelperEx.DB_Match.GetObjs<JCZQ_MatchInfo_WEB>(reidskey);
-                        if (oddlist_jczq == null || oddlist_jczq.Count == 0)
+                        if (oddlist_jczq == null)
                         {
                             if (gameType.ToLower() == "hhdg")
                                 oddlist_jczq = Json_JCZQ.GetJCZQHHDGList();
@@ -2448,7 +2448,7 @@ namespace Lottery.Api.Controllers
                         param.Add("Key", key);
                         var oddlist_jclq = await _serviceProxyProvider.Invoke<List<JCLQ_MatchInfo_WEB>>(param, "api/Data/GetJCLQMatchOddsList_ByRedis");
                         //var oddlist_jclq = RedisHelperEx.DB_Match.GetObjs<JCLQ_MatchInfo_WEB>(key);
-                        if (oddlist_jclq == null|| oddlist_jclq.Count==0)
+                        if (oddlist_jclq == null)
                         {
                             if (gameType.ToLower() == "hhdg")
                                 oddlist_jclq = Json_JCLQ.GetJCLQHHDGList();
