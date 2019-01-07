@@ -456,28 +456,15 @@ namespace KaSon.FrameWork.Common
             return list;
         }
 
-#endregion
+        #endregion
 
-#region 竞彩足球混合单关数据读取
+        #region 竞彩足球混合单关数据读取
 
         public static List<JCZQ_MatchInfo_WEB> GetJCZQHHDGList()
         {
             List<JCZQ_MatchInfo_WEB> jczqMatchList = new List<JCZQ_MatchInfo_WEB>();
-            List<C_JCZQ_Match_HH> matchList = new List<C_JCZQ_Match_HH>();
             BettingHelper bizHelper = new BettingHelper();
-
-            if (ConfigHelper.CrawDataBaseIsMongo)
-            {
-                 matchList = MgMatchDataHelper.JCZQ_Match_HH_List();
-
-            }
-            else
-            {
-                 matchList = bizHelper.GetMatchInfoList<C_JCZQ_Match_HH>(Match_List_HH());
-            }
-
-
-
+            var matchList = bizHelper.GetMatchInfoList<JCZQHHDGBase>(GetFilePath("Match_List_HH"));
             matchList = matchList.Where(s => long.Parse(Convert.ToDateTime(s.FSStopBettingTime).ToString("yyyyMMddHHmmss")) > long.Parse(DateTime.Now.ToString("yyyyMMddHHmmss")) && s.MatchStopDesc != "2").ToList();
             if (matchList != null && matchList.Count > 0)
             {
@@ -512,7 +499,7 @@ namespace KaSon.FrameWork.Common
                     info.PrivilegesType = item.PrivilegesType == null ? string.Empty : item.PrivilegesType;
 
                     //info.State = item.State;
-#region 附加让球胜平负sp数据
+                    #region 附加让球胜平负sp数据
                     if (item.SPF != null)
                     {
                         var json_spf = JsonHelper.Deserialize<EntityModel.LotteryJsonInfo.JCZQ_SPF_SPInfo>(item.SPF);
@@ -532,9 +519,9 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = string.Empty;
                     }
 
-#endregion
+                    #endregion
 
-#region 附加胜平负sp数据
+                    #region 附加胜平负sp数据
 
                     if (item.BRQSPF != null)
                     {
@@ -554,9 +541,9 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = string.Empty;
                     }
 
-#endregion
+                    #endregion
 
-#region 附加总进球sp数据
+                    #region 附加总进球sp数据
 
                     if (item.ZJQ != null)
                     {
@@ -586,9 +573,9 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = string.Empty;
                     }
 
-#endregion
+                    #endregion
 
-#region 附加比分sp数据
+                    #region 附加比分sp数据
 
                     if (item.BF != null)
                     {
@@ -664,9 +651,9 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = string.Empty;
                     }
 
-#endregion
+                    #endregion
 
-#region 附加半全场sp数据
+                    #region 附加半全场sp数据
 
                     if (item.BQC != null)
                     {
@@ -698,7 +685,7 @@ namespace KaSon.FrameWork.Common
                         //info.PrivilegesType = string.Empty;
                     }
 
-#endregion
+                    #endregion
 
                     jczqMatchList.Add(info);
                 }
