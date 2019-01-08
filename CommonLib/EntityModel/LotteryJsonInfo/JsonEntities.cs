@@ -1432,7 +1432,19 @@ namespace EntityModel.LotteryJsonInfo
         //public int Mid { get; set; }
         public int FXId { get; set; }
         public string PrivilegesType { get; set; }
-        public string State_HHDG { get; set; }
+        public string State_HHDG
+        {
+            get
+            {
+                return _state_HHDG;
+            }
+            set
+            {
+                this._state_HHDG = value;
+            }
+        }
+
+        private string _state_HHDG = "";
 
         //队伍结果信息
         /// <summary>
