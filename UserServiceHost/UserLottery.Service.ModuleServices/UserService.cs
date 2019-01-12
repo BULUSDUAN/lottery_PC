@@ -788,12 +788,12 @@ namespace UserLottery.Service.ModuleServices
                     throw new LogicException("该手机号已经认证");
                 #endregion      
 
-                isCheckValidateCode = ValidationMobile.CheckValidationCode(mobile, "MobileAuthentication", validateCode, GetMaxTimes(3));
+                //isCheckValidateCode = ValidationMobile.CheckValidationCode(mobile, "MobileAuthentication", validateCode, GetMaxTimes(3));
 
-                if (!isCheckValidateCode)
-                {
-                    throw new LogicException("验证码输入不正确。");
-                }
+                //if (!isCheckValidateCode)
+                //{
+                //    throw new LogicException("验证码输入不正确。");
+                //}
                 info.Referrer = fxid == "" ? "mobile_regist" : "fxid_regist";
                 info.Referrer = yqid == "" ? info.Referrer : "yqid_regist";
                 //注册

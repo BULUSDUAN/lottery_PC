@@ -158,7 +158,7 @@ namespace HK6.ModuleBaseServices
 
             try
             {
-                result = BusinessHelper.Payout_To_FrozenByDB(LettoryDB, BusinessHelper.FundCategory_GameRecharge, userId, orderId, Money, msg, "GameTransfer", "");
+                result = BusinessHelper.Payout_To_EndByDb(LettoryDB, BusinessHelper.FundCategory_GameRecharge, userId, orderId, Money, msg, "GameTransfer", "");
                 if (!result.IsSuccess)
                 {
                     LettoryDB.Rollback();
@@ -300,10 +300,12 @@ namespace HK6.ModuleBaseServices
                     OrderId = orderId,
                     RequestMoney = Money,
                     RequestTime = DateTime.Now,
+                    UpdateTime = DateTime.Now,
                     Status = (int)FillMoneyStatus.Success,
                     UserId = userId,
                     TransferType = (int)GameTransferType.Withdraw,
                     UserDisplayName = userDisplayName,
+
                     GameType = (int)MGGameType.LHC
                 };
                 LettoryDB.GetDal<C_Game_Transfer>().Add(ctransfer);

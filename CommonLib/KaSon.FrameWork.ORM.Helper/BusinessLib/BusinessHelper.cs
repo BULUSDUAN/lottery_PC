@@ -799,6 +799,224 @@ namespace KaSon.FrameWork.ORM.Helper
             //balanceManager.UpdateUserBalance(userBalance);
             balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
         }
+       
+        public static CommonActionResult Payout_To_EndByDb(IDbProvider DB, string category, string userId, string orderId, decimal payoutMoney, string summary, string place, string password)
+        {
+           
+            CommonActionResult result = new CommonActionResult();
+            result.IsSuccess = true;
+            if (payoutMoney <= 0M)
+            {
+                result.IsSuccess = false;
+                result.Message = "消费金额不能小于0";
+                result.StatuCode = 300;
+                result.Code = 300;
+
+                return result;
+            }
+            //查询帐户余额
+            var balanceManager = new UserBalanceManager();
+            var fundManager = new FundManager();
+            //资金密码判断
+            var userBalance = balanceManager.QueryUserBalance(userId);
+            if (userBalance == null) {
+                result.IsSuccess = false;
+                result.Message = "用户帐户不存在 - " + userId;
+                result.StatuCode = 300;
+                result.Code = 300;
+
+                return result;
+                }
+            if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
+            {
+                if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
+                {
+                    password = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
+                    if (!userBalance.Password.ToUpper().Equals(password))
+                    {
+                        result.IsSuccess = false;
+                        result.Message = "资金密码输入错误 - " + userId;
+                        result.StatuCode = 300;
+                        result.Code = 300;
+
+                        return result;
+                       // throw new LogicException("资金密码输入错误");
+                    }
+                }
+            }
+
+            var totalMoney = userBalance.FillMoneyBalance + userBalance.BonusBalance + userBalance.CommissionBalance + userBalance.ExpertsBalance;
+            if (totalMoney < payoutMoney) {
+                result.IsSuccess = false;
+                result.Message = "用户总金额小于 {0:N2}元 - " + userId;
+                result.StatuCode = 300;
+                result.Code = 300;
+
+                return result;
+            }
+               // throw new LogicException(string.Format("用户总金额小于 {0:N2}元。", payoutMoney));
+
+            //消费顺序：充值金额=>奖金=>佣金=>名家
+            #region 按顺序消费用户余额
+
+            var currentPayout = 0M;
+            var payDetailList = new List<PayDetail>();
+            if (userBalance.FillMoneyBalance > 0M && payoutMoney > 0M)
+            {
+                //充值金额参与支出
+                currentPayout = userBalance.FillMoneyBalance >= payoutMoney ? payoutMoney : userBalance.FillMoneyBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.FillMoney,
+                    PayMoney = currentPayout,
+                    PayType = EntityModel.Enum.PayType.Payout,
+                });
+                DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.FillMoney,
+                    PayMoney = currentPayout,
+                    PayType = (int)EntityModel.Enum.PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.FillMoneyBalance,
+                    AfterBalance = userBalance.FillMoneyBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.FillMoneyBalance -= currentPayout;
+            }
+            if (userBalance.BonusBalance > 0M && payoutMoney > 0M)
+            {
+                //奖金参与支付
+                currentPayout = userBalance.BonusBalance >= payoutMoney ? payoutMoney : userBalance.BonusBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Bonus,
+                    PayMoney = currentPayout,
+                    PayType = EntityModel.Enum.PayType.Payout
+                });
+                DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Bonus,
+                    PayMoney = currentPayout,
+                    PayType = (int)EntityModel.Enum.PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.BonusBalance,
+                    AfterBalance = userBalance.BonusBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.BonusBalance -= currentPayout;
+            }
+            if (userBalance.CommissionBalance > 0M && payoutMoney > 0M)
+            {
+                //佣金参与支付
+                currentPayout = userBalance.CommissionBalance >= payoutMoney ? payoutMoney : userBalance.CommissionBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Commission,
+                    PayMoney = currentPayout,
+                    PayType = EntityModel.Enum.PayType.Payout,
+                });
+                DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Commission,
+                    PayMoney = currentPayout,
+                    PayType = (int)EntityModel.Enum.PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.CommissionBalance,
+                    AfterBalance = userBalance.CommissionBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.CommissionBalance -= currentPayout;
+            }
+            if (userBalance.ExpertsBalance > 0M && payoutMoney > 0M)
+            {
+                //名家参与支付
+                currentPayout = userBalance.ExpertsBalance >= payoutMoney ? payoutMoney : userBalance.ExpertsBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.Experts,
+                    PayMoney = currentPayout,
+                    PayType = EntityModel.Enum.PayType.Payout,
+                });
+                DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.Experts,
+                    PayMoney = currentPayout,
+                    PayType = (int)EntityModel.Enum.PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.ExpertsBalance,
+                    AfterBalance = userBalance.ExpertsBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.ExpertsBalance -= currentPayout;
+            }
+            if (userBalance.CPSBalance > 0M && payoutMoney > 0M)
+            {
+                //佣金参与支付
+                currentPayout = userBalance.CPSBalance >= payoutMoney ? payoutMoney : userBalance.CPSBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.CPS,
+                    PayMoney = currentPayout,
+                    PayType = EntityModel.Enum.PayType.Payout,
+                });
+                DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.CPS,
+                    PayMoney = currentPayout,
+                    PayType = (int)EntityModel.Enum.PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.CPSBalance,
+                    AfterBalance = userBalance.CPSBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.CPSBalance -= currentPayout;
+            }
+            if (payoutMoney > 0M)
+            {
+                result.IsSuccess = false;
+                result.Message = "用户总金额小于 {0:N2}元 - " + userId;
+                result.StatuCode = 300;
+                result.Code = 300;
+
+                return result;
+            }
+            #endregion
+
+            //修改余额
+            //balanceManager.UpdateUserBalance(userBalance);
+            balanceManager.PayToUserBalanceByDB(DB,userId, payDetailList.ToArray());
+            return result;
+        }
 
         /// <summary>
         /// 用户支出，仅扣除用户红包余额，非冻结
