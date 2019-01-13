@@ -34,7 +34,7 @@ namespace Lottery.Api.Controllers
     /// </summary>
     [Area("api")]
     [ReusltFilter]
-    public class BJPKController : BaseController
+    public class PLVPKController : BaseController
     {
 
 
@@ -50,6 +50,7 @@ namespace Lottery.Api.Controllers
             CommonActionResult result = new CommonActionResult();
             HK6Sports_BetingInfo p = JsonHelper.Deserialize<HK6Sports_BetingInfo>(entity.Param);
             p.SchemeSource =(int) entity.SourceCode;
+            string balancePassword = p.BalancePassword;
             string userToken = p.UserToken;
 
 

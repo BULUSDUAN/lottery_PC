@@ -64,6 +64,8 @@ namespace EntityModel.CoreModel
         public string UserToken { get; set; }
 
         public int SchemeSource { get; set; }
+
+        public string BalancePassword { get; set; }
         //public string UserToken { get; set; }
 
         /// <summary>

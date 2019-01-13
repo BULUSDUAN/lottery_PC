@@ -1084,6 +1084,102 @@ namespace KaSon.FrameWork.ORM.Helper
             balanceManager.PayToUserBalance(userId, payDetailList.ToArray());
         }
 
+        public static CommonActionResult Payout_RedBag_To_EndByDb(IDbProvider DB, string category, string userId, string orderId, decimal payoutMoney,
+       string summary, string place, string password)
+        {
+            CommonActionResult result = new CommonActionResult();
+            result.IsSuccess = true;
+            if (payoutMoney <= 0M)
+            {
+                result.IsSuccess = false;
+                result.Message = "消费金额不能小于0";
+                result.StatuCode = 300;
+                result.Code = 300;
+
+                return result;
+            }
+            
+            //查询帐户余额
+            var balanceManager = new UserBalanceManager();
+            //var fundManager = new FundManager();
+            //资金密码判断
+            var userBalance = DB.CreateQuery<C_User_Balance>().Where(p => p.UserId == userId).FirstOrDefault();// balanceManager.QueryUserBalance(userId);
+            if (userBalance == null)
+            {
+                result.IsSuccess = false;
+                result.Message = "用户帐户不存在 - " + userId;
+                result.StatuCode = 300;
+                result.Code = 300;
+
+                return result;
+            }
+           
+            if (userBalance.IsSetPwd && !string.IsNullOrEmpty(userBalance.NeedPwdPlace))
+            {
+                if (userBalance.NeedPwdPlace == "ALL" || userBalance.NeedPwdPlace.Split('|', ',').Contains(place))
+                {
+                    password = Encipherment.MD5(string.Format("{0}{1}", password, _gbKey)).ToUpper();
+                    if (!userBalance.Password.ToUpper().Equals(password))
+                    {
+                        result.IsSuccess = false;
+                        result.Message = "资金密码输入错误 - " + userId;
+                        result.StatuCode = 300;
+                        result.Code = 300;
+
+                        return result;
+                    }
+                   
+                }
+            }
+
+            var totalMoney = userBalance.RedBagBalance;
+            if (totalMoney < payoutMoney)
+            {
+                result.IsSuccess = false;
+                result.Message = string.Format("用户红包小于 {0:N2}元。", payoutMoney);
+                result.StatuCode = 300;
+                result.Code = 300;
+
+                return result;
+            }
+           // throw new LogicException(string.Format("用户红包小于 {0:N2}元。", payoutMoney));
+
+            var currentPayout = 0M;
+            var payDetailList = new List<PayDetail>();
+            if (userBalance.RedBagBalance > 0M && payoutMoney > 0M)
+            {
+                //红包参与支付
+                currentPayout = userBalance.RedBagBalance >= payoutMoney ? payoutMoney : userBalance.RedBagBalance;
+                payoutMoney -= currentPayout;
+                payDetailList.Add(new PayDetail
+                {
+                    AccountType = AccountType.RedBag,
+                    PayMoney = currentPayout,
+                    PayType = EntityModel.Enum.PayType.Payout,
+                });
+                DB.GetDal<C_Fund_Detail>().Add(new C_Fund_Detail
+                {
+                    Category = category,
+                    CreateTime = DateTime.Now,
+                    KeyLine = orderId,
+                    OrderId = orderId,
+                    AccountType = (int)AccountType.RedBag,
+                    PayMoney = currentPayout,
+                    PayType = (int)EntityModel.Enum.PayType.Payout,
+                    Summary = summary,
+                    UserId = userId,
+                    BeforeBalance = userBalance.RedBagBalance,
+                    AfterBalance = userBalance.RedBagBalance - currentPayout,
+                    OperatorId = userId,
+                });
+                //userBalance.RedBagBalance -= currentPayout;
+            }
+
+            //balanceManager.UpdateUserBalance(userBalance);
+            balanceManager.PayToUserBalanceByDB(DB, userId, payDetailList.ToArray());
+
+            return result;
+        }
 
 
 

@@ -161,16 +161,16 @@ namespace SystemManage.Host
                 KaSon.FrameWork.Common.InitConfigInfo.logFactory = ServiceLocator.GetService<ILoggerFactory>();
                 // AutoTaskServices.AutoCaheData(int.Parse(Sports_SchemeJobSeconds));
             }
-            var gdb= ServiceLocator.GetService<IDbProvider>();
+           // var gdb= ServiceLocator.GetService<IDbProvider>();
 
-            var gdb1 = ServiceLocator.GetService<IDbProvider>();
+           // var gdb1 = ServiceLocator.GetService<IDbProvider>();
 
-            var db = gdb.Init("MySql.Default", true);
-            var xdb = gdb1.Init("MySql.Default1", true);
-            // DataInserterHelper dh = new DataInserterHelper(db);
-            // dh.ADDDATA();
-          //  DataInserterHelper dh = new DataInserterHelper(db, xdb);
-          //  dh.DataAddPK期号();
+           // var db = gdb.Init("MySql.Default", true);
+           // var xdb = gdb1.Init("MySql.Default1", true);
+           // // DataInserterHelper dh = new DataInserterHelper(db);
+           // // dh.ADDDATA();
+           //DataInserterHelper dh = new DataInserterHelper(db, xdb);
+           // dh.PKAnteCodeData3();
 
 
             //初始化内存期号 k_todo，可用彩种类型,执行一次

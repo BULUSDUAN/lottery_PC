@@ -121,6 +121,7 @@ namespace KaSon.FrameWork.ORM.Helper
                     break;
                 #endregion
                 default:
+
                     break;
             }
 

@@ -50,8 +50,8 @@ namespace HK6.ModuleBaseServices
         {
             // _Log = log;
             this._rep = repository;
-            DB = _rep.LDB.Init("MySql.Default", true);
-            LettoryDB = _rep.DB.Init("SqlServer.Default", true);
+            DB = _rep.LDB.Init("MySql.Default", false);
+            LettoryDB = _rep.DB.Init("SqlServer.Default", false);
         }
 
         public Task<CommonActionResult> PlayCategory()
@@ -144,6 +144,19 @@ namespace HK6.ModuleBaseServices
             //    result.IsSuccess = false;
             //    return Task.FromResult(result);
             //}
+            try
+            {
+                DB.Dispose();
+                LettoryDB.Dispose();
+            }
+            catch (Exception)
+            {
+
+              
+            }
+           
+            DB = _rep.LDB.Init("MySql.Default", true);
+            LettoryDB = _rep.DB.Init("SqlServer.Default", true);
             CommonActionResult result = new CommonActionResult();
             var orderId = BettingHelper.GetGameTransferId();
             var msg = string.Format("游戏充值订单号{0}", orderId);
@@ -244,7 +257,19 @@ namespace HK6.ModuleBaseServices
             // var omb = DB.CreateQuery<C_User_Balance>().Where(b => b.UserId == userId).FirstOrDefault();
 
             CommonActionResult result = new CommonActionResult();
+            try
+            {
+                DB.Dispose();
+                LettoryDB.Dispose();
+            }
+            catch (Exception)
+            {
 
+
+            }
+
+            DB = _rep.LDB.Init("MySql.Default", true);
+            LettoryDB = _rep.DB.Init("SqlServer.Default", true);
             var orderId = BettingHelper.GetGameTransferId();
             var mb = DB.CreateQuery<blast_member>().Where(b => b.userId == userId).FirstOrDefault();
             if (mb.gameMoney < Money)
@@ -387,7 +412,7 @@ namespace HK6.ModuleBaseServices
                 result.Code = 500;
                 result.StatuCode = 500;
             }
-
+           // LettoryDB.Dispose();
 
             return Task.FromResult(result);
 
@@ -398,7 +423,8 @@ namespace HK6.ModuleBaseServices
             CommonActionResult result = new CommonActionResult();
             result.IsSuccess = true;
             var mb = new DataServiceHelper(DB).GetissueNo();
-           // CommonActionResult result = new DataHelper(DB).GetGames(20);
+            // CommonActionResult result = new DataHelper(DB).GetGames(20);
+           // DB.Dispose();
             result.Value = mb;
             return Task.FromResult(result);
         }
@@ -419,7 +445,7 @@ namespace HK6.ModuleBaseServices
                 //result.IsSuccess = true;
                 result.Value = new blast_member();
             }
-
+           // DB.Dispose();
             return Task.FromResult(result);
         }
         public Task<CommonActionResult> PlayInfo()
@@ -463,7 +489,7 @@ namespace HK6.ModuleBaseServices
                 pgroupList.Add(pg);
             }
 
-
+          //  DB.Dispose();
             result.Value = pgroupList;
             result.IsSuccess = true;
 
@@ -520,7 +546,7 @@ namespace HK6.ModuleBaseServices
             //{
             //    result.ReturnObj = new blast_member();
             //}
-
+           // DB.Dispose();
 
             return Task.FromResult(result);
         }
@@ -541,7 +567,7 @@ namespace HK6.ModuleBaseServices
             //{
             //    result.ReturnObj = new blast_member();
             //}
-
+         //   DB.Dispose();
 
             return Task.FromResult(result);
         }
@@ -606,7 +632,7 @@ namespace HK6.ModuleBaseServices
                 }
             }
 
-
+          //  DB.Dispose();
             return Task.FromResult(result);
 
         }

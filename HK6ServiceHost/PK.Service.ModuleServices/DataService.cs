@@ -52,8 +52,8 @@ namespace PK.Service.ModuleServices
         {
             // _Log = log;
             this._rep = repository;
-            DB = _rep.LDB.Init("MySql.Default", true);
-            LettoryDB = _rep.DB.Init("SqlServer.Default", true);
+            DB = _rep.LDB.Init("MySql.Default", false);
+            LettoryDB = _rep.DB.Init("SqlServer.Default", false);
         }
 
         public Task<CommonActionResult> PlayCategory()
@@ -62,9 +62,10 @@ namespace PK.Service.ModuleServices
             
             try
             {
-                var mblist = DB.CreateQuery<blast_played_group>().Where(b => b.enable == true && b.typeid==2).ToList();
-                var mPlayedList = DB.CreateQuery<blast_played>().Where(b => b.enable == true && b.typeid == 2).ToList();
+                var mblist = DB.CreateQuery<blast_played_group>().Where(b => b.enable == true && b.typeid==3).ToList();
+                var mPlayedList = DB.CreateQuery<blast_played>().Where(b => b.enable == true && b.typeid ==3).ToList();
 
+                mblist = mblist.OrderBy(b=>b.sort).ToList();
                 foreach ( var item in mblist)
                 {
                     item.PlayedList = mPlayedList.Where(b => b.groupId == item.groupId).ToList();
@@ -113,8 +114,8 @@ namespace PK.Service.ModuleServices
         {
             CommonActionResult result = new CommonActionResult();
             //playGroup
-            var pmb = DB.CreateQuery<blast_played>().Where(b=>b.typeid==2).ToList();
-            var mb = DB.CreateQuery<blast_antecode>().Where(b => b.typeid == 2).ToList();
+            var pmb = DB.CreateQuery<blast_played>().Where(b=>b.typeid==3).ToList();
+            var mb = DB.CreateQuery<blast_antecode>().Where(b => b.typeid == 3).ToList();
             var q = from b in mb
                     group b by b.playid into g
                     select g;
@@ -129,39 +130,24 @@ namespace PK.Service.ModuleServices
                 pp = pmb.Where(b => b.playId == pid).FirstOrDefault();
                 antecodeList = item.ToList<blast_antecode>().OrderBy(b => b.sort).ToList();
                 playGroup pg = new playGroup();
-                switch (item.Key)
-                {   
-                    case 59://前2
-                    case 60:
-                    case 61:
-                    case 62:
-                    case 63:
-                        pg = new playGroup()
-                        {
-                            CodeList = antecodeList.Where(b=>b.cateNum==1).ToList(),
-                            CodeList1 = antecodeList.Where(b => b.cateNum == 2).ToList(),
-                            CodeList2 = antecodeList.Where(b => b.cateNum == 3).ToList(),
-                            CodeList3 = antecodeList.Where(b => b.cateNum == 4).ToList(),
-                            CodeList4 = antecodeList.Where(b => b.cateNum == 5).ToList(),
-                            CodeList5 = antecodeList.Where(b => b.cateNum == 6).ToList(),
-                            CodeList6 = antecodeList.Where(b => b.cateNum == 7).ToList(),
-                            CodeList7 = antecodeList.Where(b => b.cateNum == 8).ToList(),
-                            CodeList8 = antecodeList.Where(b => b.cateNum == 9).ToList(),
-                            CodeList9 = antecodeList.Where(b => b.cateNum == 10).ToList(),
-                            Key = item.Key + "",
-                            Name = pp.name
-                        };
-                        break;
-                    default:
-                         pg = new playGroup()
-                        {
-                            CodeList = antecodeList,
-                            Key = item.Key + "",
-                            Name = pp.name
-                        };
-                        break;
+                if (pid==101)
+                {
+                    var temp = mb.Where(b => b.playid == 80).ToList();
+                    foreach (var item1 in temp)
+                    {
+                        antecodeList.Add(item1);
+                    }
+
+                 
                 }
-                
+                pg = new playGroup()
+                {
+                    CodeList = antecodeList,
+                    Key = item.Key + "",
+                    Name = pp.name
+                };
+
+
                 pgroupList.Add(pg);
             }
 
@@ -193,7 +179,7 @@ namespace PK.Service.ModuleServices
             wlist.Add(new WhereField()
             {
                 Field = "typeid",
-                Value = 2+"",
+                Value = 3+"",
                 WhereType = WhereType.Equal
 
             });
@@ -275,7 +261,7 @@ namespace PK.Service.ModuleServices
             wlist.Add(new WhereField()
             {
                 Field = "typeid",
-                Value = "2",
+                Value = "3",
                 WhereType = WhereType.Equal
 
             });

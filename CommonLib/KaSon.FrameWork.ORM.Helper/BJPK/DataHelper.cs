@@ -153,7 +153,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
 
                 sresult.IsSuccess = true;
                
-                sresult.Value = new
+                sresult.Value = new IssueReuslt
                 {
                     lastactionNum = lastactionNo,//上一期期号
                     lastactionNo = lastnumber,//期号

@@ -53,6 +53,10 @@ namespace KaSon.FrameWork.ORM.Helper
             }
         }
 
+
+    
+
+
         /// <summary>
         /// pk 分组录入
         /// </summary>
@@ -330,6 +334,319 @@ namespace KaSon.FrameWork.ORM.Helper
 
         }
 
+
+        public void PKAnteCodeData3()
+        {
+           // DataAddPK赔率玩法3();
+
+          //  DataAddPKAnteCode两面3();
+
+           // DataAddPKAnteCode1到10_3();
+            DataAddPKAnteCode冠亚和3();
+        }
+            /// <summary>
+            /// pk 分组录入
+            /// </summary>
+            private void DataAddPK赔率玩法3()
+        {
+            IList<dynamic> list0 = new List<dynamic>();
+
+            IList<dynamic> list1 = new List<dynamic>();
+
+
+
+            list0.Add(new { name = "冠亚和", typeid = 3, groupId = 24 });
+            list0.Add(new { name = "冠军", typeid = 3, groupId = 24 });
+            list0.Add(new { name = "亚军", typeid = 3, groupId = 24 });
+            list0.Add(new { name = "第三名", typeid = 3, groupId = 24 });
+            list0.Add(new { name = "第四名", typeid = 3, groupId = 24 });
+            list0.Add(new { name = "第五名", typeid = 3, groupId = 24 });
+            list0.Add(new { name = "第六名", typeid = 3, groupId = 24 });
+            list0.Add(new { name = "第七名", typeid = 3, groupId = 24 });
+            list0.Add(new { name = "第八名", typeid = 3, groupId = 24 });
+            list0.Add(new { name = "第九名", typeid = 3, groupId = 24 });
+            list0.Add(new { name = "第十名", typeid = 3, groupId = 24 });
+
+
+            //91
+            list0.Add(new { name = "冠军", typeid = 3, groupId = 25 });
+            list0.Add(new { name = "亚军", typeid = 3, groupId = 25 });
+            list0.Add(new { name = "第三名", typeid = 3, groupId = 25 });
+            list0.Add(new { name = "第四名", typeid = 3, groupId = 25 });
+            list0.Add(new { name = "第五名", typeid = 3, groupId = 25 });
+            list0.Add(new { name = "第六名", typeid = 3, groupId = 25 });
+            list0.Add(new { name = "第七名", typeid = 3, groupId = 25 });
+            list0.Add(new { name = "第八名", typeid = 3, groupId = 25 });
+            list0.Add(new { name = "第九名", typeid = 3, groupId = 25 });
+            list0.Add(new { name = "第十名", typeid = 3, groupId = 25 });
+
+            //101
+            list0.Add(new { name = "冠、亚军组合", typeid = 3, groupId = 26 });
+
+            //  list1.Add(new { name = "01", typeid = 2, groupId = 16, playId = 58 });
+
+            //var xDB = DB.Init("MySql.Default1");
+            var nDB = DB.Init("MySql.Default");
+            int index = 0;
+            int payid = 80;
+            try
+            {
+
+                nDB.Begin();
+                foreach (var item in list0)
+                {
+                    index++;
+                    blast_played bp = new blast_played()
+                    {
+                        groupId = item.groupId,
+                        name = item.name,
+                        enable = true,
+                        simpleInfo = "",
+                        info = "",
+                        example = "",
+                        Odds = 0,
+                        playId = payid,
+                        sort = index,
+                        typeid = item.typeid
+
+                    };
+                    nDB.GetDal<blast_played>().Add(bp);
+                    payid++;
+                }
+
+
+                nDB.Commit();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                nDB.Rollback();
+
+
+            }
+        }
+        private void DataAddPKAnteCode两面3()
+        {
+            var nDB = DB.Init("MySql.Default");
+            try
+            {
+                List<dynamic> list0 = new List<dynamic>();
+                List<dynamic> list1 = new List<dynamic>();
+                List<dynamic> list2 = new List<dynamic>();
+
+                int playId = 80;//冠亚和
+                list0.Add(new { name = "冠亚大",Code="GYDA",odds=1.98M, typeid = 3, groupId = 24, playId = playId });
+                list0.Add(new { name = "冠亚小",Code= "GYXIAO", odds=1.98M, typeid = 3, groupId = 24, playId = playId });
+                list0.Add(new { name = "冠亚单",Code= "GYDAN", odds=1.98M, typeid = 3, groupId = 24, playId = playId });
+                list0.Add(new { name = "冠亚双",Code= "GYSHUANG", odds=1.98M, typeid = 3, groupId = 24, playId = playId });
+
+              
+
+                list1.Add(new { name = "大", Code = "DA", odds = 1.98M, typeid = 3, groupId = 24, playId = playId });
+                list1.Add(new { name = "小", Code = "XIAO", odds = 1.98M, typeid = 3, groupId = 24, playId = playId });
+                list1.Add(new { name = "单", Code = "DAN", odds = 1.98M, typeid = 3, groupId = 24, playId = playId });
+                list1.Add(new { name = "双", Code = "SHUANG", odds = 1.98M, typeid = 3, groupId = 24, playId = playId });
+                list1.Add(new { name = "龙", Code = "LONG", odds = 1.98M, typeid = 3, groupId = 24, playId = playId });
+                list1.Add(new { name = "虎", Code = "HU", odds = 1.98M, typeid = 3, groupId = 24, playId = playId });
+
+                list2.Add(new { name = "大", Code = "DA", odds = 1.98M, typeid = 3, groupId = 24, playId = playId });
+                list2.Add(new { name = "小", Code = "XIAO", odds = 1.98M, typeid = 3, groupId = 24, playId = playId });
+                list2.Add(new { name = "单", Code = "DAN", odds = 1.98M, typeid = 3, groupId = 24, playId = playId });
+                list2.Add(new { name = "双", Code = "SHUANG", odds = 1.98M, typeid = 3, groupId = 24, playId = playId });
+               
+
+                nDB.Begin();
+                int sort = 1;
+                foreach (var item in list0)
+                {
+                    var P = new blast_antecode()
+                    {
+                        AnteCode = item.Code,
+                        displayName = item.name,
+                        odds = item.odds,
+                        playid = playId,
+                        createTime = DateTime.Now,
+                        updateTime = DateTime.Now,
+                        sort = sort,
+                        typeid = 3,
+                        cateNum = 0,
+                        enable = true,
+                        remark = item.name
+                    };
+                    sort++;
+                    nDB.GetDal<blast_antecode>().Add(P);
+                  
+                }
+
+                playId = 81;//冠军
+                for (int i = 1; i <= 5; i++)
+                {
+                  
+                    sort = 1;
+                    foreach (var item in list1)
+                    {
+                        var P = new blast_antecode()
+                        {
+                            AnteCode =i+"_"+item.Code,
+                            displayName = item.name,
+                            odds = item.odds,
+                            playid = playId,
+                            createTime = DateTime.Now,
+                            updateTime = DateTime.Now,
+                            sort = sort,
+                            typeid = 3,
+                            cateNum = 0,
+                            enable = true,
+                            remark = item.name
+                        };
+                        sort++;
+                        nDB.GetDal<blast_antecode>().Add(P);
+
+                    }
+                    playId++;
+                }
+                for (int i =6; i <= 10; i++)
+                {
+
+                    sort = 1;
+                    foreach (var item in list2)
+                    {
+                        var P = new blast_antecode()
+                        {
+                            AnteCode = i + "_" + item.Code,
+                            displayName = item.name,
+                            odds = item.odds,
+                            playid = playId,
+                            createTime = DateTime.Now,
+                            updateTime = DateTime.Now,
+                            sort = sort,
+                            typeid=3,
+                            cateNum = 0,
+                            enable = true,
+                            remark = item.name
+                        };
+                        sort++;
+                        nDB.GetDal<blast_antecode>().Add(P);
+
+                    }
+                    playId++;
+                }
+
+                nDB.Commit();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                nDB.Rollback();
+
+            }
+
+
+        }
+
+        private void DataAddPKAnteCode1到10_3()
+        {
+            var nDB = DB.Init("MySql.Default");
+            try
+            {
+            
+
+                nDB.Begin();
+                int sort = 1;
+                int playId =90;
+                for (int i =1; i < 11; i++)
+                {
+                    sort = 1;
+                    playId++;
+                    for (int j = 1; j < 11; j++)
+                    {
+                        var P = new blast_antecode()
+                        {
+                            AnteCode = i + "_" + j,
+                            displayName = j + "",
+                            odds = 9.9M,
+                            playid = playId,
+                            createTime = DateTime.Now,
+                            updateTime = DateTime.Now,
+                            sort = sort,
+                            typeid = 3,
+                            cateNum = 0,
+                            enable = true,
+                            remark = ""
+                        };
+                        sort++;
+                        nDB.GetDal<blast_antecode>().Add(P);
+                    }
+              
+                   
+                 
+                   
+
+                }
+
+             
+
+                nDB.Commit();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                nDB.Rollback();
+
+            }
+
+
+        }
+
+        private void DataAddPKAnteCode冠亚和3()
+        {
+            var nDB = DB.Init("MySql.Default");
+            try
+            {
+                List<dynamic> list = new List<dynamic>();
+                List<dynamic> list0 = new List<dynamic>();
+              
+               
+               
+                //  int index = 0;
+                nDB.Begin();
+                //foreach (var item in list)
+                //{
+                for (int i = 3; i <= 19; i++)
+                {
+                    string temp = i + "";
+
+                    var P = new blast_antecode()
+                    {
+                        AnteCode = temp,
+                        displayName = temp,
+                        odds = 14.7M,
+                        playid = 101,
+                        createTime = DateTime.Now,
+                        updateTime = DateTime.Now,
+                        sort = i,
+                        typeid=3,
+                        cateNum = 0,
+                        enable = true,
+                        remark = "冠亚和"
+
+                    };
+                    nDB.GetDal<blast_antecode>().Add(P);
+                }
+                //  }
+
+
+                nDB.Commit();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                nDB.Rollback();
+
+            }
+
+
+        }
 
         private void DataAddPKAnteCode冠亚和()
         {

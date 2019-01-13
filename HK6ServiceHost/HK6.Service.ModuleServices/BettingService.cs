@@ -325,6 +325,19 @@ namespace HK6.ModuleBaseServices
                 //清空重复验证缓存数据
                 _bettingListInfo[info.userId] = info;
             }
+            catch (LogicException ex)
+            {
+                cresult.IsSuccess = false;
+                cresult.Code = 300;
+                cresult.Message = ex.Message;
+                cresult.StatuCode = 300;
+                cresult.ReturnValue = ex.ToString();
+
+
+                LettoryDB.Rollback();
+                DB.Rollback();
+                // throw new Exception("订单投注异常，请重试 ", ex);
+            }
             catch (Exception ex)
             {
                 cresult.Code = 500;
