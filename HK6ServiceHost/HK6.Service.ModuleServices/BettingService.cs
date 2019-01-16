@@ -22,6 +22,7 @@ using KaSon.FrameWork.ORM;
 using EntityModel;
 using KaSon.FrameWork.Analyzer.Hk6Model;
 using KaSon.FrameWork.Common.Utilities;
+using EntityModel.Domain.Entities.HK6;
 
 namespace HK6.ModuleBaseServices
 {
@@ -126,7 +127,14 @@ namespace HK6.ModuleBaseServices
                     cresult.Message = "期号无效无法购买.";
                     return Task.FromResult(cresult);
                 }
-
+                if ((info.issueNo+"").Length !=7)
+                {
+                    cresult.IsSuccess = false;
+                    cresult.Code = 300;
+                    cresult.StatuCode = 300;
+                    cresult.Message = "期号格式无效无法购买.格式如:2019007";
+                    return Task.FromResult(cresult);
+                }
 
                 var mb = new DataServiceHelper(DB).GetissueNo();
 
@@ -301,13 +309,31 @@ namespace HK6.ModuleBaseServices
                 #endregion
 
                 #region 扣款
-
+                decimal aftermoney = LoginUser.gameMoney - totalmoney;
+                blast_money_detail mdetail = new blast_money_detail()
+                {
+                    beforeMoney = LoginUser.gameMoney,
+                    afterMoney = aftermoney,
+                    totalMoney = totalmoney,
+                    moneyType = (int)PayType.Payin,
+                    category = moneyType.HK6_Buy,
+                    create_time = DateTime.Now,
+                    update_time = DateTime.Now,
+                    isAuto = 1,
+                    orderId = border.SchemeId,
+                    remark = "HK6投注订单号"+ border.SchemeId+",是主订单号",
+                    userId= LoginUser.userId,
+                    user_diaplayName= LoginUser.displayName
+                };
+                DB.GetDal<blast_money_detail>().Add(mdetail);
                 // decimal gameMoney = (LoginUser.gameMoney - totalmoney);
                 DB.GetDal<blast_member>().Update(b => new blast_member()
                 {
                     gameMoney = b.gameMoney - totalmoney
                 }, b => b.userId == info.userId);
 
+
+               
                 #endregion
                 DB.Commit();
 

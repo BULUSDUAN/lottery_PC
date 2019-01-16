@@ -318,7 +318,9 @@ namespace HK6.ModuleBaseServices
                     }, b => b.userId == userId);
 
                 }
-
+                blast_money_detail dm = new blast_money_detail() {
+                     
+                };
 
                 C_Game_Transfer ctransfer = new C_Game_Transfer()
                 {
