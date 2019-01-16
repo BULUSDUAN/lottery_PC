@@ -34,6 +34,7 @@ using Microsoft.AspNetCore.Http;
 using KaSon.FrameWork.Common.Net;
 using Kason.Sg.Core.Log4net;
 using KaSon.FrameWork.Common;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace Lottery.ApiGateway
 {
@@ -82,8 +83,9 @@ namespace Lottery.ApiGateway
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            RegisterController(services);
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            RegisterController(services);
+            
             services.AddSession();
             return RegisterAutofac(services);
         }
@@ -149,7 +151,7 @@ namespace Lottery.ApiGateway
             {
                 app.UseExceptionHandler("/mg/Home/Error");
             }
-           // app.UseCors(builder => builder.WithOrigins("*"));
+            // app.UseCors(builder => builder.WithOrigins("*"));
             //app.UseCors(builder =>
             //{
             //    var policy = Kason.Sg.Core.ApiGateWay.AppConfig.Policy;
@@ -168,7 +170,7 @@ namespace Lottery.ApiGateway
             //myProvider.Mappings.Add(".tpl", "text/plain");
             //app.UseStaticFiles(new StaticFileOptions() { ContentTypeProvider = myProvider });
             //app.UseStaticFiles();
-
+       
             MyHttpContext.ServiceProvider = svp;
             app.UseSession();
             app.UseMvc(routes =>

@@ -28,6 +28,7 @@ using System.Diagnostics;
 using EntityModel.ExceptionExtend;
 using KaSon.FrameWork.Common.Expansion;
 using System.Text.Encodings.Web;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Lottery.Api.Controllers
 {
@@ -35,10 +36,10 @@ namespace Lottery.Api.Controllers
     [ReusltFilter]
     public class UserController : BaseController
     {
-        private IHttpContextAccessor _accessor;
-        public UserController(IHttpContextAccessor accessor)
+        public UserController(IHttpContextAccessor accessor, IServiceProvider sp)
         {
-            _accessor = accessor;
+            ServiceProvider = sp;
+
         }
         /// <summary>
         /// 登录(103)
@@ -57,7 +58,7 @@ namespace Lottery.Api.Controllers
                     throw new LogicException("密码不能为空");
                 param["loginName"] = loginName;
                 param["password"] = password;
-                param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                param["IPAddress"] = IpManager.GetClientUserIp(ServiceProvider);
                 Kason.Sg.Core.ProxyGenerator.Implementation.ServiceProxyProvider sp = _serviceProxyProvider as Kason.Sg.Core.ProxyGenerator.Implementation.ServiceProxyProvider;
 
              //   sp.Invoke<LoginInfo>(param, "api/user/user_login");
@@ -369,6 +370,8 @@ namespace Lottery.Api.Controllers
             }
         }
 
+        public static IServiceProvider ServiceProvider;
+
         /// <summary>
         /// 适应web版本注册 211
         /// </summary>
@@ -403,7 +406,7 @@ namespace Lottery.Api.Controllers
 
                 var userInfo = new RegisterInfo_Local();
                 //userInfo.RegisterIp = IpManager.IPAddress;
-                userInfo.RegisterIp = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                userInfo.RegisterIp = IpManager.GetClientUserIp(ServiceProvider);
                 userInfo.LoginName = mobile;
                 userInfo.Password = password;
                 userInfo.Mobile = mobile;
@@ -2123,7 +2126,7 @@ namespace Lottery.Api.Controllers
                 string userToken = p.UserToken;
                 string UserId = KaSon.FrameWork.Common.CheckToken.UserAuthentication.ValidateAuthentication(userToken);
                 param["UserId"] = UserId;
-                param["IPAddress"] = _accessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                param["IPAddress"] = IpManager.GetClientUserIp(ServiceProvider);
                 var GiveRedEnvelopes = await _serviceProxyProvider.Invoke<bool>(param, "api/user/LoginGiveRedEnvelopes");
                 if (GiveRedEnvelopes)
                 {

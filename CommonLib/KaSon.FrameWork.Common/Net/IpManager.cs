@@ -15,27 +15,39 @@ namespace KaSon.FrameWork.Common.Net
         private static String Taiwan = "\u53f0\u6e7e";
         private static String HongKong = "\u9999\u6e2f";
         private static String Macao = "\u6fb3\u95e8";
-        private static IHttpContextAccessor _accessor;
+
+
+
 
         /// <summary>
         /// 获取客户Ip
         /// </summary>
-        public static string GetClientUserIp(this HttpContext context)
+        public static string GetClientUserIp(IServiceProvider sp)
         {
-
-            //String srcIp = HttpContext.Current.Request.Headers["Cdn-Src-Ip"];
-            var ip = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-            if (string.IsNullOrEmpty(ip))
+            try
             {
-                ip = context.Connection.RemoteIpAddress.ToString();
-            }
-            if (ip == null)
-            {
-                ip = context.Request.Host.Host;
-            }
-            return ip;
+                //String srcIp = HttpContext.Current.Request.Headers["Cdn-Src-Ip"];
+                var httpcontext = MyHttpContext.Current(sp);
+                var ip = httpcontext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+                if (string.IsNullOrEmpty(ip))
+                {
+                    ip = httpcontext.Connection.RemoteIpAddress.ToString();
+                }
+                if (ip == null)
+                {
+                    ip = httpcontext.Request.Host.Host;
+                }
+                return ip;
 
+            }
+            catch (Exception ex)
+            {
+                string ee = ex.Message;
+                return ex.Message;
+            }
         }
+
+
 
         /// <summary>
         /// 获取ip的名称
@@ -83,4 +95,4 @@ namespace KaSon.FrameWork.Common.Net
             }
         }
     }
-    }
+}
