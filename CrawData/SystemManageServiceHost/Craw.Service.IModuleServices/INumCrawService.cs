@@ -1,0 +1,49 @@
+﻿
+using EntityModel;
+using EntityModel.Communication;
+using Kason.Sg.Core.Caching;
+using Kason.Sg.Core.CPlatform;
+using Kason.Sg.Core.CPlatform.EventBus.Events;
+using Kason.Sg.Core.CPlatform.Filters.Implementation;
+using Kason.Sg.Core.CPlatform.Ioc;
+using Kason.Sg.Core.CPlatform.Routing.Implementation;
+using Kason.Sg.Core.CPlatform.Runtime.Client.Address.Resolvers.Implementation.Selectors.Implementation;
+using Kason.Sg.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attributes;
+using Kason.Sg.Core.CPlatform.Support;
+using Kason.Sg.Core.CPlatform.Support.Attributes;
+using Kason.Sg.Core.ProxyGenerator.Implementation;
+using Kason.Sg.Core.System.Intercept;
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace Craw.Service.IModuleServices
+{
+    /// <summary>
+    /// 采集服务
+    /// </summary>
+    [ServiceBundle("creawSer/{Service}")]
+    public interface INumCrawService : IServiceKey
+    {
+
+
+        bool UpdateErrorIssue();
+
+        [Service(Date = "2018-9-17", Director = "kason", Name = "采集，开奖服务")]
+
+        Task<string> NumLettory_WinNumber_Start(string gameName);
+
+        [Service(Date = "2018-9-17", Director = "kason", Name = "采集，开奖服务")]
+
+        Task<string> NumLettory_WinNumber_Stop(string gameName);
+        [Service(Date = "2018-9-17", Director = "kason", Name = "采集，开奖服务")]
+         Task<string> NumLettory_HK6Issuse(string gameName);
+        [Service(Date = "2018-9-17", Director = "kason", Name = "集，开奖服务")]
+        Task<string> NumLettory_BJPK(string gameName = "BJPK");
+        CommonActionResult NumLettory_BJPKSum(string userId = "", string IssueNo = "", string winNum = "");
+        CommonActionResult NumLettory_Sum(string userId = "", string IssueNo = "", string winNum = "");
+    }
+}

@@ -118,12 +118,12 @@ namespace HK6.ModuleBaseServices
                 var issue = DB.CreateQuery<blast_lhc_time>().Where(b => b.actionNo == issueNo).FirstOrDefault();
 
                
-                if (issue == null || DateTime.Parse(issue.actionTime.ToShortDateString()).AddHours(21).AddMonths(20) < DateTime.Now)
+                if (issue == null || DateTime.Now> DateTime.Parse(issue.actionTime.ToShortDateString()).AddHours(21).AddMinutes(10))
                 {
                     cresult.IsSuccess = false;
                     cresult.Code = 300;
                     cresult.StatuCode = 300;
-                    cresult.Message = "期号无效无法购买";
+                    cresult.Message = "期号无效无法购买.";
                     return Task.FromResult(cresult);
                 }
 
@@ -135,7 +135,7 @@ namespace HK6.ModuleBaseServices
                     cresult.IsSuccess = false;
                     cresult.Code = 300;
                     cresult.StatuCode = 300;
-                    cresult.Message = "期号无效无法购买";
+                    cresult.Message = "无法查询期号无法购买";
                     return Task.FromResult(cresult);
                 }
                 else if (mb.actionNo != info.issueNo)

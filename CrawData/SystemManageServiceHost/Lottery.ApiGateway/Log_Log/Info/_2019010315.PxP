@@ -1,0 +1,2 @@
+2019-01-03 15:11:39,659 [3] INFO  Microsoft.AspNetCore.Hosting.Internal.WebHost [(null)] - Request starting HTTP/1.1 POST http://127.0.0.1:729/manage/Sum/HKSum multipart/form-data; boundary=--------------------------570744153932464377994269 311
+2019-01-03 15:11:40,178 [3] INFO  Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker [(null)] - Executing action method CrawHost.Controllers.SumController.HKSum (CrawHost) with arguments (Craw.Service.ModuleServices.NumCrawService, Lottery.ApiGateway.Model.HelpModel.LotteryServiceRequest) - ModelState is Valid

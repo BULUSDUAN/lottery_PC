@@ -1,0 +1,383 @@
+﻿{
+  "BettiongModule": [
+    {
+      "Key": "P_JCLQ_GetLastOddsByMatchId_SF",
+      "Desc": "查询竞彩篮球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": "SELECT * FROM T_JCLQ_Odds_SF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCLQ_Odds_SF WHERE [MatchId] = @MatchId ) T ON O.[Id]=T.[MaxId]",
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCLQ_GetLastOddsByMatchId_RFSF",
+      "Desc": "查询竞彩篮球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": "SELECT * FROM T_JCLQ_Odds_RFSF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCLQ_Odds_RFSF WHERE [MatchId] = @MatchId ) T ON O.[Id]=T.[MaxId]",
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCLQ_GetLastOddsByMatchId_SFC",
+      "Desc": "查询竞彩篮球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": "SELECT * FROM T_JCLQ_Odds_SFC O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCLQ_Odds_SFC WHERE [MatchId] = @MatchId ) T ON O.[Id]=T.[MaxId]",
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCLQ_GetLastOddsByMatchId_DXF",
+      "Desc": "查询竞彩篮球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": "SELECT * FROM T_JCLQ_Odds_DXF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCLQ_Odds_DXF WHERE [MatchId] = @MatchId ) T ON O.[Id]=T.[MaxId]",
+      "Remark": "备注"
+    },
+
+    {
+      "Key": "P_JCZQ_GetLastOddsByMatchId_SPF",
+      "Desc": "查询竞彩足球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": "SELECT * FROM T_JCZQ_Odds_SPF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_SPF WHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCZQ_GetLastOddsByMatchId_BRQSPF",
+      "Desc": "查询竞彩足球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": " SELECT * FROM T_JCZQ_Odds_BRQSPF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_BRQSPF WHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCZQ_GetLastOddsByMatchId_ZJQ",
+      "Desc": "查询竞彩足球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": " SELECT * FROM T_JCZQ_Odds_ZJQ O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_ZJQ WHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCZQ_GetLastOddsByMatchId_BQC",
+      "Desc": "查询竞彩足球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": " SELECT * FROM T_JCZQ_Odds_BQC O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_BQC WHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+
+      "Remark": "备注"
+    },
+    {
+      "Key": "P_JCZQ_GetLastOddsByMatchId_BF",
+      "Desc": "查询竞彩足球赔率",
+      "ParamDesc": "@MatchId",
+      "Director": "kason",
+      "SQL": " SELECT * FROM T_JCZQ_Odds_BF O INNER JOIN (SELECT MAX(Id) [MaxId] FROM T_JCZQ_Odds_BF WHERE [MatchId] = @MatchId) T ON O.[Id]=T.[MaxId]",
+
+      "Remark": "备注"
+    }
+  ],
+  "UserSystemModule": [
+    {
+      "Key": "P_Order_QueryBonusOrderList",
+      "Desc": "中奖查询",
+      "ParamDesc": "@UserId:UserId,@GameCode:gameCode,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY ComplateDateTime DESC) AS [RowNumber],[SchemeId],[GameCode],[GameType],[PlayType],[SchemeType],[IssuseNumber],[Amount],[BetCount],[TotalMatchCount],[TotalMoney],[TicketStatus],[ProgressStatus] ,[BonusStatus],[PreTaxBonusMoney],[AfterTaxBonusMoney],ISNULL([IsVirtualOrder],1) [IsVirtualOrder],O.[CreateTime],[BonusCount],BonusCountDescription,BonusCountDisplayName,[ComplateDateTime],[ComplateDate],[IsPrizeMoney],O.[AgentId] ,O.[UserId],R.DisplayName,R.IsAgent,R.HideDisplayNameCount FROM [C_Sports_Order_Complate] O LEFT OUTER JOIN C_User_Register R ON R.UserId=O.UserId WHERE [BonusStatus]=20 AND AfterTaxBonusMoney>2000 AND IsVirtualOrder=0 AND (@UserId='' OR O.[UserId]=@UserId) AND (@GameCode='' OR [GameCode]=@GameCode) ) T WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": "备注"
+    },
+    {
+      "Key": "Debug_AccountDetailHasUserID",
+      "Desc": "资金明细",
+      "ParamDesc": "@AccountList:AccountList,@UserId:userId,@StartTime:fromDate,@EndTime:toDate,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "Debug",
+      "SQL": "if exists(select * from tempdb..sysobjects where id=object_id('tempdb..#AccountTable'))DROP TABLE #AccountTable;SELECT * INTO #AccountTable FROM [F_Common_SplitString](@AccountList, '|');  SELECT * FROM( select ROW_NUMBER()OVER(ORDER BY f.id DESC) RowIndex, f.Id, f.UserId ,f.AccountType,f.Category,f.KeyLine,f.OperatorId,f.PayType,f.Summary,f.OrderId,f.BeforeBalance,f.PayMoney,f.AfterBalance,f.CreateTime from C_Fund_Detail f where f.UserId=@UserId and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) and (@AccountList='' or f.AccountType in ( select * from #AccountTable )) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize ",
+      "Remark": ""
+    },
+    {
+      "Key": "Debug_AccountDetailNoUserID",
+      "Desc": "资金明细",
+      "ParamDesc": "@UserId:userId,@StartTime:fromDate,@EndTime:toDate,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM( select ROW_NUMBER()OVER(ORDER BY f.id DESC) RowIndex, f.Id, f.UserId ,f.AccountType,f.Category,f.KeyLine,f.OperatorId,f.PayType,f.Summary,f.OrderId,f.BeforeBalance,f.PayMoney,f.AfterBalance,f.CreateTime from C_Fund_Detail f where @UserId='' and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_IncomeAndMoney",
+      "Desc": "收入/支出条数和金额",
+      "ParamDesc": "@AccountList:AccountList,@UserId:userId,@StartTime:fromDate,@EndTime:toDate",
+      "Director": "Debug",
+      "SQL": "if exists(select * from tempdb..sysobjects where id=object_id('tempdb..#AccountTable'))DROP TABLE #AccountTable;select * into #AccountTable from [F_Common_SplitString](@AccountList,'|'); select count(1) PayCount, isnull(sum(f.PayMoney),0)TotalPayMoney from C_Fund_Detail f where f.UserId=@UserId and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) and f.PayType=20",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_OutAndMoney",
+      "Desc": "收入/支出条数和金额",
+      "ParamDesc": "@AccountList:AccountList,@UserId:userId,@StartTime:fromDate,@EndTime:toDate",
+      "Director": "Debug",
+      "SQL": "if exists(select * from tempdb..sysobjects where id=object_id('tempdb..#AccountTable'))DROP TABLE #AccountTable;select * into #AccountTable from [F_Common_SplitString](@AccountList,'|'); select count(1) PayCount, isnull(sum(f.PayMoney),0)TotalPayMoney from C_Fund_Detail f where f.UserId=@UserId and (f.CreateTime>=@StartTime and f.CreateTime<@EndTime) and f.PayType=10",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_TotalRequestMoney",
+      "Desc": "充值记录金额",
+      "ParamDesc": "@UserId:userId,@AgentList:AgentList,@SourceList:SourceList,@StatusList:StatusList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "Director": "Debug",
+      "SQL": "SELECT TotalCount=COUNT(1),TotalRequestMoney=SUM(RequestMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (SELECT a FROM F_Common_SplitString(@AgentList,'|'))) AND (@StatusList=N'' OR [Status] IN (SELECT a FROM F_Common_SplitString(@StatusList,'|'))) AND (@SourceList=N'' OR SchemeSource IN (SELECT a FROM F_Common_SplitString(@SourceList,'|'))) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime) and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId))",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_TotalResponseMoney",
+      "Desc": "充值记录金额",
+      "ParamDesc": "@UserId:userId,@AgentList:AgentList,@SourceList:SourceList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "Director": "Debug",
+      "SQL": "SELECT TotalResponseMoney=SUM(ResponseMoney) FROM C_FillMoney WHERE (@UserId=N'' OR UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (SELECT a FROM F_Common_SplitString(@AgentList,'|'))) AND [Status]=1 AND (@SourceList=N'' OR SchemeSource IN (SELECT a FROM F_Common_SplitString(@SourceList,'|'))) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime) and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId))",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_FillMoneyPage",
+      "Desc": "充值记录分页",
+      "ParamDesc": "@UserId:userId,@AgentList:AgentList,@SourceList:SourceList,@StatusList:StatusList,@StartTime:startTime,@EndTime:endTime,@OrderId:OrderId",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY RequestTime DESC) RowIndex,T.*,R.ComeFrom,R.VipLevel,DisplayName,R.HideDisplayNameCount FROM C_FillMoney T LEFT OUTER JOIN C_User_Register R ON T.UserId=R.UserId WHERE (@UserId=N'' OR T.UserId=@UserId) AND (@AgentList=N'' OR FillMoneyAgent IN (SELECT a FROM F_Common_SplitString(@AgentList,'|'))) AND (@StatusList=N'' OR [Status] IN (SELECT a FROM F_Common_SplitString(@StatusList,'|'))) AND (@SourceList=N'' OR SchemeSource IN (SELECT a FROM F_Common_SplitString(@SourceList,'|'))) ANd (RequestTime>=@StartTime AND RequestTime < @EndTime)  and (@OrderId='' or (OrderId=@OrderId or OuterFlowId=@OrderId)) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_MyBettingOrder",
+      "Desc": "我的投注记录",
+      "ParamDesc": "@UserId:userId,@BonusStatus:bonusStatus,@GameCode:gameCode,@FromDate:startTime,@ToDate:endTime",
+      "Director": "Debug",
+      "SQL": "SELECT TotalCount=COUNT(1), TotalBuyMoney=SUM(o.CurrentBettingMoney), TotalBonusMoney=SUM(o.AfterTaxBonusMoney) FROM [C_OrderDetail] o WHERE o.SchemeType in (1,7) and o.UserId=@UserId AND (@BonusStatus=-1 OR BonusStatus=@BonusStatus) AND (@GameCode=N'' OR GameCode=@GameCode) AND (@FromDate=N'' OR o.CreateTime>=@FromDate) AND (@ToDate=N'' OR o.CreateTime<@ToDate)",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_MyBettingOrderPage",
+      "Desc": "我的投注记录",
+      "ParamDesc": "@UserId:userId,@BonusStatus:bonusStatus,@GameCode:gameCode,@FromDate:startTime,@ToDate:endTime,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY  o.CreateTime DESC, StartIssuseNumber) AS [RowNumber], o.SchemeId,o.UserId,r.VipLevel,r.DisplayName CreatorDisplayName,r.HideDisplayNameCount, o.UserId as JoinUserId,'1' as JoinSucess, GameCode,GameTypeName,o.GameType as GameType,SchemeType,SchemeSource,SchemeBettingCategory, o.CreateTime as BuyTime, o.CurrentBettingMoney BuyMoney, TotalMoney,ProgressStatus,TicketStatus ,TotalIssuseCount,StartIssuseNumber IssuseNumber,BonusStatus,IsVirtualOrder, o.PreTaxBonusMoney as PreTaxBonusMoney, o.AfterTaxBonusMoney as AfterTaxBonusMoney, StopAfterBonus,o.AddMoney as AddMoney, o.RedBagMoney RedBagMoney, o.RedBagAwardsMoney RedBagAwardsMoney, o.BonusAwardsMoney BonusAwardsMoney FROM [C_OrderDetail] o LEFT OUTER JOIN C_User_Register r ON r.UserId=o.UserId WHERE o.SchemeType in (1,7) and o.UserId=@UserId AND (@BonusStatus=-1 OR BonusStatus=@BonusStatus) AND (@GameCode=N'' OR GameCode=@GameCode) AND (@FromDate=N'' OR o.CreateTime>=@FromDate) AND (@ToDate=N'' OR o.CreateTime<@ToDate) ) T WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryCreateTogetherOrderCount",
+      "Desc": "查询指定用户创建的合买订单列表统计",
+      "ParamDesc": "@UserId:userId,@DateFrom:startTime,@DateTo:endTime,@GameCode:gameCode",
+      "Director": "Debug",
+      "SQL": "SELECT TotalCount=COUNT(1), TotalBuyMoney=0, TotalOrderMoney=0 FROM C_Sports_Together O WHERE O.CreateUserId=@UserId AND O.CreateTime BETWEEN @DateFrom AND @DateTo and (@GameCode='' or o.GameCode=@GameCode)",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryCreateTogetherOrderPage",
+      "Desc": "查询指定用户创建的合买订单列表",
+      "ParamDesc": "@UserId:userId,@DateFrom:startTime,@DateTo:endTime,@GameCode:gameCode,@PageIndex:pageIndex,@PageSize:pageSize,@BonusStatus:BonusStatus",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY O.CreateTime DESC) RowIndex,O.SchemeId,O.SchemeType,O.UserId,O.GameCode, T.GameType,O.GameTypeName,O.StartIssuseNumber,O.TotalMoney,O.ProgressStatus,O.AddMoney, O.TicketStatus,O.BonusStatus,O.IsVirtualOrder,O.PreTaxBonusMoney,O.AfterTaxBonusMoney,O.CreateTime ,T.ProgressStatus TogetherSchemeProgress,T.Progress,ISNULL(C.IsPrizeMoney,0) IsPrizeMoney FROM C_Sports_Together T INNER JOIN C_OrderDetail O ON O.SchemeId=T.SchemeId LEFT OUTER JOIN C_Sports_Order_Complate C ON C.SchemeId=T.SchemeId LEFT OUTER JOIN C_User_Register R ON O.UserId=R.UserId WHERE T.CreateUserId=@UserId AND T.CreateTime BETWEEN @DateFrom AND @DateTo and (@GameCode='' or o.GameCode=@GameCode) and (@BonusStatus=-1 or o.BonusStatus=@BonusStatus) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryJoinTogetherOrderCount",
+      "Desc": "查询指定用户参与的合买订单统计",
+      "ParamDesc": "@UserId:UserId,@GameCode:gameCode,@DateFrom:startTime,@DateTo:endTime",
+      "Director": "Debug",
+      "SQL": "SELECT TotalCount=COUNT(1) FROM ( SELECT SchemeId,JoinUserId FROM C_Sports_TogetherJoin J WHERE JoinUserId=@UserId AND (CreateTime BETWEEN @DateFrom AND @DateTo) AND JoinSucess=1 AND J.JoinType IN (2,3) GROUP BY J.SchemeId,JoinUserId) T left join C_Sports_Together s on s.SchemeId = T.SchemeId where (@GameCode='' or s.GameCode=@GameCode)",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryJoinTogetherOrderPage",
+      "Desc": "查询指定用户参与的合买订单列表",
+      "ParamDesc": "@UserId:userId,@DateFrom:startTime,@DateTo:endTime,@GameCode:gameCode,@BonusStatus:bonus,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "Debug",
+      "SQL": "SELECT * FROM( SELECT ROW_NUMBER()OVER(ORDER BY ISNULL(S.CreateTime,O.CreateTime) DESC) RowIndex,O.SchemeId,O.SchemeType,O.UserId,O.GameCode,T.GameType,O.GameTypeName,O.StartIssuseNumber,O.TotalMoney,O.ProgressStatus,O.TicketStatus, O.BonusStatus,O.IsVirtualOrder,O.PreTaxBonusMoney,O.AfterTaxBonusMoney,O.AddMoney ,S.BuyMoney JoinMoney,ISNULL(S.CreateTime,O.CreateTime) CreateTime FROM ( SELECT J.SchemeId,JoinUserId UserId,CONVERT(MONEY, SUM(RealBuyCount)) BuyMoney,MIN(CreateTime) CreateTime FROM C_Sports_TogetherJoin J WHERE JoinUserId=@UserId AND (CreateTime BETWEEN @DateFrom AND @DateTo) AND JoinSucess=1 AND J.JoinType IN (2,3) GROUP BY J.SchemeId,JoinUserId ) S INNER JOIN C_OrderDetail O ON S.SchemeId=O.SchemeId INNER JOIN C_Sports_Together T ON S.SchemeId=T.SchemeId where (@GameCode='' or O.GameCode=@GameCode) and (@BonusStatus=-1 or o.BonusStatus=@BonusStatus) ) T WHERE RowIndex > @PageIndex * @PageSize AND RowIndex <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryOrderListByChaseKeyLine",
+      "Desc": "按keyline查询追号列表",
+      "ParamDesc": "@KeyLine:KeyLine",
+      "Director": "Debug",
+      "SQL": "SELECT o.CurrentIssuseNumber as IssuseNumber,o.*,i.WinNumber,ISNULL(complate.Amount,running.Amount) Amount,r.VipLevel,r.DisplayName CreatorDisplayName,r.HideDisplayNameCount,g.DisplayName GameName FROM C_Lottery_Scheme c INNER JOIN C_OrderDetail o ON c.SchemeId=o.SchemeId LEFT OUTER JOIN C_User_Register r ON r.UserId=o.UserId LEFT OUTER JOIN C_Lottery_Game g on o.GameCode=g.GameCode LEFT OUTER JOIN C_Sports_Order_Complate complate on complate.SchemeId=o.SchemeId LEFT OUTER JOIN C_Sports_Order_Running running on running.SchemeId=o.SchemeId LEFT OUTER JOIN C_Game_Issuse i on i.GameCode=o.GameCode AND i.IssuseNumber=o.StartIssuseNumber WHERE c.KeyLine=@KeyLine ORDER BY o.StartIssuseNumber",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryAnteCodeListBySchemeId",
+      "Desc": "查询指定订单的投注号码列表",
+      "ParamDesc": "@SchemeId:SchemeId",
+      "Director": "Debug",
+      "SQL": "SELECT c.*,g.DisplayName GameName,T.DisplayName GameTypeName FROM C_Sports_AnteCode c LEFT OUTER JOIN C_Lottery_Game g on g.GameCode=c.GameCode LEFT OUTER JOIN C_Lottery_GameType t on t.GameCode=c.GameCode AND t.GameType=c.GameType WHERE c.SchemeId=@SchemeId ORDER BY c.IssuseNumber",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_TempOrderRunning_Complate_table",
+      "Desc": "创建表变量",
+      "ParamDesc": "",
+      "Director": "Debug",
+      "SQL": "declare @Table_OrderRunning_Complate table ( SchemeId nvarchar(50), UserId nvarchar(50), GameCode nvarchar(50), GameType nvarchar(50), PlayType nvarchar(50), SchemeType nvarchar(50), IssuseNumber nvarchar(50), TotalMoney money, Amount int, BetCount int, TicketStatus int, ProgressStatus int, BonusStatus int, AfterTaxBonusMoney money, CanChase bit, TotalMatchCount int ) insert into @Table_OrderRunning_Complate select * from ( select ISNULL(c.SchemeId,'') SchemeId,ISNULL(c.UserId,'') UserId,ISNULL(c.GameCode,'') GameCode,ISNULL(c.GameType,'') GameType,ISNULL(c.PlayType,'') PlayType,c.SchemeType,ISNULL(c.IssuseNumber,'') IssuseNumber,ISNULL(c.TotalMoney,0) TotalMoney,ISNULL(c.Amount,0) Amount,ISNULL(c.BetCount,0) BetCount,c.TicketStatus,c.ProgressStatus,c.BonusStatus,ISNULL(c.AfterTaxBonusMoney,0) AfterTaxBonusMoney,c.CanChase,c.TotalMatchCount from C_Sports_Order_Complate c where SchemeType=6 union select ISNULL(r.SchemeId,'') SchemeId,ISNULL(r.UserId,'') UserId,ISNULL(r.GameCode,'') GameCode,ISNULL(r.GameType,'') GameType,ISNULL(r.PlayType,'') PlayType,r.SchemeType,ISNULL(r.IssuseNumber,'') IssuseNumber,ISNULL(r.TotalMoney,0) TotalMoney,ISNULL(r.Amount,0) Amount,ISNULL(r.BetCount,0) BetCount,r.TicketStatus,r.ProgressStatus,r.BonusStatus,ISNULL(r.AfterTaxBonusMoney,0),r.CanChase,r.TotalMatchCount from C_Sports_Order_Running r where SchemeType=6 ) as t;",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_MyBDCount",
+      "Desc": "我的宝单统计",
+      "ParamDesc": "@GameCode:GameCode,@UserName:UserName,@UserId:UserId",
+      "Director": "Debug",
+      "SQL": "select TotalCount=COUNT(1) from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where (@GameCode='' or o.GameCode=@GameCode) and (@UserName='' or u.DisplayName=@UserName) and (@UserId='' or u.UserId=@UserId)",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_MyBDPage",
+      "Desc": "我的宝单分页",
+      "ParamDesc": "@Desc:Desc,@OrderBy:OrderBy,@GameCode=GameCode,@UserName:UserName,@UserId:UserId,@LastweekStartTime:LastweekStartTime,@LastweekEndTime:LastweekEndTime",
+      "Director": "Debug",
+      "SQL": "select *,_Table.LastweekProfitRate from (select ROW_NUMBER() over(order by case @Desc when 'desc' then case @OrderBy when 'expectedreturnrate' then t.ExpectedReturnRate when 'totalbuymoney' then t.TotalBuyMoney when 'totalbuycount' then t.TotalBuyCount  when 'bdfxcreatetime' then t.CreateTime end end desc, case @Desc when 'asc' then case @OrderBy when 'expectedreturnrate' then t.ExpectedReturnRate when 'totalbuymoney' then t.TotalBuyMoney when 'totalbuycount' then t.TotalBuyCount when 'bdfxcreatetime' then t.CreateTime end end asc ) rowNumber,isnull(u.UserId,'')UserId,isnull(u.DisplayName,'') as UserName,isnull(t.SingleTreasureDeclaration,'')SingleTreasureDeclaration,isnull(o.GameCode,'')GameCode,isnull(o.GameType,'')GameType,isnull(o.IssuseNumber,'')IssuseNumber,isnull(t.ExpectedReturnRate,0)ExpectedReturnRate,isnull(t.Commission,0)Commission,isnull(t.Security,0)Security,isnull(t.TotalBuyCount,0)TotalBuyCount,isnull(t.TotalBuyMoney,0)TotalBuyMoney,isnull(o.AfterTaxBonusMoney,0)AfterTaxBonusMoney,t.FirstMatchStopTime,t.LastMatchStopTime,isnull(t.ProfitRate,0)ProfitRate,isnull(t.SchemeId,'')SchemeId,ISNULL(t.TotalBonusMoney,0)TotalBonusMoney,ISNULL(t.ExpectedBonusMoney,0) ExpectedBonusMoney,ISNULL(o.BetCount,0)BetCount,isnull(o.TotalMatchCount,0)TotalMatchCount,t.IsComplate,isnull(t.CurrentBetMoney,0)CurrentBetMoney,(case when t.CurrentBetMoney>0 then (o.AfterTaxBonusMoney-t.CurrentBetMoney)/t.CurrentBetMoney else 0 end)CDProfitRate,t.CreateTime as BDFXCreateTime,t.CurrProfitRate from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where (@GameCode='' or o.GameCode=@GameCode) and (@UserName='' or u.DisplayName=@UserName) and (@UserId='' or u.UserId=@UserId) ) tab left join ( select tt.LastweekProfitRate,tt.UserId from (select (case SUM(CurrentBetMoney) when 0 then 0 else (SUM(CurrBonusMoney)-SUM(CurrentBetMoney))/SUM(CurrentBetMoney) end) LastweekProfitRate,UserId from C_TotalSingleTreasure t where CreateTime>=''+@LastweekStartTime+'' and CreateTime<''+@LastweekEndTime+'' and t.IsBonus=1 group by UserId)tt) _Table on tab.UserId=_Table.UserId",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_NotMyBDCount",
+      "Desc": "宝单统计",
+      "ParamDesc": "@GameCode:GameCode,@UserName:UserName,@UserId:UserId",
+      "Director": "Debug",
+      "SQL": "select TotalCount=COUNT(1) from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where (@GameCode='' or o.GameCode=@GameCode) and (@UserName='' or u.DisplayName=@UserName) and (@UserId='' or u.UserId=@UserId) and t.FirstMatchStopTime>GETDATE()",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_NotMyBDPage",
+      "Desc": "宝单分页",
+      "ParamDesc": "@Desc:Desc,@OrderBy:OrderBy,@GameCode=GameCode,@UserName:UserName,@UserId:UserId,@LastweekStartTime:LastweekStartTime,@LastweekEndTime:LastweekEndTime",
+      "Director": "Debug",
+      "SQL": "select *,_Table.LastweekProfitRate from (select ROW_NUMBER() over(order by case @Desc when 'desc' then case @OrderBy when 'expectedreturnrate' then t.ExpectedReturnRate when 'totalbuymoney' then t.TotalBuyMoney when 'totalbuycount' then t.TotalBuyCount  when 'bdfxcreatetime' then t.CreateTime end end desc, case @Desc when 'asc' then case @OrderBy when 'expectedreturnrate' then t.ExpectedReturnRate when 'totalbuymoney' then t.TotalBuyMoney when 'totalbuycount' then t.TotalBuyCount when 'bdfxcreatetime' then t.CreateTime end end asc ) rowNumber,isnull(u.UserId,'')UserId,isnull(u.DisplayName,'') as UserName,isnull(t.SingleTreasureDeclaration,'')SingleTreasureDeclaration,isnull(o.GameCode,'')GameCode,isnull(o.GameType,'')GameType,isnull(o.IssuseNumber,'')IssuseNumber,isnull(t.ExpectedReturnRate,0)ExpectedReturnRate,isnull(t.Commission,0)Commission,isnull(t.Security,0)Security,isnull(t.TotalBuyCount,0)TotalBuyCount,isnull(t.TotalBuyMoney,0)TotalBuyMoney,isnull(o.AfterTaxBonusMoney,0)AfterTaxBonusMoney,t.FirstMatchStopTime,t.LastMatchStopTime,isnull(t.ProfitRate,0)ProfitRate,isnull(t.SchemeId,'')SchemeId,ISNULL(t.TotalBonusMoney,0)TotalBonusMoney,ISNULL(t.ExpectedBonusMoney,0) ExpectedBonusMoney,ISNULL(o.BetCount,0)BetCount,isnull(o.TotalMatchCount,0)TotalMatchCount,t.IsComplate,isnull(t.CurrentBetMoney,0)CurrentBetMoney,(case when t.CurrentBetMoney>0 then (o.AfterTaxBonusMoney-t.CurrentBetMoney)/t.CurrentBetMoney else 0 end)CDProfitRate,t.CreateTime as BDFXCreateTime,t.CurrProfitRate from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where (@GameCode='' or o.GameCode=@GameCode) and (@UserName='' or u.DisplayName=@UserName) and (@UserId='' or u.UserId=@UserId) and (t.FirstMatchStopTime>GETDATE()) ) tab left join ( select tt.LastweekProfitRate,tt.UserId from (select (case SUM(CurrentBetMoney) when 0 then 0 else (SUM(CurrBonusMoney)-SUM(CurrentBetMoney))/SUM(CurrentBetMoney) end) LastweekProfitRate,UserId from C_TotalSingleTreasure t where CreateTime>=''+@LastweekStartTime+'' and CreateTime<''+@LastweekEndTime+'' and t.IsBonus=1 group by UserId)tt) _Table on tab.UserId=_Table.UserId",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_TempTableComplate",
+      "Desc": "Temp_Table_OrderRunning_Complate",
+      "ParamDesc": "",
+      "Director": "",
+      "SQL": "declare @Table_OrderRunning_Complate table ( SchemeId nvarchar(50), UserId nvarchar(50), GameCode nvarchar(50), GameType nvarchar(50), PlayType nvarchar(50), SchemeType nvarchar(50), IssuseNumber nvarchar(50), TotalMoney money, Amount int, BetCount int, TicketStatus int, ProgressStatus int, BonusStatus int, AfterTaxBonusMoney money, CanChase bit, TotalMatchCount int ); insert into @Table_OrderRunning_Complate select * from ( select ISNULL(c.SchemeId,'') SchemeId,ISNULL(c.UserId,'') UserId,ISNULL(c.GameCode,'') GameCode,ISNULL(c.GameType,'') GameType,ISNULL(c.PlayType,'') PlayType,c.SchemeType,ISNULL(c.IssuseNumber,'') IssuseNumber,ISNULL(c.TotalMoney,0) TotalMoney,ISNULL(c.Amount,0) Amount,ISNULL(c.BetCount,0) BetCount,c.TicketStatus,c.ProgressStatus,c.BonusStatus,ISNULL(c.AfterTaxBonusMoney,0) AfterTaxBonusMoney,c.CanChase,c.TotalMatchCount from C_Sports_Order_Complate c where SchemeType=6 union select ISNULL(r.SchemeId,'') SchemeId,ISNULL(r.UserId,'') UserId,ISNULL(r.GameCode,'') GameCode,ISNULL(r.GameType,'') GameType,ISNULL(r.PlayType,'') PlayType,r.SchemeType,ISNULL(r.IssuseNumber,'') IssuseNumber,ISNULL(r.TotalMoney,0) TotalMoney,ISNULL(r.Amount,0) Amount,ISNULL(r.BetCount,0) BetCount,r.TicketStatus,r.ProgressStatus,r.BonusStatus,ISNULL(r.AfterTaxBonusMoney,0),r.CanChase,r.TotalMatchCount from C_Sports_Order_Running r where SchemeType=6 ) as t ",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryBDFXAutherHomePageCount",
+      "Desc": "查询昨日牛人统计",
+      "ParamDesc": "@UserId:UserId,@StrIsBonus:StrIsBonus,@_bonusStatus:_bonusStatus,@CurrentTime:CurrentTime",
+      "Director": "Debug",
+      "SQL": "select TotalCount=COUNT(1),AllTotalBuyCount=SUM(t.TotalBuyCount),AllTotalBonusMoney=SUM(t.TotalBonusMoney) from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where(@UserId='' or u.UserId=@UserId) and (@StrIsBonus='' or o.BonusStatus=@_bonusStatus ) and (@CurrentTime='' or t.FirstMatchStopTime>@CurrentTime)",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryBDFXAutherHomePage",
+      "Desc": "查询昨日牛人分页",
+      "ParamDesc": "@UserId:UserId,@StrIsBonus:StrIsBonus,@_bonusStatus:_bonusStatus,@CurrentTime:CurrentTime,@PageIndex:PageIndex,@PageSize:PageSize",
+      "Director": "Debug",
+      "SQL": "select * from (select ROW_NUMBER() over(order by t.CreateTime desc,t.CurrProfitRate desc) rowNumber,isnull(u.UserId,'')UserId,isnull(u.DisplayName,'') as UserName,isnull(t.SingleTreasureDeclaration,'')SingleTreasureDeclaration,isnull(o.GameCode,'')GameCode,isnull(o.GameType,'')GameType,isnull(o.IssuseNumber,'')IssuseNumber,isnull(t.ExpectedReturnRate,0)ExpectedReturnRate,isnull(t.Commission,0)Commission,isnull(t.Security,0)Security,isnull(t.TotalBuyCount,0)TotalBuyCount,isnull(t.TotalBuyMoney,0)TotalBuyMoney,isnull(o.AfterTaxBonusMoney,0)AfterTaxBonusMoney,t.FirstMatchStopTime,t.LastMatchStopTime,isnull(t.ProfitRate,0)ProfitRate,isnull(t.SchemeId,'')SchemeId,ISNULL(t.TotalBonusMoney,0)TotalBonusMoney,ISNULL(t.ExpectedBonusMoney,0) ExpectedBonusMoney,ISNULL(o.BetCount,0)BetCount,isnull(o.TotalMatchCount,0)TotalMatchCount,t.IsComplate,isnull(t.CurrentBetMoney,0)CurrentBetMoney,t.CurrProfitRate,t.CreateTime from @Table_OrderRunning_Complate o inner join C_TotalSingleTreasure t on o.SchemeId=t.SchemeId inner join C_User_Register u on o.UserId=u.UserId where (@UserId='' or u.UserId=@UserId) and (@StrIsBonus='' or o.BonusStatus=@_bonusStatus) and (@CurrentTime='' or t.FirstMatchStopTime>@CurrentTime) ) tab where rowNumber>@PageIndex*@PageSize and rowNumber<=(@PageIndex+1)*@PageSize ",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryMyFollow",
+      "Desc": "我的关注",
+      "ParamDesc": "@StartTime:StartTime,@EndTime:EndTime,@CurrUserId:CurrUserId,@LastweekStartTime:LastweekStartTime,@LastweekEndTime:LastweekEndTime",
+      "Director": "Debug",
+      "SQL": "SELECT isnull(T.RowNumber, 0) AS RankNumber, isnull(T.DisplayName, '') AS UserName, isnull(satt.UserId, '') UserId, isnull( satt.BeConcernedUserCount, 0 ) BeConcernedUserCount, isnull( t_singleCount.SingleTreasureCount, 0 ) SingleTreasureCount, isnull(T.CurrProfitRate, 0) CurrProfitRate, ( CASE WHEN isnull(T.BeConcernedUserId, '') = '' THEN 'false' ELSE 'true' END ) IsGZ, isnull(tt.SchemeId, '') SchemeId, _tt.LastweekRank FROM ( SELECT RowNumber, u.UserId, CurrProfitRate, DisplayName, BeConcernedUserId FROM ( SELECT TOP 50 ROW_NUMBER () OVER (  ORDER BY ts.CurrProfitRate DESC ) RowNumber, ts.UserId, CurrProfitRate FROM ( SELECT ( CASE SUM (t.CurrentBetMoney) WHEN 0 THEN 0 ELSE ( ( SUM (t.CurrBonusMoney) - SUM (t.CurrentBetMoney) ) / SUM (t.CurrentBetMoney) ) END ) CurrProfitRate, t.UserId FROM C_TotalSingleTreasure t WHERE t.CreateTime >= '' +@StartTime + '' AND t.CreateTime < '' +@EndTime + '' AND t.IsBonus = 1 GROUP BY UserId ) ts ) tab RIGHT JOIN C_SingleTreasure_Attention satt ON tab.UserId = satt.BeConcernedUserId INNER JOIN C_User_Register u ON satt.BeConcernedUserId = u.UserId WHERE satt.ConcernedUserId =@CurrUserId ) T LEFT JOIN ( SELECT COUNT (1) SingleTreasureCount, UserId FROM C_TotalSingleTreasure t WHERE t.CreateTime >= '' +@StartTime + '' AND t.CreateTime < '' +@EndTime + '' GROUP BY UserId ) t_singleCount ON t.UserId = t_singleCount.UserId LEFT JOIN ( SELECT UserId, ConcernedUserCount, BeConcernedUserCount FROM C_SingleTreasure_AttentionSummary ) satt ON T.UserId = satt.UserId LEFT JOIN ( SELECT tst.SchemeId, tst.UserId FROM ( SELECT MAX (CreateTime) CreateTime, UserId FROM C_TotalSingleTreasure tt WHERE tt.IsComplate = 0 GROUP BY UserId ) t INNER JOIN C_TotalSingleTreasure tst ON t.UserId = tst.UserId AND t.CreateTime = tst.CreateTime ) tt ON T.UserId = tt.UserId LEFT JOIN ( SELECT tt.LastweekRank, tt.UserId FROM ( SELECT ROW_NUMBER () OVER (  ORDER BY SUM (CurrProfitRate) DESC ) LastweekRank, lastTab.UserId FROM ( SELECT ( CASE SUM (t.CurrentBetMoney) WHEN 0 THEN 0 ELSE ( ( SUM (t.CurrBonusMoney) - SUM (t.CurrentBetMoney) ) / SUM (t.CurrentBetMoney) ) END ) CurrProfitRate, UserId FROM C_TotalSingleTreasure t WHERE CreateTime >= '' +@LastweekStartTime + '' AND CreateTime < '' +@LastweekEndTime + '' AND t.IsBonus = 1 GROUP BY UserId ) lastTab GROUP BY lastTab.UserId ) tt ) _tt ON T.UserId = _tt.UserId ORDER BY CurrProfitRate DESC",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryGSRankList",
+      "Desc": "查询高手排行",
+      "ParamDesc": "@CurrUserId:CurrUserId,@StartTime:StartTime,@EndTime:EndTime,@IsMyGZ:IsMyGZ,@LastweekStartTime:LastweekStartTime,@LastweekEndTime:LastweekEndTime",
+      "Director": "Debug",
+      "SQL": "SELECT isnull(T.RowNumber, 0) AS RankNumber ,isnull(T.DisplayName, '') AS UserName ,isnull(T.UserId, '') UserId ,isnull(T.BeConcernedUserCount, 0) BeConcernedUserCount ,isnull(t_singleCount.SingleTreasureCount, 0) SingleTreasureCount ,isnull(T.CurrProfitRate, 0) CurrProfitRate ,isnull(T.isGZ, 'false') IsGZ ,isnull(tt.SchemeId, '') SchemeId ,_tt.LastweekRank FROM ( SELECT TOP 50 ROW_NUMBER() OVER ( ORDER BY tab.CurrProfitRate DESC ) RowNumber ,tab.UserId ,tab.DisplayName ,tab.BeConcernedUserCount ,tab.CurrProfitRate ,tab.isGZ FROM ( SELECT u.UserId ,u.DisplayName ,att.BeConcernedUserCount ,( CASE SUM(t.CurrentBetMoney) WHEN 0 THEN 0 ELSE ((SUM(t.CurrBonusMoney) - SUM(t.CurrentBetMoney)) / SUM(t.CurrentBetMoney)) END ) CurrProfitRate ,( CASE WHEN @CurrUserId = '' THEN '' WHEN ( SELECT COUNT(1) FROM C_SingleTreasure_Attention WHERE BeConcernedUserId = t.UserId AND ConcernedUserId = @CurrUserId ) >= 1 THEN 'true' ELSE '' END ) isGZ FROM C_TotalSingleTreasure t INNER JOIN C_User_Register u ON t.UserId = u.UserId LEFT JOIN C_SingleTreasure_AttentionSummary att ON t.UserId = att.UserId WHERE t.CreateTime >= '' +@StartTime + '' AND t.CreateTime < '' +@EndTime + '' AND t.IsBonus = 1 GROUP BY u.UserId ,u.DisplayName ,att.BeConcernedUserCount ,att.SingleTreasureCount ,t.UserId ) tab WHERE ( @IsMyGZ = '' OR tab.isGZ = '' +@IsMyGZ + '' ) ) T LEFT JOIN ( SELECT COUNT(1) SingleTreasureCount ,UserId FROM C_TotalSingleTreasure t WHERE t.CreateTime >= '' +@StartTime + '' AND t.CreateTime < '' +@EndTime + '' GROUP BY UserId ) t_singleCount ON t.UserId = t_singleCount.UserId LEFT JOIN ( SELECT tst.SchemeId ,tst.UserId FROM ( SELECT MAX(CreateTime) CreateTime ,UserId FROM C_TotalSingleTreasure tt WHERE tt.IsComplate = 0 GROUP BY UserId ) t INNER JOIN C_TotalSingleTreasure tst ON t.UserId = tst.UserId AND t.CreateTime = tst.CreateTime ) tt ON T.UserId = tt.UserId LEFT JOIN ( SELECT tt.LastweekRank ,tt.UserId FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY SUM(CurrProfitRate) DESC ) LastweekRank ,lastTab.UserId FROM ( SELECT ( CASE SUM(t.CurrentBetMoney) WHEN 0 THEN 0 ELSE ((SUM(t.CurrBonusMoney) - SUM(t.CurrentBetMoney)) / SUM(t.CurrentBetMoney)) END ) CurrProfitRate ,UserId FROM C_TotalSingleTreasure t WHERE CreateTime >= '' +@LastweekStartTime + '' AND CreateTime < '' +@LastweekEndTime + '' AND t.IsBonus = 1 GROUP BY UserId ) AS lastTab GROUP BY lastTab.UserId ) tt ) _tt ON T.UserId = _tt.UserId ORDER BY CurrProfitRate DESC ,RankNumber ",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryMyChaseOrderListCount",
+      "Desc": "查询我的追号订单列表统计",
+      "ParamDesc": "@GameCode:GameCode,@UserId:UserId,@FromDate:FromDate,@ToDate:ToDate,@ProgressStatus:ProgressStatus",
+      "Director": "Debug",
+      "SQL": "select count(1)as TotalCount from( select c.keyline FROM  [C_Lottery_Scheme] c inner join C_OrderDetail o on c.schemeid=o.schemeid where (@GameCode='' or o.gamecode=@GameCode)  and (@ProgressStatus='' or o.ProgressStatus in ({0})) and o.userid=@UserId group by o.userid,c.keyline having (MIN(c.CreateTime)  >=@FromDate and MIN(c.CreateTime) <@ToDate) )as t",
+      "Remark": ""
+    },
+    {
+      "key": "Debug_QueryMyChaseOrderListPage",
+      "Desc": "查询我的追号订单列表",
+      "ParamDesc": "@GameCode:GameCode,@UserId:UserId,@FromDate:FromDate,@ToDate:ToDate,@ProgressStatus:ProgressStatus,@PageIndex:PageIndex,@PageSize:PageSize",
+      "Director": "Debug",
+      "SQL": "select t.*,CONVERT(bit,t.StopAfterBonus_1) as StopAfterBonus,convert(bit,t.IsVirtualOrder_1) as IsVirtualOrder from (SELECT ROW_NUMBER() OVER(ORDER BY MIN(c.CreateTime) DESC) AS [RowNumber], KeyLine SchemeId,MIN(c.CreateTime) CreateTime,o.UserId,MIN(o.GameCode) GameCode,MIN([GameTypeName]) [GameTypeName],2 [SchemeType] ,MIN(o.[SchemeSource]) [SchemeSource],MIN(o.[SchemeBettingCategory]) [SchemeBettingCategory] ,SUM([CurrentBettingMoney]) [CurrentBettingMoney],SUM(o.[TotalMoney]) [TotalMoney],max(o.[ProgressStatus]) [ProgressStatus],max(o.[TicketStatus]) [TicketStatus] ,COUNT(1) [TotalIssuseCount],MIN([StartIssuseNumber]) [StartIssuseNumber],N'' [CurrentIssuseNumber],MIN(o.[BonusStatus]) [BonusStatus] ,SUM(o.[PreTaxBonusMoney]) [PreTaxBonusMoney],SUM(o.[AfterTaxBonusMoney]) [AfterTaxBonusMoney] ,MIN(CONVERT(int,o.StopAfterBonus)) StopAfterBonus_1, 0 IsVirtualOrder_1 ,MIN(o.[AgentId]) [AgentId],MAX([ComplateTime]) [ComplateTime],SUM(o.AddMoney)AddMoney FROM  [C_Lottery_Scheme] c inner join C_OrderDetail o on c.schemeid=o.schemeid where (@GameCode='' or o.gamecode=@GameCode) and (@ProgressStatus='' or o.ProgressStatus in ({0})) and o.userid=@UserId and o.SchemeType=2 group by o.userid,c.keyline having (MIN(c.CreateTime)  >=@FromDate and MIN(c.CreateTime) <@ToDate) ) as t where  t.[RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "rj_Fund_QueryWithdrawById",
+      "Desc": "查询提现明细",
+      "ParamDesc": "@OrderId:OrderId",
+      "Director": "renjun",
+      "SQL": "SELECT top 1 w.OrderId,u1.DisplayName as RequesterDisplayName,u1.UserId as RequesterUserKey,u1.ComeFrom as RequesterComeFrom,u2.DisplayName as ProcessorsDisplayName,u2.UserId as ProcessorsUserKey,w.WithdrawAgent,w.ProvinceName,w.CityName,w.BankCode,w.BankName,w.BankSubName,w.BankCardNumber,w.RequestMoney,w.RequestTime,w.Status,w.ResponseMoney,w.ResponseMessage,w.ResponseTime,real_1.RealName as RequesterRealName,mobile_1.Mobile as RequesterMobile FROM C_Withdraw w LEFT JOIN C_User_Register u1 on w.UserId = u1.UserId LEFT JOIN C_User_Register u2 on w.ResponseUserId = u2.UserId LEFT JOIN E_Authentication_RealName real_1 on u1.UserId = real_1.UserId LEFT JOIN E_Authentication_Mobile mobile_1 on u1.UserId = mobile_1.UserId where w.OrderId=@OrderId",
+      "Remark": ""
+
+    },
+    {
+      "key": "P_Blog_TotalUserCount",
+      "Desc": "用户总数",
+      "ParamDesc": "@AgentId:AgentId,@UserId:UserId,@TotalUserCount:TotalUserCount,@UserCount:UserCount",
+      "Director": "renjun",
+      "SQL": "declare my_cursor cursor for select UserId from E_Blog_UserSpread where AgentId=@AgentId open my_cursor fetch next from my_cursor into @UserId while @@FETCH_STATUS=0 begin begin with smbk as(select r.UserId from C_User_Register r left join E_Authentication_RealName e on r.UserId=e.UserId left join C_BankCard b on b.UserId=r.UserId  where r.UserType=0 and r.IsEnable=1 and r.UserId<>'admin' and r.UserId=@UserId),cz as(select top 1 f.UserId from  C_FillMoney f where f.RequestMoney>10 and f.status =1 and f.UserId=@UserId) select @UserCount=COUNT(a.UserId) from smbk a,cz b where  a.UserId=b.UserId; end begin set @TotalUserCount=@TotalUserCount+@UserCount; end fetch next from my_cursor into  @UserId end close my_cursor deallocate my_cursor select @TotalUserCount;",
+      "Remark": ""
+    },
+    {
+      "key": "P_Blog_UserSpread",
+      "Desc": "所有的",
+      "ParamDesc": "@AgentId:AgentId",
+      "Director": "renjun",
+      "SQL": "select COUNT(UserId) from E_Blog_UserSpread where AgentId=@AgentId;",
+      "Remark": ""
+    },
+    {
+      "key": "P_Blog_RedBagMoney",
+      "Desc": "领取红包总额",
+      "ParamDesc": "@AgentId:AgentId",
+      "Director": "renjun",
+      "SQL": "select sum(RedBagMoney) from C_Fund_RedBagDetail where RedBagCategory=5 and UserId=@AgentId;",
+      "Remark": ""
+    }
+  ],
+
+  "DataModule": [
+    {
+      "key": "Data_QueryArticleList",
+      "Desc": "查询文章列表",
+      "ParamDesc": "@Key:key,@GameCode:gameCode,@Category:category,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "lili",
+      "SQL": "SELECT [Id],[GameCode],[Title],[Category],[ShowIndex],[ReadCount],[CreateTime],[CreateUserKey],[CreateUserDisplayName], [UpdateTime],[UpdateUserKey],[UpdateUserDisplayName],[IsRedTitle],KeyWords,DescContent,StaticPath,PreStaticPath,NextStaticPath,Description FROM ( SELECT ROW_NUMBER() OVER(ORDER BY [ShowIndex] ASC, [CreateTime] DESC) AS [RowNumber],[Id],[GameCode],[Title],[Category], [ShowIndex],[ReadCount],[CreateTime],[CreateUserKey],[CreateUserDisplayName],[UpdateTime], [UpdateUserKey],[UpdateUserDisplayName],[IsRedTitle],KeyWords,DescContent,StaticPath,PreStaticPath,NextStaticPath,Description FROM [E_SiteMessage_Article_List] WHERE (@Key = '' OR [Title] LIKE @Key) AND (@GameCode = '' OR [GameCode] LIKE '%' + @GameCode) AND (@Category=N'' OR [Category] IN (SELECT a FROM F_Common_SplitString(@Category,'|'))) ) AS [T] WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryArticleList_TotalCount",
+      "Desc": "查询文章列表_总条数",
+      "ParamDesc": "@Key:key,@GameCode:gameCode,@Category:category",
+      "Director": "lili",
+      "SQL": "SELECT @TotalCount = COUNT(1) FROM [E_SiteMessage_Article_List] WHERE (@Key = '' OR [Title] LIKE @Key) AND (@Category=N'' OR [Category] IN (SELECT a FROM F_Common_SplitString(@Category,'|'))) AND (@GameCode = '' OR [GameCode] LIKE '%' + @GameCode)",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryBulletinList_Web",
+      "Desc": "用户查询公告列表",
+      "ParamDesc": "@BulletinAgent:bulletinAgent,@PageIndex:pageIndex,@PageSize:pageSize",
+      "Director": "lili",
+      "SQL": "SELECT [Id],[Title],[Status],[Priority],[IsPutTop],[EffectiveFrom],[EffectiveTo],[CreateTime] FROM ( SELECT ROW_NUMBER() OVER(ORDER BY [IsPutTop] DESC,[Priority],[CreateTime] DESC) AS [RowNumber],[Id],[Title],[Status],[Priority],[IsPutTop],[EffectiveFrom],[EffectiveTo],[CreateTime] FROM [E_SiteMessage_Bulletin_List] WHERE [Status] = 0 AND (BulletinAgent=@BulletinAgent) AND ([EffectiveFrom] IS NULL OR [EffectiveFrom] <= GETDATE()) AND ([EffectiveTo] IS NULL OR DATEADD(DAY,1,[EffectiveTo]) >= GETDATE()) ) AS [T] WHERE [RowNumber] > @PageIndex * @PageSize AND [RowNumber] <= (@PageIndex + 1) * @PageSize",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryBulletinList_Web_Total",
+      "Desc": "用户查询公告列表_总条数",
+      "ParamDesc": "@BulletinAgent:bulletinAgent",
+      "Director": "lili",
+      "SQL": "SELECT COUNT(1) FROM [E_SiteMessage_Bulletin_List] WHERE [Status] = 0 AND (BulletinAgent=@BulletinAgent) AND ([EffectiveFrom] IS NULL OR [EffectiveFrom] <= GETDATE()) AND ([EffectiveTo] IS NULL OR DATEADD(DAY,1,[EffectiveTo]) >= GETDATE())",
+      "Remark": ""
+    },
+    {
+      "key": "Data_QueryCurrentNewIssuseInfo",
+      "Desc": "用户查询查询最新期号",
+      "ParamDesc": "@GameCode:gameCode,@GameType:gameType",
+      "Director": "lili",
+      "SQL": "select i.* from C_Game_Issuse i inner join( select min(GameCode_IssuseNumber) as GameCode_IssuseNumber from C_Game_Issuse where GameCode=@GameCode and GameType=@GameType and Status=10 and OfficialStopTime > GETDATE() ) b on i.GameCode_IssuseNumber = b.GameCode_IssuseNumber",
+      "Remark": ""
+    }
+  ]
+}

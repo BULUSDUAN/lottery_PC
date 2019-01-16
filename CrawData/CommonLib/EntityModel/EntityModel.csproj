@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ConvertHelper.cs" />
+    <Compile Remove="CoreModel\BetingEntities\RedisWaitTicket.cs" />
+    <Compile Remove="CoreModel\Sports_SchemeQueryInfo.cs" />
+    <Compile Remove="CoreModel\Sports_TogetherJoinInfoCollection.cs" />
+    <Compile Remove="CoreModel\Sports_TogetherSchemeQueryInfoCollection.cs" />
+    <Compile Remove="CoreModel\TogetherFollowerRuleQueryInfo.cs" />
+    <Compile Remove="Xml\ConnConfigAnalyzer.cs" />
+    <Compile Remove="Xml\SensitiveAnalyzer.cs" />
+    <Compile Remove="Xml\SettingConfigAnalyzer.cs" />
+    <Compile Remove="Xml\XmlAnalyzeHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="protobuf-net" Version="2.3.7" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SystemManageServiceHost\KaSon.FrameWork.Services\KaSon.FrameWork.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MessagePack">
+      <HintPath>..\..\FramWorkDLL\MessagePack.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
