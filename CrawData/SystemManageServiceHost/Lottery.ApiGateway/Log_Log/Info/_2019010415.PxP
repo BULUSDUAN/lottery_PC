@@ -1,0 +1,8 @@
+2019-01-04 15:37:48,849 [13] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+15:37
+2019-01-04 15:37:50,372 [3] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+15:37
+2019-01-04 15:37:52,002 [14] INFO  Microsoft.AspNetCore.Hosting.Internal.WebHost [(null)] - Request starting HTTP/1.1 POST http://127.0.0.1:729/manage/Sum/HKSum multipart/form-data; boundary=--------------------------750809265381348406704349 309
+2019-01-04 15:37:52,369 [14] INFO  Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker [(null)] - Executing action method CrawHost.Controllers.SumController.HKSum (CrawHost) with arguments (Craw.Service.ModuleServices.NumCrawService, Lottery.ApiGateway.Model.HelpModel.LotteryServiceRequest) - ModelState is Valid

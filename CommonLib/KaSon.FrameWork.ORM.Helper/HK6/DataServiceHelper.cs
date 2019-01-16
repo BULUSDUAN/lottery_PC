@@ -21,7 +21,7 @@ namespace KaSon.FrameWork.ORM.Helper
         public blast_lhc_time GetissueNo() {
            // result.IsSuccess = true;
             DateTime date = DateTime.Parse(DateTime.Now.ToShortDateString());
-            if (DateTime.Now.Hour > 21)
+            if (DateTime.Now.Hour >=21)
             {
                 date = DateTime.Parse(DateTime.Now.AddDays(1).ToShortDateString());
             }

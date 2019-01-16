@@ -1,0 +1,99 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Config\AllConfig.json" />
+    <Content Remove="Config\log4net.config" />
+    <Content Remove="Config\log4net_ORMHelper.config" />
+    <Content Remove="Redis\redisSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Config\AllConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\log4net_ORMHelper.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Redis\redisSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.6.2" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
+    <PackageReference Include="Consul" Version="0.7.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.6.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CommonLib\csredis-master\CSRedisCore.csproj" />
+    <ProjectReference Include="..\..\CommonLib\EntityModel\EntityModel.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Analyzer\KaSon.FrameWork.Analyzer.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.Common\KaSon.FrameWork.Common.csproj" />
+    <ProjectReference Include="..\..\CommonLib\KaSon.FrameWork.ORM.Helper\KaSon.FrameWork.ORM.Helper.csproj" />
+    <ProjectReference Include="..\Craw.Service.IModuleServices\Craw.Service.IModuleServices.csproj" />
+    <ProjectReference Include="..\Craw.Service.ModuleServices\Craw.Service.ModuleServices.csproj" />
+    <ProjectReference Include="..\Lottery.ApiGateway.Model\Lottery.ApiGateway.Model.csproj" />
+    <ProjectReference Include="..\Lottery.CrawGetters\Lottery.CrawGetters.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Kason.Sg.Core.CPlatform">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.CPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Kason.Sg.Core.Log4net">
+      <HintPath>..\..\FramWorkDLL\Kason.Sg.Core.Log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="kason.Sg.Core.Mongo">
+      <HintPath>..\..\FramWorkDLL\kason.Sg.Core.Mongo.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\FramWorkDLL\log4net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Configs\appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Configs\cacheSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Configs\ConfigSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Configs\gatewaySettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Config\gatewaySettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Config\KaSon.FrameWork.ORM.Config.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Config\log4net.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

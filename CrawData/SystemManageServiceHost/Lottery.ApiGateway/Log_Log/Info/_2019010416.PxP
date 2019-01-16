@@ -1,0 +1,127 @@
+2019-01-04 16:02:50,169 [4] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:02
+2019-01-04 16:02:52,494 [16] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:02
+2019-01-04 16:02:56,184 [17] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:02
+2019-01-04 16:03:00,096 [22] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:04,443 [24] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:07,962 [27] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:08,053 [14] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:11,464 [15] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:11,471 [29] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:15,067 [3] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:15,089 [31] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:18,896 [33] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:19,176 [20] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:23,211 [36] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:25,678 [26] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:26,718 [38] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:29,179 [28] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:30,156 [40] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:31,676 [30] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:32,965 [41] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:36,175 [32] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:37,121 [44] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:38,171 [34] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:41,164 [46] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:42,675 [35] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:43,984 [47] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:03
+2019-01-04 16:03:47,201 [37] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:47,300 [51] INFO  Microsoft.AspNetCore.Hosting.Internal.WebHost [(null)] - Request starting HTTP/1.1 POST http://127.0.0.1:729/manage/Sum/HKSum multipart/form-data; boundary=--------------------------302934524889677006139488 309
+2019-01-04 16:03:47,648 [51] INFO  Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker [(null)] - Executing action method CrawHost.Controllers.SumController.HKSum (CrawHost) with arguments (Craw.Service.ModuleServices.NumCrawService, Lottery.ApiGateway.Model.HelpModel.LotteryServiceRequest) - ModelState is Valid
+2019-01-04 16:03:53,247 [42] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:54,389 [39] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:03:56,370 [43] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:03
+2019-01-04 16:04:00,996 [50] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:04
+2019-01-04 16:04:10,826 [45] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:04
+2019-01-04 16:04:10,844 [48] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:04
+2019-01-04 16:04:15,580 [49] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩开奖结算没有踩到数据
+16:04
+2019-01-04 16:04:17,297 [4] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - 六合彩历史记录采集到数据1条
+六合彩历史记录采集成功同步到数据库
+16:04
+2019-01-04 16:04:20,735 [51] INFO  Microsoft.AspNetCore.Mvc.Formatters.Json.Internal.JsonResultExecutor [(null)] - Executing JsonResult, writing value EntityModel.Communication.CommonActionResult.
+2019-01-04 16:04:20,806 [51] INFO  Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker [(null)] - Executed action CrawHost.Controllers.SumController.HKSum (CrawHost) in 33292.1092ms
+2019-01-04 16:04:20,816 [51] INFO  Microsoft.AspNetCore.Hosting.Internal.WebHost [(null)] - Request finished in 33554.0255ms 200 application/json; charset=utf-8
+2019-01-04 16:04:20,907 [52] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲʿ�������û�вȵ�����
+16:04
+2019-01-04 16:04:20,917 [16] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲʿ�������û�вȵ�����
+16:04
+2019-01-04 16:04:23,263 [53] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲ���ʷ��¼�ɼ�������1��
+���ϲ���ʷ��¼�ɼ��ɹ�ͬ�������ݿ�
+16:04
+2019-01-04 16:04:24,259 [56] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲ���ʷ��¼�ɼ�������1��
+���ϲ���ʷ��¼�ɼ��ɹ�ͬ�������ݿ�
+16:04
+2019-01-04 16:04:24,262 [51] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲ���ʷ��¼�ɼ�������1��
+���ϲ���ʷ��¼�ɼ��ɹ�ͬ�������ݿ�
+16:04
+2019-01-04 16:04:24,297 [15] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲ���ʷ��¼�ɼ�������1��
+���ϲ���ʷ��¼�ɼ��ɹ�ͬ�������ݿ�
+16:04
+2019-01-04 16:04:24,379 [3] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲ���ʷ��¼�ɼ�������1��
+���ϲ���ʷ��¼�ɼ��ɹ�ͬ�������ݿ�
+16:04
+2019-01-04 16:04:24,419 [22] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲ���ʷ��¼�ɼ�������1��
+���ϲ���ʷ��¼�ɼ��ɹ�ͬ�������ݿ�
+16:04
+2019-01-04 16:04:24,429 [20] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲ���ʷ��¼�ɼ�������1��
+���ϲ���ʷ��¼�ɼ��ɹ�ͬ�������ݿ�
+16:04
+2019-01-04 16:04:24,435 [29] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲ���ʷ��¼�ɼ�������1��
+���ϲ���ʷ��¼�ɼ��ɹ�ͬ�������ݿ�
+16:04
+2019-01-04 16:04:26,689 [57] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲ���ʷ��¼�ɼ�������1��
+���ϲ���ʷ��¼�ɼ��ɹ�ͬ�������ݿ�
+16:04
+2019-01-04 16:04:30,161 [26] INFO  Lottery.CrawGetters.BaseAutoCollect [(null)] - ���ϲ���ʷ��¼�ɼ�������1��
+���ϲ���ʷ��¼�ɼ��ɹ�ͬ�������ݿ�
+16:04

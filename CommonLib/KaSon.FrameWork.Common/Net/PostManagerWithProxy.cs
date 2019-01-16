@@ -13,8 +13,19 @@ namespace KaSon.FrameWork.Common.Net
     {
     //    private  readonly ILog logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static ILogger<PostManagerWithProxy> logger = InitConfigInfo.logFactory.CreateLogger<PostManagerWithProxy>();
+        public static string Post_Head(string url, string requestString, Encoding encoding,
+          string contentType = "application/x-www-form-urlencoded", string refer = "", WebHeaderCollection Head = null)
+        {
+            var content = PostManager.Post_Head(buildProxyUrl(url), requestString, encoding, 0, null, contentType, refer, Head);
+            if (string.IsNullOrEmpty(content))
+            {
+                logger.LogError("下载失败:" + url);
+                return string.Empty;
+            }
+            return content;
+        }
 
-        public  static string buildProxyUrl(string url)
+        public static string buildProxyUrl(string url)
         {
             var proxy = InitConfigInfo.data_spider_proxy_url;
             if (string.IsNullOrEmpty(proxy))
