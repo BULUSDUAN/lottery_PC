@@ -33,96 +33,96 @@ namespace KaSon.FrameWork.ORM.Helper
             BaseOrderHelper iorder = null;
             switch (orderdetail.playId)
             {
-                #region hk6 
-                case 1:
-                    iorder = new TeMaOrderHelper(DB);
-                    break;
-                case 3:
-                    iorder = new ZhengMaOrderHelper(DB);
-                    break;
-                case 2:
-                    iorder = new LingMianOrderHelper(DB);
-                    break;
-                case 39:
-                    iorder = new ZhengXiaoOrderHelper(DB);
-                    break;
-                case 40:
-                    iorder = new TeXiaoOrderHelper(DB);
-                    break;
-                case 41:
-                    iorder = new YiXiaoOrderHelper(DB);
-                    break;
-                case 42:
-                    iorder = new ZongXiaoOrderHelper(DB);
-                    break;
-                case 44:
-                    iorder = new SBSanSeOrderHelper(DB);
-                    break;
-                case 45:
-                    iorder = new SBBanOrderHelper(DB);
-                    break;
-                case 46:
-                    iorder = new SBBanBanOrderHelper(DB);
-                    break;
-                case 47:
-                    iorder = new SBQiSeOrderHelper(DB);
-                    break;
-                #endregion
-                #region pk10
-                case 58:
-                    iorder = new QianYiOrderHelper(DB);
-                    break;
-                case 59:
-                    iorder = new QianErOrderHelper(DB);
-                    break;
-                case 60:
-                    iorder = new QianSanOrderHelper(DB);
-                    break;
-                case 61:
-                    iorder = new DingWeiWuOrderHelper(DB);
-                    break;
-                case 62:
-                    iorder = new DingWeiLiuOrderHelper(DB);
-                    break;
-                case 63:
-                    iorder = new DingWeiOrderHelper(DB);
-                    break;
-                case 64:
-                    iorder = new GYHZOrderHelper(DB);
-                    break;
-                case 65:
-                case 66:
-                case 67:
-                case 68:
-                case 69:
-                    iorder = new LongHuOrderHelper(DB);
-                    break;
-                case 70:
-                case 71:
-                case 72:
+            //    #region hk6 
+            //    case 1:
+            //        iorder = new TeMaOrderHelper(DB);
+            //        break;
+            //    case 3:
+            //        iorder = new ZhengMaOrderHelper(DB);
+            //        break;
+            //    case 2:
+            //        iorder = new LingMianOrderHelper(DB);
+            //        break;
+            //    case 39:
+            //        iorder = new ZhengXiaoOrderHelper(DB);
+            //        break;
+            //    case 40:
+            //        iorder = new TeXiaoOrderHelper(DB);
+            //        break;
+            //    case 41:
+            //        iorder = new YiXiaoOrderHelper(DB);
+            //        break;
+            //    case 42:
+            //        iorder = new ZongXiaoOrderHelper(DB);
+            //        break;
+            //    case 44:
+            //        iorder = new SBSanSeOrderHelper(DB);
+            //        break;
+            //    case 45:
+            //        iorder = new SBBanOrderHelper(DB);
+            //        break;
+            //    case 46:
+            //        iorder = new SBBanBanOrderHelper(DB);
+            //        break;
+            //    case 47:
+            //        iorder = new SBQiSeOrderHelper(DB);
+            //        break;
+            //    #endregion
+            //    #region pk10
+            //    case 58:
+            //        iorder = new QianYiOrderHelper(DB);
+            //        break;
+            //    case 59:
+            //        iorder = new QianErOrderHelper(DB);
+            //        break;
+            //    case 60:
+            //        iorder = new QianSanOrderHelper(DB);
+            //        break;
+            //    case 61:
+            //        iorder = new DingWeiWuOrderHelper(DB);
+            //        break;
+            //    case 62:
+            //        iorder = new DingWeiLiuOrderHelper(DB);
+            //        break;
+            //    case 63:
+            //        iorder = new DingWeiOrderHelper(DB);
+            //        break;
+            //    case 64:
+            //        iorder = new GYHZOrderHelper(DB);
+            //        break;
+            //    case 65:
+            //    case 66:
+            //    case 67:
+            //    case 68:
+            //    case 69:
+            //        iorder = new LongHuOrderHelper(DB);
+            //        break;
+            //    case 70:
+            //    case 71:
+            //    case 72:
 
-                    iorder = new WuXingOrderHelper(DB);
-                    break;
-                case 73:
-                case 74:
-                case 75:
+            //        iorder = new WuXingOrderHelper(DB);
+            //        break;
+            //    case 73:
+            //    case 74:
+            //    case 75:
 
-                    iorder = new DanXiaoOrderHelper(DB);
-                    break;
-                case 76:
-                case 77:
-                case 78:
+            //        iorder = new DanXiaoOrderHelper(DB);
+            //        break;
+            //    case 76:
+            //    case 77:
+            //    case 78:
 
-                    iorder = new DanShuanOrderHelper(DB);
-                    break;
-                case 79:
+            //        iorder = new DanShuanOrderHelper(DB);
+            //        break;
+            //    case 79:
 
-                    iorder = new GYHDanXiaoDSOrderHelper(DB);
-                    break;
-                #endregion
-                default:
+            //        iorder = new GYHDanXiaoDSOrderHelper(DB);
+            //        break;
+            //    #endregion
+            //    default:
 
-                    break;
+            //        break;
             }
 
             return iorder;

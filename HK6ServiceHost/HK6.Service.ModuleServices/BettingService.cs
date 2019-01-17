@@ -20,7 +20,7 @@ using Kason.Sg.Core.ProxyGenerator;
 using Microsoft.Extensions.Logging;
 using KaSon.FrameWork.ORM;
 using EntityModel;
-using KaSon.FrameWork.Analyzer.Hk6Model;
+
 using KaSon.FrameWork.Common.Utilities;
 using EntityModel.Domain.Entities.HK6;
 
@@ -315,7 +315,7 @@ namespace HK6.ModuleBaseServices
                     beforeMoney = LoginUser.gameMoney,
                     afterMoney = aftermoney,
                     totalMoney = totalmoney,
-                    moneyType = (int)PayType.Payin,
+                    moneyType = (int)PayType.Payout,
                     category = moneyType.HK6_Buy,
                     create_time = DateTime.Now,
                     update_time = DateTime.Now,

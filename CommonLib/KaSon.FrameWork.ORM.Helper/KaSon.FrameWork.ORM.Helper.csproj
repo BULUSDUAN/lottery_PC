@@ -59,6 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="HK6\" />
     <Folder Include="LotteryJsonInfo_Operate\" />
   </ItemGroup>
 
