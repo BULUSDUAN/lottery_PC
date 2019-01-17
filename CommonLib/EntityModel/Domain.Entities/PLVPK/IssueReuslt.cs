@@ -17,6 +17,7 @@ namespace EntityModel
         {
             
         }
+        public decimal redBackPercent { get; set; } = 0;
         public string lastactionNum { get; set; } = "";
         public string lastactionNo { get; set; } = "";
 

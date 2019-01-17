@@ -150,7 +150,8 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 //});
 
 
-
+                var fundManager = new FundManager();
+                var percent = fundManager.QueryRedBagUseConfig("PLVPK10");
                 sresult.IsSuccess = true;
                
                 sresult.Value = new IssueReuslt
@@ -162,6 +163,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                     gamecode = result.name,
                     sort = result.sort,
                     title = result.title,
+                    redBackPercent= percent,
                     gamename = result.shortName,
                     info = result.info,
                     actionNum = actionNo,//期数

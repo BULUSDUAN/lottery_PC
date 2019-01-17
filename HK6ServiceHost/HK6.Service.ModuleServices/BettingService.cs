@@ -46,8 +46,8 @@ namespace HK6.ModuleBaseServices
         {
             _Log = log;
             this._rep = repository;
-            DB = _rep.LDB.Init("MySql.Default", true);
-            LettoryDB = _rep.DB.Init("SqlServer.Default", true);
+            DB = _rep.LDB.Init("MySql.Default", false);
+            LettoryDB = _rep.DB.Init("SqlServer.Default", false);
         }
         /// <summary>
         /// 普通订单缓存数据
@@ -119,7 +119,7 @@ namespace HK6.ModuleBaseServices
                 var issue = DB.CreateQuery<blast_lhc_time>().Where(b => b.actionNo == issueNo).FirstOrDefault();
 
                
-                if (issue == null || DateTime.Now> DateTime.Parse(issue.actionTime.ToShortDateString()).AddHours(21).AddMinutes(10))
+                if (issue == null || DateTime.Now> DateTime.Parse(issue.actionTime.ToShortDateString()).AddHours(21).AddMinutes(15))
                 {
                     cresult.IsSuccess = false;
                     cresult.Code = 300;
@@ -293,7 +293,7 @@ namespace HK6.ModuleBaseServices
                         anteSchemeId = "CDHK6" + UsefullHelper.UUID() + "_" + info.issueNo.ToString() + "_" + item.playId
 
                     };
-                    BaseOrderHelper winHelper = BaseOrderHelper.GetOrderHelper(orderDetail, DB);
+                    BaseCodeOrderHelper winHelper = BaseCodeOrderHelper.GetOrderHelper(orderDetail.playId);
                     orderDetail.AnteCodes = winHelper.BuildCodes(item.content);
 
                     orderDetailList.Add(orderDetail);
@@ -379,8 +379,8 @@ namespace HK6.ModuleBaseServices
             finally
             {
                 //释放资源
-                DB.Dispose();
-                LettoryDB.Dispose();
+                //DB.Dispose();
+                //LettoryDB.Dispose();
             }
 
 

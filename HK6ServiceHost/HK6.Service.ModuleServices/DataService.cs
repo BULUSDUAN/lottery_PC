@@ -26,6 +26,7 @@ using KaSon.FrameWork.Common.Hk6;
 using KaSon.FrameWork.Services.ORM;
 using KaSon.FrameWork.Services.Enum;
 using KaSon.FrameWork.ORM.Helper.BJPK;
+using EntityModel.Domain.Entities.HK6;
 
 namespace HK6.ModuleBaseServices
 {
@@ -180,6 +181,7 @@ namespace HK6.ModuleBaseServices
                     LettoryDB.Dispose();
                     return Task.FromResult(result);
                 }
+                decimal beforeMoney = 0;
                 if (mb == null)
                 {
                     //创建一个用户
@@ -196,9 +198,11 @@ namespace HK6.ModuleBaseServices
                     };
 
                     DB.GetDal<blast_member>().Add(tmb);
+                   // mb = tmb;
                 }
                 else
                 {
+                    beforeMoney = mb.gameMoney;
                     DB.GetDal<blast_member>().Update(b => new blast_member
                     {
                         displayName = userRegister.DisplayName,
@@ -207,7 +211,22 @@ namespace HK6.ModuleBaseServices
                     }, b => b.userId == userId);
 
                 }
-
+                blast_money_detail mdetail = new blast_money_detail()
+                {
+                    beforeMoney = beforeMoney,
+                    afterMoney = beforeMoney + Money,
+                    totalMoney = Money,
+                    moneyType = (int)PayType.Payin,
+                    category = moneyType.HK6_Recharge,
+                    create_time = DateTime.Now,
+                    update_time = DateTime.Now,
+                    isAuto = 1,
+                    orderId = "",
+                    remark = "HK6充值",
+                    userId = userId,
+                    user_diaplayName = userRegister.DisplayName
+                };
+                DB.GetDal<blast_money_detail>().Add(mdetail);
 
                 C_Game_Transfer ctransfer = new C_Game_Transfer()
                 {
@@ -298,6 +317,7 @@ namespace HK6.ModuleBaseServices
                     LettoryDB.Dispose();
                     return Task.FromResult(result);
                 }
+               
                 if (mb == null)
                 {
                     //创建一个用户
@@ -309,8 +329,8 @@ namespace HK6.ModuleBaseServices
                     result.StatuCode = 300;
                     return Task.FromResult(result);
                 }
-                else
-                {
+                else { 
+                   
                     DB.GetDal<blast_member>().Update(b => new blast_member
                     {
                         gameMoney = b.gameMoney - Money,
@@ -318,10 +338,24 @@ namespace HK6.ModuleBaseServices
                     }, b => b.userId == userId);
 
                 }
-                blast_money_detail dm = new blast_money_detail() {
-                     
+             
+               
+                blast_money_detail mdetail = new blast_money_detail()
+                {
+                    beforeMoney = mb.gameMoney,
+                    afterMoney = mb.gameMoney + Money,
+                    totalMoney = Money,
+                    moneyType = (int)PayType.Payout,
+                    category = moneyType.HK6_Withdraw,
+                    create_time = DateTime.Now,
+                    update_time = DateTime.Now,
+                    isAuto = 1,
+                    orderId = "",
+                    remark = "HK6提现",
+                    userId = mb.userId,
+                    user_diaplayName = mb.displayName
                 };
-
+                DB.GetDal<blast_money_detail>().Add(mdetail);
                 C_Game_Transfer ctransfer = new C_Game_Transfer()
                 {
                     OrderId = orderId,
