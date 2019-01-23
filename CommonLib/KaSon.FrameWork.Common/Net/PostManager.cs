@@ -432,12 +432,12 @@ namespace KaSon.FrameWork.Common.Net
             }
             catch (System.Net.WebException ex)
             {
-                return ex.ToString();
+                throw ex;
                 //return "404";
             }
             catch (Exception ex)
             {
-                return ex.ToString();
+                throw ex;
             }
         }
     }

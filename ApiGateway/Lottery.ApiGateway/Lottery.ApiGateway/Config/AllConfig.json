@@ -49,6 +49,13 @@
     "PreName": "DJW",
     "URL": "http://api.mtechgame.com/generic"
   },
+  "LGGame": {
+    "agent": "21",
+    "key": "LUoVa7JRs7y0ugTL",
+    "pre": "DJW",
+    "password": "1",
+    "url": "https://cnpublicapi.lgslots.com/index.php"
+  },
   "TGDomain_1": "http://www.baidu.com/",
   "TGDomain_2": "http://m.baidu.com/"
 }

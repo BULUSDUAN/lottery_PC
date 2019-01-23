@@ -1667,7 +1667,8 @@ namespace EntityModel.Enum
         /// 
         [Remark("SMF")]
         SMF = 1,
-
+        [Remark("LG")]
+        LG=2,
         LHC =10,
 
         BJPK = 11
