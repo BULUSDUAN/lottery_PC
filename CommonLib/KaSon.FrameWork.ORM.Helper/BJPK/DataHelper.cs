@@ -137,7 +137,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 //string kjhao =  DB.CreateSQLQuery($"select kjdata from blast_data where type=@type and issueNo=@number")
                 //     .SetString("@number", lastnumber + "")
                 //    .SetString("@type", gameid+"").First<string>();
-                string kjhaonum = "";
+                string kjhaonum = "1,2,3,4,5,6,7,8,9,10";
                 var kjhao = DB.CreateQuery<blast_data>().Where(b => b.typeid == gameid && b.issueNo == lastnum).FirstOrDefault();
 
                 if (kjhao !=null)
@@ -150,7 +150,8 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                 //});
 
 
-
+                var fundManager = new FundManager();
+                var percent = fundManager.QueryRedBagUseConfig("PLVPK10");
                 sresult.IsSuccess = true;
                
                 sresult.Value = new IssueReuslt
@@ -162,6 +163,7 @@ namespace KaSon.FrameWork.ORM.Helper.BJPK
                     gamecode = result.name,
                     sort = result.sort,
                     title = result.title,
+                    redBackPercent= percent,
                     gamename = result.shortName,
                     info = result.info,
                     actionNum = actionNo,//期数

@@ -51,6 +51,20 @@ namespace KaSon.FrameWork.Common.Hk6
                       "34","35","40","45","46"
                     };
 
+        public static  IDictionary<string,DateTime> ChunjieDate = new Dictionary<string, DateTime>();
+
+        static SXHelper() {
+          
+            ChunjieDate.Add("2018",DateTime.Parse("2018-02-15"));
+            ChunjieDate.Add("2019", DateTime.Parse("2019-02-05"));
+            ChunjieDate.Add("2020", DateTime.Parse("2020-1-25"));
+            ChunjieDate.Add("2021", DateTime.Parse("2021-2-12"));
+            ChunjieDate.Add("2022", DateTime.Parse("2022-2-1"));
+            ChunjieDate.Add("2023", DateTime.Parse("2023-1-22"));
+        }
+        //public static string[] ChunjieDate = new string[] {
+        //              "2018-02-15","2019-02-05","2020-1-25","2021-2-12","2022-2-1"
+        //            };
         //蓝波 :03、04、09、10、14、15、20、25、26、31、36、37、41、42、47、48
 
         public static string[] BluBox = new string[] {
@@ -89,21 +103,73 @@ namespace KaSon.FrameWork.Common.Hk6
                         02,14 ,26, 38,
                         01 ,13, 25, 37 ,49
                     };
-        private static string shuxiang()
+        public static string shuxiang()
         {
             // string[] shuxiang = { "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
-            string[] shuCode = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
-            int tmp = DateTime.Now.Year - 2008;
-            if (DateTime.Now.Year < 2008)
+            string[] shuCode = {  "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11","12"};
+            int tmp = 0;
+
+            int year = DateTime.Now.Year;
+
+            DateTime ndt = DateTime.Now;
+
+            DateTime DT = DateTime.Parse("1900-01-01");
+            // DateTime DT1 = DateTime.Parse("1900-01-01");
+            try
             {
-                // Console.WriteLine(shuxiang[tmp % 12 + 12]);
-                return shuCode[tmp % 12 + 12];
+                ChunjieDate.TryGetValue(year + "", out DT);
             }
-            else
+            catch 
             {
-                // Console.WriteLine(shuxiang[tmp % 12]);
-                return shuCode[tmp % 12];
+                DT = DateTime.Parse("1900-01-01");
+
             }
+           
+          //  ChunjieDate.TryGetValue((int.Parse(year)+1)+"", out DT1);
+            if (DT.Year > 1900)
+            {
+                if (ndt > DT && year == DT.Year)
+                {
+                    tmp = year - 2008;
+                }
+                else if (ndt < DT && year == DT.Year)
+                {
+                    tmp = (year - 1) - 2008;
+                }
+                else if (ndt < DT && year < DT.Year)
+                {
+                    tmp = year - 2008;
+                }
+                else {
+                    tmp = year - 2008;
+                }
+
+                if (year < 2008)
+                {
+                    // Console.WriteLine(shuxiang[tmp % 12 + 12]);
+                    return shuCode[tmp % 12 + 12];
+                }
+                else
+                {
+
+                    return shuCode[tmp % 12];
+
+                }
+            }
+            else {
+                tmp = year - 2008;
+                if (DateTime.Now.Year < 2008)
+                {
+                    // Console.WriteLine(shuxiang[tmp % 12 + 12]);
+                    return shuCode[tmp % 12 + 12];
+                }
+                else
+                {
+                    // Console.WriteLine(shuxiang[tmp % 12]);
+                    return shuCode[tmp % 12];
+                }
+            }
+            
         }
         private static int SCode(int code)
         {
@@ -126,36 +192,39 @@ namespace KaSon.FrameWork.Common.Hk6
         {
 
             int t = int.Parse(shuxiang());
-
+           
             if (code==48)
             {
                 Console.WriteLine("");
             }
-            int tt = t + code;
-            int value = tt;
-            int temp = code;
-            if (code < 12)
+            //  int tt = t + code;
+           
+           // t=10
+
+            int temp =(code) % 12;
+            if ((code) % 12 == 0 && t==12)
             {
-
-                temp = code % 12;
+                temp = 12;
             }
-            temp = code % 12;
+            else {
+                temp = (code) % 12;
+            }
+            //13  1
 
+            int value = 0;
             if (t >= temp) //11>8
             {
                 value = t - temp;
             }
-            else
+            else //10 < 11
             {
                 value = t + (12 - temp);
 
             }
-            value--;
+           // value--;
 
             string[] shuxiangarr = {
-                "鼠", "牛", "虎", "兔", "龙",
-                "蛇", "马", "羊", "猴", "鸡",
-                "狗", "猪" };
+                "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪" };
 
             return shuxiangarr[value];
         }

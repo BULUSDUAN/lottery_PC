@@ -341,6 +341,7 @@ namespace PK.Service.ModuleServices
                 //返回
                 cresult.IsSuccess = true;
                 cresult.Message = "投注成功";
+              
                 cresult.ReturnValue = keyLine;
                 cresult.Value = orderDetailList.OrderByDescending(b => b.CreateTime).Select(b => b.anteSchemeId).ToList();
 
